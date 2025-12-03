@@ -195,7 +195,145 @@
 
       renderSeats();
     });
-  </script>
+  <script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxhANMHPxBVtS1TpAXb1gMT2X0YDI5JcBLB5PHMCxCzMRCS9sB0eEHMVa9n9RpgMjNm/exec";
+  const READ_URL   = SCRIPT_URL + "?action=read"; // ไว้โหลดสถานะเบาะ
+
+  const SEATS = [3,6,9,2,5,8,1,4,7];
+  let selectedSeat = null;
+  let bookedSeats = [];
+
+  // -------------------------
+  // โหลดสถานะเบาะจากชีต
+  // -------------------------
+  async function loadBooked(date) {
+    if (!date) return [];
+
+    try {
+      const res = await fetch(READ_URL + "&date=" + date);
+      const data = await res.json();
+      return data.booked || [];
+    } catch {
+      return [];
+    }
+  }
+
+  // -------------------------
+  // วาดผังที่นั่ง + ใส่สี
+  // -------------------------
+  async function renderSeats() {
+    const date = document.getElementById('globalDate').value;
+    const grid = document.getElementById('seatGrid');
+
+    grid.innerHTML = "";
+    selectedSeat = null;
+    document.getElementById('selectedSeat').textContent = "";
+    document.getElementById('showDate').textContent = date || "";
+
+    if (!date) {
+      grid.innerHTML = "<p>กรุณาเลือกวันที่ก่อน</p>";
+      return;
+    }
+
+    // โหลดเบาะที่ถูกจองแล้ว
+    bookedSeats = await loadBooked(date);
+
+    SEATS.forEach(num => {
+      const div = document.createElement("div");
+      div.className = "seat";
+      div.textContent = num;
+      div.dataset.seat = num;
+
+      if (bookedSeats.includes(String(num))) {
+        div.classList.add("booked"); // สีแดง
+      } else {
+        div.style.background = "#4CAF50"; // เบาะว่าง = เขียว
+        div.style.color = "white";
+
+        div.addEventListener("click", () => selectSeat(div));
+      }
+      grid.appendChild(div);
+    });
+  }
+
+  // -------------------------
+  // เมื่อเลือกเบาะ → สีเหลือง
+  // -------------------------
+  function selectSeat(el) {
+    if (el.classList.contains("booked")) return;
+
+    document.querySelectorAll('.seat').forEach(s => {
+      if (!s.classList.contains("booked")) {
+        s.style.background = "#4CAF50"; // เขียว
+      }
+      s.classList.remove("selected");
+    });
+
+    el.classList.add("selected");
+    el.style.background = "gold"; // สีเหลือง
+    el.style.color = "black";
+
+    selectedSeat = el.dataset.seat;
+    document.getElementById("selectedSeat").textContent = selectedSeat;
+    document.getElementById("showDate").textContent = document.getElementById("globalDate").value;
+
+    document.getElementById("formBox").classList.remove("hidden");
+  }
+
+  // -------------------------
+  // ส่งข้อมูลแบบฟอร์ม (กัน fetch error)
+  // -------------------------
+  function submitBooking(e) {
+    e.preventDefault();
+
+    const date = document.getElementById('globalDate').value;
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const line  = document.getElementById('line').value.trim();
+
+    if (!date || !selectedSeat || !name || !phone || !line) {
+      alert("กรุณากรอกข้อมูลให้ครบ");
+      return;
+    }
+
+    // ส่งแบบ form (ไม่ติด CORS)
+    const form = document.createElement('form');
+    form.action = SCRIPT_URL;
+    form.method = "POST";
+    form.target = "_blank";
+
+    for (const key of ["date","seat","name","phone","line"]) {
+      const inp = document.createElement("input");
+      inp.type = "hidden";
+      inp.name = key;
+      inp.value = {
+        date: date,
+        seat: selectedSeat,
+        name: name,
+        phone: phone,
+        line: line
+      }[key];
+      form.appendChild(inp);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+
+    alert("ส่งคำจองเรียบร้อยแล้ว ✔");
+
+    renderSeats();
+  }
+
+  // -------------------------
+  // EVENT
+  // -------------------------
+  document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("globalDate").addEventListener("change", renderSeats);
+    document.getElementById("submitBtn").addEventListener("click", submitBooking);
+    renderSeats();
+  });
+</script>
 
 </body>
 </html>
