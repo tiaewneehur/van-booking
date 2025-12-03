@@ -36,6 +36,7 @@
       cursor: pointer;
       background: #4CAF50; 
       color: white;
+      transition: 0.15s;
     }
 
     /* กำลังเลือก */
@@ -101,18 +102,19 @@
     <button id="submitBtn">ยืนยันการจอง</button>
   </div>
 
-<script>
-    /* ใช้ URL เดียวของไอซ์ */
+  <!-- ❗ มีสคริปต์แค่ก้อนนี้ก้อนเดียวพอ -->
+  <script>
+    // URL Apps Script (ตัวเดียวกับฝั่งหลังบ้าน)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq_wamcsBHOnEWZZba2onoX6lvczQ1ghkyia608cZjjzuwbTc2ZGS28NPAgcDjFoZA/exec";
-    const READ_URL = SCRIPT_URL + "?action=read";
+    const READ_URL   = SCRIPT_URL + "?action=read";
 
-    /* ผังเบาะ 9 ที่นั่ง */
-    const SEATS = [3,6,9,2,5,8,1,4,7];
+    // ผังเบาะ 9 ที่นั่ง: 3 6 9 / 2 5 8 / 1 4 7
+    const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
 
     let selectedSeat = null;
     let bookedSeats = [];
 
-    /* โหลดสถานะเบาะที่ถูกจองแล้ว */
+    // โหลดเบาะที่ถูกจองแล้วของวันนั้น
     async function loadBooked(date) {
       if (!date) return [];
       try {
@@ -125,7 +127,7 @@
       }
     }
 
-    /* วาดผังเบาะ + ทำสี */
+    // วาดผังเบาะ + ทำสีตามสถานะ
     async function renderSeats() {
       const date = document.getElementById("globalDate").value;
       const grid = document.getElementById("seatGrid");
@@ -135,6 +137,7 @@
       form.classList.add("hidden");
       selectedSeat = null;
       document.getElementById("selectedSeat").textContent = "";
+      document.getElementById("showDate").textContent = date || "";
 
       if (!date) {
         grid.innerHTML = "<p>กรุณาเลือกวันที่ก่อน</p>";
@@ -150,7 +153,7 @@
         seat.dataset.seat = num;
 
         if (bookedSeats.includes(String(num))) {
-          seat.classList.add("booked"); // เบาะจองแล้ว
+          seat.classList.add("booked"); // แดง = จองแล้ว
         } else {
           seat.addEventListener("click", () => selectSeat(seat));
         }
@@ -159,7 +162,7 @@
       });
     }
 
-    /* เลือกเบาะ = เหลือง */
+    // เลือกเบาะ = เหลือง
     function selectSeat(el) {
       if (el.classList.contains("booked")) return;
 
@@ -176,20 +179,20 @@
       el.style.color = "black";
 
       selectedSeat = el.dataset.seat;
-
+      const date = document.getElementById("globalDate").value;
       document.getElementById("selectedSeat").textContent = selectedSeat;
-      document.getElementById("showDate").textContent = document.getElementById("globalDate").value;
+      document.getElementById("showDate").textContent = date;
       document.getElementById("formBox").classList.remove("hidden");
     }
 
-    /* ส่งฟอร์มจองไป Apps Script */
+    // ส่งฟอร์มจองไป Apps Script
     function submitBooking(event) {
       event.preventDefault();
 
-      const date = document.getElementById("globalDate").value;
-      const name = document.getElementById("name").value.trim();
+      const date  = document.getElementById("globalDate").value;
+      const name  = document.getElementById("name").value.trim();
       const phone = document.getElementById("phone").value.trim();
-      const line = document.getElementById("line").value.trim();
+      const line  = document.getElementById("line").value.trim();
 
       if (!date || !selectedSeat || !name || !phone || !line) {
         alert("กรุณากรอกข้อมูลให้ครบ");
@@ -201,7 +204,7 @@
       form.action = SCRIPT_URL;
       form.target = "_blank";
 
-      const data = {date, seat:selectedSeat, name, phone, line};
+      const data = { date, seat: selectedSeat, name, phone, line };
       Object.keys(data).forEach(k => {
         const input = document.createElement("input");
         input.type = "hidden";
@@ -214,8 +217,9 @@
       form.submit();
       form.remove();
 
-      alert("ส่งคำจองแล้ว — ถ้าซ้ำ ระบบจะแจ้งในแท็บใหม่");
+      alert("ส่งคำจองแล้ว — ถ้าเบาะซ้ำ ระบบจะแจ้งในแท็บใหม่");
 
+      // รีโหลดสถานะ (จะเห็นเบาะเพิ่งจองกลายเป็นแดง)
       renderSeats();
     }
 
@@ -224,7 +228,7 @@
       document.getElementById("submitBtn").addEventListener("click", submitBooking);
       renderSeats();
     });
-</script>
+  </script>
 
 </body>
 </html>
