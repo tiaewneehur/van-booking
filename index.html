@@ -11,20 +11,29 @@
 <body>
 
 <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
+
+<!-- เลือกวันก่อน -->
+<div style="margin-bottom:15px;">
+  <label>เลือกวันที่เดินทาง:</label><br>
+  <input id="globalDate" type="date" style="padding:10px; margin-top:5px;">
+</div>
+
 <img src="เที่ย นี่เหอะ.png" class="logo">
 <br>
 <img src="IMG_0444.jpeg" class="logo">
-  
+
 <div id="seatGrid" class="grid"></div>
 
 <div id="formBox" class="formBox hidden">
   <h2>ข้อมูลผู้จอง</h2>
+  <p>วันที่เดินทาง: <span id="showDate"></span></p>
   <p>ที่นั่งที่เลือก: <span id="selectedSeat"></span></p>
+
   <input id="name" placeholder="ชื่อ-นามสกุล">
   <input id="phone" placeholder="เบอร์โทรศัพท์">
   <input id="line" placeholder="ไลน์ไอดี">
-  
-  <button onclick="submitBooking">ยืนยันการจอง</button>
+
+  <button onclick="submitBooking()">ยืนยันการจอง</button>
 </div>
 
 </body>
