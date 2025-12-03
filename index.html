@@ -145,11 +145,10 @@
         return;
       }
 
-      if (!SCRIPT_URL || SCRIPT_URL.includes('AKfycbxhANMHPxBVtS1TpAXb1gMT2X0YDI5JcBLB5PHMCxCzMRCS9sB0eEHMVa9n9RpgMjNm')) {
-        alert('ยังไม่ได้ตั้งค่า SCRIPT_URL ในโค้ด');
-        return;
-      }
-
+      if (!SCRIPT_URL || SCRIPT_URL.includes('XXXXXXXX')) {
+  alert('ยังไม่ได้ตั้งค่า SCRIPT_URL ในโค้ด');
+  return;
+}
       try {
         const res = await fetch(SCRIPT_URL, {
           method: 'POST',
