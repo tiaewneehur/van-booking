@@ -257,11 +257,14 @@
       form.submit();
       form.remove();
 
-      alert("ส่งคำจองแล้ว — ถ้าเบาะนี้จองไว้แล้ว ระบบจะแจ้งในแท็บใหม่");
+// ...
+alert("ส่งคำจองแล้ว — ถ้าเบาะนี้จองไว้แล้ว ระบบจะแจ้งในแท็บใหม่");
 
-      // หลังจองเสร็จ รีโหลดผัง → เบาะนี้จะกลายเป็นสีแดง
-      renderSeats();
-    }
+// หลังจองเสร็จ รีโหลดผัง → **หน่วงเวลา 2 วินาที (2000 ms)**
+// เพื่อให้ Apps Script มีเวลาบันทึกข้อมูลให้เสร็จ
+setTimeout(() => {
+  renderSeats();
+}, 2000);
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("globalDate").addEventListener("change", renderSeats);
