@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>จองที่นั่งรถตู้</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<script defer src="app.js"></script>
+</head>
+<body>
+
+<h1 class="title">ระบบจองที่นั่งรถตู้</h1>
+<img src="logo.jpg" class="logo">
+
+<div id="seatGrid" class="grid"></div>
+
+<div id="formBox" class="formBox hidden">
+  <h2>ข้อมูลผู้จอง</h2>
+  <p>ที่นั่งที่เลือก: <span id="selectedSeat"></span></p>
+  <input id="name" placeholder="ชื่อ-นามสกุล">
+  <input id="phone" placeholder="เบอร์โทรศัพท์">
+  <input id="line" placeholder="ไลน์ไอดี">
+  <input id="date" type="date">
+  <button onclick="submitBooking()">ยืนยันการจอง</button>
+</div>
+
+</body>
+</html>
