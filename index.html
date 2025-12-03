@@ -88,13 +88,13 @@
   </div>
 
   <script>
-    // 👉 URL จาก Apps Script ของไอซ์
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8ZY7brRfuXt2Rt0XqF-boIr4EOWfo0JCPtzmdSKHYXLd8lFzHMQ1hq2Wx1hyAJ2Eo/exec';
+    // URL Apps Script ของไอซ์ (น้าใส่ให้แล้ว)
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxhANMHPxBVtS1TpAXb1gMT2X0YDI5JcBLB5PHMCxCzMRCS9sB0eEHMVa9n9RpgMjNm/exec';
 
     const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
     let selectedSeat = null;
 
-    // วาดผังที่นั่ง (เช็ควันก่อน แล้วให้ลูกค้าเลือกเบาะ)
+    // วาดผังที่นั่ง
     function renderSeats() {
       const date = document.getElementById('globalDate').value;
       const grid = document.getElementById('seatGrid');
@@ -143,9 +143,8 @@
         return;
       }
 
-      // กันกรณีลืมตั้งค่า URL
       if (!SCRIPT_URL) {
-        alert('ยังไม่ได้ตั้งค่า SCRIPT_URL ในโค้ด');
+        alert('ยังไม่ได้ตั้งค่า SCRIPT_URL');
         return;
       }
 
@@ -162,22 +161,9 @@
           })
         });
 
-        const text = await res.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch (err) {
-          console.error('Response is not JSON:', text);
-          alert('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheet (ตอบกลับไม่ใช่ JSON)');
-          return;
-        }
-
-        if (!data.success) {
-          if (data.error === 'SEAT_TAKEN') {
-            alert('ที่นั่งนี้ของวันนี้ถูกจองแล้วในระบบ');
-          } else {
-            alert('จองไม่สำเร็จ: ' + (data.error || 'ไม่ทราบสาเหตุ'));
-          }
+        if (!res.ok) {
+          const text = await res.text();
+          alert('ส่งไม่สำเร็จ: HTTP ' + res.status + '\n' + text);
           return;
         }
 
@@ -190,8 +176,7 @@
         document.getElementById('line').value = '';
 
       } catch (e) {
-        console.error(e);
-        alert('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheet');
+        alert('ส่งไม่สำเร็จ: ' + e.message);
       }
     }
 
