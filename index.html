@@ -2,55 +2,218 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>จองที่นั่งรถตู้</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css">
-<script defer src="app.js"></script>
+  <meta charset="UTF-8">
+  <title>จองที่นั่งรถตู้</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-  .hidden { display: none; }
-  .seat { 
-    width: 60px; height: 60px; 
-    border: 1px solid #444; 
-    display: flex; justify-content:center; align-items:center;
-    margin: 5px; cursor: pointer; border-radius: 8px;
-  }
-  .seat.selected { background: orange; }
-  .seat.booked { background: gray; color:#fff; }
-  .grid { display: flex; flex-wrap: wrap; max-width: 220px; }
-  .logo { width: 180px; margin: 10px auto; display:block; }
-</style>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 10px; }
+    .title { font-size: 22px; margin-bottom: 10px; }
+    .logo { width: 160px; display: block; margin: 5px auto; }
+
+    .hidden { display: none; }
+
+    .date-box { margin: 10px 0 15px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 70px);
+      gap: 8px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .seat {
+      width: 70px;
+      height: 70px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .seat.selected { background: orange; color: #fff; }
+    .seat.booked { background: #9e9e9e; color: #fff; cursor: not-allowed; }
+
+    .formBox { margin-top: 15px; }
+    input {
+      display: block;
+      margin: 5px auto;
+      padding: 8px;
+      width: 230px;
+      max-width: 90%;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 6px;
+      background: #1976d2;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
 </head>
-
 <body>
 
-<h1 class="title">ระบบจองที่นั่งรถตู้</h1>
+  <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
 
-<img src="เที่ย นี่เหอะ.png" class="logo">
-<img src="IMG_0444.jpeg" class="logo">
+  <!-- โลโก้ 2 รูป -->
+  <img src="เที่ย นี่เหอะ.png" class="logo">
+  <img src="IMG_0444.jpeg" class="logo">
 
-<!-- เลือกวันที่ -->
-<div style="margin-bottom:15px;">
-  <label>เลือกวันที่เดินทาง:</label><br>
-  <input id="globalDate" type="date" style="padding:10px; margin-top:5px;">
-</div>
+  <!-- เลือกวันที่ -->
+  <div class="date-box">
+    <label>เลือกวันที่เดินทาง:</label><br>
+    <input id="globalDate" type="date" style="padding:10px; margin-top:5px;">
+  </div>
 
-<!-- ผังที่นั่ง -->
-<div id="seatGrid" class="grid"></div>
+  <!-- ผังที่นั่ง -->
+  <div id="seatGrid" class="grid"></div>
 
-<!-- ฟอร์มจอง -->
-<div id="formBox" class="hidden">
-  <h2>ข้อมูลผู้จอง</h2>
-  <p>วันที่เดินทาง: <span id="showDate"></span></p>
-  <p>ที่นั่งที่เลือก: <span id="selectedSeat"></span></p>
+  <!-- ฟอร์มจอง -->
+  <div id="formBox" class="formBox hidden">
+    <h2>ข้อมูลผู้จอง</h2>
+    <p>วันที่เดินทาง: <span id="showDate"></span></p>
+    <p>ที่นั่งที่เลือก: <span id="selectedSeat"></span></p>
 
-  <input id="name" placeholder="ชื่อ-นามสกุล">
-  <input id="phone" placeholder="เบอร์โทรศัพท์">
-  <input id="line" placeholder="ไลน์ไอดี">
+    <input id="name" placeholder="ชื่อ-นามสกุล">
+    <input id="phone" placeholder="เบอร์โทรศัพท์">
+    <input id="line" placeholder="ไลน์ไอดี">
 
-  <button id="submitBtn">ยืนยันการจอง</button>
-</div>
+    <button id="submitBtn">ยืนยันการจอง</button>
+  </div>
+
+  <script>
+    // ==== CONFIG & DATA STRUCTURE ====
+    const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7]; // ผัง: บน 3 6 9 / กลาง 2 5 8 / ล่าง 1 4 7
+    const STORAGE_KEY = 'vanBookingsByDate';
+
+    let selectedSeat = null;
+
+    function getAllBookings() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function getBookingsByDate(date) {
+      const all = getAllBookings();
+      return all[date] || [];
+    }
+
+    function saveBooking(date, booking) {
+      const all = getAllBookings();
+      if (!all[date]) all[date] = [];
+      all[date].push(booking);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+    }
+
+    // ==== UI ====
+    function renderSeats() {
+      const date = document.getElementById('globalDate').value;
+      const grid = document.getElementById('seatGrid');
+      const form = document.getElementById('formBox');
+
+      grid.innerHTML = '';
+      form.classList.add('hidden');
+      selectedSeat = null;
+
+      if (!date) {
+        grid.innerHTML = '<p>กรุณาเลือกวันที่ก่อน</p>';
+        return;
+      }
+
+      const bookings = getBookingsByDate(date);
+
+      SEATS.forEach(n => {
+        const isBooked = bookings.some(b => String(b.seat) === String(n));
+        const div = document.createElement('div');
+        div.className = 'seat' + (isBooked ? ' booked' : '');
+        div.textContent = n;
+        div.dataset.seat = n;
+
+        if (!isBooked) {
+          div.addEventListener('click', () => selectSeat(div));
+        }
+
+        grid.appendChild(div);
+      });
+    }
+
+    function selectSeat(el) {
+      document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedSeat = el.dataset.seat;
+
+      const date = document.getElementById('globalDate').value;
+      document.getElementById('selectedSeat').textContent = selectedSeat;
+      document.getElementById('showDate').textContent = date;
+      document.getElementById('formBox').classList.remove('hidden');
+    }
+
+    function submitBooking(event) {
+      if (event) event.preventDefault();
+
+      const date = document.getElementById('globalDate').value;
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const line = document.getElementById('line').value.trim();
+
+      if (!date || !selectedSeat || !name || !phone || !line) {
+        alert('กรุณากรอกข้อมูลให้ครบ');
+        return;
+      }
+
+      const existing = getBookingsByDate(date);
+      if (existing.some(b => String(b.seat) === String(selectedSeat))) {
+        alert('ที่นั่งนี้ถูกจองแล้วในวันนี้');
+        renderSeats();
+        return;
+      }
+
+      const booking = {
+        seat: selectedSeat,
+        name,
+        phone,
+        line,
+        date,
+        time: new Date().toLocaleString()
+      };
+
+      saveBooking(date, booking);
+
+      alert('จองสำเร็จ!');
+
+      // เคลียร์ฟอร์ม
+      selectedSeat = null;
+      document.getElementById('formBox').classList.add('hidden');
+      document.getElementById('name').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('line').value = '';
+
+      renderSeats();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const dateInput = document.getElementById('globalDate');
+      const btn = document.getElementById('submitBtn');
+
+      if (dateInput) {
+        dateInput.addEventListener('change', renderSeats);
+      }
+      if (btn) {
+        btn.addEventListener('click', submitBooking);
+      }
+
+      renderSeats();
+    });
+  </script>
 
 </body>
 </html>
