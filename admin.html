@@ -1,31 +1,133 @@
 
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>หลังบ้าน - รายการจอง</title>
+  <title>หลังบ้าน - รายการจองรถตู้</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
 
+  <style>
+    body { font-family: sans-serif; padding: 10px; }
+    h1 { text-align: center; }
+    table { border-collapse: collapse; width: 100%; max-width: 900px; margin: 15px auto; font-size: 14px; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: center; }
+    th { background: #f0f0f0; }
+    .btn-box { text-align: center; margin-top: 10px; }
+    button {
+      padding: 8px 16px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 6px;
+      background: #1976d2;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
+</head>
 <body>
 
-<h1>หลังบ้าน - รายการจอง</h1>
+  <h1>หลังบ้าน - รายการจองรถตู้ (เครื่องนี้)</h1>
+  <p style="text-align:center; font-size:13px; color:#555;">
+    ข้อมูลนี้มาจาก <b>localStorage</b> ของเบราว์เซอร์เครื่องนี้เท่านั้น<br>
+    ถ้าลูกค้าจองจากเครื่องอื่น ข้อมูลจะไม่โผล่ที่นี่
+  </p>
 
-<table border="1" cellpadding="8" cellspacing="0" style="margin:auto; margin-top:20px;">
-  <thead>
-    <tr>
-      <th>วันที่</th>
-      <th>ที่นั่ง</th>
-      <th>ชื่อ</th>
-      <th>เบอร์โทร</th>
-      <th>ไลน์</th>
-      <th>เวลาจอง</th>
-    </tr>
-  </thead>
-  <tbody id="rows"></tbody>
-</table>
+  <table>
+    <thead>
+      <tr>
+        <th>วันที่เดินทาง</th>
+        <th>ที่นั่ง</th>
+        <th>ชื่อ</th>
+        <th>เบอร์โทร</th>
+        <th>ไลน์ไอดี</th>
+        <th>เวลาที่จอง</th>
+      </tr>
+    </thead>
+    <tbody id="rows"></tbody>
+  </table>
 
-<script src="admin.js"></script>
+  <div class="btn-box">
+    <button onclick="exportCSV()">Export CSV</button>
+    <button onclick="clearAll()">ลบข้อมูลทั้งหมดในเครื่องนี้</button>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'vanBookingsByDate';
+
+    function getAllBookings() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function drawTable() {
+      const tbody = document.getElementById('rows');
+      tbody.innerHTML = '';
+
+      const all = getAllBookings();
+      const dates = Object.keys(all);
+
+      if (dates.length === 0) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 6;
+        td.textContent = 'ยังไม่มีข้อมูลการจองในเครื่องนี้';
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        return;
+      }
+
+      dates.forEach(date => {
+        all[date].forEach(b => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${date}</td>
+            <td>${b.seat}</td>
+            <td>${b.name}</td>
+            <td>${b.phone}</td>
+            <td>${b.line}</td>
+            <td>${b.time}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      });
+    }
+
+    function exportCSV() {
+      const all = getAllBookings();
+      const dates = Object.keys(all);
+      if (dates.length === 0) {
+        alert('ยังไม่มีข้อมูลให้ Export');
+        return;
+      }
+
+      const rows = [['Date', 'Seat', 'Name', 'Phone', 'Line', 'Time']];
+      dates.forEach(date => {
+        all[date].forEach(b => {
+          rows.push([date, b.seat, b.name, b.phone, b.line, b.time]);
+        });
+      });
+
+      const csv = rows.map(r => r.join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bookings.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearAll() {
+      if (!confirm('ลบข้อมูลทั้งหมดในเครื่องนี้?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      drawTable();
+    }
+
+    document.addEventListener('DOMContentLoaded', drawTable);
+  </script>
 
 </body>
 </html>
