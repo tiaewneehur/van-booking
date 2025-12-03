@@ -163,15 +163,13 @@
       });
     }
 
-    // วาดผังเบาะ + ทำสีแดงให้เบาะที่จองแล้ว
-    function renderSeats() {
-      const date = document.getElementById("globalDate").value;
-      const grid = document.getElementById("seatGrid");
-      const form = document.getElementById("formBox");
+    // ... ใน function renderSeats()
+const form = document.getElementById("formBox");
 
-      grid.innerHTML = "";
-      form.classList.add("hidden");
-      selectedSeat = null;
+grid.innerHTML = "";
+// form.classList.add("hidden"); <--- ลบหรือคอมเมนต์บรรทัดนี้ออกไป
+selectedSeat = null;
+// ...
       document.getElementById("selectedSeat").textContent = "";
       document.getElementById("showDate").textContent = date || "";
 
