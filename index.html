@@ -88,15 +88,13 @@
   </div>
 
   <script>
-    // 👉👉 ตรงนี้ใส่ URL จาก Apps Script
+    // 👉 URL จาก Apps Script ของไอซ์
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxhANMHPxBVtS1TpAXb1gMT2X0YDI5JcBLB5PHMCxCzMRCS9sB0eEHMVa9n9RpgMjNm/exec';
-    // ^^^ เปลี่ยน XXXXXX เป็น URL ของไอซ์เอง
 
     const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
-
     let selectedSeat = null;
 
-    // วาดผังที่นั่ง (ไม่เช็คชีตนะ ใช้กันซ้ำฝั่งเซิร์ฟเวอร์)
+    // วาดผังที่นั่ง (เช็ควันก่อน แล้วให้ลูกค้าเลือกเบาะ)
     function renderSeats() {
       const date = document.getElementById('globalDate').value;
       const grid = document.getElementById('seatGrid');
@@ -145,10 +143,12 @@
         return;
       }
 
-      if (!SCRIPT_URL || SCRIPT_URL.includes('XXXXXXXX')) {
-  alert('ยังไม่ได้ตั้งค่า SCRIPT_URL ในโค้ด');
-  return;
-}
+      // กันกรณีลืมตั้งค่า URL
+      if (!SCRIPT_URL) {
+        alert('ยังไม่ได้ตั้งค่า SCRIPT_URL ในโค้ด');
+        return;
+      }
+
       try {
         const res = await fetch(SCRIPT_URL, {
           method: 'POST',
@@ -162,7 +162,15 @@
           })
         });
 
-        const data = await res.json();
+        const text = await res.text();
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (err) {
+          console.error('Response is not JSON:', text);
+          alert('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheet (ตอบกลับไม่ใช่ JSON)');
+          return;
+        }
 
         if (!data.success) {
           if (data.error === 'SEAT_TAKEN') {
