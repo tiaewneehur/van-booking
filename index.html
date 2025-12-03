@@ -225,60 +225,49 @@
       document.getElementById("formBox").classList.remove("hidden");
     }
 
-// เปลี่ยนมาใช้ google.script.run
-function submitBooking(event) {
-  event.preventDefault();
+    // ส่งการจองไป Apps Script (กันซ้ำหลังบ้าน)
+    function submitBooking(event) {
+      event.preventDefault();
 
-  const date  = document.getElementById("globalDate").value;
-  const name  = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const line  = document.getElementById("line").value.trim();
+      const date  = document.getElementById("globalDate").value;
+      const name  = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const line  = document.getElementById("line").value.trim();
 
-  if (!date || !selectedSeat || !name || !phone || !line) {
-    alert("กรุณากรอกข้อมูลให้ครบ");
-    return;
-  }
-  
-  // 1. สร้าง Object ข้อมูลที่จะส่ง
-  const data = { 
-      date: date, 
-      seat: selectedSeat, 
-      name: name, 
-      phone: phone, 
-      line: line 
-  };
-  
-  // 2. ใช้ google.script.run เพื่อส่งข้อมูลและรอผลลัพธ์
-  google.script.run
-      .withSuccessHandler(handleBookingResponse) // เมื่อ Apps Script ประมวลผลสำเร็จ ให้เรียกฟังก์ชันนี้
-      .withFailureHandler(handleBookingError) // เมื่อเกิดข้อผิดพลาด
-      .doPost(data); // ชื่อฟังก์ชันบน Apps Script ที่จะรับข้อมูล (doPost หรือชื่ออื่นที่คุณสร้าง)
+      if (!date || !selectedSeat || !name || !phone || !line) {
+        alert("กรุณากรอกข้อมูลให้ครบ");
+        return;
+      }
 
-  // แจ้งผู้ใช้ว่ากำลังประมวลผล (Optional)
-  alert("กำลังส่งคำจอง... โปรดรอสักครู่"); 
-}
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = SCRIPT_URL;
+      form.target = "_blank";
 
-// 3. ฟังก์ชันสำหรับจัดการผลลัพธ์ที่ส่งกลับมาจาก Apps Script
-function handleBookingResponse(result) {
-    // result คือค่าที่ Apps Script return กลับมา เช่น เป็นข้อความสถานะ
-    if (result.status === "success") {
-        alert("ส่งคำจองแล้ว");
-    } else if (result.status === "duplicate") {
-        alert("เบาะนี้ถูกจองไว้แล้ว");
-    } else {
-        alert("เกิดข้อผิดพลาดในการจอง");
+      const data = { date, seat: selectedSeat, name, phone, line };
+      Object.keys(data).forEach(k => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = data[k];
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+      form.submit();
+      form.remove();
+
+      alert("ส่งคำจองแล้ว — ถ้าเบาะนี้จองไว้แล้ว ระบบจะแจ้งในแท็บใหม่");
+
+      // หลังจองเสร็จ รีโหลดผัง → เบาะนี้จะกลายเป็นสีแดง
+      renderSeats();
     }
 
-    // เมื่อประมวลผลเสร็จและข้อมูลใน Google Sheet อัพเดตแล้ว 
-    // ค่อยเรียก renderSeats() เพื่อดึงข้อมูลสถานะล่าสุด
-    renderSeats(); 
-}
-
-function handleBookingError(error) {
-    alert("เกิดข้อผิดพลาดในการเชื่อมต่อกับระบบ: " + error.message);
-}
-
-// ************ ส่วนโค้ดอื่น ๆ ยังคงเดิม ************
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("globalDate").addEventListener("change", renderSeats);
+      document.getElementById("submitBtn").addEventListener("click", submitBooking);
+      renderSeats();
+    });
   </script>
 
 </body>
