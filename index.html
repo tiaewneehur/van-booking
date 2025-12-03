@@ -23,7 +23,7 @@
       margin-top: 10px;
     }
 
-    /* เบาะว่าง */
+    /* เบาะว่าง = เขียว */
     .seat {
       width: 70px;
       height: 70px;
@@ -39,10 +39,17 @@
       transition: 0.15s;
     }
 
-    /* กำลังเลือก */
+    /* เบาะที่กำลังเลือก = เหลือง */
     .seat.selected {
       background: gold;
       color: black;
+    }
+
+    /* เบาะถูกจองแล้ว = แดง */
+    .seat.booked {
+      background: #f44336;
+      color: white;
+      cursor: not-allowed;
     }
 
     .formBox { margin-top: 15px; }
@@ -96,15 +103,68 @@
   </div>
 
   <script>
-    // ⭐ URL Apps Script ของไอซ์ (Web App URL)
+    // ⭐ เอา URL Web App ของไอซ์มาใส่ตรงนี้
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq_wamcsBHOnEWZZba2onoX6lvczQ1ghkyia608cZjjzuwbTc2ZGS28NPAgcDjFoZA/exec";
 
     // ผังเบาะ 9 ที่นั่ง: 3 6 9 / 2 5 8 / 1 4 7
     const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
 
     let selectedSeat = null;
+    let bookedSeats = [];
 
-    // วาดผังเบาะ (แบบง่าย ไม่ดึงสีแดง)
+    // โหลดเบาะที่ถูกจองแล้ว โดยใช้ JSONP (เลี่ยง CORS)
+    function loadBooked(date) {
+      return new Promise((resolve) => {
+        if (!date) {
+          resolve([]);
+          return;
+        }
+
+        const callbackName = "jsonp_cb_" + Date.now();
+        let done = false;
+
+        window[callbackName] = function(data) {
+          if (done) return;
+          done = true;
+          delete window[callbackName];
+          document.body.removeChild(scriptEl);
+          resolve((data.booked || []).map(String));
+        };
+
+        const scriptEl = document.createElement("script");
+        scriptEl.src =
+          SCRIPT_URL +
+          "?action=read" +
+          "&date=" + encodeURIComponent(date) +
+          "&callback=" + encodeURIComponent(callbackName);
+
+        // กันกรณี error หรือโดนบล็อก → ให้ถือว่าไม่มีใครจอง
+        scriptEl.onerror = function() {
+          if (done) return;
+          done = true;
+          delete window[callbackName];
+          document.body.removeChild(scriptEl);
+          resolve([]);
+        };
+
+        document.body.appendChild(scriptEl);
+
+        // safety timeout
+        setTimeout(function() {
+          if (done) return;
+          done = true;
+          if (window[callbackName]) {
+            delete window[callbackName];
+          }
+          if (scriptEl.parentNode) {
+            document.body.removeChild(scriptEl);
+          }
+          resolve([]);
+        }, 3000);
+      });
+    }
+
+    // วาดผังเบาะ + ทำสีแดงให้เบาะที่จองแล้ว
     function renderSeats() {
       const date = document.getElementById("globalDate").value;
       const grid = document.getElementById("seatGrid");
@@ -121,22 +181,37 @@
         return;
       }
 
-      SEATS.forEach(num => {
-        const seat = document.createElement("div");
-        seat.className = "seat";
-        seat.textContent = num;
-        seat.dataset.seat = num;
-        seat.addEventListener("click", () => selectSeat(seat));
-        grid.appendChild(seat);
+      // โหลดสถานะเบาะแล้วค่อยวาด
+      loadBooked(date).then((booked) => {
+        bookedSeats = booked;
+
+        SEATS.forEach(num => {
+          const seat = document.createElement("div");
+          seat.className = "seat";
+          seat.textContent = num;
+          seat.dataset.seat = num;
+
+          if (bookedSeats.includes(String(num))) {
+            seat.classList.add("booked"); // แดง = จองแล้ว
+          } else {
+            seat.addEventListener("click", () => selectSeat(seat));
+          }
+
+          grid.appendChild(seat);
+        });
       });
     }
 
-    // เลือกเบาะ = เหลือง + แสดงในฟอร์ม
+    // เลือกเบาะ → เหลือง
     function selectSeat(el) {
+      if (el.classList.contains("booked")) return;
+
       document.querySelectorAll(".seat").forEach(s => {
-        s.classList.remove("selected");
-        s.style.background = "#4CAF50";
-        s.style.color = "white";
+        if (!s.classList.contains("booked")) {
+          s.classList.remove("selected");
+          s.style.background = "#4CAF50";
+          s.style.color = "white";
+        }
       });
 
       el.classList.add("selected");
@@ -144,14 +219,13 @@
       el.style.color = "black";
 
       selectedSeat = el.dataset.seat;
-
       const date = document.getElementById("globalDate").value;
       document.getElementById("selectedSeat").textContent = selectedSeat;
       document.getElementById("showDate").textContent = date;
       document.getElementById("formBox").classList.remove("hidden");
     }
 
-    // ส่งฟอร์มจองไป Apps Script
+    // ส่งการจองไป Apps Script (กันซ้ำหลังบ้าน)
     function submitBooking(event) {
       event.preventDefault();
 
@@ -183,15 +257,9 @@
       form.submit();
       form.remove();
 
-      alert("ส่งคำจองแล้ว — ถ้าเบาะนี้จองไว้แล้ว ระบบจะขึ้นหน้า ❌ ในแท็บใหม่");
+      alert("ส่งคำจองแล้ว — ถ้าเบาะนี้จองไว้แล้ว ระบบจะแจ้งในแท็บใหม่");
 
-      // เคลียร์ฟอร์ม + วาดผังใหม่
-      selectedSeat = null;
-      document.getElementById("formBox").classList.add("hidden");
-      document.getElementById("name").value = "";
-      document.getElementById("phone").value = "";
-      document.getElementById("line").value = "";
-      document.getElementById("selectedSeat").textContent = "";
+      // หลังจองเสร็จ รีโหลดผัง → เบาะนี้จะกลายเป็นสีแดง
       renderSeats();
     }
 
