@@ -224,8 +224,7 @@
       document.getElementById("showDate").textContent = date;
       document.getElementById("formBox").classList.remove("hidden");
     }
-
-    // ส่งการจองไป Apps Script (กันซ้ำหลังบ้าน)
+// ส่งการจองไป Apps Script (กันซ้ำหลังบ้าน)
     function submitBooking(event) {
       event.preventDefault();
 
@@ -238,6 +237,9 @@
         alert("กรุณากรอกข้อมูลให้ครบ");
         return;
       }
+
+      // ปิดปุ่มเพื่อป้องกันการจองซ้ำ
+      document.getElementById("submitBtn").disabled = true;
 
       const form = document.createElement("form");
       form.method = "POST";
@@ -258,16 +260,13 @@
       form.remove();
 
       alert("ส่งคำจองแล้ว — ถ้าเบาะนี้จองไว้แล้ว ระบบจะแจ้งในแท็บใหม่");
-
-      // หลังจองเสร็จ รีโหลดผัง → เบาะนี้จะกลายเป็นสีแดง
-      renderSeats();
+      
+      // 💡 โค้ดที่แก้ไข: หน่วงเวลา 3 วินาที (3000 ms) ก่อนรีโหลดสถานะ
+      setTimeout(() => {
+          renderSeats();
+          document.getElementById("submitBtn").disabled = false; // เปิดปุ่มอีกครั้ง
+      }, 3000); 
     }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("globalDate").addEventListener("change", renderSeats);
-      document.getElementById("submitBtn").addEventListener("click", submitBooking);
-      renderSeats();
-    });
   </script>
 
 </body>
