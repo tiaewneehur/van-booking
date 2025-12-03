@@ -71,7 +71,7 @@
     <input id="globalDate" type="date" style="padding:10px; margin-top:5px;">
   </div>
 
-  <!-- ผังที่นั่ง -->
+  <!-- ผังที่นั่ง (3 6 9 / 2 5 8 / 1 4 7) -->
   <div id="seatGrid" class="grid"></div>
 
   <!-- ฟอร์มจอง -->
@@ -88,33 +88,15 @@
   </div>
 
   <script>
-    // ==== CONFIG & DATA STRUCTURE ====
-    const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7]; // ผัง: บน 3 6 9 / กลาง 2 5 8 / ล่าง 1 4 7
-    const STORAGE_KEY = 'vanBookingsByDate';
+    // https://script.google.com/macros/s/AKfycbxhANMHPxBVtS1TpAXb1gMT2X0YDI5JcBLB5PHMCxCzMRCS9sB0eEHMVa9n9RpgMjNm/exec
+    const SCRIPT_URL = 'https://script.google.com/macros/s/XXXXXXXXXXXX/exec';
+    // https://script.google.com/macros/library/d/1o3LVBEdPRpkNOGvMzC1QvKvXu3OFVem5NAPOtli_YisXhu-IOBXaorBE/1
+
+    const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
 
     let selectedSeat = null;
 
-    function getAllBookings() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      } catch (e) {
-        return {};
-      }
-    }
-
-    function getBookingsByDate(date) {
-      const all = getAllBookings();
-      return all[date] || [];
-    }
-
-    function saveBooking(date, booking) {
-      const all = getAllBookings();
-      if (!all[date]) all[date] = [];
-      all[date].push(booking);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
-    }
-
-    // ==== UI ====
+    // วาดผังที่นั่ง (ไม่เช็คชีตนะ ใช้กันซ้ำฝั่งเซิร์ฟเวอร์)
     function renderSeats() {
       const date = document.getElementById('globalDate').value;
       const grid = document.getElementById('seatGrid');
@@ -129,19 +111,12 @@
         return;
       }
 
-      const bookings = getBookingsByDate(date);
-
       SEATS.forEach(n => {
-        const isBooked = bookings.some(b => String(b.seat) === String(n));
         const div = document.createElement('div');
-        div.className = 'seat' + (isBooked ? ' booked' : '');
+        div.className = 'seat';
         div.textContent = n;
         div.dataset.seat = n;
-
-        if (!isBooked) {
-          div.addEventListener('click', () => selectSeat(div));
-        }
-
+        div.addEventListener('click', () => selectSeat(div));
         grid.appendChild(div);
       });
     }
@@ -157,7 +132,7 @@
       document.getElementById('formBox').classList.remove('hidden');
     }
 
-    function submitBooking(event) {
+    async function submitBooking(event) {
       if (event) event.preventDefault();
 
       const date = document.getElementById('globalDate').value;
@@ -170,34 +145,47 @@
         return;
       }
 
-      const existing = getBookingsByDate(date);
-      if (existing.some(b => String(b.seat) === String(selectedSeat))) {
-        alert('ที่นั่งนี้ถูกจองแล้วในวันนี้');
-        renderSeats();
+      if (!SCRIPT_URL || SCRIPT_URL.includes('XXXXXXXX')) {
+        alert('ยังไม่ได้ตั้งค่า SCRIPT_URL ในโค้ด');
         return;
       }
 
-      const booking = {
-        seat: selectedSeat,
-        name,
-        phone,
-        line,
-        date,
-        time: new Date().toLocaleString()
-      };
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            date,
+            seat: selectedSeat,
+            name,
+            phone,
+            line
+          })
+        });
 
-      saveBooking(date, booking);
+        const data = await res.json();
 
-      alert('จองสำเร็จ!');
+        if (!data.success) {
+          if (data.error === 'SEAT_TAKEN') {
+            alert('ที่นั่งนี้ของวันนี้ถูกจองแล้วในระบบ');
+          } else {
+            alert('จองไม่สำเร็จ: ' + (data.error || 'ไม่ทราบสาเหตุ'));
+          }
+          return;
+        }
 
-      // เคลียร์ฟอร์ม
-      selectedSeat = null;
-      document.getElementById('formBox').classList.add('hidden');
-      document.getElementById('name').value = '';
-      document.getElementById('phone').value = '';
-      document.getElementById('line').value = '';
+        alert('จองสำเร็จ! ข้อมูลถูกบันทึกใน Google Sheet แล้ว');
 
-      renderSeats();
+        selectedSeat = null;
+        document.getElementById('formBox').classList.add('hidden');
+        document.getElementById('name').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('line').value = '';
+
+      } catch (e) {
+        console.error(e);
+        alert('เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheet');
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
