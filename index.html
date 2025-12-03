@@ -2,179 +2,55 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>จองที่นั่งรถตู้</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* กันไว้เผื่อ style.css ไม่มี .hidden */
-    .hidden { display: none; }
-  </style>
+<meta charset="UTF-8">
+<title>จองที่นั่งรถตู้</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+<script defer src="app.js"></script>
+
+<style>
+  .hidden { display: none; }
+  .seat { 
+    width: 60px; height: 60px; 
+    border: 1px solid #444; 
+    display: flex; justify-content:center; align-items:center;
+    margin: 5px; cursor: pointer; border-radius: 8px;
+  }
+  .seat.selected { background: orange; }
+  .seat.booked { background: gray; color:#fff; }
+  .grid { display: flex; flex-wrap: wrap; max-width: 220px; }
+  .logo { width: 180px; margin: 10px auto; display:block; }
+</style>
 </head>
+
 <body>
 
-  <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
+<h1 class="title">ระบบจองที่นั่งรถตู้</h1>
 
-  <img src="เที่ย นี่เหอะ.png" class="logo">
-  <br>
-  <img src="IMG_0444.jpeg" class="logo">
+<img src="เที่ย นี่เหอะ.png" class="logo">
+<img src="IMG_0444.jpeg" class="logo">
 
-  <!-- เลือกวันก่อน -->
-  <div style="margin-bottom:15px; margin-top:10px;">
-    <label>เลือกวันที่เดินทาง:</label><br>
-    <input id="globalDate" type="date" style="padding:10px; margin-top:5px;">
-  </div>  
+<!-- เลือกวันที่ -->
+<div style="margin-bottom:15px;">
+  <label>เลือกวันที่เดินทาง:</label><br>
+  <input id="globalDate" type="date" style="padding:10px; margin-top:5px;">
+</div>
 
-  <div id="seatGrid" class="grid"></div>
+<!-- ผังที่นั่ง -->
+<div id="seatGrid" class="grid"></div>
 
-  <div id="formBox" class="formBox hidden">
-    <h2>ข้อมูลผู้จอง</h2>
-    <p>วันที่เดินทาง: <span id="showDate"></span></p>
-    <p>ที่นั่งที่เลือก: <span id="selectedSeat"></span></p>
+<!-- ฟอร์มจอง -->
+<div id="formBox" class="hidden">
+  <h2>ข้อมูลผู้จอง</h2>
+  <p>วันที่เดินทาง: <span id="showDate"></span></p>
+  <p>ที่นั่งที่เลือก: <span id="selectedSeat"></span></p>
 
-    <input id="name" placeholder="ชื่อ-นามสกุล">
-    <input id="phone" placeholder="เบอร์โทรศัพท์">
-    <input id="line" placeholder="ไลน์ไอดี">
+  <input id="name" placeholder="ชื่อ-นามสกุล">
+  <input id="phone" placeholder="เบอร์โทรศัพท์">
+  <input id="line" placeholder="ไลน์ไอดี">
 
-    <button id="submitBtn">ยืนยันการจอง</button>
-  </div>
-
-  <script>
-    // === โค้ดจองอยู่ในหน้านี้เลย ไม่ใช้ app.js แล้ว ===
-    const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
-    const STORAGE_KEY = 'vanBookingsByDate';
-
-    function getAll() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      } catch (e) {
-        return {};
-      }
-    }
-
-    function getBookingsByDate(date) {
-      const all = getAll();
-      return all[date] || [];
-    }
-
-    function saveBooking(date, booking) {
-      const all = getAll();
-      if (!all[date]) all[date] = [];
-      all[date].push(booking);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
-    }
-
-    function renderSeats() {
-      const dateInput = document.getElementById('globalDate');
-      const grid = document.getElementById('seatGrid');
-      const formBox = document.getElementById('formBox');
-
-      if (!dateInput || !grid) return;
-
-      const date = dateInput.value;
-      grid.innerHTML = '';
-      formBox.classList.add('hidden');
-      selectedSeat = null;
-
-      if (!date) {
-        grid.innerHTML = '<p>กรุณาเลือกวันที่ก่อน</p>';
-        return;
-      }
-
-      const bookings = getBookingsByDate(date);
-
-      SEATS.forEach(n => {
-        const isBooked = bookings.some(b => String(b.seat) === String(n));
-        const div = document.createElement('div');
-        div.className = 'seat' + (isBooked ? ' booked' : '');
-        div.textContent = n;
-        div.dataset.seat = n;
-
-        if (!isBooked) {
-          div.addEventListener('click', () => selectSeat(div));
-        }
-
-        grid.appendChild(div);
-      });
-    }
-
-    let selectedSeat = null;
-
-    function selectSeat(el) {
-      document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedSeat = el.dataset.seat;
-
-      const date = document.getElementById('globalDate').value;
-      document.getElementById('selectedSeat').textContent = selectedSeat;
-      document.getElementById('showDate').textContent = date;
-      document.getElementById('formBox').classList.remove('hidden');
-    }
-
-    function submitBooking(event) {
-      if (event) event.preventDefault();
-
-      const date = document.getElementById('globalDate').value;
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const line = document.getElementById('line').value.trim();
-
-      if (!date) {
-        alert('กรุณาเลือกวันที่เดินทางก่อน');
-        return;
-      }
-      if (!selectedSeat) {
-        alert('กรุณาเลือกที่นั่ง');
-        return;
-      }
-      if (!name || !phone || !line) {
-        alert('กรุณากรอกข้อมูลให้ครบ');
-        return;
-      }
-
-      const existing = getBookingsByDate(date);
-      if (existing.some(b => String(b.seat) === String(selectedSeat))) {
-        alert('ที่นั่งนี้ถูกจองแล้วในวันนี้');
-        renderSeats();
-        return;
-      }
-
-      const booking = {
-        seat: selectedSeat,
-        name,
-        phone,
-        line,
-        date,
-        time: new Date().toLocaleString()
-      };
-
-      saveBooking(date, booking);
-
-      alert('จองสำเร็จ!');
-
-      selectedSeat = null;
-      document.getElementById('formBox').classList.add('hidden');
-      document.getElementById('name').value = '';
-      document.getElementById('phone').value = '';
-      document.getElementById('line').value = '';
-
-      renderSeats();
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const dateInput = document.getElementById('globalDate');
-      const btn = document.getElementById('submitBtn');
-
-      if (dateInput) {
-        dateInput.addEventListener('change', renderSeats);
-      }
-      if (btn) {
-        btn.addEventListener('click', submitBooking);
-      }
-
-      renderSeats();
-    });
-  </script>
+  <button id="submitBtn">ยืนยันการจอง</button>
+</div>
 
 </body>
 </html>
