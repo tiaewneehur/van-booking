@@ -2,21 +2,35 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<title>หลังบ้าน</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="style.css">
-<script defer src="admin.js"></script>
+  <meta charset="UTF-8">
+  <title>หลังบ้าน - รายการจองรถตู้</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>หลังบ้าน - รายการจอง</h1>
-<table id="tbl" border="1" cellpadding="8" style="margin:auto; margin-top:20px;">
-<thead><tr><th>Seat</th><th>Name</th><th>Phone</th><th>Line</th><th>Date</th><th>Time</th></tr></thead>
-<tbody></tbody>
-</table>
+  <h1 class="title">หลังบ้าน - รายการจองรถตู้</h1>
+  <p>แสดงข้อมูลจากเครื่อง / เบราว์เซอร์เดียวกับที่ลูกค้ากดจอง (localStorage)</p>
 
-<button onclick="exportCSV()" style="margin-top:20px;">Export CSV</button>
+  <table id="tbl" border="1" cellpadding="8" cellspacing="0" style="margin:auto; margin-top:20px; max-width:100%; font-size:14px;">
+    <thead>
+      <tr>
+        <th>วันที่เดินทาง</th>
+        <th>ที่นั่ง</th>
+        <th>ชื่อ</th>
+        <th>เบอร์โทร</th>
+        <th>ไลน์ไอดี</th>
+        <th>เวลาที่จอง</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
+  <div style="margin-top:20px; text-align:center;">
+    <button onclick="exportCSV()">Export CSV</button>
+    <button onclick="clearAll()" style="margin-left:10px;">ลบข้อมูลทั้งหมดในเครื่องนี้</button>
+  </div>
+
+  <script src="admin.js"></script>
 </body>
 </html>
