@@ -144,27 +144,23 @@
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
   <p class="subtitle">เลือกวัน กรอกชื่อทริป เลือกเบาะ แล้วกรอกข้อมูลให้ครบ</p>
 
-  <!-- รูปโลโก้ + ผังเบาะ -->
   <img src="เที่ย นี่เหอะ.png" class="logo" alt="โลโก้ เที่ยวนี่เหอะ" />
   <img src="IMG_0444.jpeg" class="seat-map-img" alt="ผังเบาะรถตู้" />
 
   <!-- ฟอร์มหลัก ส่งตรงไป Apps Script -->
   <form id="bookingForm" method="POST" target="_blank">
-    <!-- วันที่เดินทาง -->
     <label class="field-label" for="date">วันที่เดินทาง</label>
     <input id="date" name="date" type="date" class="field-input" required />
 
-    <!-- ชื่อทริป -->
     <label class="field-label" for="trip">ชื่อทริป</label>
     <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ผ้าห่มปก" required />
 
     <!-- ผังเบาะ -->
     <div id="seatGrid" class="grid"></div>
 
-    <!-- ซ่อนค่าเบาะที่เลือกไว้ส่งไปหลังบ้าน -->
+    <!-- hidden seat -->
     <input id="seatField" name="seat" type="hidden" />
 
-    <!-- ข้อมูลผู้จอง -->
     <div id="formBox" class="formBox hidden">
       <label class="field-label" for="name">ชื่อ-นามสกุล</label>
       <input id="name" name="name" type="text" class="field-input" required />
@@ -189,26 +185,23 @@
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq_wamcsBHOnEWZZba2onoX6lvczQ1ghkyia608cZjjzuwbTc2ZGS28NPAgcDjFoZA/exec";
   const READ_URL   = SCRIPT_URL + "?action=read";
 
-  // ผังเบาะ 9 ที่นั่ง 3-6-9 / 2-5-8 / 1-4-7
+  // ผังเบาะ
   const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
-
   let selectedSeat = null;
 
   document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("bookingForm");
+    const form      = document.getElementById("bookingForm");
     const dateInput = document.getElementById("date");
 
-    // ตั้ง action ของฟอร์มให้ยิงไป Apps Script
+    // ตั้ง action ยิงไป Apps Script
     form.action = SCRIPT_URL;
 
     dateInput.addEventListener("change", onDateChange);
     form.addEventListener("submit", onSubmit);
 
-    // ตอนโหลดครั้งแรก ยังไม่รู้ว่ามีเบาะแดงไหน → วาดแต่เบาะว่าง
     renderSeats([]);
   });
 
-  // วาดผังเบาะตามลิสต์ bookedSeats
   function renderSeats(bookedSeats) {
     const grid = document.getElementById("seatGrid");
     const formBox = document.getElementById("formBox");
@@ -227,10 +220,8 @@
       div.textContent = num;
 
       if (bookedSet.has(String(num))) {
-        // เบาะที่ถูกจองแล้ว
         div.classList.add("booked");
       } else {
-        // เบาะว่าง → เลือกได้
         div.addEventListener("click", () => selectSeat(div));
       }
 
@@ -238,7 +229,6 @@
     });
   }
 
-  // โหลดเบาะแดงจาก Apps Script ตามวันที่
   function onDateChange() {
     const date = document.getElementById("date").value;
     if (!date) {
@@ -248,7 +238,6 @@
     loadBooked(date).then(renderSeats);
   }
 
-  // JSONP เรียก Apps Script: ?action=read&date=...
   function loadBooked(date) {
     return new Promise(resolve => {
       const cbName = "cb_" + Date.now();
@@ -279,7 +268,6 @@
 
       document.body.appendChild(script);
 
-      // กันกรณี timeout
       setTimeout(() => {
         if (finished) return;
         finished = true;
@@ -289,7 +277,6 @@
     });
   }
 
-  // เวลาเลือกเบาะ
   function selectSeat(el) {
     if (el.classList.contains("booked")) return;
 
@@ -311,15 +298,10 @@
 
     el.classList.add("selected");
     selectedSeat = el.textContent;
-
-    // เก็บเบาะที่เลือกลง hidden input เพื่อส่งไปหลังบ้าน
     document.getElementById("seatField").value = selectedSeat;
-
-    // โชว์ฟอร์มข้อมูลผู้จอง
     document.getElementById("formBox").classList.remove("hidden");
   }
 
-  // ตรวจสอบก่อนส่งฟอร์ม
   function onSubmit(e) {
     const date  = document.getElementById("date").value;
     const trip  = document.getElementById("trip").value.trim();
@@ -336,8 +318,6 @@
 
     alert("ส่งคำจองแล้ว! ระบบจะเปิดหน้าแจ้งผลในแท็บใหม่");
 
-    // หลังจากส่งฟอร์มแล้ว (เบราว์เซอร์จะส่งต่อให้ Apps Script เอง)
-    // เรารีโหลดสถานะเบาะหลังจากนี้นิดหน่อย
     setTimeout(() => {
       loadBooked(date).then(renderSeats);
     }, 1000);
