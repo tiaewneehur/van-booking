@@ -6,33 +6,60 @@
   <title>จองที่นั่งรถตู้</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    :root{
-      --green:#4CAF50; --red:#E53935; --yellow:#FDD835; --bg:#f2f4f7;
-      --card:#fff; --muted:#777;
-    }
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); padding:16px;}
-    .card{max-width:520px;margin:0 auto;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,0.06);}
-    .title{text-align:center;font-size:22px;font-weight:700;margin:2px 0 6px;}
-    .subtitle{text-align:center;color:var(--muted);font-size:13px;margin-bottom:12px;}
-    .logo{display:block;margin:8px auto 12px;max-width:220px;width:70%;}
-    .seat-map-img{display:block;margin:6px auto 12px;max-width:280px;width:85%;border-radius:8px;}
-    .field-label{font-weight:600;margin:10px 0 6px;display:block;}
-    .field-input{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;font-size:15px;}
-    .grid{display:grid;grid-template-columns:repeat(3,90px);gap:12px;justify-content:center;margin-top:14px;margin-bottom:12px;}
-    .seat{width:90px;height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.06);transition:transform .12s}
-    .seat:hover{transform:translateY(-4px)}
-    .seat.empty{background:var(--green)}
-    .seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
-    .seat.selected{background:var(--yellow);color:#000}
-    .legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
-    .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
-    .btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:#1976d2;color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px}
-    .note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
-    .hidden{display:none}
-    @media (max-width:420px){
-      .grid{grid-template-columns:repeat(3,72px);gap:10px}
-      .seat{width:72px;height:72px;font-size:20px}
-    }
+:root{
+  --green:#4CAF50; --red:#E53935; --yellow:#FDD835; --bg:#f2f4f7;
+  --card:#fff; --muted:#777;
+}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); padding:16px;}
+.card{max-width:520px;margin:0 auto;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,0.06);}
+.title{text-align:center;font-size:22px;font-weight:700;margin:2px 0 6px;}
+.subtitle{text-align:center;color:var(--muted);font-size:13px;margin-bottom:12px;}
+.logo{display:block;margin:8px auto 12px;max-width:220px;width:70%;}
+.seat-map-img{display:block;margin:6px auto 12px;max-width:280px;width:85%;border-radius:8px;}
+.field-label{font-weight:600;margin:10px 0 6px;display:block;}
+.field-input{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;font-size:15px;}
+.grid{display:grid;grid-template-columns:repeat(3,90px);gap:12px;justify-content:center;margin-top:14px;margin-bottom:12px;}
+
+/* ✅ ปรับฟอนต์ปุ่มให้พอดี ไม่ล้น ไม่เด้ง */
+.seat{
+  width:90px;
+  height:90px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;     /* จาก 26px → 17px */
+  font-weight:600;    /* นุ่มขึ้น อ่านง่าย */
+  color:#fff;
+  cursor:pointer;
+  padding:4px;        /* กันข้อความชิดขอบ */
+  line-height:1.2;
+  white-space:nowrap; /* กันชื่อขึ้นบรรทัดใหม่ */
+  box-shadow:0 6px 14px rgba(0,0,0,0.06);
+  transition:transform .12s;
+}
+
+.seat:hover{transform:translateY(-4px)}
+.seat.empty{background:var(--green)}
+.seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
+.seat.selected{background:var(--yellow);color:#000}
+
+.legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
+.legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
+.btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:#1976d2;color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px}
+.note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+.hidden{display:none}
+
+/* 📱 Responsive: ลดขนาดปุ่มลงอีกในจอเล็ก */
+@media (max-width:420px){
+  .grid{grid-template-columns:repeat(3,72px);gap:10px}
+  .seat{
+    width:72px;
+    height:72px;
+    font-size:13px;   /* ขนาดใหม่สำหรับมือถือ */
+    padding:3px;
+  }
+}
   </style>
 </head>
 <body>
