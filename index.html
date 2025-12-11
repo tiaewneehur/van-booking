@@ -2,202 +2,368 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8" />
-<title>ระบบจองที่นั่งรถตู้</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<style>
-  body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f3f7f3;margin:0;padding:16px}
-  .card{max-width:560px;margin:0 auto;background:#fff;border-radius:12px;padding:18px;box-shadow:0 6px 20px rgba(0,0,0,0.08)}
-  .title{text-align:center;font-size:20px;margin:0 0 6px}
-  .subtitle{text-align:center;color:#666;font-size:13px;margin:0 0 12px}
-  .logo{display:block;margin:8px auto;max-width:160px}
-  .grid{display:grid;grid-template-columns:repeat(3,90px);gap:10px;justify-content:center;margin:12px 0}
-  .seat{height:90px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#fff;background:#16a34a;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.08);text-align:center;padding:6px}
-  .seat.booked{background:#ef4444;cursor:not-allowed;box-shadow:none}
-  .seat.selected{background:#facc15;color:#111}
-  .field{display:block;width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #d1d5db;margin:6px 0}
-  .form-row{display:flex;gap:8px;align-items:center}
-  button{width:100%;padding:12px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:700;cursor:pointer;margin-top:10px}
-  .legend{display:flex;justify-content:center;gap:12px;margin-top:8px;font-size:12px;color:#374151}
-  .legend-box{width:12px;height:12px;border-radius:3px;display:inline-block;margin-right:6px}
-</style>
+  <meta charset="UTF-8" />
+  <title>จองที่นั่งรถตู้</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 16px;
+    }
+
+    .card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      padding: 20px 16px 24px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .logo {
+      display: block;
+      margin: 6px auto;
+      max-width: 220px;
+      width: 70%;
+    }
+
+    .seat-map-img {
+      display: block;
+      margin: 6px auto 16px;
+      max-width: 260px;
+      width: 85%;
+      border-radius: 8px;
+    }
+
+    .field-label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .field-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 80px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 16px;
+      margin-bottom: 4px;
+    }
+
+    .seat {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #4caf50;   /* เขียว = ว่าง */
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+      transition: 0.15s;
+      padding: 6px;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    .seat.booked {
+      background: #e53935;   /* แดง = จองแล้ว */
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .seat.selected {
+      background: gold;      /* เหลือง = กำลังเลือก */
+      color: #000;
+    }
+
+    .formBox { margin-top: 10px; }
+
+    .hidden { display: none; }
+
+    button[type="submit"] {
+      width: 100%;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      background: #1976d2;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover { background: #1459a3; }
+
+    .small-note { margin-top: 8px; font-size: 11px; color: #777; text-align: center; }
+
+    .legend { display:flex; justify-content:center; gap:10px; margin-top:8px; color:#555; font-size:12px; }
+    .legend .box { width:12px;height:12px;display:inline-block;margin-right:6px;border-radius:2px; }
+  </style>
 </head>
 <body>
+
 <div class="card">
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
-  <p class="subtitle">เลือกวันที่ → เลือกทริป → เลือกเบาะ → กรอกข้อมูล</p>
+  <p class="subtitle">เลือกวัน กรอกชื่อทริป เลือกเบาะ แล้วกรอกข้อมูลให้ครบ</p>
 
-  <!-- โลโก้ของไอซ์ (วางไฟล์ใน repo) -->
-  <img src="เที่ย นี่เหอะ.png" class="logo" alt="logo">
+  <!-- โลโก้ + ผังเบาะ (ต้องมีไฟล์ชื่อแบบนี้อยู่ใน repo ด้วย) -->
+  <img src="เที่ย นี่เหอะ.png" class="logo" alt="โลโก้ เที่ยวนี่เหอะ" />
+  <img src="IMG_0444.jpeg" class="seat-map-img" alt="ผังเบาะรถตู้" />
 
-  <label>วันที่เดินทาง</label>
-  <input id="date" class="field" type="date">
+  <!-- ฟอร์มหลัก ส่งตรงไป Apps Script -->
+  <form id="bookingForm" method="POST" target="_blank">
+    <label class="field-label" for="date">วันที่เดินทาง</label>
+    <input id="date" name="date" type="date" class="field-input" required />
 
-  <label>ชื่อทริป</label>
-  <input id="trip" class="field" type="text" placeholder="เช่น ผ้าห่มปก">
+    <label class="field-label" for="trip">ชื่อทริป</label>
+    <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ผ้าห่มปก" required />
 
-  <div id="seatGrid" class="grid"></div>
+    <!-- ผังเบาะ 3 6 9 / 2 5 8 / 1 4 7 -->
+    <div id="seatGrid" class="grid"></div>
+
+    <!-- hidden seat ส่งไปหลังบ้าน -->
+    <input id="seatField" name="seat" type="hidden" />
+
+    <!-- ข้อมูลลูกค้า -->
+    <div id="formBox" class="formBox hidden">
+      <label class="field-label" for="name">ชื่อ-นามสกุล</label>
+      <input id="name" name="name" type="text" class="field-input" required />
+
+      <!-- เพิ่มช่องชื่อเล่น -->
+      <label class="field-label" for="nickname">ชื่อเล่น</label>
+      <input id="nickname" name="nickname" type="text" class="field-input" required />
+
+      <label class="field-label" for="phone">เบอร์โทรศัพท์</label>
+      <input id="phone" name="phone" type="tel" class="field-input" required />
+
+      <!-- เปลี่ยนเป็น ชื่อไลน์ -->
+      <label class="field-label" for="line">ชื่อไลน์</label>
+      <input id="line" name="line" type="text" class="field-input" required />
+
+      <button type="submit">ยืนยันการจอง</button>
+
+      <p class="small-note">
+        เบาะสีแดง = จองแล้ว (โชว์ชื่อเล่น) / เขียว = ว่าง / เหลือง = เบาะที่คุณกำลังเลือก
+      </p>
+    </div>
+  </form>
 
   <div class="legend">
-    <div><span class="legend-box" style="background:#16a34a"></span>ว่าง</div>
-    <div><span class="legend-box" style="background:#facc15"></span>กำลังเลือก</div>
-    <div><span class="legend-box" style="background:#ef4444"></span>จองแล้ว (แสดงชื่อเล่น)</div>
-  </div>
-
-  <div id="formBox" style="display:none;margin-top:8px">
-    <input id="name" class="field" placeholder="ชื่อ-นามสกุล">
-    <input id="nickname" class="field" placeholder="ชื่อเล่น (จะโชว์บนผัง)">
-    <input id="phone" class="field" placeholder="เบอร์โทรศัพท์">
-    <input id="line" class="field" placeholder="ชื่อไลน์ (เช่น เที่ยวนี่เหอะ)">
-    <button id="submitBtn">ยืนยันการจอง</button>
+    <div><span class="box" style="background:#4caf50"></span>ว่าง</div>
+    <div><span class="box" style="background:gold"></span>กำลังเลือก</div>
+    <div><span class="box" style="background:#e53935"></span>จองแล้ว (แสดงชื่อเล่น)</div>
   </div>
 </div>
 
 <script>
-  // ใช้ลิงก์ที่ไอซ์ให้
+  // ---------- URL Apps Script ของไอซ์ ----------
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5y4EZztdFvFhLrOSR0elHZwoTshvrpkJhI5loyiDylH_T6Bs2_QfrXqF8oawWQoMU/exec";
-  const READ_URL = SCRIPT_URL + "?action=read";
-  const SEATS = [3,6,9,2,5,8,1,4,7];
+  const READ_URL   = SCRIPT_URL + "?action=read";
 
+  const SEATS = [3, 6, 9, 2, 5, 8, 1, 4, 7];
   let selectedSeat = null;
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('date').addEventListener('change', onDateChange);
-    document.getElementById('submitBtn').addEventListener('click', onSubmit);
-    // ถ้าบราว์เซอร์จำวันที่ไว้ ให้โหลดสถานะเลย
-    const d = document.getElementById('date').value;
-    if (d) loadBookingsWithRetry(d,3).then(renderSeats).catch(()=>renderSeats([]));
-    else renderSeats([]);
-    // เมื่อกลับมาเห็นหน้า ให้ refresh สถานะ (กรณี user กลับมาจากแท็บผลการจอง)
+  document.addEventListener("DOMContentLoaded", () => {
+    const form      = document.getElementById("bookingForm");
+    const dateInput = document.getElementById("date");
+
+    // บอก form ให้ยิงไปที่ Script URL จริง
+    form.action = SCRIPT_URL;
+
+    // เวลามีการเปลี่ยนวัน ให้โหลดสถานะเบาะของวันนั้น
+    dateInput.addEventListener("change", onDateChange);
+
+    // ฟัง submit เพื่อเช็กความครบและให้โหลดสถานะหลังบันทึก
+    form.addEventListener("submit", onSubmit);
+
+    // ถ้าบราว์เซอร์จำวันที่ไว้ ให้โหลดสถานะทันที
+    if (dateInput.value) {
+      loadBookingsWithRetry(dateInput.value, 3).then(renderSeats).catch(()=>renderSeats([]));
+    } else {
+      renderSeats([]);
+    }
+
+    // เวลาโฟกัสหน้ากลับมา (user กลับจากแท็บผลการจอง) ให้รีโหลดสถานะ
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
-        const dd = document.getElementById('date').value;
-        if (dd) loadBookingsWithRetry(dd,2).then(renderSeats).catch(()=>{/*silent*/});
+        const d = document.getElementById('date').value;
+        if (d) loadBookingsWithRetry(d,2).then(renderSeats).catch(()=>{/*silent*/});
       }
     });
   });
 
-  function renderSeats(bookings) {
-    const grid = document.getElementById('seatGrid');
-    grid.innerHTML = '';
-    selectedSeat = null;
-    document.getElementById('formBox').style.display = 'none';
-
-    const map = new Map();
-    (bookings||[]).forEach(b => {
-      if (b && b.seat != null) map.set(String(b.seat), (b.nickname || 'จองแล้ว'));
-    });
-
-    SEATS.forEach(num => {
-      const el = document.createElement('div');
-      el.className = 'seat';
-      el.dataset.seat = num;
-      if (map.has(String(num))) {
-        el.classList.add('booked');
-        el.textContent = map.get(String(num));
-      } else {
-        el.textContent = String(num);
-        el.addEventListener('click', () => selectSeat(el));
-      }
-      grid.appendChild(el);
-    });
-  }
-
-  function selectSeat(el) {
-    if (el.classList.contains('booked')) return;
-    const date = document.getElementById('date').value;
-    const trip = document.getElementById('trip').value.trim();
-    if (!date) { alert('กรุณาเลือกวันที่ก่อน'); return; }
-    if (!trip) { alert('กรุณากรอกชื่อทริปก่อน'); return; }
-
-    document.querySelectorAll('.seat').forEach(s => { if (!s.classList.contains('booked')) s.classList.remove('selected'); });
-    el.classList.add('selected');
-    selectedSeat = el.dataset.seat;
-    document.getElementById('formBox').style.display = 'block';
-    // auto focus to name
-    setTimeout(()=>document.getElementById('name').focus(), 150);
-  }
-
-  // JSONP loader
+  // ---------------- JSONP loader (return bookings array [{seat, nickname}, ...]) ----------------
   function loadBookings(date) {
     return new Promise((resolve, reject) => {
-      const cb = "cb_" + Date.now();
-      window[cb] = function(data) {
+      const cbName = 'cb_' + Date.now();
+      let finished = false;
+
+      // create script after we define cleanup so it's in scope
+      let script = document.createElement('script');
+
+      window[cbName] = function(data) {
+        if (finished) return;
+        finished = true;
         cleanup();
-        resolve((data && data.bookings) ? data.bookings : []);
+        // accept either `bookings` or `booked` if backend uses different name (backward compat)
+        const list = (data && (data.bookings || data.booked)) ? (data.bookings || data.booked) : [];
+        resolve(list);
       };
-      function cleanup() { try{ delete window[cb]; } catch(e){} if (script.parentNode) script.parentNode.removeChild(script); }
-      const script = document.createElement('script');
-      script.src = READ_URL + "&date=" + encodeURIComponent(date) + "&callback=" + cb;
-      script.onerror = function(){ cleanup(); resolve([]); };
+
+      script.src = READ_URL + "&date=" + encodeURIComponent(date) + "&callback=" + cbName;
+      script.onerror = function(err) {
+        if (finished) return;
+        finished = true;
+        cleanup();
+        resolve([]); // on error, return empty
+      };
+
+      function cleanup() {
+        try { delete window[cbName]; } catch(e) {}
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+
       document.body.appendChild(script);
+
       // timeout safety
-      setTimeout(()=>{ try{ delete window[cb]; }catch(e){} resolve([]); }, 7000);
+      setTimeout(() => {
+        if (finished) return;
+        finished = true;
+        cleanup();
+        resolve([]);
+      }, 7000);
     });
   }
 
-  // retry wrapper to avoid race (server write delay)
-  async function loadBookingsWithRetry(date, tries) {
+  // retry wrapper (avoid race when server write not finished)
+  async function loadBookingsWithRetry(date, tries = 3) {
     for (let i=0;i<tries;i++) {
       try {
         const r = await loadBookings(date);
-        // return whatever got (even empty)
+        // return whatever we have (even empty) — caller will render
         return r;
       } catch(e) {
-        // wait then retry
-        await new Promise(r => setTimeout(r, 500));
+        await new Promise(r=>setTimeout(r, 400));
       }
     }
     return [];
   }
 
-  async function onDateChange() {
-    const date = document.getElementById('date').value;
-    if (!date) { renderSeats([]); return; }
-    const bookings = await loadBookingsWithRetry(date, 3);
-    renderSeats(bookings);
+  // ---------------- render seats ----------------
+  function renderSeats(bookings) {
+    const grid       = document.getElementById("seatGrid");
+    const formBox    = document.getElementById("formBox");
+    const seatHidden = document.getElementById("seatField");
+
+    grid.innerHTML = "";
+    formBox.classList.add("hidden");
+    selectedSeat = null;
+    seatHidden.value = "";
+
+    // bookings expected: [{seat:"3", nickname:"ไอซ์"}, ...]
+    const map = new Map();
+    (bookings || []).forEach(b => {
+      if (b && b.seat != null) map.set(String(b.seat), (b.nickname || 'จองแล้ว'));
+    });
+
+    SEATS.forEach(num => {
+      const div = document.createElement("div");
+      div.className = "seat";
+      div.dataset.seat = String(num);
+
+      if (map.has(String(num))) {
+        // booked → แดง + แสดงชื่อเล่น
+        div.classList.add("booked");
+        div.textContent = map.get(String(num));
+      } else {
+        // available → เขียว + แสดงเลข
+        div.textContent = String(num);
+        div.addEventListener("click", () => selectSeat(div));
+      }
+
+      grid.appendChild(div);
+    });
   }
 
-  function onSubmit(e) {
-    // validate
-    const date = document.getElementById('date').value;
-    const trip = document.getElementById('trip').value.trim();
-    const name = document.getElementById('name').value.trim();
-    const nickname = document.getElementById('nickname').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const line = document.getElementById('line').value.trim();
+  // ---------------- select seat ----------------
+  function selectSeat(el) {
+    if (el.classList.contains("booked")) return;
 
-    if (!date || !trip || !selectedSeat || !name || !nickname || !phone || !line) {
-      alert('กรุณาเลือกเบาะ และกรอกข้อมูลให้ครบ');
+    const date = document.getElementById("date").value;
+    const trip = document.getElementById("trip").value.trim();
+
+    if (!date) { alert("กรุณาเลือกวันที่ก่อน"); return; }
+    if (!trip) { alert("กรุณากรอกชื่อทริปก่อน"); return; }
+
+    document.querySelectorAll(".seat").forEach(s => {
+      if (!s.classList.contains("booked")) s.classList.remove("selected");
+    });
+
+    el.classList.add("selected");
+    selectedSeat = el.dataset.seat;
+    document.getElementById("seatField").value = selectedSeat;
+
+    document.getElementById("formBox").classList.remove("hidden");
+    setTimeout(()=>document.getElementById("name").focus(), 120);
+  }
+
+  // ---------------- submit handler ----------------
+  function onSubmit(e) {
+    // validation
+    const date  = document.getElementById("date").value;
+    const trip  = document.getElementById("trip").value.trim();
+    const seat  = document.getElementById("seatField").value;
+    const name  = document.getElementById("name").value.trim();
+    const nickname = document.getElementById("nickname").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const line  = document.getElementById("line").value.trim();
+
+    if (!date || !trip || !seat || !name || !nickname || !phone || !line) {
+      e.preventDefault();
+      alert("กรุณาเลือกเบาะ และกรอกข้อมูลให้ครบทุกช่อง");
       return;
     }
 
-    // ส่งแบบ form เพื่อเลี่ยง CORS (เปิดผลในแท็บใหม่)
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = SCRIPT_URL;
-    form.target = '_blank';
-
-    const fields = { date: date, trip: trip, seat: selectedSeat, name: name, nickname: nickname, phone: phone, line: line };
-    for (const k in fields) {
-      const i = document.createElement('input');
-      i.type = 'hidden';
-      i.name = k;
-      i.value = fields[k];
-      form.appendChild(i);
-    }
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
-
-    // รอให้ server เขียน แล้วโหลดสถานะหน้าใหม่
-    setTimeout(async () => {
-      const b = await loadBookingsWithRetry(date, 4);
-      renderSeats(b);
+    // allow form to submit (target _blank) — then refresh seat map after short delay
+    setTimeout(() => {
+      loadBookingsWithRetry(date, 4).then(renderSeats).catch(()=>{/*silent*/});
     }, 1200);
-
-    alert('ส่งคำจองเรียบร้อย ระบบจะเปิดหน้าแสดงผลในแท็บใหม่ (ปิดได้เมื่ออ่านเสร็จ)');
+    // no preventDefault → form will post to SCRIPT_URL and open result in new tab
   }
 </script>
+
 </body>
 </html>
