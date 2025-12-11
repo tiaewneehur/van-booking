@@ -7,12 +7,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     :root{
-      --green:#4CAF50;
-      --red:#E53935;
-      --yellow:#FDD835;
-      --bg:#f2f4f7;
-      --card:#fff;
-      --muted:#777;
+      --green:#4CAF50; --red:#E53935; --yellow:#FDD835; --bg:#f2f4f7;
+      --card:#fff; --muted:#777;
     }
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); padding:16px;}
     .card{max-width:520px;margin:0 auto;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,0.06);}
@@ -32,6 +28,7 @@
     .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
     .btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:#1976d2;color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px}
     .note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+    .hidden{display:none}
     @media (max-width:420px){
       .grid{grid-template-columns:repeat(3,72px);gap:10px}
       .seat{width:72px;height:72px;font-size:20px}
@@ -44,11 +41,10 @@
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
   <p class="subtitle">เลือกวัน กรอกชื่อทริป เลือกเบาะ เติมข้อมูลให้ครบ</p>
 
-  <!-- โลโก้ + ผังรถ (วางไฟล์ไว้ด้วยชื่อเดียวกัน) -->
+  <!-- วางไฟล์รูป 2 ไฟล์ใน repo: ชื่อตามนี้ -->
   <img src="เที่ย นี่เหอะ.png" alt="โลโก้" class="logo" />
   <img src="IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
 
-  <!-- form ส่งไป Apps Script (เปิดแท็บใหม่เพื่อดูผล) -->
   <form id="bookingForm" method="POST" target="_blank">
     <label class="field-label" for="date">วันที่เดินทาง</label>
     <input id="date" name="date" type="date" class="field-input" required />
@@ -86,17 +82,16 @@
 </div>
 
 <script>
-/* ========== CONFIG ========== */
-/* ใส่ URL Apps Script ที่ deploy แล้วของไอซ์ตรงนี้ (ที่ไอซ์บอกไว้) */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwq_wamcsBHOnEWZZba2onoX6lvczQ1ghkyia608cZjjzuwbTc2ZGS28NPAgcDjFoZA/exec";
-const READ_URL = SCRIPT_URL + "?action=read"; // JSONP endpoint for reading booked seats
+/* ====== ตั้งค่า: แทนที่ด้วย URL ของ Web App ที่ deploy ของไอซ์ ====== */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzVfBbi1mWSBSUPImZXqHIQ_jpQ-Aego3_hpQ0AptRraXApS-aAQditC-INjxyipF7L/exec";
+const READ_URL = SCRIPT_URL + "?action=read";
 
-/* layout ของเบาะ (เรียงตามตำแหน่งที่ต้องการ) */
+/* layout เบาะ */
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
 let selectedSeat = null;
 
-/* ----------------- UTIL: JSONP loader ----------------- */
+/* JSONP loader (load booked seats for selected date) */
 function loadBookedJSONP(date, callback) {
   if (!date) { callback([]); return; }
   const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*9999);
@@ -109,11 +104,10 @@ function loadBookedJSONP(date, callback) {
   script.src = READ_URL + "&date=" + encodeURIComponent(date) + "&callback=" + cbName;
   script.onerror = function(){ delete window[cbName]; script.remove(); callback([]); };
   document.body.appendChild(script);
-  // fallback timeout 5s
   setTimeout(()=>{ if (window[cbName]) { delete window[cbName]; script.remove(); callback([]); } }, 5000);
 }
 
-/* ----------------- RENDER SEATS ----------------- */
+/* render ผังเบาะตาม bookedArray */
 function renderSeats(bookedArray) {
   const grid = document.getElementById('seatGrid');
   grid.innerHTML = '';
@@ -121,7 +115,6 @@ function renderSeats(bookedArray) {
   document.getElementById('seatField').value = '';
   document.getElementById('formBox').classList.add('hidden');
 
-  // make a map seat -> nickname for quick check
   const bookedMap = {};
   (bookedArray || []).forEach(b => {
     if (b && b.seat) bookedMap[String(b.seat)] = b.nickname || 'จองแล้ว';
@@ -133,7 +126,7 @@ function renderSeats(bookedArray) {
     const sKey = String(n);
     if (bookedMap[sKey]) {
       div.classList.add('booked');
-      div.textContent = bookedMap[sKey]; // show nickname for booked seat
+      div.textContent = bookedMap[sKey];
       div.title = "จองแล้ว: " + bookedMap[sKey];
     } else {
       div.classList.add('empty');
@@ -144,37 +137,31 @@ function renderSeats(bookedArray) {
   });
 }
 
+/* เมื่อคลิกเบาะ */
 function onClickSeat(div, sKey) {
-  // ensure date & trip filled
   const date = document.getElementById('date').value;
   const trip = document.getElementById('trip').value.trim();
   if (!date) { alert('กรุณาเลือกวันที่ก่อน'); return; }
   if (!trip) { alert('กรุณากรอกชื่อทริปก่อน'); return; }
-
-  // clear existing selected
   document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
   div.classList.add('selected');
   selectedSeat = sKey;
   document.getElementById('seatField').value = sKey;
   document.getElementById('formBox').classList.remove('hidden');
-
-  // scroll form into view on mobile
-  setTimeout(()=>{ document.getElementById('name').focus(); }, 120);
+  setTimeout(()=>{ const el = document.getElementById('name'); if(el) el.focus(); }, 120);
 }
 
-/* ----------------- onDateChange -> load booked seats ----------------- */
+/* โหลดสถานะเมื่อเปลี่ยนวัน */
 function onDateChange() {
   const date = document.getElementById('date').value;
   if (!date) { renderSeats([]); return; }
   loadBookedJSONP(date, function(booked){
-    // booked: [{seat: "3", nickname:"ไอซ์"}, ...]
     renderSeats(booked);
   });
 }
 
-/* ----------------- onSubmit validation (form will POST to SCRIPT_URL) ----------------- */
+/* ตรวจก่อน submit (form จะ submit เป็น POST ไป SCRIPT_URL) */
 function onSubmit(e) {
-  // form posts to SCRIPT_URL in new tab, but we validate here
   const date = document.getElementById('date').value;
   const trip = document.getElementById('trip').value.trim();
   const seat = document.getElementById('seatField').value;
@@ -188,27 +175,17 @@ function onSubmit(e) {
     alert('กรุณากรอกข้อมูลให้ครบทุกช่องและเลือกเบาะ');
     return false;
   }
-
-  // let the form submit to SCRIPT_URL (opens new tab)
-  // after short delay reload booked seats to update UI (optimistic)
+  // optimistic reload สถานะหลัง submit เล็กน้อย
   setTimeout(()=> onDateChange(), 900);
   return true;
 }
 
-/* ----------------- INIT ----------------- */
+/* init */
 document.addEventListener('DOMContentLoaded', function(){
-  // set form action to script
   const form = document.getElementById('bookingForm');
   form.action = SCRIPT_URL;
-
-  // attach events
   document.getElementById('date').addEventListener('change', onDateChange);
-  form.addEventListener('submit', function(e){
-    if (!onSubmit(e)) return false;
-    // allow submit (target=_blank will open result)
-  });
-
-  // initial render (empty)
+  form.addEventListener('submit', function(e){ if (!onSubmit(e)) return false; });
   renderSeats([]);
 });
 </script>
