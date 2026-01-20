@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <title>ระบบจองที่นั่งรถตู้</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <style>
 :root{
@@ -14,12 +14,9 @@
 body{margin:0;font-family:system-ui;background:var(--bg);padding:16px}
 .card{max-width:520px;margin:auto;background:#fff;border-radius:14px;padding:18px}
 .hidden{display:none}
+.field{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;margin-bottom:10px}
 .btn{width:100%;padding:12px;border-radius:10px;border:0;font-weight:700;font-size:15px;cursor:pointer}
-.btn-line{background:#00c300;color:#fff}
 .btn-main{background:#1976d2;color:#fff}
-.btn-warn{background:#fbc02d}
-.note{text-align:center;font-size:13px;color:#777;margin-top:8px}
-
 .grid{display:grid;grid-template-columns:repeat(3,90px);gap:12px;justify-content:center;margin:12px 0}
 .seat{
   width:90px;height:90px;border-radius:12px;
@@ -29,42 +26,32 @@ body{margin:0;font-family:system-ui;background:var(--bg);padding:16px}
 .seat.empty{background:var(--green)}
 .seat.pending{background:var(--yellow);color:#000}
 .seat.booked{background:var(--red);cursor:not-allowed}
+.note{text-align:center;font-size:13px;color:#777;margin-top:8px}
 </style>
 </head>
 
 <body>
 
-<!-- 🔐 LOGIN -->
-<div id="loginGate" class="card">
-  <h3 style="text-align:center">เข้าสู่ระบบก่อนใช้งาน</h3>
-  <button id="lineLoginBtn" class="btn btn-line">เข้าสู่ระบบด้วย LINE</button>
-</div>
-
-<!-- 📦 MAIN APP -->
-<div id="app" class="hidden">
-
 <div class="card">
 <h3 style="text-align:center">จองที่นั่งรถตู้</h3>
 
 <label>วันที่เดินทาง</label>
-<input type="date" id="date" style="width:100%;padding:10px">
+<input type="date" id="date" class="field">
 
 <label>ชื่อทริป</label>
-<input type="text" id="trip" style="width:100%;padding:10px">
+<input type="text" id="trip" class="field">
 
 <div id="seatGrid" class="grid"></div>
 
 <div id="formBox" class="hidden">
 <label>ชื่อเล่น</label>
-<input id="nickname" style="width:100%;padding:10px">
+<input id="nickname" class="field">
 
 <label>เบอร์โทร</label>
-<input id="phone" style="width:100%;padding:10px">
+<input id="phone" class="field">
 
 <button class="btn btn-main" onclick="confirmBooking()">ยืนยันการจอง</button>
 </div>
-</div>
-
 </div>
 
 <!-- 💰 PAYMENT -->
@@ -82,32 +69,17 @@ body{margin:0;font-family:system-ui;background:var(--bg);padding:16px}
 ชื่อบัญชี วิชาญ นาคะลัย
 </p>
 
-<img src="PROMPTPAY_QR.png" style="width:200px;display:block;margin:auto">
+<p class="note">กรุณาโอนภายใน 30 นาที</p>
 
-<p class="note">กรุณาโอนภายใน <span id="timer">30:00</span></p>
-
-<button class="btn btn-warn" onclick="notifyPaid()">แจ้งชำระแล้ว</button>
+<button class="btn btn-main" onclick="notifyPaid()">แจ้งชำระแล้ว</button>
 </div>
 </div>
 
 <script>
-/* ===== CONFIG ===== */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 let selectedSeat=null;
-let bookingKey=null;
-
-/* ===== LOGIN ===== */
-document.getElementById('lineLoginBtn').onclick=()=>{
-  location.href=SCRIPT_URL+"?action=line_login";
-};
-const q=new URLSearchParams(location.search);
-if(q.get('line_name')){
-  document.getElementById('loginGate').classList.add('hidden');
-  document.getElementById('app').classList.remove('hidden');
-  document.getElementById('nickname').value=q.get('line_name');
-}
 
 /* ===== LOAD SEATS ===== */
 function loadSeats(date){
@@ -131,7 +103,7 @@ function renderSeats(booked){
     d.className='seat';
     if(map[n]){
       d.classList.add(map[n].status==='paid'?'booked':'pending');
-      d.innerHTML=map[n].nickname+(map[n].status!=='paid'?'<br><small>รอชำระ</small>':'');
+      d.innerHTML=map[n].nickname+"<br><small>รอชำระ</small>";
     }else{
       d.classList.add('empty');
       d.textContent=n;
@@ -159,22 +131,10 @@ function confirmBooking(){
       nickname:nickname.value,
       phone:phone.value
     })
-  }).then(r=>r.text()).then(()=>{
-    document.getElementById('app').classList.add('hidden');
+  }).then(()=>{
+    document.querySelector('.card').classList.add('hidden');
     document.getElementById('paymentPage').classList.remove('hidden');
-    startTimer(30*60);
   });
-}
-
-/* ===== PAYMENT ===== */
-function startTimer(sec){
-  const el=document.getElementById('timer');
-  const t=setInterval(()=>{
-    const m=Math.floor(sec/60);
-    const s=sec%60;
-    el.textContent=`${m}:${String(s).padStart(2,'0')}`;
-    if(--sec<0) clearInterval(t);
-  },1000);
 }
 
 function notifyPaid(){
