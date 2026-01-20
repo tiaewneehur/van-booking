@@ -8,71 +8,153 @@
 
 <style>
 :root{
-  --green:#4CAF50; --red:#E53935; --yellow:#FDD835;
-  --bg:#f2f4f7; --card:#fff; --muted:#777;
+  --green:#4CAF50;
+  --red:#E53935;
+  --yellow:#FDD835;
+  --bg:#f2f4f7;
+  --card:#fff;
+  --muted:#777;
 }
-body{margin:0;font-family:system-ui;background:var(--bg);padding:16px}
-.card{max-width:520px;margin:auto;background:#fff;border-radius:14px;padding:18px}
-.hidden{display:none}
-.field{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;margin-bottom:10px}
-.btn{width:100%;padding:12px;border-radius:10px;border:0;font-weight:700;font-size:15px;cursor:pointer}
-.btn-main{background:#1976d2;color:#fff}
-.grid{display:grid;grid-template-columns:repeat(3,90px);gap:12px;justify-content:center;margin:12px 0}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  background:var(--bg);
+  padding:16px;
+}
+.card{
+  max-width:520px;
+  margin:auto;
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 8px 30px rgba(0,0,0,.06);
+}
+.title{
+  text-align:center;
+  font-size:22px;
+  font-weight:700;
+}
+.subtitle{
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:12px;
+}
+.logo{
+  display:block;
+  margin:8px auto 12px;
+  max-width:220px;
+}
+.seat-map-img{
+  display:block;
+  margin:6px auto 12px;
+  max-width:280px;
+  border-radius:8px;
+}
+.field-label{
+  font-weight:600;
+  margin:10px 0 6px;
+  display:block;
+}
+.field-input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  font-size:15px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,90px);
+  gap:12px;
+  justify-content:center;
+  margin:14px 0;
+}
 .seat{
-  width:90px;height:90px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:600;color:#fff;cursor:pointer;text-align:center
+  width:90px;
+  height:90px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  font-weight:600;
+  color:#fff;
+  cursor:pointer;
+  text-align:center;
 }
 .seat.empty{background:var(--green)}
 .seat.pending{background:var(--yellow);color:#000}
 .seat.booked{background:var(--red);cursor:not-allowed}
-.note{text-align:center;font-size:13px;color:#777;margin-top:8px}
+.btn{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:0;
+  background:#1976d2;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  cursor:pointer;
+}
+.note{
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  margin-top:8px;
+}
+.hidden{display:none}
 </style>
 </head>
 
 <body>
 
-<div class="card">
-<h3 style="text-align:center">จองที่นั่งรถตู้</h3>
+<div class="card" id="bookingPage">
+  <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
+  <p class="subtitle">เลือกวัน เลือกทริป เลือกที่นั่ง</p>
 
-<label>วันที่เดินทาง</label>
-<input type="date" id="date" class="field">
+  <!-- ✅ รูป -->
+  <img src="/images/logo.png" class="logo" alt="logo">
+  <img src="/images/seatmap.jpg" class="seat-map-img" alt="seatmap">
 
-<label>ชื่อทริป</label>
-<input type="text" id="trip" class="field">
+  <label class="field-label">วันที่เดินทาง</label>
+  <input type="date" id="date" class="field-input">
 
-<div id="seatGrid" class="grid"></div>
+  <label class="field-label">ชื่อทริป</label>
+  <input type="text" id="trip" class="field-input" placeholder="เช่น ผ้าห่มปก">
 
-<div id="formBox" class="hidden">
-<label>ชื่อเล่น</label>
-<input id="nickname" class="field">
+  <div id="seatGrid" class="grid"></div>
 
-<label>เบอร์โทร</label>
-<input id="phone" class="field">
+  <div id="formBox" class="hidden">
+    <label class="field-label">ชื่อเล่น</label>
+    <input id="nickname" class="field-input">
 
-<button class="btn btn-main" onclick="confirmBooking()">ยืนยันการจอง</button>
+    <label class="field-label">เบอร์โทร</label>
+    <input id="phone" class="field-input">
+
+    <button class="btn" onclick="submitBooking()">ยืนยันการจอง</button>
+  </div>
 </div>
-</div>
 
-<!-- 💰 PAYMENT -->
-<div id="paymentPage" class="hidden">
-<div class="card">
-<h3 style="text-align:center">ชำระเงินมัดจำ</h3>
+<!-- 💰 ชำระเงิน -->
+<div class="card hidden" id="paymentPage">
+  <h1 class="title">ชำระเงินมัดจำ</h1>
 
-<p style="text-align:center;font-size:18px">
-ยอดชำระ <b>1,000 บาท</b>
-</p>
+  <p style="text-align:center;font-size:18px">
+    ยอดชำระ <b>1,000 บาท</b>
+  </p>
 
-<p style="text-align:center">
-ธนาคาร TTB<br>
-เลขบัญชี <b>442-261-4471</b><br>
-ชื่อบัญชี วิชาญ นาคะลัย
-</p>
+  <p style="text-align:center">
+    ธนาคาร TTB<br>
+    เลขบัญชี <b>442-261-4471</b><br>
+    ชื่อบัญชี วิชาญ นาคะลัย
+  </p>
 
-<p class="note">กรุณาโอนภายใน 30 นาที</p>
+  <p class="note">กรุณาโอนภายใน 30 นาที</p>
 
-<button class="btn btn-main" onclick="notifyPaid()">แจ้งชำระแล้ว</button>
-</div>
+  <button class="btn" onclick="alert('แจ้งชำระแล้ว รอแอดมินตรวจสอบ')">
+    แจ้งชำระแล้ว
+  </button>
 </div>
 
 <script>
@@ -81,49 +163,47 @@ const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 let selectedSeat=null;
 
-/* ===== LOAD SEATS ===== */
 function loadSeats(date){
   const cb="cb"+Date.now();
   window[cb]=res=>{
     renderSeats(res.bookings||[]);
     delete window[cb];
   };
-  const s=document.createElement('script');
+  const s=document.createElement("script");
   s.src=READ_URL+"&date="+date+"&callback="+cb;
   document.body.appendChild(s);
 }
 
 function renderSeats(booked){
-  const grid=document.getElementById('seatGrid');
-  grid.innerHTML='';
+  const grid=document.getElementById("seatGrid");
+  grid.innerHTML="";
   const map={};
   booked.forEach(b=>map[b.seat]=b);
   SEATS.forEach(n=>{
-    const d=document.createElement('div');
-    d.className='seat';
+    const d=document.createElement("div");
+    d.className="seat";
     if(map[n]){
-      d.classList.add(map[n].status==='paid'?'booked':'pending');
+      d.classList.add(map[n].status==="paid"?"booked":"pending");
       d.innerHTML=map[n].nickname+"<br><small>รอชำระ</small>";
     }else{
-      d.classList.add('empty');
+      d.classList.add("empty");
       d.textContent=n;
       d.onclick=()=>{
         selectedSeat=n;
-        document.getElementById('formBox').classList.remove('hidden');
+        document.getElementById("formBox").classList.remove("hidden");
       };
     }
     grid.appendChild(d);
   });
 }
 
-document.getElementById('date').onchange=e=>{
+document.getElementById("date").onchange=e=>{
   if(e.target.value) loadSeats(e.target.value);
 };
 
-/* ===== BOOKING ===== */
-function confirmBooking(){
+function submitBooking(){
   fetch(SCRIPT_URL,{
-    method:'POST',
+    method:"POST",
     body:new URLSearchParams({
       date:date.value,
       trip:trip.value,
@@ -132,13 +212,9 @@ function confirmBooking(){
       phone:phone.value
     })
   }).then(()=>{
-    document.querySelector('.card').classList.add('hidden');
-    document.getElementById('paymentPage').classList.remove('hidden');
+    document.getElementById("bookingPage").classList.add("hidden");
+    document.getElementById("paymentPage").classList.remove("hidden");
   });
-}
-
-function notifyPaid(){
-  alert("แจ้งชำระแล้ว รอผู้ดูแลตรวจสอบ");
 }
 </script>
 
