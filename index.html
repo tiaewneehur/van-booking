@@ -19,26 +19,44 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 .field-label{font-weight:600;margin:10px 0 6px;display:block;}
 .field-input{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;font-size:15px;}
 .grid{display:grid;grid-template-columns:repeat(3,90px);gap:12px;justify-content:center;margin-top:14px;margin-bottom:12px;}
+
 .seat{
-  width:90px;height:90px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:17px;font-weight:600;color:#fff;
-  cursor:pointer;padding:4px;line-height:1.2;
-  white-space:nowrap;box-shadow:0 6px 14px rgba(0,0,0,0.06);
+  width:90px;
+  height:90px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  font-weight:600;
+  color:#fff;
+  cursor:pointer;
+  padding:4px;
+  line-height:1.2;
+  white-space:nowrap;
+  box-shadow:0 6px 14px rgba(0,0,0,0.06);
   transition:transform .12s;
 }
+
 .seat:hover{transform:translateY(-4px)}
 .seat.empty{background:var(--green)}
 .seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
 .seat.selected{background:var(--yellow);color:#000}
+
 .legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
 .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
 .btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:#1976d2;color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px}
 .note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
 .hidden{display:none}
+
 @media (max-width:420px){
   .grid{grid-template-columns:repeat(3,72px);gap:10px}
-  .seat{width:72px;height:72px;font-size:13px;padding:3px}
+  .seat{
+    width:72px;
+    height:72px;
+    font-size:13px;
+    padding:3px;
+  }
 }
   </style>
 </head>
@@ -48,9 +66,9 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
   <p class="subtitle">เลือกวัน กรอกชื่อทริป เลือกเบาะ เติมข้อมูลให้ครบ</p>
 
-  <!-- ✅ แก้ path รูปอย่างเดียว -->
-  <img src="./เที่ย%20นี่เหอะ.png" alt="โลโก้" class="logo" />
-  <img src="./IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
+  <!-- 🔧 แก้เฉพาะ path รูป (ไม่เปลี่ยนชื่อไฟล์) -->
+  <img src="/เที่ย นี่เหอะ.png" alt="โลโก้" class="logo" />
+  <img src="/IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
 
   <form id="bookingForm" method="POST" target="_blank">
     <label class="field-label" for="date">วันที่เดินทาง</label>
@@ -59,7 +77,8 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
     <label class="field-label" for="trip">ชื่อทริป</label>
     <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ผ้าห่มปก" required />
 
-    <div id="seatGrid" class="grid"></div>
+    <div id="seatGrid" class="grid" aria-hidden="false"></div>
+
     <input id="seatField" name="seat" type="hidden" />
 
     <div id="formBox" class="hidden">
@@ -76,11 +95,11 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
       <input id="line" name="line" type="text" class="field-input" required />
 
       <button type="submit" class="btn">ยืนยันการจอง</button>
-      <p class="note">เบาะสีแดง = จองแล้ว • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
+      <p class="note">เบาะสีแดง = จองแล้ว (แสดงชื่อเล่น) • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
     </div>
   </form>
 
-  <div class="legend">
+  <div class="legend" aria-hidden="true">
     <span><span class="box" style="background:var(--green)"></span>ว่าง</span>
     <span><span class="box" style="background:var(--yellow)"></span>กำลังเลือก</span>
     <span><span class="box" style="background:var(--red)"></span>จองแล้ว</span>
@@ -91,54 +110,65 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
-let selectedSeat=null;
+let selectedSeat = null;
 
-function loadBookedJSONP(date, cb){
-  if(!date){cb([]);return;}
-  const name="cb_"+Date.now();
-  window[name]=data=>{
-    cb(data.bookings||[]);
-    delete window[name];
+function loadBookedJSONP(date, callback) {
+  if (!date) { callback([]); return; }
+  const cbName = "cb_" + Date.now();
+  window[cbName] = function(data){
+    callback(data && data.bookings ? data.bookings : []);
+    delete window[cbName];
   };
-  const s=document.createElement("script");
-  s.src=READ_URL+"&date="+date+"&callback="+name;
-  document.body.appendChild(s);
+  const script = document.createElement('script');
+  script.src = READ_URL + "&date=" + encodeURIComponent(date) + "&callback=" + cbName;
+  document.body.appendChild(script);
 }
 
-function renderSeats(booked){
-  const grid=document.getElementById("seatGrid");
-  grid.innerHTML="";
-  selectedSeat=null;
-  document.getElementById("seatField").value="";
-  document.getElementById("formBox").classList.add("hidden");
-  const map={};
-  booked.forEach(b=>map[b.seat]=b.nickname);
-  SEATS.forEach(n=>{
-    const d=document.createElement("div");
-    d.className="seat";
-    if(map[n]){
-      d.classList.add("booked");
-      d.textContent=map[n];
-    }else{
-      d.classList.add("empty");
-      d.textContent=n;
-      d.onclick=()=>{
-        document.querySelectorAll(".seat").forEach(x=>x.classList.remove("selected"));
-        d.classList.add("selected");
-        selectedSeat=n;
-        document.getElementById("seatField").value=n;
-        document.getElementById("formBox").classList.remove("hidden");
-      };
+function renderSeats(bookedArray) {
+  const grid = document.getElementById('seatGrid');
+  grid.innerHTML = '';
+  selectedSeat = null;
+  document.getElementById('seatField').value = '';
+  document.getElementById('formBox').classList.add('hidden');
+
+  const bookedMap = {};
+  (bookedArray || []).forEach(b => {
+    if (b && b.seat) bookedMap[String(b.seat)] = b.nickname || 'จองแล้ว';
+  });
+
+  SEATS.forEach(n => {
+    const div = document.createElement('div');
+    div.classList.add('seat');
+    const sKey = String(n);
+    if (bookedMap[sKey]) {
+      div.classList.add('booked');
+      div.textContent = bookedMap[sKey];
+    } else {
+      div.classList.add('empty');
+      div.textContent = sKey;
+      div.onclick = () => onClickSeat(div, sKey);
     }
-    grid.appendChild(d);
+    grid.appendChild(div);
   });
 }
 
-document.getElementById("date").addEventListener("change",e=>{
-  loadBookedJSONP(e.target.value,renderSeats);
+function onClickSeat(div, sKey) {
+  if (!date.value || !trip.value.trim()) {
+    alert('กรุณาเลือกวันที่และกรอกชื่อทริปก่อน');
+    return;
+  }
+  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+  div.classList.add('selected');
+  selectedSeat = sKey;
+  document.getElementById('seatField').value = sKey;
+  document.getElementById('formBox').classList.remove('hidden');
+}
+
+document.getElementById('date').addEventListener('change', () => {
+  loadBookedJSONP(date.value, renderSeats);
 });
 
-document.getElementById("bookingForm").action=SCRIPT_URL;
+document.getElementById('bookingForm').action = SCRIPT_URL;
 renderSeats([]);
 </script>
 
