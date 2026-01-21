@@ -31,16 +31,16 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 .seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
 .seat.selected{background:var(--yellow);color:#000}
 
-/* ✅ เพิ่ม CSS กล่องธนาคาร (คงโครงสร้างเดิม) */
+/* ✅ แก้ไข CSS กล่องธนาคารให้เหมือนรูป */
 .bank-box { border: 2px dashed #1976d2; border-radius: 12px; padding: 15px; margin: 15px 0; background: #fdfdfd; text-align: center; }
-.bank-box p { margin: 5px 0; font-size: 14px; }
-.bank-acc { font-size: 22px; color: #d32f2f; font-weight: 800; }
-.slip-label { color: #d32f2f; font-weight: 700; display: block; margin-top: 10px; }
+.bank-box p { margin: 5px 0; font-size: 15px; font-weight: 500; }
+.bank-acc { font-size: 26px; color: #d32f2f; font-weight: 800; letter-spacing: 1px; margin: 8px 0 !important; }
+.slip-label { color: #d32f2f; font-weight: 700; display: block; margin-top: 15px; margin-bottom: 8px; }
 
 .legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
 .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
-.btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:#1976d2;color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px}
-.note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+.btn{display:block;width:100%;padding:14px;border-radius:12px;border:0;background:#1e88e5;color:#fff;font-weight:700;font-size:16px;cursor:pointer;margin-top:15px}
+.note{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
 .hidden{display:none}
 
 @media (max-width:420px){
@@ -85,12 +85,18 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
         <p>ธนาคารทหารไทยธนชาต (TTB)</p>
         <p class="bank-acc">442-2-61447-1</p>
         <p>ชื่อบัญชี: วิชาญ นาคะลัย</p>
-        <span class="slip-label">แนบสลิปเพื่อยืนยันการจอง *</span>
+        
+        <label class="field-label" style="text-align:left; margin-top:15px;">ยอดเงินโอน (บาท)</label>
+        <input type="text" class="field-input" value="1000" readonly style="background:#eee; text-align:center; font-weight:bold;">
+        
+        <span class="slip-label">แนบรูปสลิปการโอนเงิน *</span>
         <input type="file" id="slipFile" class="field-input" accept="image/*" required onchange="processFile(this)" />
         <input type="hidden" id="slipBase64" name="slipBase64" />
       </div>
 
-      <button type="submit" id="submitBtn" class="btn">ยืนยันการจอง</button>
+      <button type="submit" id="submitBtn" class="btn">ยืนยันการจองและส่งสลิป</button>
+      <p class="note" style="margin-bottom:15px;">ข้อมูลจะถูกส่งไปยังระบบเพื่อตรวจสอบการโอนเงิน</p>
+      
       <p class="note">เบาะสีแดง = จองแล้ว (แสดงชื่อเล่น) • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
     </div>
   </form>
