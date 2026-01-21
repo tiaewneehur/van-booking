@@ -32,16 +32,18 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 .seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
 .seat.selected{background:var(--yellow);color:#000}
 
+/* ส่วนของกล่องชำระเงิน */
 .payment-box {
   margin-top: 20px; padding: 15px; border: 2px dashed var(--blue);
   border-radius: 12px; background: #f0f7ff; text-align: center;
 }
-.bank-info { font-size: 16px; margin-bottom: 10px; color: #333; }
-.bank-acc { font-size: 20px; color: #d32f2f; font-weight: bold; margin: 5px 0; }
+.bank-info { font-size: 16px; margin-bottom: 10px; color: #333; line-height: 1.5; }
+.bank-acc { font-size: 22px; color: #d32f2f; font-weight: bold; margin: 5px 0; }
 
 .legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
 .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
 .btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:15px}
+.btn:disabled { background: #ccc; cursor: not-allowed; }
 .note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
 .hidden{display:none}
 
@@ -55,7 +57,7 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 
 <div class="card">
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
-  <p class="subtitle">เลือกวันที่ และจองเบาะพร้อมแนบหลักฐานการโอนเงิน</p>
+  <p class="subtitle">เลือกวันที่ จองเบาะ และแนบสลิปโอนเงิน</p>
 
   <img src="เที่ย นี่เหอะ.png" alt="โลโก้" class="logo" />
   <img src="IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
@@ -81,7 +83,7 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
       <input id="phone" name="phone" type="tel" class="field-input" placeholder="080-000-0000" required />
 
       <label class="field-label" for="line">ชื่อไลน์</label>
-      <input id="line" name="line" type="text" class="field-input" placeholder="เที่ยวนี่เหอะ" required />
+      <input id="line" name="line" type="text" class="field-input" placeholder="ชื่อไลน์ของคุณ" required />
 
       <div class="payment-box">
         <div class="bank-info">
@@ -93,12 +95,15 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
         <label class="field-label" style="text-align:left;">ยอดเงินโอน (บาท)</label>
         <input name="amount" type="number" class="field-input" value="1000" readonly style="background:#eee;">
 
-        <label class="field-label" style="text-align:left;">เวลาที่โอน หรือ เลขท้ายอ้างอิง</label>
-        <input id="slip_note" name="slip_note" type="text" class="field-input" placeholder="เช่น 14:25 น. หรือ เลข 4 ตัวท้ายสลิป" required />
+        <label class="field-label" style="text-align:left; color:#d32f2f;">แนบรูปสลิปการโอนเงิน *</label>
+        <input id="slipFile" type="file" class="field-input" accept="image/*" required onchange="encodeImageFileAsURL(this)">
+        
+        <input id="slipBase64" name="slipBase64" type="hidden">
+        <input id="slipName" name="slipName" type="hidden">
       </div>
 
-      <button type="submit" class="btn">ยืนยันการจองและแจ้งโอน</button>
-      <p class="note">เบาะสีแดง = จองแล้ว • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
+      <button type="submit" id="submitBtn" class="btn">ยืนยันการจองและส่งสลิป</button>
+      <p class="note">ข้อมูลจะถูกส่งไปยังระบบเพื่อตรวจสอบการโอนเงิน</p>
     </div>
   </form>
 
@@ -114,6 +119,25 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpG
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 let selectedSeat = null;
+
+// ฟังก์ชันแปลงรูปภาพเป็น Base64
+function encodeImageFileAsURL(element) {
+  const file = element.files[0];
+  if (!file) return;
+  
+  const submitBtn = document.getElementById('submitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = "กำลังประมวลผลรูปภาพ...";
+
+  const reader = new FileReader();
+  reader.onloadend = function() {
+    document.getElementById('slipBase64').value = reader.result.split(',')[1];
+    document.getElementById('slipName').value = file.name;
+    submitBtn.disabled = false;
+    submitBtn.textContent = "ยืนยันการจองและส่งสลิป";
+  }
+  reader.readAsDataURL(file);
+}
 
 function loadBookedJSONP(date, callback) {
   if (!date) { callback([]); return; }
@@ -179,14 +203,16 @@ document.addEventListener('DOMContentLoaded', function(){
   const form = document.getElementById('bookingForm');
   form.action = SCRIPT_URL;
   document.getElementById('date').addEventListener('change', onDateChange);
+  
   form.addEventListener('submit', function(e){
-    const slip = document.getElementById('slip_note').value.trim();
+    const slip = document.getElementById('slipBase64').value;
     if(!slip){
       e.preventDefault();
-      alert('กรุณากรอกข้อมูลการโอนเงินเพื่อยืนยัน');
+      alert('กรุณาแนบรูปสลิปการโอนเงินก่อนยืนยัน');
       return false;
     }
-    setTimeout(()=> onDateChange(), 1500);
+    // หน่วงเวลาให้ผู้ใช้เห็นว่าส่งข้อมูลแล้ว ก่อนรีโหลดสถานะ
+    setTimeout(()=> onDateChange(), 2000);
     return true;
   });
   renderSeats([]);
