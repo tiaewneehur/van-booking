@@ -52,54 +52,44 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
   <img src="IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
 
   <form id="bookingForm">
-    <label class="field-label" for="date">วันที่เดินทาง</label>
+    <label class="field-label">วันที่เดินทาง</label>
     <input id="date" name="date" type="date" class="field-input" required />
 
-    <label class="field-label" for="trip">ชื่อทริป</label>
+    <label class="field-label">ชื่อทริป</label>
     <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ผ้าห่มปก" required />
 
     <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
 
     <div id="formBox" class="hidden">
-      <label class="field-label" for="name">ชื่อ-นามสกุล</label>
-      <input id="name" name="name" type="text" class="field-input" placeholder="เช่น นายเดินป่า เที่ยวนี่เหอะ" required />
+      <label class="field-label">ชื่อ-นามสกุล</label>
+      <input name="name" type="text" class="field-input" placeholder="เช่น นายเดินป่า เที่ยวนี่เหอะ" required />
 
-      <label class="field-label" for="nickname">ชื่อเล่น (จะแสดงบนผังเมื่อจองแล้ว)</label>
-      <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
+      <label class="field-label">ชื่อเล่น</label>
+      <input name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
 
-      <label class="field-label" for="phone">เบอร์โทรศัพท์</label>
-      <input id="phone" name="phone" type="tel" class="field-input" placeholder="เช่น 080-000-0000" required />
+      <label class="field-label">เบอร์โทรศัพท์</label>
+      <input name="phone" type="tel" class="field-input" placeholder="เช่น 080-000-0000" required />
 
-      <label class="field-label" for="line">ชื่อไลน์</label>
-      <input id="line" name="line" type="text" class="field-input" placeholder="เช่น เที่ยวนี่เหอะ" required />
+      <label class="field-label">ชื่อไลน์</label>
+      <input name="line" type="text" class="field-input" placeholder="เช่น เที่ยวนี่เหอะ" required />
 
-      <!-- กล่องธนาคาร + สลิป -->
-      <div class="bank-box" style="border:2px dashed #1976d2;border-radius:12px;padding:15px;margin:15px 0;background:#f7fbff;text-align:center;">
-        <p style="margin:5px 0;font-size:15px;font-weight:600;">
-          ธนาคารทหารไทยธนชาต (TTB)
-        </p>
-        <p style="font-size:26px;color:#d32f2f;font-weight:800;margin:8px 0;">
-          442-2-61447-1
-        </p>
-        <p style="margin:5px 0;">ชื่อบัญชี: วิชาญ นาคะลัย</p>
+      <!-- กล่องธนาคาร -->
+      <div style="border:2px dashed #1976d2;border-radius:12px;padding:15px;margin:15px 0;background:#f7fbff;text-align:center;">
+        <p><b>ธนาคารทหารไทยธนชาต (TTB)</b></p>
+        <p style="font-size:26px;color:#d32f2f;font-weight:800;">442-2-61447-1</p>
+        <p>ชื่อบัญชี: วิชาญ นาคะลัย</p>
 
-        <label class="field-label" style="text-align:left;margin-top:12px;">
-          ยอดเงินโอน (บาท)
-        </label>
-        <input type="text" name="amount" class="field-input"
-               value="1000" readonly
-               style="background:#eee;text-align:center;font-weight:bold;">
+        <label class="field-label" style="text-align:left;">ยอดเงินโอน (บาท)</label>
+        <input name="amount" class="field-input" value="1000" readonly style="background:#eee;text-align:center;font-weight:bold;">
 
-        <span style="color:#d32f2f;font-weight:700;display:block;margin-top:15px;margin-bottom:8px;">
-          แนบรูปสลิปการโอนเงิน *
-        </span>
+        <span style="color:#d32f2f;font-weight:700;display:block;margin-top:12px;">แนบรูปสลิป *</span>
         <input type="file" id="slipFile" class="field-input" accept="image/*" required>
         <input type="hidden" id="slipBase64" name="slipBase64">
       </div>
 
-      <button type="submit" id="submitBtn" class="btn">ยืนยันการจอง</button>
-      <p class="note">เบาะสีแดง = จองแล้ว (แสดงชื่อเล่น) • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
+      <button id="submitBtn" class="btn">ยืนยันการจอง</button>
+      <p class="note">เบาะสีแดง = จองแล้ว • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
     </div>
   </form>
 
@@ -115,35 +105,29 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpG
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-/* ---------- แปลงรูปเป็น base64 (กัน error) ---------- */
-const slipInput = document.getElementById('slipFile');
-if (slipInput) {
-  slipInput.addEventListener('change', function(){
-    const file = this.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(){
-      const h = document.getElementById('slipBase64');
-      if (h) h.value = reader.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
+/* แปลงรูปเป็น base64 */
+slipFile.onchange = () => {
+  const f = slipFile.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => slipBase64.value = r.result;
+  r.readAsDataURL(f);
+};
 
-/* ---------- JSONP โหลดเบาะ ---------- */
-function loadBookedJSONP(date, cb){
-  if (!date) { cb([]); return; }
-  const name = "cb_" + Date.now();
-  window[name] = d => { cb(d.bookings || []); delete window[name]; };
+/* โหลดผัง */
+function loadBooked(date){
+  const cb = "cb" + Date.now();
+  window[cb] = d => {
+    render(d.bookings || []);
+    delete window[cb];
+  };
   const s = document.createElement('script');
-  s.src = READ_URL + "&date=" + encodeURIComponent(date) + "&callback=" + name;
+  s.src = READ_URL + "&date=" + date + "&callback=" + cb;
   document.body.appendChild(s);
 }
 
-/* ---------- render ผังเบาะ ---------- */
-function renderSeats(booked){
+function render(booked){
   seatGrid.innerHTML = '';
-  seatField.value = '';
   formBox.classList.add('hidden');
   const map = {};
   booked.forEach(b => map[b.seat] = b.nickname);
@@ -154,7 +138,7 @@ function renderSeats(booked){
     d.textContent = map[n] || n;
     if (!map[n]) {
       d.onclick = () => {
-        document.querySelectorAll('.seat').forEach(x => x.classList.remove('selected'));
+        document.querySelectorAll('.seat').forEach(x=>x.classList.remove('selected'));
         d.classList.add('selected');
         seatField.value = n;
         formBox.classList.remove('hidden');
@@ -164,34 +148,22 @@ function renderSeats(booked){
   });
 }
 
-date.onchange = () => loadBookedJSONP(date.value, renderSeats);
-document.addEventListener('DOMContentLoaded', () => renderSeats([]));
+date.onchange = () => loadBooked(date.value);
+render([]);
 
-/* ---------- submit (กันกดซ้ำ) ---------- */
+/* SUBMIT — แก้ CORS */
 bookingForm.onsubmit = e => {
   e.preventDefault();
-  if (submitBtn.disabled) return;
-
-  if (!slipBase64.value) {
-    alert('กรุณาแนบสลิปก่อนยืนยันการจอง');
-    return;
-  }
-
   submitBtn.disabled = true;
   submitBtn.textContent = 'กำลังบันทึก...';
 
   fetch(SCRIPT_URL, {
     method: 'POST',
+    mode: 'no-cors',
     body: new URLSearchParams(new FormData(bookingForm))
-  })
-  .then(() => {
+  }).then(()=>{
     alert('จองสำเร็จแล้ว');
     location.reload();
-  })
-  .catch(() => {
-    alert('เกิดข้อผิดพลาด');
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'ยืนยันการจอง';
   });
 };
 </script>
