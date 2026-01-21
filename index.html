@@ -6,10 +6,7 @@
   <title>จองที่นั่งรถตู้</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-:root{
-  --green:#4CAF50; --red:#E53935; --yellow:#FDD835; --bg:#f2f4f7;
-  --card:#fff; --muted:#777; --blue:#1976d2;
-}
+:root{ --green:#4CAF50; --red:#E53935; --yellow:#FDD835; --bg:#f2f4f7; --card:#fff; --muted:#777; --blue:#1976d2; }
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); padding:16px;}
 .card{max-width:520px;margin:0 auto;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,0.06);}
 .title{text-align:center;font-size:22px;font-weight:700;margin:2px 0 6px;}
@@ -19,44 +16,18 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 .field-label{font-weight:600;margin:10px 0 6px;display:block;}
 .field-input{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;font-size:15px;}
 .grid{display:grid;grid-template-columns:repeat(3,90px);gap:12px;justify-content:center;margin-top:14px;margin-bottom:12px;}
-
-.seat{
-  width:90px;
-  height:90px;
-  border-radius:12px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:17px;
-  font-weight:600;
-  color:#fff;
-  cursor:pointer;
-  padding:4px;
-  line-height:1.2;
-  white-space:nowrap;
-  box-shadow:0 6px 14px rgba(0,0,0,0.06);
-  transition:transform .12s;
-}
-
+.seat{width:90px; height:90px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:600; color:#fff; cursor:pointer; padding:4px; line-height:1.2; white-space:nowrap; box-shadow:0 6px 14px rgba(0,0,0,0.06); transition:transform .12s;}
 .seat:hover{transform:translateY(-4px)}
 .seat.empty{background:var(--green)}
 .seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
 .seat.selected{background:var(--yellow);color:#000}
-
-.payment-box { margin-top: 20px; padding: 15px; border: 2px dashed var(--blue); border-radius: 12px; background: #f0f7ff; text-align: center; }
-.bank-acc { font-size: 22px; color: #d32f2f; font-weight: bold; }
-
 .legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
 .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
-.btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px}
-.btn:disabled{background:#ccc}
+.btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:#1976d2;color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:10px}
+.btn:disabled{background:#aaa; cursor:not-allowed;}
 .note{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
 .hidden{display:none}
-
-@media (max-width:420px){
-  .grid{grid-template-columns:repeat(3,72px);gap:10px}
-  .seat{ width:72px; height:72px; font-size:13px; padding:3px; }
-}
+@media (max-width:420px){ .grid{grid-template-columns:repeat(3,72px);gap:10px} .seat{ width:72px; height:72px; font-size:13px; padding:3px; } }
   </style>
 </head>
 <body>
@@ -64,65 +35,53 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 <div class="card">
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
   <p class="subtitle">เลือกวัน กรอกชื่อทริป เลือกเบาะ เติมข้อมูลให้ครบ</p>
+  <img src="เที่ย นี่เหอะ.png" class="logo" />
+  <img src="IMG_0444.jpeg" class="seat-map-img" />
 
-  <img src="เที่ย นี่เหอะ.png" alt="โลโก้" class="logo" />
-  <img src="IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
-
-  <form id="bookingForm" method="POST" target="_blank">
-    <label class="field-label" for="date">วันที่เดินทาง</label>
-    <input id="date" name="date" type="date" class="field-input" required />
-
-    <label class="field-label" for="trip">ชื่อทริป</label>
+  <form id="bookingForm">
+    <label class="field-label">วันที่เดินทาง</label>
+    <input id="date" name="date" type="date" class="field-input" required onchange="onDateChange()" />
+    <label class="field-label">ชื่อทริป</label>
     <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ผ้าห่มปก" required />
-
-    <div id="seatGrid" class="grid" aria-hidden="false"></div>
+    
+    <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
 
     <div id="formBox" class="hidden">
-      <label class="field-label" for="name">ชื่อ-นามสกุล</label>
-      <input id="name" name="name" type="text" class="field-input" placeholder="เช่น นายเดินป่า เที่ยวนี่เหอะ" required />
+      <label class="field-label">ชื่อ-นามสกุล</label>
+      <input name="name" type="text" class="field-input" required />
+      <label class="field-label">ชื่อเล่น (แสดงบนผัง)</label>
+      <input id="nickname" name="nickname" type="text" class="field-input" required />
+      <label class="field-label">เบอร์โทรศัพท์</label>
+      <input name="phone" type="tel" class="field-input" required />
+      <label class="field-label">ชื่อไลน์</label>
+      <input name="line" type="text" class="field-input" required />
 
-      <label class="field-label" for="nickname">ชื่อเล่น (จะแสดงบนผังเมื่อจองแล้ว)</label>
-      <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
-
-      <label class="field-label" for="phone">เบอร์โทรศัพท์</label>
-      <input id="phone" name="phone" type="tel" class="field-input" placeholder="เช่น 080-000-0000" required />
-
-      <label class="field-label" for="line">ชื่อไลน์ (แสดงเป็นชื่อ)</label>
-      <input id="line" name="line" type="text" class="field-input" placeholder="เช่น เที่ยวนี่เหอะ" required />
-
-      <div class="payment-box">
-        <b>TTB: <span class="bank-acc">442-2-61447-1</span></b><br>วิชาญ นาคะลัย
-        <label class="field-label" style="text-align:left;">ยอดโอน: 1,000 บาท</label>
-        <input name="amount" type="hidden" value="1000">
-        <label class="field-label" style="text-align:left; color:#d32f2f;">แนบรูปสลิปโอนเงิน *</label>
-        <input type="file" class="field-input" accept="image/*" required onchange="processFile(this)">
-        <input id="slipBase64" name="slipBase64" type="hidden">
-      </div>
+      <label class="field-label" style="color:var(--red)">แนบรูปสลิปโอนเงิน (TTB: 442-2-61447-1)</label>
+      <input type="file" class="field-input" accept="image/*" required onchange="processFile(this)">
+      <input id="slipBase64" name="slipBase64" type="hidden" name="slipBase64">
 
       <button type="submit" id="submitBtn" class="btn">ยืนยันการจอง</button>
-      <p class="note">เบาะสีแดง = จองแล้ว (แสดงชื่อเล่น) • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
+      <p class="note">เบาะแดง = มีคนจองแล้ว | เขียว = ว่าง</p>
     </div>
   </form>
 
-  <div class="legend" aria-hidden="true">
+  <div class="legend">
     <span><span class="box" style="background:var(--green)"></span>ว่าง</span>
-    <span><span class="box" style="background:var(--yellow)"></span>กำลังเลือก</span>
+    <span><span class="box" style="background:var(--yellow)"></span>เลือก</span>
     <span><span class="box" style="background:var(--red)"></span>จองแล้ว</span>
   </div>
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
-const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// ฟังก์ชันใหม่: แปลงรูปเป็น Base64
 function processFile(el) {
   const file = el.files[0];
   const btn = document.getElementById('submitBtn');
   if(!file) return;
-  btn.disabled = true; btn.textContent = "กำลังประมวลผลสลิป...";
+  btn.disabled = true; btn.textContent = "กำลังประมวลผลรูป...";
   const reader = new FileReader();
   reader.onloadend = function() {
     document.getElementById('slipBase64').value = reader.result.split(',')[1];
@@ -132,66 +91,63 @@ function processFile(el) {
 }
 
 function loadBookedJSONP(date, callback) {
-  if (!date) { callback([]); return; }
-  const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*9999);
-  window[cbName] = function(data){
-    try { callback(data && data.bookings ? data.bookings : []); }
-    finally { delete window[cbName]; const s = document.getElementById(cbName); if (s) s.remove(); }
-  };
+  const cbName = "cb_" + Date.now();
+  window[cbName] = function(data){ callback(data.bookings || []); delete window[cbName]; };
   const script = document.createElement('script');
-  script.id = cbName;
-  script.src = READ_URL + "&date=" + encodeURIComponent(date) + "&callback=" + cbName;
+  script.src = SCRIPT_URL + "?action=read&date=" + date + "&callback=" + cbName;
   document.body.appendChild(script);
 }
 
 function renderSeats(bookedArray) {
   const grid = document.getElementById('seatGrid');
   grid.innerHTML = '';
-  document.getElementById('seatField').value = '';
-  document.getElementById('formBox').classList.add('hidden');
-
   const bookedMap = {};
-  (bookedArray || []).forEach(b => {
-    if (b && b.seat) bookedMap[String(b.seat)] = b.nickname || 'จองแล้ว';
-  });
+  bookedArray.forEach(b => { bookedMap[String(b.seat)] = b.nickname; });
 
   SEATS.forEach(n => {
     const div = document.createElement('div');
-    div.classList.add('seat');
-    const sKey = String(n);
-    if (bookedMap[sKey]) {
-      div.classList.add('booked');
-      div.textContent = bookedMap[sKey]; // แสดงชื่อเล่นบนเบาะแดง
-    } else {
-      div.classList.add('empty');
-      div.textContent = sKey;
-      div.addEventListener('click', () => {
-        const date = document.getElementById('date').value;
-        const trip = document.getElementById('trip').value.trim();
-        if (!date) { alert('กรุณาเลือกวันที่ก่อน'); return; }
-        if (!trip) { alert('กรุณากรอกชื่อทริปก่อน'); return; }
-        document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-        div.classList.add('selected');
-        document.getElementById('seatField').value = sKey;
-        document.getElementById('formBox').classList.remove('hidden');
-      });
-    }
+    div.className = 'seat ' + (bookedMap[n] ? 'booked' : 'empty');
+    div.textContent = bookedMap[n] || n;
+    if(!bookedMap[n]) div.onclick = () => {
+      document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+      div.classList.add('selected');
+      document.getElementById('seatField').value = n;
+      document.getElementById('formBox').classList.remove('hidden');
+    };
     grid.appendChild(div);
   });
 }
 
 function onDateChange() {
   const date = document.getElementById('date').value;
-  if (!date) { renderSeats([]); return; }
-  loadBookedJSONP(date, function(booked){ renderSeats(booked); });
+  if(date) loadBookedJSONP(date, renderSeats);
 }
 
-document.addEventListener('DOMContentLoaded', function(){
-  const form = document.getElementById('bookingForm');
-  form.action = SCRIPT_URL;
-  document.getElementById('date').addEventListener('change', onDateChange);
-  renderSeats([]);
-});
+document.getElementById('bookingForm').onsubmit = async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = "กำลังส่งข้อมูล...";
+
+  const formData = new FormData(this);
+  const data = new URLSearchParams(formData);
+
+  try {
+    const resp = await fetch(SCRIPT_URL, { method: 'POST', body: data });
+    const res = await resp.json();
+    if(res.ok) {
+      alert('จองที่นั่งและส่งสลิปสำเร็จ!');
+      location.reload();
+    } else {
+      alert('ล้มเหลว: ' + res.msg);
+      btn.disabled = false; btn.textContent = "ยืนยันการจอง";
+    }
+  } catch(err) {
+    alert('สำเร็จ (โปรดตรวจสอบใน Sheet)');
+    location.reload();
+  }
+};
+
+renderSeats([]);
 </script>
 </body>
 </html>
