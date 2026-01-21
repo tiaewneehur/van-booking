@@ -81,21 +81,22 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
       <label class="field-label" for="line">ชื่อไลน์</label>
       <input id="line" name="line" type="text" class="field-input" placeholder="เช่น เที่ยวนี่เหอะ" required />
 
-      <div class="bank-box">
-        <p>ธนาคารทหารไทยธนชาต (TTB)</p>
-        <p class="bank-acc">442-2-61447-1</p>
-        <p>ชื่อบัญชี: วิชาญ นาคะลัย</p>
-        
-        <label class="field-label" style="text-align:left; margin-top:15px;">ยอดเงินโอน (บาท)</label>
-        <input type="text" class="field-input" value="1000" readonly style="background:#eee; text-align:center; font-weight:bold;">
-        
-        <span class="slip-label">แนบรูปสลิปการโอนเงิน *</span>
-        <input type="file" id="slipFile" class="field-input" accept="image/*" required onchange="processFile(this)" />
-        <input type="hidden" id="slipBase64" name="slipBase64" />
-      </div>
+     <div class="bank-box" style="border: 2px dashed #1976d2; border-radius: 12px; padding: 15px; margin: 15px 0; background: #fdfdfd; text-align: center;">
+  <p style="margin: 5px 0; font-size: 15px; font-weight: 500;">ธนาคารทหารไทยธนชาต (TTB)</p>
+  <p style="font-size: 26px; color: #d32f2f; font-weight: 800; margin: 8px 0;">442-2-61447-1</p>
+  <p style="margin: 5px 0;">ชื่อบัญชี: วิชาญ นาคะลัย</p>
+  
+  <label class="field-label" style="text-align:left; margin-top:15px;">ยอดเงินโอน (บาท)</label>
+  <input type="text" name="amount" class="field-input" value="1000" readonly style="background:#eee; text-align:center; font-weight:bold;">
+  
+  <span style="color: #d32f2f; font-weight: 700; display: block; margin-top: 15px; margin-bottom: 8px;">แนบรูปสลิปการโอนเงิน *</span>
+  <input type="file" id="slipFile" class="field-input" accept="image/*" required onchange="processFile(this)" />
+  <input type="hidden" id="slipBase64" name="slipBase64" />
+</div>
 
-      <button type="submit" id="submitBtn" class="btn">ยืนยันการจองและส่งสลิป</button>
-      <p class="note" style="margin-bottom:15px;">ข้อมูลจะถูกส่งไปยังระบบเพื่อตรวจสอบการโอนเงิน</p>
+<button type="submit" id="submitBtn" class="btn" style="background:#1e88e5;">ยืนยันการจองและส่งสลิป</button>
+<p class="note" style="margin-top:10px; color:#777;">ข้อมูลจะถูกส่งไปยังระบบเพื่อตรวจสอบการโอนเงิน</p>
+
       
       <p class="note">เบาะสีแดง = จองแล้ว (แสดงชื่อเล่น) • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
     </div>
