@@ -114,7 +114,7 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpG
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// ✅ ฟังก์ชันแปลงไฟล์รูปเป็น Base64 (สำคัญ)
+// ✅ ฟังก์ชันแปลงไฟล์รูปเป็น Base64
 function processFile(el) {
   const file = el.files[0];
   if(!file) return;
@@ -125,6 +125,34 @@ function processFile(el) {
   reader.readAsDataURL(file);
 }
 
+// ✅ แก้ไข: เพิ่มฟังก์ชันส่งข้อมูลแบบ AJAX เพื่อให้รูปส่งไปถึงแน่นอน
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+  e.preventDefault(); // กันหน้าจอกระพริบ
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerText = "กำลังบันทึกและส่งสลิป...";
+
+  const formData = new FormData(this);
+  const data = {};
+  formData.forEach((value, key) => { data[key] = value; });
+
+  // ส่งข้อมูลไปหลังบ้าน
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams(data)
+  }).then(() => {
+    alert("จองที่นั่งและส่งสลิปสำเร็จแล้ว!");
+    location.reload();
+  }).catch(err => {
+    alert("เกิดข้อผิดพลาด: " + err);
+    btn.disabled = false;
+    btn.innerText = "ยืนยันการจองและส่งสลิป";
+  });
+});
+
+// --- ฟังก์ชันดึงข้อมูลเบาะ (เหมือนเดิม) ---
 function loadBookedJSONP(date, callback) {
   if (!date) { callback([]); return; }
   const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*9999);
@@ -178,8 +206,6 @@ function onDateChange() {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-  const form = document.getElementById('bookingForm');
-  form.action = SCRIPT_URL;
   document.getElementById('date').addEventListener('change', onDateChange);
   renderSeats([]);
 });
