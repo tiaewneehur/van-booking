@@ -32,13 +32,12 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 .seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
 .seat.selected{background:var(--yellow);color:#000}
 
-/* ส่วนของกล่องชำระเงิน */
 .payment-box {
   margin-top: 20px; padding: 15px; border: 2px dashed var(--blue);
   border-radius: 12px; background: #f0f7ff; text-align: center;
 }
-.bank-info { font-size: 16px; margin-bottom: 10px; color: #333; line-height: 1.5; }
-.bank-acc { font-size: 22px; color: #d32f2f; font-weight: bold; margin: 5px 0; }
+.bank-info { font-size: 16px; margin-bottom: 10px; color: #333; }
+.bank-acc { font-size: 20px; color: #d32f2f; font-weight: bold; margin: 5px 0; }
 
 .legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
 .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
@@ -57,7 +56,7 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 
 <div class="card">
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
-  <p class="subtitle">เลือกวันที่ จองเบาะ และแนบสลิปโอนเงิน</p>
+  <p class="subtitle">เลือกวันที่ จองเบาะ และแนบสลิปโอนเงิน 1,000 บาท</p>
 
   <img src="เที่ย นี่เหอะ.png" alt="โลโก้" class="logo" />
   <img src="IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
@@ -87,7 +86,7 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 
       <div class="payment-box">
         <div class="bank-info">
-          <b>ธนาคารทหารไทยธนชาติ (TTB)</b><br>
+          <b>ธนาคารทหารไทยธนชาต (TTB)</b><br>
           <div class="bank-acc">442-2-61447-1</div>
           ชื่อบัญชี: <b>วิชาญ นาคะลัย</b>
         </div>
@@ -95,15 +94,14 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
         <label class="field-label" style="text-align:left;">ยอดเงินโอน (บาท)</label>
         <input name="amount" type="number" class="field-input" value="1000" readonly style="background:#eee;">
 
-        <label class="field-label" style="text-align:left; color:#d32f2f;">แนบรูปสลิปการโอนเงิน *</label>
+        <label class="field-label" style="text-align:left;">แนบรูปสลิปการโอนเงิน (บังคับ)</label>
         <input id="slipFile" type="file" class="field-input" accept="image/*" required onchange="encodeImageFileAsURL(this)">
         
         <input id="slipBase64" name="slipBase64" type="hidden">
-        <input id="slipName" name="slipName" type="hidden">
       </div>
 
       <button type="submit" id="submitBtn" class="btn">ยืนยันการจองและส่งสลิป</button>
-      <p class="note">ข้อมูลจะถูกส่งไปยังระบบเพื่อตรวจสอบการโอนเงิน</p>
+      <p class="note">เบาะสีแดง = จองแล้ว • เขียว = ว่าง • เหลือง = กำลังเลือก</p>
     </div>
   </form>
 
@@ -115,24 +113,23 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 </div>
 
 <script>
+/* แทนที่ URL ด้วย Web App ที่ Deploy ล่าสุดของไอซ์ */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
-let selectedSeat = null;
 
-// ฟังก์ชันแปลงรูปภาพเป็น Base64
+// ฟังก์ชันแปลงรูปภาพเป็น Base64 สำหรับส่งไป Drive
 function encodeImageFileAsURL(element) {
   const file = element.files[0];
-  if (!file) return;
-  
   const submitBtn = document.getElementById('submitBtn');
+  if (!file) return;
+
   submitBtn.disabled = true;
-  submitBtn.textContent = "กำลังประมวลผลรูปภาพ...";
+  submitBtn.textContent = "กำลังเตรียมรูปภาพ...";
 
   const reader = new FileReader();
   reader.onloadend = function() {
     document.getElementById('slipBase64').value = reader.result.split(',')[1];
-    document.getElementById('slipName').value = file.name;
     submitBtn.disabled = false;
     submitBtn.textContent = "ยืนยันการจองและส่งสลิป";
   }
@@ -156,7 +153,6 @@ function loadBookedJSONP(date, callback) {
 function renderSeats(bookedArray) {
   const grid = document.getElementById('seatGrid');
   grid.innerHTML = '';
-  selectedSeat = null;
   document.getElementById('seatField').value = '';
   document.getElementById('formBox').classList.add('hidden');
 
@@ -184,36 +180,33 @@ function renderSeats(bookedArray) {
 function onClickSeat(div, sKey) {
   const date = document.getElementById('date').value;
   const trip = document.getElementById('trip').value.trim();
-  if (!date) { alert('กรุณาเลือกวันที่ก่อน'); return; }
-  if (!trip) { alert('กรุณากรอกชื่อทริปก่อน'); return; }
+  if (!date || !trip) { alert('กรุณาเลือกวันที่และชื่อทริปก่อน'); return; }
+  
   document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
   div.classList.add('selected');
-  selectedSeat = sKey;
   document.getElementById('seatField').value = sKey;
   document.getElementById('formBox').classList.remove('hidden');
-}
-
-function onDateChange() {
-  const date = document.getElementById('date').value;
-  if (!date) { renderSeats([]); return; }
-  loadBookedJSONP(date, renderSeats);
 }
 
 document.addEventListener('DOMContentLoaded', function(){
   const form = document.getElementById('bookingForm');
   form.action = SCRIPT_URL;
-  document.getElementById('date').addEventListener('change', onDateChange);
+  document.getElementById('date').addEventListener('change', function() {
+    const date = this.value;
+    if (!date) { renderSeats([]); return; }
+    loadBookedJSONP(date, renderSeats);
+  });
   
   form.addEventListener('submit', function(e){
-    const slip = document.getElementById('slipBase64').value;
-    if(!slip){
+    if (!document.getElementById('slipBase64').value) {
       e.preventDefault();
-      alert('กรุณาแนบรูปสลิปการโอนเงินก่อนยืนยัน');
+      alert('กรุณาแนบรูปสลิปก่อนยืนยัน');
       return false;
     }
-    // หน่วงเวลาให้ผู้ใช้เห็นว่าส่งข้อมูลแล้ว ก่อนรีโหลดสถานะ
-    setTimeout(()=> onDateChange(), 2000);
-    return true;
+    setTimeout(()=> {
+       const date = document.getElementById('date').value;
+       loadBookedJSONP(date, renderSeats);
+    }, 2000);
   });
   renderSeats([]);
 });
