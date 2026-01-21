@@ -6,95 +6,77 @@
   <title>จองที่นั่งรถตู้</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-    /* โครงสร้าง CSS เดิมของคุณ 100% */
     :root{ --green:#4CAF50; --red:#E53935; --yellow:#FDD835; --bg:#f2f4f7; --card:#fff; --muted:#777; --blue:#1976d2; }
-    body{margin:0;font-family:system-ui,-apple-system,sans-serif; background:var(--bg); padding:16px;}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); padding:16px;}
     .card{max-width:520px;margin:0 auto;background:var(--card);border-radius:14px;padding:18px;box-shadow:0 8px 30px rgba(0,0,0,0.06);}
     .title{text-align:center;font-size:22px;font-weight:700;margin:2px 0 6px;}
     .subtitle{text-align:center;color:var(--muted);font-size:13px;margin-bottom:12px;}
-    .logo, .seat-map-img{display:block;margin:10px auto;max-width:100%;border-radius:8px;}
+    .logo{display:block;margin:8px auto 12px;max-width:220px;width:70%;}
+    .seat-map-img{display:block;margin:6px auto 12px;max-width:280px;width:85%;border-radius:8px;}
     .field-label{font-weight:600;margin:10px 0 6px;display:block;}
     .field-input{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;box-sizing:border-box;font-size:15px;}
     .grid{display:grid;grid-template-columns:repeat(3,90px);gap:12px;justify-content:center;margin-top:14px;margin-bottom:12px;}
-    .seat{width:90px; height:90px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:600; color:#fff; cursor:pointer; padding:4px; text-align:center; transition:0.2s; box-shadow:0 6px 14px rgba(0,0,0,0.06);}
+    .seat{width:90px; height:90px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:600; color:#fff; cursor:pointer; padding:4px; line-height:1.2; text-align:center; box-shadow:0 6px 14px rgba(0,0,0,0.06); transition:transform .12s;}
     .seat.empty{background:var(--green)}
-    .seat.booked{background:var(--red);cursor:not-allowed;font-size:13px;}
+    .seat.booked{background:var(--red);cursor:not-allowed;font-size:14px;}
     .seat.selected{background:var(--yellow);color:#000}
     .payment-box { margin-top: 20px; padding: 15px; border: 2px dashed var(--blue); border-radius: 12px; background: #f0f7ff; text-align: center; }
     .bank-acc { font-size: 22px; color: #d32f2f; font-weight: bold; margin: 5px 0; }
     .btn{display:block;width:100%;padding:12px;border-radius:10px;border:0;background:var(--blue);color:#fff;font-weight:700;font-size:15px;cursor:pointer;margin-top:15px}
-    .btn:disabled{background:#ccc;}
-    .legend{display:flex;gap:10px;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
-    .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;vertical-align:middle;margin-right:4px;}
+    .legend{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:10px;font-size:13px;color:var(--muted)}
+    .legend .box{width:14px;height:14px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
     .hidden{display:none}
     @media (max-width:420px){ .grid{grid-template-columns:repeat(3,72px);gap:10px} .seat{ width:72px; height:72px; font-size:13px; } }
   </style>
 </head>
 <body>
-
 <div class="card">
   <h1 class="title">ระบบจองที่นั่งรถตู้</h1>
   <p class="subtitle">เลือกวันที่ จองเบาะ และแนบสลิปโอนเงิน</p>
-
   <img src="เที่ย นี่เหอะ.png" class="logo" />
   <img src="IMG_0444.jpeg" class="seat-map-img" />
-
   <form id="bookingForm" method="POST" target="_blank">
     <label class="field-label">วันที่เดินทาง</label>
     <input id="date" name="date" type="date" class="field-input" required />
-
     <label class="field-label">ชื่อทริป</label>
     <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ผ้าห่มปก" required />
-
     <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
-
     <div id="formBox" class="hidden">
       <label class="field-label">ชื่อ-นามสกุล</label>
       <input name="name" type="text" class="field-input" placeholder="เช่น นายเดินป่า เที่ยวนี่เหอะ" required />
-
-      <label class="field-label">ชื่อเล่น (แสดงบนผัง)</label>
+      <label class="field-label">ชื่อเล่น (โชว์บนเบาะ)</label>
       <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
-
       <label class="field-label">เบอร์โทรศัพท์</label>
       <input name="phone" type="tel" class="field-input" placeholder="080-000-0000" required />
-
       <label class="field-label">ชื่อไลน์</label>
       <input name="line" type="text" class="field-input" placeholder="ชื่อไลน์ของคุณ" required />
-
       <div class="payment-box">
-        <b>TTB: <span class="bank-acc">442-2-61447-1</span></b><br>
-        วิชาญ นาคะลัย
+        <b>TTB: <span class="bank-acc">442-2-61447-1</span></b><br>วิชาญ นาคะลัย
         <label class="field-label" style="text-align:left;">ยอดโอน: 1,000 บาท</label>
         <input name="amount" type="hidden" value="1000">
-        
         <label class="field-label" style="text-align:left; color:#d32f2f;">แนบรูปสลิปโอนเงิน *</label>
         <input type="file" class="field-input" accept="image/*" required onchange="processFile(this)">
         <input id="slipBase64" name="slipBase64" type="hidden">
       </div>
-
       <button type="submit" id="submitBtn" class="btn">ยืนยันการจองและส่งสลิป</button>
     </div>
   </form>
-
   <div class="legend">
     <span><span class="box" style="background:var(--green)"></span>ว่าง</span>
     <span><span class="box" style="background:var(--yellow)"></span>เลือก</span>
     <span><span class="box" style="background:var(--red)"></span>จองแล้ว</span>
   </div>
 </div>
-
 <script>
-// *** สำคัญ: เปลี่ยน URL เป็นตัวล่าสุดที่ได้จากการ Deploy หลังบ้าน ***
-const SCRIPT_URL = "ใส่_URL_WEB_APP_ที่นี่";
+const SCRIPT_URL = "เอา_URL_ที่_DEPLOY_ใหม่_มาใส่ตรงนี้";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// ฟังก์ชันแปลงรูปภาพเป็นรหัส Base64
 function processFile(el) {
   const file = el.files[0];
   const btn = document.getElementById('submitBtn');
   if(!file) return;
-  btn.disabled = true; btn.textContent = "กำลังประมวลผลรูปภาพ...";
+  btn.disabled = true; btn.textContent = "กำลังประมวลผลรูป...";
   const reader = new FileReader();
   reader.onloadend = function() {
     document.getElementById('slipBase64').value = reader.result.split(',')[1];
@@ -103,7 +85,6 @@ function processFile(el) {
   reader.readAsDataURL(file);
 }
 
-// ฟังก์ชันโหลดชื่อเล่นมาแสดงบนเบาะ
 function loadBooked() {
   const date = document.getElementById('date').value;
   if(!date) return;
@@ -117,22 +98,25 @@ function renderSeats(data) {
   grid.innerHTML = '';
   const booked = {};
   if(data.bookings) data.bookings.forEach(b => { booked[String(b.seat)] = b.nickname; });
-  
   SEATS.forEach(n => {
     const div = document.createElement('div');
     const sKey = String(n);
-    div.className = 'seat ' + (booked[sKey] ? 'booked' : 'empty');
-    div.textContent = booked[sKey] || sKey; // ถ้าจองแล้วแสดงชื่อเล่น ถ้าไม่จองแสดงเลขเบาะ
-    if(!booked[sKey]) div.onclick = () => {
-      document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-      div.classList.add('selected');
-      document.getElementById('seatField').value = sKey;
-      document.getElementById('formBox').classList.remove('hidden');
-    };
+    if (booked[sKey]) {
+      div.className = 'seat booked';
+      div.textContent = booked[sKey];
+    } else {
+      div.className = 'seat empty';
+      div.textContent = sKey;
+      div.onclick = () => {
+        document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+        div.classList.add('selected');
+        document.getElementById('seatField').value = sKey;
+        document.getElementById('formBox').classList.remove('hidden');
+      };
+    }
     grid.appendChild(div);
   });
 }
-
 document.getElementById('date').onchange = loadBooked;
 document.getElementById('bookingForm').action = SCRIPT_URL;
 renderSeats({bookings:[]});
