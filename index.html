@@ -6,7 +6,6 @@
   <title>จองที่นั่งรถตู้</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
-/* --- สไตล์เดิมของคุณทั้งหมด --- */
 :root{
   --green:#4CAF50; --red:#E53935; --yellow:#FDD835; --bg:#f2f4f7;
   --card:#fff; --muted:#777; --blue:#1976d2;
@@ -33,7 +32,6 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 .seat.booked{background:var(--red);cursor:not-allowed;transform:none;box-shadow:none}
 .seat.selected{background:var(--yellow);color:#000}
 
-/* ส่วนของกล่องชำระเงินแบบเส้นประที่คุณชอบ */
 .payment-box {
   margin-top: 20px; padding: 15px; border: 2px dashed var(--blue);
   border-radius: 12px; background: #f0f7ff; text-align: center;
@@ -74,16 +72,16 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 
     <div id="formBox" class="hidden">
       <label class="field-label" for="name">ชื่อ-นามสกุล</label>
-      <input id="name" name="name" type="text" class="field-input" required />
+      <input id="name" name="name" type="text" class="field-input" placeholder="เช่น นายเดินป่า เที่ยวนี่เหอะ" required />
 
       <label class="field-label" for="nickname">ชื่อเล่น (แสดงบนผัง)</label>
-      <input id="nickname" name="nickname" type="text" class="field-input" required />
+      <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
 
       <label class="field-label" for="phone">เบอร์โทรศัพท์</label>
-      <input id="phone" name="phone" type="tel" class="field-input" required />
+      <input id="phone" name="phone" type="tel" class="field-input" placeholder="080-000-0000" required />
 
       <label class="field-label" for="line">ชื่อไลน์</label>
-      <input id="line" name="line" type="text" class="field-input" required />
+      <input id="line" name="line" type="text" class="field-input" placeholder="ชื่อไลน์ของคุณ" required />
 
       <div class="payment-box">
         <div class="bank-info">
@@ -97,7 +95,6 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 
         <label class="field-label" style="text-align:left; color:#d32f2f;">แนบรูปสลิปการโอนเงิน *</label>
         <input id="slipFile" type="file" class="field-input" accept="image/*" required onchange="encodeImageFileAsURL(this)">
-        
         <input id="slipBase64" name="slipBase64" type="hidden">
       </div>
 
@@ -113,19 +110,15 @@ body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto; background:va
 </div>
 
 <script>
-// *** เปลี่ยน URL ตรงนี้เป็น Web App URL ของไอซ์ ***
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
+const SCRIPT_URL = "ใส่_URL_WEB_APP_ของคุณที่นี่";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// ฟังก์ชันแปลงรูปภาพเป็นรหัส Base64 (เพิ่มเข้าไป)
 function encodeImageFileAsURL(element) {
   const file = element.files[0];
   const submitBtn = document.getElementById('submitBtn');
   if (!file) return;
-
   submitBtn.disabled = true;
   submitBtn.textContent = "กำลังเตรียมรูปภาพ...";
-
   const reader = new FileReader();
   reader.onloadend = function() {
     document.getElementById('slipBase64').value = reader.result.split(',')[1];
@@ -135,7 +128,6 @@ function encodeImageFileAsURL(element) {
   reader.readAsDataURL(file);
 }
 
-// ฟังก์ชันดึงข้อมูลที่นั่งเดิม
 function loadBookedJSONP(date, callback) {
   if (!date) { callback([]); return; }
   const cbName = "cb_" + Date.now();
