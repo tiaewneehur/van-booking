@@ -3,20 +3,17 @@
 <html lang="th">
 <head>
   <meta charset="utf-8" />
-  <title>จองที่นั่งรถตู้ - เที่ยวนี่เหอะ</title>
+  <title>จองที่นั่งรถตู้ - เที่ยวนี่เหอะ 🚐</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #1e40af; /* สีน้ำเงินเข้มดูน่าเชื่อถือ */
-      --success: #10b981;
-      --danger: #ef4444;
+      --primary: #2563eb;
+      --success: #059669;
+      --danger: #dc2626;
       --warning: #f59e0b;
-      --bg: #f8fafc;
+      --bg: #eff6ff;
       --card-bg: #ffffff;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
     }
 
     * { box-sizing: border-box; }
@@ -25,273 +22,238 @@
       margin: 0;
       font-family: 'Kanit', sans-serif;
       background-color: var(--bg);
-      background-image: radial-gradient(#cbd5e1 0.5px, transparent 0.5px);
-      background-size: 24px 24px;
-      color: var(--text-main);
       padding: 16px;
-      line-height: 1.5;
     }
 
     .card {
       max-width: 500px;
       margin: 0 auto;
       background: var(--card-bg);
-      border-radius: 24px;
-      padding: 24px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(255,255,255,0.7);
-    }
-
-    .title {
-      text-align: center;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--primary);
-      margin: 10px 0 4px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 14px;
-      margin-bottom: 20px;
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      border: 2px solid #fff;
     }
 
     .logo {
       display: block;
-      margin: 0 auto 15px;
+      margin: 0 auto 10px;
       max-width: 180px;
-      height: auto;
       filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
     }
 
-    .seat-map-img {
-      display: block;
-      margin: 15px auto;
-      max-width: 100%;
-      height: auto;
-      border-radius: 12px;
-      border: 2px solid var(--border);
+    .title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
     }
 
-    /* Form Styling */
-    .field-label {
-      font-weight: 600;
-      margin: 14px 0 6px;
-      display: block;
-      font-size: 14px;
-      color: var(--text-main);
+    .subtitle {
+      text-align: center;
+      color: #64748b;
+      font-size: 15px;
+      margin-bottom: 25px;
     }
 
+    .field-group { margin-bottom: 18px; }
+    .field-label { font-weight: 600; margin-bottom: 8px; display: block; font-size: 15px; color: #334155; }
+    
     .field-input {
       width: 100%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      border: 2px solid var(--border);
-      background: #fdfdfd;
-      font-size: 15px;
-      transition: all 0.2s;
+      padding: 14px 18px;
+      border-radius: 15px;
+      border: 2px solid #e2e8f0;
+      font-size: 16px;
       font-family: inherit;
+      transition: all 0.3s;
+      background: #f8fafc;
     }
-
+    
     .field-input:focus {
       outline: none;
       border-color: var(--primary);
       background: #fff;
-      box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.1);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
     }
 
-    /* ✅ Seat Grid Design */
+    .seat-map-img {
+      display: block;
+      margin: 25px auto;
+      max-width: 100%;
+      border-radius: 20px;
+      border: 4px solid #fff;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      justify-content: center;
-      margin: 20px 0;
-      padding: 15px;
+      gap: 15px;
       background: #f1f5f9;
-      border-radius: 20px;
+      padding: 20px;
+      border-radius: 25px;
     }
 
     .seat {
       aspect-ratio: 1/1;
-      border-radius: 16px;
+      border-radius: 18px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
-      color: #fff;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 4px 0 rgba(0,0,0,0.1);
-      position: relative;
-      border: 2px solid transparent;
+      font-weight: 700;
+      color: white;
+      text-align: center;
     }
-
-    .seat:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.1); }
 
     .seat.empty {
-      background: var(--success);
-      border-bottom: 5px solid #059669;
+      background: linear-gradient(145deg, #10b981, #059669);
+      box-shadow: 0 5px 0 #047857;
     }
+    
+    .seat.empty:hover { transform: translateY(-4px) scale(1.05); }
 
     .seat.booked {
       background: #cbd5e1;
-      color: #64748b;
+      box-shadow: 0 5px 0 #94a3b8;
       cursor: not-allowed;
-      border-bottom: 5px solid #94a3b8;
+      color: #475569;
       font-size: 12px;
-      padding: 4px;
-      text-align: center;
-      word-break: break-word;
     }
 
     .seat.selected {
-      background: var(--warning);
+      background: linear-gradient(145deg, #fbbf24, #f59e0b);
       color: #000;
-      border: 3px solid #b45309;
-      transform: scale(1.05);
-      box-shadow: 0 8px 15px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 5px 0 #b45309;
+      transform: scale(1.1);
+      animation: bounce 0.4s infinite alternate;
     }
 
-    /* Legend */
+    @keyframes bounce { from { transform: scale(1.1); } to { transform: scale(1.15); } }
+
+    .btn {
+      width: 100%;
+      padding: 18px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(to right, #2563eb, #1e40af);
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 25px;
+      box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+      transition: 0.3s;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 15px 20px -3px rgba(37, 99, 235, 0.4); }
+
     .legend {
       display: flex;
-      gap: 15px;
-      align-items: center;
       justify-content: center;
-      margin-top: 15px;
+      gap: 12px;
+      margin-top: 25px;
       font-size: 13px;
       background: #fff;
-      padding: 10px;
-      border-radius: 12px;
+      padding: 12px;
+      border-radius: 15px;
     }
-    
     .legend-item { display: flex; align-items: center; gap: 6px; }
-    .box { width: 14px; height: 14px; border-radius: 4px; }
+    .dot { width: 14px; height: 14px; border-radius: 5px; }
 
-    /* Button */
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 16px;
-      border-radius: 14px;
-      border: 0;
-      background: var(--primary);
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 15px;
-      transition: all 0.2s;
-      box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.2);
-    }
-
-    .btn:hover { background: #173693; transform: translateY(-1px); box-shadow: 0 6px 12px rgba(30, 64, 175, 0.3); }
-
-    .note { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 12px; }
     .hidden { display: none; }
-
-    /* Responsive */
-    @media (max-width: 400px) {
-      .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; }
-      .seat { font-size: 14px; border-radius: 12px; }
-    }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <img src="เที่ย นี่เหอะ.png" alt="โลโก้" class="logo" />
-  <h1 class="title">จองที่นั่งรถตู้</h1>
-  <p class="subtitle">เช็คที่นั่งว่างและจองทริปง่ายๆ เพียงไม่กี่คลิก</p>
+  <img src="เที่ย นี่เหอะ.png" alt="Logo" class="logo" />
+  <h1 class="title">จองที่นั่งรถตู้ 🚐✨</h1>
+  <p class="subtitle">แพลนทริปสนุก จองเบาะที่ใช่ได้เลย! 🏔️🎒</p>
 
   <form id="bookingForm" method="POST" target="_blank">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-      <div>
-        <label class="field-label" for="date">📅 วันที่เดินทาง</label>
-        <input id="date" name="date" type="date" class="field-input" required />
-      </div>
-      <div>
-        <label class="field-label" for="trip">🏔️ ชื่อทริป</label>
-        <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ผ้าห่มปก" required />
-      </div>
+    <div class="field-group">
+      <label class="field-label">📅 เลือกวันที่เดินทาง</label>
+      <input id="date" name="date" type="date" class="field-input" required />
     </div>
 
-    <img src="IMG_0444.jpeg" alt="ผังเบาะ" class="seat-map-img" />
-    
-    <label class="field-label">💺 เลือกตำแหน่งที่นั่ง</label>
-    <div id="seatGrid" class="grid"></div>
+    <div class="field-group">
+      <label class="field-label">⛺ ชื่อทริปสุดคูล</label>
+      <input id="trip" name="trip" type="text" class="field-input" placeholder="ระบุชื่อทริป เช่น ดอยอินทนนท์" required />
+    </div>
 
+    <img src="IMG_0444.jpeg" alt="Bus Layout" class="seat-map-img" />
+
+    <label class="field-label">💺 เลือกตำแหน่งที่นั่ง (เบาะเขียวว่างนะ!)</label>
+    <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
 
-    <div id="formBox" class="hidden" style="animation: fadeIn 0.4s ease-out;">
-      <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+    <div id="formBox" class="hidden">
+      <div style="margin: 30px 0 20px; border-top: 3px dashed #e2e8f0;"></div>
+      <h3 style="text-align: center; color: var(--primary);">📝 ข้อมูลผู้จอง</h3>
       
-      <label class="field-label" for="name">👤 ชื่อ-นามสกุล</label>
-      <input id="name" name="name" type="text" class="field-input" placeholder="ระบุชื่อจริง" required />
+      <div class="field-group">
+        <label class="field-label">👤 ชื่อ-นามสกุล (จริง)</label>
+        <input id="name" name="name" type="text" class="field-input" placeholder="ใส่ชื่อ-นามสกุล" required />
+      </div>
 
-      <label class="field-label" for="nickname">🏷️ ชื่อเล่น (แสดงบนแผนผัง)</label>
-      <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
+      <div class="field-group">
+        <label class="field-label">🏷️ ชื่อเล่น (จะไปโชว์บนผังรถ)</label>
+        <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
+      </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <div>
-          <label class="field-label" for="phone">📞 เบอร์โทรศัพท์</label>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+        <div class="field-group">
+          <label class="field-label">📞 เบอร์โทรติดต่อ</label>
           <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxxxxxx" required />
         </div>
-        <div>
-          <label class="field-label" for="line">💬 ชื่อ Line</label>
-          <input id="line" name="line" type="text" class="field-input" placeholder="ไอดีไลน์" required />
+        <div class="field-group">
+          <label class="field-label">💬 ID LINE / ชื่อไลน์</label>
+          <input id="line" name="line" type="text" class="field-input" placeholder="เพื่อดึงเข้ากลุ่ม" required />
         </div>
       </div>
 
-      <button type="submit" class="btn">ยืนยันการจองที่นั่ง</button>
-      <p class="note">เมื่อกดแล้ว ข้อมูลจะถูกบันทึกลงระบบทันที</p>
+      <button type="submit" class="btn">🚀 ยืนยันจองที่นั่งตอนนี้เลย</button>
+      <p style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 15px;">กดจองแล้วเจอกันที่ทริปนะครับ! 🙏✨</p>
     </div>
   </form>
 
   <div class="legend">
-    <div class="legend-item"><span class="box" style="background:var(--success)"></span>ว่าง</div>
-    <div class="legend-item"><span class="box" style="background:var(--warning)"></span>กำลังเลือก</div>
-    <div class="legend-item"><span class="box" style="background:#cbd5e1"></span>เต็ม</div>
+    <div class="legend-item"><div class="dot" style="background:var(--success)"></div> ว่าง ✅</div>
+    <div class="legend-item"><div class="dot" style="background:var(--warning)"></div> เลือก 💛</div>
+    <div class="legend-item"><div class="dot" style="background:#cbd5e1"></div> เต็ม ❌</div>
   </div>
 </div>
 
 <script>
-/* ====== ตั้งค่า: ลิงก์เดิมของคุณไอซ์ ====== */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
-
 const SEATS = [3,6,9,2,5,8,1,4,7];
-let selectedSeat = null;
 
 function loadBookedJSONP(date, callback) {
-  if (!date) { callback([]); return; }
-  const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*9999);
-  window[cbName] = function(data){
-    try { callback(data && data.bookings ? data.bookings : []); }
-    finally { delete window[cbName]; const s = document.getElementById(cbName); if (s) s.remove(); }
+  if (!date) return;
+  const cbName = "cb_" + Date.now();
+  window[cbName] = (data) => {
+    callback(data.bookings || []);
+    delete window[cbName];
+    const el = document.getElementById(cbName);
+    if(el) el.remove();
   };
-  const script = document.createElement('script');
-  script.id = cbName;
-  script.src = READ_URL + "&date=" + encodeURIComponent(date) + "&callback=" + cbName;
-  script.onerror = function(){ delete window[cbName]; script.remove(); callback([]); };
-  document.body.appendChild(script);
+  const s = document.createElement('script');
+  s.id = cbName;
+  s.src = `${READ_URL}&date=${encodeURIComponent(date)}&callback=${cbName}`;
+  document.body.appendChild(s);
 }
 
 function renderSeats(bookedArray) {
   const grid = document.getElementById('seatGrid');
   grid.innerHTML = '';
-  selectedSeat = null;
-  document.getElementById('seatField').value = '';
-  document.getElementById('formBox').classList.add('hidden');
-
   const bookedMap = {};
-  (bookedArray || []).forEach(b => {
-    if (b && b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม';
-  });
+  bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
 
   SEATS.forEach(n => {
     const div = document.createElement('div');
@@ -299,67 +261,41 @@ function renderSeats(bookedArray) {
     const sKey = String(n);
     if (bookedMap[sKey]) {
       div.classList.add('booked');
-      div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ ${sKey}</span><br><b>${bookedMap[sKey]}</b>`;
+      div.innerHTML = `<span style="font-size:10px;">เบาะ ${sKey}</span><div style="overflow:hidden; text-overflow:ellipsis; width:100%">${bookedMap[sKey]}</div>`;
     } else {
       div.classList.add('empty');
-      div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ</span><br>${sKey}`;
-      div.addEventListener('click', () => onClickSeat(div, sKey));
+      div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:20px;">${sKey}</span>`;
+      div.onclick = () => {
+        if(!document.getElementById('date').value) return alert('⚠️ กรุณาเลือกวันที่เดินทางก่อนจ้า!');
+        if(!document.getElementById('trip').value) return alert('⚠️ อย่าลืมใส่ชื่อทริปด้วยนะ!');
+        document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+        div.classList.add('selected');
+        document.getElementById('seatField').value = sKey;
+        document.getElementById('formBox').classList.remove('hidden');
+        // เลื่อนลงไปที่ฟอร์มแบบนุ่มนวล
+        setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior: 'smooth'}), 300);
+      };
     }
     grid.appendChild(div);
   });
 }
 
-function onClickSeat(div, sKey) {
-  const date = document.getElementById('date').value;
-  const trip = document.getElementById('trip').value.trim();
-  if (!date) { alert('กรุณาเลือกวันที่ก่อนครับ'); return; }
-  if (!trip) { alert('กรุณากรอกชื่อทริปก่อนครับ'); return; }
-  
-  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-  div.classList.add('selected');
-  selectedSeat = sKey;
-  document.getElementById('seatField').value = sKey;
-  document.getElementById('formBox').classList.remove('hidden');
-  
-  // เลื่อนหน้าจอลงมาที่ฟอร์มกรอกข้อมูล
-  setTimeout(() => {
-    document.getElementById('formBox').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    document.getElementById('name').focus();
-  }, 200);
-}
-
-function onDateChange() {
-  const date = document.getElementById('date').value;
-  const grid = document.getElementById('seatGrid');
-  grid.style.opacity = "0.5"; // ให้ความรู้สึกว่ากำลังโหลด
-  
-  if (!date) { renderSeats([]); grid.style.opacity = "1"; return; }
-  loadBookedJSONP(date, function(booked){
-    renderSeats(booked);
-    grid.style.opacity = "1";
-  });
-}
-
-function onSubmit(e) {
-  const date = document.getElementById('date').value;
-  const seat = document.getElementById('seatField').value;
-  if (!date || !seat) {
-    e.preventDefault();
-    alert('กรุณาเลือกวันและที่นั่งให้ครบถ้วน');
-    return false;
-  }
-  setTimeout(()=> onDateChange(), 1500); // โหลดใหม่หลังจอง
-  return true;
-}
-
-document.addEventListener('DOMContentLoaded', function(){
-  const form = document.getElementById('bookingForm');
-  form.action = SCRIPT_URL;
-  document.getElementById('date').addEventListener('change', onDateChange);
-  form.addEventListener('submit', onSubmit);
+document.getElementById('date').onchange = (e) => {
   renderSeats([]);
-});
-</script>
+  loadBookedJSONP(e.target.value, renderSeats);
+};
 
+document.getElementById('bookingForm').onsubmit = () => {
+  document.getElementById('bookingForm').action = SCRIPT_URL;
+  // แสดง Loading เล็กน้อยก่อน Refresh
+  const btn = document.querySelector('.btn');
+  btn.innerHTML = "⌛ กำลังบันทึกข้อมูล...";
+  btn.style.opacity = "0.7";
+  setTimeout(() => location.reload(), 2500);
+  return true;
+};
+
+renderSeats([]);
+</script>
 </body>
 </html>
