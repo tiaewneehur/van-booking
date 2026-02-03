@@ -24,7 +24,7 @@
     .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 0 #047857; }
     .seat.booked { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 0 #b91c1c; font-size: 10px; cursor: not-allowed; }
     
-    /* ลูกเล่นจังหวะหัวใจที่น้าต้องการ */
+    /* ลูกเล่นกดแล้วเต้นตุบตับ */
     .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
     @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
 
@@ -107,7 +107,6 @@
 </div>
 
 <script>
-// URL ที่น้าแจ้งไว้
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
@@ -118,13 +117,13 @@ function doLogin() {
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainUI').style.display = 'block';
 
-  // ค้นหาข้อมูลเก่ามาเติม (ให้มันเด้ง)
+  // ระบบค้นหาคนเก่า (ดึงชื่อจริง ชื่อเล่น ไลน์ มาครบ!)
   const cbSearch = "src_" + Date.now();
   window[cbSearch] = (res) => {
     if (res && res.found) {
-      document.getElementById('name').value = res.user.name || '';
-      document.getElementById('nickname').value = res.user.nickname || '';
-      document.getElementById('line').value = res.user.line || '';
+      if(res.user.name) document.getElementById('name').value = res.user.name;
+      if(res.user.nickname) document.getElementById('nickname').value = res.user.nickname;
+      if(res.user.line) document.getElementById('line').value = res.user.line;
     }
     delete window[cbSearch];
     const s = document.getElementById(cbSearch); if(s) s.remove();
