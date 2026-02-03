@@ -123,9 +123,14 @@ function showPayment() {
   document.getElementById('payModal').style.display = 'flex';
 }
 
+
 function finalSubmit() {
-  if (!document.getElementById('confirmCheck').checked) return alert('กรุณาติ๊กยืนยันการโอนก่อนนะจ๊ะ!');
-  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
+  if (!document.getElementById('confirmCheck').checked)
+    return alert('กรุณาติ๊กยืนยันการโอนก่อนนะจ๊ะ!');
+
+  const btn = document.getElementById('submitBtn');
+  btn.innerHTML = "⌛ กำลังส่งข้อมูล...";
+  btn.disabled = true;
 
   const data = {
     date: document.getElementById('date').value,
@@ -134,17 +139,36 @@ function finalSubmit() {
     name: document.getElementById('name').value,
     nickname: document.getElementById('nickname').value,
     phone: document.getElementById('phone').value,
-    line: document.getElementById('line').value,
-    confirm: true
+    line: document.getElementById('line').value
   };
 
-  fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
-  .then(() => { alert('จองสำเร็จ! เก็บกระเป๋าเลย 🎒'); location.reload(); })
-  .catch(() => { alert('ส่งข้อมูลเรียบร้อย (กรุณาเช็กชื่อในตารางอีกครั้ง)'); location.reload(); });
-}
+  if (!data.date || !data.seat || !data.name) {
+    alert('ข้อมูลไม่ครบ');
+    btn.disabled = false;
+    btn.innerHTML = "✅ ยืนยันจองสำเร็จ!";
+    return;
+  }
 
-document.getElementById('date').onchange = (e) => { renderSeats([]); loadBookedJSONP(e.target.value, renderSeats); };
-renderSeats([]);
+  const body = new URLSearchParams(data).toString();
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: body
+  })
+  .then(res => res.text())
+  .then(() => {
+    alert('จองสำเร็จ! เก็บกระเป๋าเลย 🎒');
+    location.reload();
+  })
+  .catch(err => {
+    console.error(err);
+    alert('เกิดข้อผิดพลาด');
+    location.reload();
+  });
+}
 </script>
 </body>
 </html>
