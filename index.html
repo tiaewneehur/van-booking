@@ -41,7 +41,6 @@
   <div class="login-box">
     <img src="เที่ย นี่เหอะ.png" style="width:100px; margin-bottom:20px;">
     <h2 style="color:#1e40af;">ยินยันตัวตน</h2>
-    <p style="font-size:14px; color:#64748b; margin-bottom:20px;">ใส่เบอร์โทรศัพท์เพื่อเข้าสู่หน้าจอง</p>
     <input id="loginPhone" type="tel" class="field-input" placeholder="08x-xxxxxxx" style="text-align:center; margin-bottom:20px;" maxlength="10">
     <button type="button" onclick="doLogin()" id="loginBtn" class="btn">ตกลง 🚀</button>
   </div>
@@ -89,43 +88,37 @@
       <button type="button" onclick="showPayment()" class="btn">🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
     </div>
   </form>
-
-  <div class="legend">
-    <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#10b981"></div> ว่างจัด</div>
-    <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#ef4444"></div> อดแดก</div>
-  </div>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <h2 style="color: #1e40af; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
-    <p style="font-size: 20px; color: #ef4444; margin-bottom: 20px;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
+    <h2 style="color: #1e40af;">💰 โอนเถอะอยากไปเที่ยว</h2>
+    <p style="color: #ef4444; margin-bottom: 20px;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
     <img src="slip-qr.png" class="qr-img">
     <div class="confirm-box">
       <input type="checkbox" id="confirmCheck" style="width: 25px; height: 25px;">
-      <label for="confirmCheck" style="font-size: 14px; font-weight: 600; color: #d9480f;">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่มจ้า</label>
+      <label for="confirmCheck">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่มจ้า</label>
     </div>
     <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #059669;">✅ ยืนยันจองสำเร็จแล้วอิห่าจิก!</button>
-    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px; font-size: 14px;">ย้อนกลับ</button>
+    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px;">ย้อนกลับ</button>
   </div>
 </div>
 
 <script>
-// *** อย่าลืมเปลี่ยนลิงก์ข้างล่างนี้เป็นตัวล่าสุดนะครับน้า ***
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
+const SCRIPT_URL = "น้าใส่ลิงก์เว็บแอปใหม่ตรงนี้";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
 function doLogin() {
   const ph = document.getElementById('loginPhone').value.trim();
   if (ph.length < 10) return alert('ใส่เบอร์ให้ครบ 10 หลักนะน้า!');
   
-  // 1. เข้าหน้าจองทันที กันค้าง
+  // 1. เข้าหน้าจองก่อนเลยกันค้าง
   document.getElementById('phone').value = ph;
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainUI').style.display = 'block';
 
-  // 2. แอบไปหาชื่อคนเก่าเงียบๆ มาเติมให้
-  const cbName = "src_" + Date.now();
+  // 2. แอบดึงข้อมูลคนเก่าเงียบๆ มาเติม
+  const cbName = "find_" + Date.now();
   window[cbName] = (res) => {
     if (res && res.found) {
       document.getElementById('name').value = res.user.name || '';
@@ -135,10 +128,10 @@ function doLogin() {
     delete window[cbName];
     const s = document.getElementById(cbName); if(s) s.remove();
   };
-  const script = document.createElement('script');
-  script.id = cbName;
-  script.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbName}`;
-  document.body.appendChild(script);
+  const sc = document.createElement('script');
+  sc.id = cbName;
+  sc.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbName}`;
+  document.body.appendChild(sc);
 }
 
 function loadBookedJSONP(date, callback) {
@@ -165,7 +158,6 @@ function renderSeats(bookedArray) {
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected'); document.getElementById('seatField').value = sKey;
         document.getElementById('formBox').classList.remove('hidden');
-        setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 200);
       };
     }
     grid.appendChild(div);
@@ -181,12 +173,10 @@ function showPayment() {
 function finalSubmit() {
   if (!document.getElementById('confirmCheck').checked) return alert('กรุณาติ๊กยืนยันการโอนก่อนนะจ๊ะเด็กโง่!');
   const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
-  
   const formData = new URLSearchParams();
   ['date','trip','seat','name','nickname','phone','line'].forEach(k => {
     formData.append(k, document.getElementById(k==='seat'?'seatField':k).value);
   });
-
   fetch(SCRIPT_URL, { 
     method: 'POST', 
     mode: 'no-cors', 
