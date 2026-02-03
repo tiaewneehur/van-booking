@@ -125,7 +125,11 @@ function renderSeats(bookedArray) {
     } else {
       div.classList.add('empty'); div.innerHTML = `<span style="font-size:9px;">เบาะ</span><span style="font-size:16px;">${sKey}</span>`;
       div.onclick = () => {
-        if(!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
+    if (!document.getElementById('date').value)
+    return alert('📅 เลือกวันก่อนสิพี่!');
+
+    if (!document.getElementById('trip').value.trim())
+    return alert('⛺ กรุณากรอกชื่อทริปก่อนเลือกเบาะนะจ๊ะ!');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected'); document.getElementById('seatField').value = sKey;
         document.getElementById('formBox').classList.remove('hidden');
