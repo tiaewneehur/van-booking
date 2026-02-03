@@ -30,6 +30,7 @@
     .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px 20px; text-align: center; }
     .qr-img { width: 100%; max-width: 250px; height: auto; border-radius: 15px; margin: 0 auto 15px; display: block; }
     .confirm-box { background: #fff4e6; border: 2px dashed #ff922b; padding: 15px; border-radius: 15px; margin: 15px 0; display: flex; align-items: center; gap: 12px; text-align: left; }
+    @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
   </style>
 </head>
 <body>
@@ -38,6 +39,7 @@
   <div class="login-box">
     <img src="เที่ย นี่เหอะ.png" style="width:100px; margin-bottom:20px;">
     <h2 style="color:#1e40af;">ยืนยันตัวตน</h2>
+    <p style="font-size:14px; color:#64748b; margin-bottom:20px;">ใส่เบอร์โทรศัพท์เพื่อเข้าสู่หน้าจอง</p>
     <input id="loginPhone" type="tel" class="field-input" placeholder="08x-xxxxxxx" style="text-align:center; margin-bottom:20px;" maxlength="10">
     <button type="button" onclick="doLogin()" id="loginBtn" class="btn">ตกลง 🚀</button>
   </div>
@@ -50,12 +52,12 @@
 
   <form id="bookingForm">
     <div class="field-group">
-      <label class="field-label">📅 วันเดินทาง</label>
+      <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
       <input id="date" name="date" type="date" class="field-input" required />
     </div>
     <div class="field-group">
-      <label class="field-label">⛺ ชื่อทริป</label>
-      <input id="trip" name="trip" type="text" class="field-input" placeholder="ไปไหนบอกด้วย" required />
+      <label class="field-label">⛺ ชื่อทริป (ไปไหนบอกด้วย)</label>
+      <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ไปดูลิงที่ลพบุรี" required />
     </div>
 
     <img src="IMG_0444.jpeg" class="seat-map-img" />
@@ -63,7 +65,7 @@
     <input id="seatField" name="seat" type="hidden" />
 
     <div id="formBox" class="hidden">
-      <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px;">📝 ข้อมูลผู้จอง</h3>
+      <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
       <div class="field-group">
         <label class="field-label">👤 ชื่อ-นามสกุล</label>
         <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
@@ -80,7 +82,7 @@
       </div>
       <div class="field-group">
         <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
-        <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์" required />
+        <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required />
       </div>
       <button type="button" onclick="showPayment()" class="btn">🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
     </div>
@@ -89,19 +91,20 @@
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <h2 style="color: #1e40af;">💰 โอนเถอะอยากไปเที่ยว</h2>
+    <h2 style="color: #1e40af; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
+    <p style="font-size: 20px; color: #ef4444; margin-bottom: 20px;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
     <img src="slip-qr.png" class="qr-img">
     <div class="confirm-box">
       <input type="checkbox" id="confirmCheck" style="width: 25px; height: 25px;">
-      <label for="confirmCheck">นำสลีปไปอัพโหลดใส่กลุ่มด้วยจ้า</label>
+      <label for="confirmCheck" style="font-size: 14px; font-weight: 600; color: #d9480f;">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่มจ้า</label>
     </div>
-    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #059669;">✅ ยืนยันจองสำเร็จ!</button>
+    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #059669;">✅ ยืนยันจองสำเร็จแล้วอิห่าจิก!</button>
     <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px;">ย้อนกลับ</button>
   </div>
 </div>
 
 <script>
-const SCRIPT_URL = "น้าเอาURLจากหลังบ้านมาใส่ตรงนี้";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
 function doLogin() {
@@ -111,7 +114,7 @@ function doLogin() {
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainUI').style.display = 'block';
 
-  // ค้นหาคนเก่าทันที
+  // ค้นหาคนเก่ามาเติมให้
   const cbName = "src_" + Date.now();
   window[cbName] = (res) => {
     if (res && res.found) {
@@ -120,8 +123,10 @@ function doLogin() {
       document.getElementById('line').value = res.user.line || '';
     }
     delete window[cbName];
+    const s = document.getElementById(cbName); if(s) s.remove();
   };
   const sc = document.createElement('script');
+  sc.id = cbName;
   sc.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbName}`;
   document.body.appendChild(sc);
 }
@@ -146,7 +151,7 @@ function renderSeats(bookedArray) {
       div.classList.add('empty'); div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:22px;">${sKey}</span>`;
       div.onclick = () => {
         if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
-        if (!document.getElementById('trip').value.trim()) return alert('⛺ กรอกทริปก่อนนะจ๊ะ!');
+        if (!document.getElementById('trip').value.trim()) return alert('⛺ กรุณากรอกชื่อทริปก่อนเลือกเบาะนะจ๊ะ!');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected'); document.getElementById('seatField').value = sKey;
         document.getElementById('formBox').classList.remove('hidden');
@@ -163,7 +168,7 @@ function showPayment() {
 }
 
 function finalSubmit() {
-  if (!document.getElementById('confirmCheck').checked) return alert('ติ๊กยืนยันการโอนก่อนนะจ๊ะ!');
+  if (!document.getElementById('confirmCheck').checked) return alert('กรุณาติ๊กยืนยันการโอนก่อนนะจ๊ะเด็กโง่!');
   const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
   const formData = new URLSearchParams();
   ['date','trip','seat','name','nickname','phone','line'].forEach(k => {
@@ -175,8 +180,8 @@ function finalSubmit() {
     body: formData.toString(),
     headers: { "Content-Type": "application/x-www-form-urlencoded" }
   })
-  .then(() => { alert('จองสำเร็จ! 🎒'); location.reload(); })
-  .catch(() => { alert('จองสำเร็จ! 🎒'); location.reload(); });
+  .then(() => { alert('จองสำเร็จแล้วอิห่าจิก!'); location.reload(); })
+  .catch(() => { alert('จองสำเร็จแล้วอิห่าจิก!'); location.reload(); });
 }
 
 document.getElementById('date').onchange = (e) => { renderSeats([]); loadBookedJSONP(e.target.value, renderSeats); };
