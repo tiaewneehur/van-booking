@@ -7,14 +7,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ล็อคความสมมาตรและขนาด */
+    /* บังคับสมมาตรทุกส่วน */
     * { box-sizing: border-box !important; margin: 0; padding: 0; }
     
     body { 
       font-family: 'Kanit', sans-serif; 
       background-color: #f0f4f8; 
       display: flex;
-      justify-content: center; 
+      justify-content: center; /* กึ่งกลางแนวนอน */
       min-height: 100vh;
       padding: 20px 0;
       color: #334155;
@@ -25,16 +25,18 @@
       max-width: 420px; 
       background: #ffffff; 
       border-radius: 30px; 
-      padding: 20px; 
+      padding: 25px 20px; 
       box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
       height: fit-content;
+      text-align: center; /* ให้เนื้อหาหลักอยู่กลาง */
     }
 
     .logo { display: block; margin: 0 auto 10px; max-width: 150px; height: auto; }
-    .title { text-align: center; font-size: 24px; font-weight: 700; color: #1e40af; margin-bottom: 5px; }
-    .subtitle { text-align: center; color: #64748b; font-size: 13px; margin-bottom: 25px; }
+    .title { font-size: 24px; font-weight: 700; color: #1e40af; margin-bottom: 5px; }
+    .subtitle { color: #64748b; font-size: 13px; margin-bottom: 25px; }
 
-    .field-group { width: 100%; margin-bottom: 15px; display: block; }
+    /* จัดระเบียบ Field ให้กว้างเต็มเท่ากันทุกอัน */
+    .field-group { width: 100%; margin-bottom: 15px; text-align: left; }
     .field-label { 
       font-weight: 600; 
       margin-bottom: 6px; 
@@ -44,6 +46,7 @@
       align-items: center; 
       gap: 6px; 
     }
+    
     .field-input { 
       display: block !important;
       width: 100% !important; 
@@ -54,7 +57,10 @@
       background: #f8fafc; 
       font-family: inherit;
       outline: none;
+      transition: 0.3s;
     }
+
+    .field-input:focus { border-color: #2563eb; background: #fff; }
 
     .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 1px solid #eee; }
     
@@ -78,22 +84,23 @@
     }
     @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.12); } }
 
-    #formBox { margin-top: 20px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2.5px solid #dbeafe; }
-    .form-row { display: flex; gap: 10px; margin-bottom: 12px; }
-    .half { flex: 1; }
+    /* ฟอร์มข้อมูลผู้จองแบบที่คุณไอซ์ชอบ */
+    #formBox { margin-top: 20px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2.5px solid #dbeafe; text-align: left; }
+    .form-row { display: flex; gap: 12px; margin-bottom: 12px; }
+    .half { flex: 1; } /* แบ่งครึ่งเป๊ะ */
 
-    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: 0.3s; }
+    .btn:active { transform: scale(0.98); }
 
-    /* --- ระบบ Modal แจ้งโอนเงิน --- */
+    /* Modal ชำระเงิน */
     .modal {
       display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%;
       background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 15px;
     }
     .modal-content {
-      background: white; width: 100%; max-width: 380px; border-radius: 25px; 
-      padding: 20px; text-align: center;
+      background: white; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px 20px; text-align: center;
     }
-    .qr-img { width: 100%; border-radius: 15px; margin-bottom: 15px; }
+    .qr-img { width: 100%; max-width: 280px; height: auto; border-radius: 15px; margin: 0 auto 15px; display: block; }
 
     .legend { display: flex; justify-content: center; gap: 10px; margin-top: 15px; font-size: 11px; }
     .dot { width: 12px; height: 12px; border-radius: 3px; }
@@ -124,21 +131,26 @@
 
     <div id="formBox" class="hidden">
       <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
+      
       <div class="field-group">
-        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อ-นามสกุล" required />
+        <label class="field-label">👤 ชื่อ-นามสกุล</label>
+        <input id="name" name="name" type="text" class="field-input" placeholder="ใส่ชื่อจริง" required />
       </div>
 
       <div class="form-row">
         <div class="half">
-          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="ชื่อเล่น" required />
+          <label class="field-label">🏷️ ชื่อเล่น</label>
+          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="โชว์บนรถ" required />
         </div>
         <div class="half">
-          <input id="phone" name="phone" type="tel" class="field-input" placeholder="เบอร์โทร" required />
+          <label class="field-label">📞 เบอร์โทร</label>
+          <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
         </div>
       </div>
 
       <div class="field-group">
-        <input id="line" name="line" type="text" class="field-input" placeholder="LINE ID" required />
+        <label class="field-label">💬 LINE ID</label>
+        <input id="line" name="line" type="text" class="field-input" placeholder="ไอดีไลน์" required />
       </div>
 
       <button type="button" onclick="showPayment()" class="btn">🚀 ไปที่หน้าชำระเงิน</button>
@@ -153,8 +165,8 @@
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <h2 style="color: #1e40af; margin-bottom: 10px;">💰 ชำระค่ามัดจำ</h2>
-    <img src="slip-qr.png" class="qr-img" alt="QR Code">
+    <h2 style="color: #1e40af; margin-bottom: 15px;">💰 ชำระค่ามัดจำ</h2>
+    <img src="slip-qr.png" class="qr-img" alt="QR Code แม่มณี">
     
     <div style="text-align: left; font-size: 14px; background: #f1f5f9; padding: 12px; border-radius: 15px; margin-bottom: 15px;">
       <p><b>ชื่อบัญชี:</b> วิชาญ นาคะลัย</p>
@@ -172,11 +184,10 @@
 </div>
 
 <script>
-const SCRIPT_URL = "ใส่_WEB_APP_URL_จาก_APPS_SCRIPT_ที่นี่";
+const SCRIPT_URL = "ใส่_WEB_APP_URL_ของคุณที่นี่";
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// ฟังก์ชันโหลดข้อมูลที่นั่ง
 function loadBookedJSONP(date, callback) {
   if (!date) return;
   const cbName = "cb_" + Date.now();
@@ -220,15 +231,14 @@ function renderSeats(bookedArray) {
   });
 }
 
-// เปิดหน้าชำระเงิน
 function showPayment() {
-  if(!document.getElementById('name').value || !document.getElementById('phone').value) {
-    return alert('กรุณากรอกข้อมูลผู้จองให้ครบถ้วนก่อนครับ');
+  const fields = ['name', 'nickname', 'phone', 'line'];
+  for(let f of fields) {
+    if(!document.getElementById(f).value) return alert('กรุณากรอกข้อมูลให้ครบทุกช่องก่อนครับ');
   }
   document.getElementById('payModal').style.display = 'flex';
 }
 
-// ส่งข้อมูลทั้งหมดเข้า Google Sheets + Drive
 function finalSubmit() {
   const fileInput = document.getElementById('slipFile');
   if (fileInput.files.length === 0) return alert('กรุณาแนบรูปสลิปด้วยนะครับ');
@@ -239,9 +249,7 @@ function finalSubmit() {
 
   const file = fileInput.files[0];
   const reader = new FileReader();
-
   reader.onload = function(e) {
-    const blob = e.target.result.split(',')[1];
     const data = {
       date: document.getElementById('date').value,
       trip: document.getElementById('trip').value,
@@ -250,17 +258,14 @@ function finalSubmit() {
       nickname: document.getElementById('nickname').value,
       phone: document.getElementById('phone').value,
       line: document.getElementById('line').value,
-      imageBlob: blob,
+      imageBlob: e.target.result.split(',')[1],
       imageType: file.type
     };
 
-    fetch(SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(data)
-    })
+    fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
     .then(res => res.json())
     .then(res => {
-      alert('จองสำเร็จ! บันทึกข้อมูลและสลิปเรียบร้อยแล้ว');
+      alert('จองสำเร็จ! ข้อมูลและสลิปถูกบันทึกแล้ว');
       location.reload();
     })
     .catch(err => {
