@@ -4,48 +4,41 @@
 <head>
   <meta charset="utf-8" />
   <title>จองที่นั่งรถตู้ - เที่ยวนี่เหอะ 🚐✨</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* บังคับสไตล์ใหม่ทั้งหมด */
-    :root {
-      --primary: #1e40af;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --bg: #f0f4f8;
-    }
-
+    /* ล้างค่าเก่า กันตีกัน */
+    * { box-sizing: border-box !important; margin: 0; padding: 0; }
+    
     body {
-      margin: 0;
       font-family: 'Kanit', sans-serif;
-      background: var(--bg);
+      background-color: #f0f4f8;
       padding: 15px;
       color: #334155;
     }
 
     .card {
-      max-width: 450px;
-      margin: 0 auto;
+      max-width: 480px;
+      margin: 10px auto;
       background: #ffffff;
       border-radius: 30px;
       padding: 25px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      border: 4px solid #ffffff;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      display: block !important;
     }
 
     .logo {
       display: block;
-      margin: 0 auto 10px;
-      max-width: 180px;
-      filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+      margin: 0 auto 15px;
+      max-width: 160px;
+      height: auto;
     }
 
     .title {
       text-align: center;
       font-size: 26px;
       font-weight: 700;
-      color: var(--primary);
+      color: #1e40af;
       margin-bottom: 5px;
     }
 
@@ -56,47 +49,42 @@
       margin-bottom: 25px;
     }
 
-    .input-box {
-      background: #f8fafc;
-      padding: 15px;
-      border-radius: 20px;
+    .form-row {
+      display: flex;
+      gap: 10px;
       margin-bottom: 15px;
-      border: 1px solid #e2e8f0;
     }
 
-    .field-label {
-      font-weight: 600;
-      margin-bottom: 8px;
-      display: block;
-      font-size: 14px;
-    }
-
+    .field-group { flex: 1; display: flex; flex-direction: column; }
+    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+    
     .field-input {
-      width: 100%;
+      width: 100% !important;
       padding: 12px;
       border-radius: 12px;
       border: 2px solid #cbd5e1;
-      font-size: 16px;
+      font-size: 15px;
+      background: #f8fafc;
       font-family: inherit;
     }
 
     .seat-map-img {
       display: block;
-      margin: 20px auto;
-      max-width: 100%;
+      width: 100%;
       border-radius: 15px;
-      border: 2px solid #e2e8f0;
+      margin: 15px 0;
+      border: 3px solid #f1f5f9;
     }
 
-    /* ตารางเบาะดีไซน์ใหม่ */
+    /* ✅ แก้ไข Grid และสีเบาะ */
     .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 12px !important;
+      margin: 20px 0 !important;
+      padding: 15px !important;
       background: #f1f5f9;
-      padding: 15px;
       border-radius: 25px;
-      margin: 20px 0;
     }
 
     .seat {
@@ -107,127 +95,126 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       font-weight: 700;
       color: white;
-      position: relative;
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .seat.empty {
-      background: linear-gradient(135deg, #10b981, #059669);
-      box-shadow: 0 6px 0 #047857;
+    /* สีเขียว = ว่าง */
+    .seat.empty { 
+      background: linear-gradient(135deg, #10b981, #059669); 
+      box-shadow: 0 5px 0 #047857; 
     }
-
-    .seat.empty:hover { transform: translateY(-3px); }
-
-    .seat.booked {
-      background: #94a3b8;
-      box-shadow: 0 6px 0 #64748b;
+    
+    /* 🔴 สีแดง = จองแล้ว (ตามที่ขอ) */
+    .seat.booked { 
+      background: linear-gradient(135deg, #ef4444, #dc2626); 
+      box-shadow: 0 5px 0 #b91c1c; 
       cursor: not-allowed;
       font-size: 11px;
     }
 
-    .seat.selected {
-      background: linear-gradient(135deg, #fbbf24, #f59e0b);
-      color: #000;
-      box-shadow: 0 6px 0 #b45309;
+    /* สีเหลือง = กำลังเลือก */
+    .seat.selected { 
+      background: linear-gradient(135deg, #fbbf24, #f59e0b); 
+      color: #000; 
+      box-shadow: 0 5px 0 #b45309; 
       transform: scale(1.1);
-      animation: heartbeat 1s infinite;
     }
 
-    @keyframes heartbeat {
-      0% { transform: scale(1.1); }
-      50% { transform: scale(1.15); }
-      100% { transform: scale(1.1); }
+    #formBox {
+      margin-top: 25px;
+      padding: 20px;
+      background: #eff6ff;
+      border-radius: 20px;
+      border: 2px solid #dbeafe;
     }
 
     .btn {
       width: 100%;
-      padding: 18px;
-      border-radius: 18px;
+      padding: 16px;
+      border-radius: 15px;
       border: none;
-      background: linear-gradient(to right, #2563eb, #1e40af);
+      background: #2563eb;
       color: white;
       font-size: 18px;
       font-weight: 700;
       cursor: pointer;
       margin-top: 15px;
-      box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
-
-    .btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
     .legend {
       display: flex;
       justify-content: center;
       gap: 15px;
-      margin-top: 20px;
+      margin-top: 25px;
       font-size: 12px;
-      color: #64748b;
     }
-
     .legend-item { display: flex; align-items: center; gap: 5px; }
-    .dot { width: 12px; height: 12px; border-radius: 4px; }
+    .dot { width: 14px; height: 14px; border-radius: 4px; }
 
-    .hidden { display: none; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <img src="เที่ย นี่เหอะ.png" alt="Logo" class="logo" />
+  <img src="เที่ย นี่เหอะ.png" class="logo" alt="Logo" />
   <h1 class="title">จองที่นั่งรถตู้ 🚐💨</h1>
-  <p class="subtitle">เลือกทริปที่ใช่ เบาะที่ชอบ แล้วลุยกัน! 🏔️✨</p>
+  <p class="subtitle">เลือกทริปที่ชอบ เบาะที่ใช่ แล้วไปเที่ยวกัน! 🎒✨</p>
 
   <form id="bookingForm" method="POST" target="_blank">
-    <div class="input-box">
-      <label class="field-label">📅 เลือกวันที่เดินทาง</label>
-      <input id="date" name="date" type="date" class="field-input" required />
+    <div class="form-row">
+      <div class="field-group">
+        <label class="field-label">📅 วันเดินทาง</label>
+        <input id="date" name="date" type="date" class="field-input" required />
+      </div>
+      <div class="field-group">
+        <label class="field-label">⛺ ชื่อทริป</label>
+        <input id="trip" name="trip" type="text" class="field-input" placeholder="ระบุชื่อทริป" required />
+      </div>
     </div>
 
-    <div class="input-box">
-      <label class="field-label">⛺ ชื่อทริปสุดเฟี้ยว</label>
-      <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ดอยม่อนจอง" required />
-    </div>
+    <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
 
-    <img src="IMG_0444.jpeg" alt="Layout" class="seat-map-img" />
-
-    <label class="field-label" style="text-align: center;">👇 จิ้มเลือกเบาะเลย (เขียว=ว่าง)</label>
+    <label class="field-label" style="text-align: center; display: block; width: 100%;">💺 เลือกเบาะที่ต้องการ (สีแดงคือเต็มนะจ๊ะ)</label>
     <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
 
-    <div id="formBox" class="hidden" style="background: #eff6ff; padding: 20px; border-radius: 20px; border: 2px solid #dbeafe;">
-      <h3 style="margin-top:0; color: var(--primary); text-align: center;">📝 กรอกข้อมูลนิดนึงจ้า</h3>
+    <div id="formBox" class="hidden">
+      <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px;">📝 ข้อมูลผู้จอง</h3>
       
-      <div class="field-group" style="margin-bottom:15px;">
+      <div class="field-group" style="margin-bottom: 12px;">
         <label class="field-label">👤 ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" class="field-input" placeholder="ขอชื่อจริงน้า" required />
+        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริง-นามสกุล" required />
       </div>
 
-      <div class="field-group" style="margin-bottom:15px;">
-        <label class="field-label">🏷️ ชื่อเล่น (โชว์บนผัง)</label>
+      <div class="field-group" style="margin-bottom: 12px;">
+        <label class="field-label">🏷️ ชื่อเล่น (โชว์บนรถ)</label>
         <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เช่น ไอซ์" required />
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-        <div>
+      <div class="form-row">
+        <div class="field-group">
           <label class="field-label">📞 เบอร์โทร</label>
           <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxxxxxx" required />
         </div>
-        <div>
+        <div class="field-group">
           <label class="field-label">💬 LINE ID</label>
           <input id="line" name="line" type="text" class="field-input" placeholder="ไอดีไลน์" required />
         </div>
       </div>
 
-      <button type="submit" class="btn">🚀 จองที่นั่งตอนนี้เลย!</button>
+      <button type="submit" class="btn">🚀 จองที่นั่งเลย!</button>
     </div>
   </form>
 
   <div class="legend">
-    <div class="legend-item"><div class="dot" style="background:var(--success)"></div> ว่าง ✅</div>
-    <div class="legend-item"><div class="dot" style="background:var(--warning)"></div> เลือกอยู่ 💛</div>
-    <div class="legend-item"><div class="dot" style="background:#94a3b8"></div> จองแล้ว ❌</div>
+    <div class="legend-item"><div class="dot" style="background:#10b981"></div> ว่าง ✅</div>
+    <div class="legend-item"><div class="dot" style="background:#ef4444"></div> จองแล้ว ❌</div>
+    <div class="legend-item"><div class="dot" style="background:#f59e0b"></div> กำลังเลือก 💛</div>
   </div>
 </div>
 
@@ -242,8 +229,7 @@ function loadBookedJSONP(date, callback) {
   window[cbName] = (data) => {
     callback(data.bookings || []);
     delete window[cbName];
-    const s = document.getElementById(cbName);
-    if(s) s.remove();
+    const s = document.getElementById(cbName); if(s) s.remove();
   };
   const script = document.createElement('script');
   script.id = cbName;
@@ -255,20 +241,20 @@ function renderSeats(bookedArray) {
   const grid = document.getElementById('seatGrid');
   grid.innerHTML = '';
   const bookedMap = {};
-  bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'จองแล้ว'; });
+  bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
 
   SEATS.forEach(n => {
     const div = document.createElement('div');
-    div.classList.add('seat');
+    div.className = 'seat';
     const sKey = String(n);
     if (bookedMap[sKey]) {
       div.classList.add('booked');
-      div.innerHTML = `<span style="font-size:10px;">เบาะ ${sKey}</span><div style="width:100%; overflow:hidden; text-overflow:ellipsis;">${bookedMap[sKey]}</div>`;
+      div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ ${sKey}</span><div style="font-weight:600; font-size:13px;">${bookedMap[sKey]}</div>`;
     } else {
       div.classList.add('empty');
-      div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ</span><span style="font-size:20px;">${sKey}</span>`;
+      div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ</span><span style="font-size:18px;">${sKey}</span>`;
       div.onclick = () => {
-        if(!document.getElementById('date').value) return alert('⚠️ เลือกวันก่อนน้าาา');
+        if(!document.getElementById('date').value) return alert('📅 อย่าลืมเลือกวันเดินทางก่อนนะครับ');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected');
         document.getElementById('seatField').value = sKey;
@@ -285,17 +271,14 @@ document.getElementById('date').onchange = (e) => {
   loadBookedJSONP(e.target.value, renderSeats);
 };
 
-document.getElementById('bookingForm').onsubmit = (e) => {
+document.getElementById('bookingForm').onsubmit = () => {
   document.getElementById('bookingForm').action = SCRIPT_URL;
-  const btn = document.querySelector('.btn');
-  btn.innerHTML = "⌛ กำลังส่งข้อมูล...";
-  btn.disabled = true;
-  setTimeout(() => location.reload(), 2000);
+  document.querySelector('.btn').innerHTML = "⌛ กำลังส่งข้อมูล...";
+  setTimeout(() => location.reload(), 2500);
   return true;
 };
 
 renderSeats([]);
 </script>
-
 </body>
 </html>
