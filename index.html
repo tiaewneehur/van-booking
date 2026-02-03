@@ -23,14 +23,17 @@
     .seat { aspect-ratio: 1/1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; color: white; transition: 0.2s; }
     .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 0 #047857; }
     .seat.booked { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 0 #b91c1c; font-size: 10px; cursor: not-allowed; }
+    
+    /* ลูกเล่นจังหวะหัวใจที่น้าต้องการ */
     .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
+    @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
     #formBox { margin-top: 20px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2.5px solid #dbeafe; text-align: left; }
     .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 10px; }
     .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 15px; }
     .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px 20px; text-align: center; }
     .qr-img { width: 100%; max-width: 250px; height: auto; border-radius: 15px; margin: 0 auto 15px; display: block; }
     .confirm-box { background: #fff4e6; border: 2px dashed #ff922b; padding: 15px; border-radius: 15px; margin: 15px 0; display: flex; align-items: center; gap: 12px; text-align: left; }
-    @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
   </style>
 </head>
 <body>
@@ -104,6 +107,7 @@
 </div>
 
 <script>
+// URL ที่น้าแจ้งไว้
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
@@ -114,20 +118,20 @@ function doLogin() {
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainUI').style.display = 'block';
 
-  // ค้นหาคนเก่ามาเติมให้
-  const cbName = "src_" + Date.now();
-  window[cbName] = (res) => {
+  // ค้นหาข้อมูลเก่ามาเติม (ให้มันเด้ง)
+  const cbSearch = "src_" + Date.now();
+  window[cbSearch] = (res) => {
     if (res && res.found) {
       document.getElementById('name').value = res.user.name || '';
       document.getElementById('nickname').value = res.user.nickname || '';
       document.getElementById('line').value = res.user.line || '';
     }
-    delete window[cbName];
-    const s = document.getElementById(cbName); if(s) s.remove();
+    delete window[cbSearch];
+    const s = document.getElementById(cbSearch); if(s) s.remove();
   };
   const sc = document.createElement('script');
-  sc.id = cbName;
-  sc.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbName}`;
+  sc.id = cbSearch;
+  sc.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbSearch}`;
   document.body.appendChild(sc);
 }
 
