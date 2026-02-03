@@ -111,15 +111,34 @@
 </div>
 
 <script>
+// *** อย่าลืมเปลี่ยนลิงก์ข้างล่างนี้เป็นตัวล่าสุดนะครับน้า ***
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
 function doLogin() {
   const ph = document.getElementById('loginPhone').value.trim();
   if (ph.length < 10) return alert('ใส่เบอร์ให้ครบ 10 หลักนะน้า!');
+  
+  // 1. เข้าหน้าจองทันที กันค้าง
   document.getElementById('phone').value = ph;
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainUI').style.display = 'block';
+
+  // 2. แอบไปหาชื่อคนเก่าเงียบๆ มาเติมให้
+  const cbName = "src_" + Date.now();
+  window[cbName] = (res) => {
+    if (res && res.found) {
+      document.getElementById('name').value = res.user.name || '';
+      document.getElementById('nickname').value = res.user.nickname || '';
+      document.getElementById('line').value = res.user.line || '';
+    }
+    delete window[cbName];
+    const s = document.getElementById(cbName); if(s) s.remove();
+  };
+  const script = document.createElement('script');
+  script.id = cbName;
+  script.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbName}`;
+  document.body.appendChild(script);
 }
 
 function loadBookedJSONP(date, callback) {
@@ -164,13 +183,9 @@ function finalSubmit() {
   const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
   
   const formData = new URLSearchParams();
-  formData.append('date', document.getElementById('date').value);
-  formData.append('trip', document.getElementById('trip').value);
-  formData.append('seat', document.getElementById('seatField').value);
-  formData.append('name', document.getElementById('name').value);
-  formData.append('nickname', document.getElementById('nickname').value);
-  formData.append('phone', document.getElementById('phone').value);
-  formData.append('line', document.getElementById('line').value);
+  ['date','trip','seat','name','nickname','phone','line'].forEach(k => {
+    formData.append(k, document.getElementById(k==='seat'?'seatField':k).value);
+  });
 
   fetch(SCRIPT_URL, { 
     method: 'POST', 
