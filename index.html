@@ -7,156 +7,109 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; color: #334155; }
+    /* สไตล์เดิมและลูกเล่น Heartbeat ของน้า */
+    * { box-sizing: border-box !important; margin: 0; padding: 0; }
+    body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; }
     #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1e40af; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-    .login-box { width: 85%; max-width: 350px; background: white; padding: 40px 25px; border-radius: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    .card { width: 92%; max-width: 400px; background: #ffffff; border-radius: 30px; padding: 25px 20px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); height: fit-content; text-align: center; overflow: hidden; display: none; }
-    .logo { display: block; margin: 0 auto 10px; max-width: 150px; height: auto; }
-    .title { font-size: 24px; font-weight: 700; color: #1e40af; margin-bottom: 5px; }
-    .subtitle { color: #64748b; font-size: 13px; margin-bottom: 25px; }
-    .field-group { width: 100%; margin-bottom: 15px; text-align: left; }
-    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #1e40af; display: flex; align-items: center; gap: 6px; }
-    .field-input { display: block !important; width: 100% !important; padding: 12px 15px !important; border-radius: 15px; border: 1.5px solid #cbd5e1; font-size: 16px; background: #f8fafc; font-family: inherit; outline: none; height: 54px; -webkit-appearance: none; appearance: none; }
-    .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 1px solid #eee; }
-    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin: 20px 0 !important; padding: 12px !important; background: #f1f5f9; border-radius: 25px; }
+    .login-box { width: 85%; max-width: 350px; background: white; padding: 40px 25px; border-radius: 30px; text-align: center; }
+    .card { width: 92%; max-width: 400px; background: #ffffff; border-radius: 30px; padding: 25px 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.08); text-align: center; display: none; }
+    .field-input { width: 100%; padding: 12px; border-radius: 15px; border: 1.5px solid #cbd5e1; margin-bottom: 15px; font-size: 16px; background: #f8fafc; outline: none; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 20px 0; background: #f1f5f9; padding: 12px; border-radius: 25px; }
     .seat { aspect-ratio: 1/1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; color: white; transition: 0.2s; }
     .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 0 #047857; }
     .seat.booked { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 0 #b91c1c; font-size: 10px; cursor: not-allowed; }
-    
-    /* ลูกเล่นกดแล้วเต้นตุบตับ */
     .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
     @keyframes heartbeat { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
-
     #formBox { margin-top: 20px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2.5px solid #dbeafe; text-align: left; }
     .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-    .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 15px; }
-    .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px 20px; text-align: center; }
-    .qr-img { width: 100%; max-width: 250px; height: auto; border-radius: 15px; margin: 0 auto 15px; display: block; }
-    .confirm-box { background: #fff4e6; border: 2px dashed #ff922b; padding: 15px; border-radius: 15px; margin: 15px 0; display: flex; align-items: center; gap: 12px; text-align: left; }
+    .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
+    .modal-content { background: white; width: 90%; max-width: 380px; border-radius: 25px; padding: 25px; text-align: center; }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
 
 <div id="loginOverlay">
   <div class="login-box">
-    <img src="เที่ย นี่เหอะ.png" style="width:100px; margin-bottom:20px;">
-    <h2 style="color:#1e40af;">ยืนยันตัวตน</h2>
-    <p style="font-size:14px; color:#64748b; margin-bottom:20px;">ใส่เบอร์โทรศัพท์เพื่อเข้าสู่หน้าจอง</p>
-    <input id="loginPhone" type="tel" class="field-input" placeholder="08x-xxxxxxx" style="text-align:center; margin-bottom:20px;" maxlength="10">
-    <button type="button" onclick="doLogin()" id="loginBtn" class="btn">ตกลง 🚀</button>
+    <h2 style="color:#1e40af; margin-bottom: 20px;">ยืนยันตัวตน</h2>
+    <input id="loginPhone" type="tel" class="field-input" placeholder="08x-xxxxxxx" style="text-align:center;" maxlength="10">
+    <button type="button" onclick="doLogin()" class="btn">ตกลง 🚀</button>
   </div>
 </div>
 
 <div class="card" id="mainUI">
-  <img src="เที่ย นี่เหอะ.png" class="logo" />
-  <h1 class="title">จองที่นั่งรถตู้ 🚐💨</h1>
-  <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
+  <h1 style="color:#1e40af;">จองที่นั่งรถตู้ 🚐💨</h1>
+  <p style="color:#64748b; font-size: 13px; margin-bottom: 20px;">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
+  
+  <input id="date" type="date" class="field-input" required />
+  <input id="trip" type="text" class="field-input" placeholder="⛺ ชื่อทริป (ไปไหนบอกด้วย)" required />
+  
+  <div id="seatGrid" class="grid"></div>
+  <input id="seatField" type="hidden" />
 
-  <form id="bookingForm">
-    <div class="field-group">
-      <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
-      <input id="date" name="date" type="date" class="field-input" required />
-    </div>
-    <div class="field-group">
-      <label class="field-label">⛺ ชื่อทริป (ไปไหนบอกด้วย)</label>
-      <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ไปดูลิงที่ลพบุรี" required />
-    </div>
-
-    <img src="IMG_0444.jpeg" class="seat-map-img" />
-    <div id="seatGrid" class="grid"></div>
-    <input id="seatField" name="seat" type="hidden" />
-
-    <div id="formBox" class="hidden">
-      <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
-      <div class="field-group">
-        <label class="field-label">👤 ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
-      </div>
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <div style="flex:1">
-          <label class="field-label">🏷️ ชื่อเล่น</label>
-          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
-        </div>
-        <div style="flex:1">
-          <label class="field-label">📞 เบอร์โทร</label>
-          <input id="phone" name="phone" type="tel" class="field-input" readonly />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
-        <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required />
-      </div>
-      <button type="button" onclick="showPayment()" class="btn">🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
-    </div>
-  </form>
+  <div id="formBox" class="hidden">
+    <label style="font-weight:600; color:#1e40af;">👤 ชื่อ-นามสกุล</label>
+    <input id="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" />
+    <label style="font-weight:600; color:#1e40af;">🏷️ ชื่อเล่น</label>
+    <input id="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" />
+    <label style="font-weight:600; color:#1e40af;">📞 เบอร์โทร</label>
+    <input id="phone" type="tel" class="field-input" readonly />
+    <label style="font-weight:600; color:#1e40af;">💬 ชื่อไลน์ นะจ๊ะ</label>
+    <input id="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์" />
+    <button type="button" onclick="showPayment()" class="btn">🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
+  </div>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <h2 style="color: #1e40af; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
-    <p style="font-size: 20px; color: #ef4444; margin-bottom: 20px;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
-    <img src="slip-qr.png" class="qr-img">
-    <div class="confirm-box">
-      <input type="checkbox" id="confirmCheck" style="width: 25px; height: 25px;">
-      <label for="confirmCheck" style="font-size: 14px; font-weight: 600; color: #d9480f;">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่มจ้า</label>
-    </div>
+    <h2 style="color: #1e40af;">💰 โอนเถอะอยากไปเที่ยว</h2>
+    <p style="color: #ef4444;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
+    <img src="slip-qr.png" style="width:100%; margin: 20px 0; border-radius: 15px;">
     <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #059669;">✅ ยืนยันจองสำเร็จแล้วอิห่าจิก!</button>
-    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px;">ย้อนกลับ</button>
   </div>
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
+const SCRIPT_URL = "น้าเอา_URL_ใหม่จากการ_Deploy_มาใส่ตรงนี้";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
 function doLogin() {
   const ph = document.getElementById('loginPhone').value.trim();
-  if (ph.length < 10) return alert('ใส่เบอร์ให้ครบ 10 หลักนะน้า!');
+  if (ph.length < 10) return alert('ใส่เบอร์ให้ครบ!');
   document.getElementById('phone').value = ph;
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainUI').style.display = 'block';
 
-  // ระบบค้นหาคนเก่า (ดึงชื่อจริง ชื่อเล่น ไลน์ มาครบ!)
-  const cbSearch = "src_" + Date.now();
-  window[cbSearch] = (res) => {
+  // ระบบค้นหาคนเก่า (ใช้ JSONP เพื่อให้ข้อมูลเด้งชัวร์)
+  const cbName = "search_" + Date.now();
+  window[cbName] = (res) => {
     if (res && res.found) {
-      if(res.user.name) document.getElementById('name').value = res.user.name;
-      if(res.user.nickname) document.getElementById('nickname').value = res.user.nickname;
-      if(res.user.line) document.getElementById('line').value = res.user.line;
+      document.getElementById('name').value = res.user.name || "";
+      document.getElementById('nickname').value = res.user.nickname || "";
+      document.getElementById('line').value = res.user.line || "";
     }
-    delete window[cbSearch];
-    const s = document.getElementById(cbSearch); if(s) s.remove();
+    delete window[cbName];
+    document.getElementById(cbName).remove();
   };
-  const sc = document.createElement('script');
-  sc.id = cbSearch;
-  sc.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbSearch}`;
-  document.body.appendChild(sc);
-}
-
-function loadBookedJSONP(date, callback) {
-  if (!date) return;
-  const cbName = "cb_" + Date.now();
-  window[cbName] = (data) => { callback(data.bookings || []); delete window[cbName]; };
   const script = document.createElement('script');
-  script.src = `${SCRIPT_URL}?action=read&date=${encodeURIComponent(date)}&callback=${cbName}`;
+  script.id = cbName;
+  script.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbName}`;
   document.body.appendChild(script);
 }
 
-function renderSeats(bookedArray) {
+function renderSeats(booked) {
   const grid = document.getElementById('seatGrid'); grid.innerHTML = '';
-  const bookedMap = {}; bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
+  const map = {}; booked.forEach(b => map[String(b.seat)] = b.nickname);
   SEATS.forEach(n => {
-    const div = document.createElement('div'); div.className = 'seat'; const sKey = String(n);
-    if (bookedMap[sKey]) {
-      div.classList.add('booked'); div.innerHTML = `<span style="font-size:11px;">เบาะ ${sKey}</span><div style="font-size:20px;">${bookedMap[sKey]}</div>`;
+    const div = document.createElement('div'); div.className = 'seat';
+    if (map[String(n)]) {
+      div.classList.add('booked'); div.innerHTML = `เบาะ ${n}<br>${map[String(n)]}`;
     } else {
-      div.classList.add('empty'); div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:22px;">${sKey}</span>`;
+      div.classList.add('empty'); div.innerHTML = `เบาะ ${n}`;
       div.onclick = () => {
-        if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
-        if (!document.getElementById('trip').value.trim()) return alert('⛺ กรุณากรอกชื่อทริปก่อนเลือกเบาะนะจ๊ะ!');
+        if(!document.getElementById('date').value) return alert('เลือกวันก่อนสิ!');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-        div.classList.add('selected'); document.getElementById('seatField').value = sKey;
+        div.classList.add('selected'); document.getElementById('seatField').value = n;
         document.getElementById('formBox').classList.remove('hidden');
       };
     }
@@ -164,30 +117,25 @@ function renderSeats(bookedArray) {
   });
 }
 
-function showPayment() {
-  const fields = ['name', 'nickname', 'phone', 'line'];
-  for(let f of fields) { if(!document.getElementById(f).value) return alert('กรอกให้ครบ!'); }
-  document.getElementById('payModal').style.display = 'flex';
-}
+document.getElementById('date').onchange = (e) => {
+  const cb = "read_" + Date.now();
+  window[cb] = (d) => renderSeats(d.bookings || []);
+  const script = document.createElement('script');
+  script.src = `${SCRIPT_URL}?action=read&date=${e.target.value}&callback=${cb}`;
+  document.body.appendChild(script);
+};
+
+function showPayment() { document.getElementById('payModal').style.display = 'flex'; }
 
 function finalSubmit() {
-  if (!document.getElementById('confirmCheck').checked) return alert('กรุณาติ๊กยืนยันการโอนก่อนนะจ๊ะเด็กโง่!');
-  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
-  const formData = new URLSearchParams();
-  ['date','trip','seat','name','nickname','phone','line'].forEach(k => {
-    formData.append(k, document.getElementById(k==='seat'?'seatField':k).value);
-  });
-  fetch(SCRIPT_URL, { 
-    method: 'POST', 
-    mode: 'no-cors', 
-    body: formData.toString(),
-    headers: { "Content-Type": "application/x-www-form-urlencoded" }
-  })
-  .then(() => { alert('จองสำเร็จแล้วอิห่าจิก!'); location.reload(); })
-  .catch(() => { alert('จองสำเร็จแล้วอิห่าจิก!'); location.reload(); });
-}
+  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ ส่งข้อมูล..."; btn.disabled = true;
+  const fd = new URLSearchParams();
+  ['date','trip','name','nickname','phone','line'].forEach(k => fd.append(k, document.getElementById(k).value));
+  fd.append('seat', document.getElementById('seatField').value);
 
-document.getElementById('date').onchange = (e) => { renderSeats([]); loadBookedJSONP(e.target.value, renderSeats); };
+  fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: fd.toString() })
+  .then(() => { alert('จองสำเร็จแล้วอิห่าจิก!'); location.reload(); });
+}
 renderSeats([]);
 </script>
 </body>
