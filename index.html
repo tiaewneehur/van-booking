@@ -9,34 +9,66 @@
   <style>
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; color: #334155; }
-    .card { width: 92%; max-width: 420px; background: #ffffff; border-radius: 35px; padding: 30px 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); text-align: center; }
-    .logo { display: block; margin: 0 auto 10px; max-width: 140px; height: auto; }
-    .title { font-size: 24px; font-weight: 600; color: #1e3a8a; margin-bottom: 4px; }
-    .subtitle { color: #94a3b8; font-size: 13px; margin-bottom: 25px; font-weight: 300; }
-    .field-group { width: 100%; margin-bottom: 18px; text-align: left; }
-    .field-label { font-weight: 500; margin-bottom: 8px; font-size: 14px; color: #1e40af; display: flex; align-items: center; gap: 8px; }
-    .field-input { display: block !important; width: 100% !important; padding: 12px 16px !important; border-radius: 15px; border: 1.5px solid #e2e8f0; font-size: 16px; background: #fdfdfd; font-family: inherit; outline: none; height: 54px; transition: 0.2s; color: #1e293b; -webkit-appearance: none; appearance: none; }
+    
+    /* ขยายการ์ดให้กว้างขึ้นเล็กน้อยเพื่อรองรับฟอนต์ใหญ่ */
+    .card { width: 94%; max-width: 440px; background: #ffffff; border-radius: 35px; padding: 35px 25px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); text-align: center; }
+    
+    /* ✅ ขยายโลโก้ให้ใหญ่ขึ้น */
+    .logo { display: block; margin: 0 auto 15px; max-width: 180px; height: auto; }
+    
+    /* ✅ ขยายหัวข้อ */
+    .title { font-size: 28px; font-weight: 600; color: #1e3a8a; margin-bottom: 6px; }
+    .subtitle { color: #94a3b8; font-size: 15px; margin-bottom: 30px; font-weight: 300; }
+
+    .field-group { width: 100%; margin-bottom: 22px; text-align: left; }
+    /* ✅ ขยายฟอนต์ Label */
+    .field-label { font-weight: 500; margin-bottom: 10px; font-size: 16px; color: #1e40af; display: flex; align-items: center; gap: 8px; }
+    
+    /* ✅ ขยายฟอนต์ในช่อง Input */
+    .field-input { 
+      display: block !important; width: 100% !important; padding: 14px 18px !important; 
+      border-radius: 15px; border: 1.5px solid #e2e8f0; font-size: 18px; 
+      background: #fdfdfd; font-family: inherit; outline: none; height: 60px;
+      transition: 0.2s; color: #1e293b;
+    }
     .field-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08); }
-    .seat-map-img { display: block; width: 100%; border-radius: 20px; margin: 15px 0; border: 1px solid #f1f5f9; }
-    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; margin: 20px 0 !important; padding: 15px !important; background: #f1f5f9; border-radius: 25px; }
+
+    .seat-map-img { display: block; width: 100%; border-radius: 20px; margin: 20px 0; border: 1px solid #f1f5f9; }
+    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 14px !important; margin: 25px 0 !important; padding: 18px !important; background: #f1f5f9; border-radius: 25px; }
+    
     .seat { aspect-ratio: 1/1; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; color: white; }
-    .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 0 #047857; }
-    .seat.booked { background: #e2e8f0; color: #64748b; box-shadow: 0 4px 0 #cbd5e1; cursor: not-allowed; }
-    .seat.booked .seat-num { color: #ef4444; font-size: 18px; font-weight: 600; }
-    /* ✅ ลูกเล่นหัวใจเต้นยังอยู่! */
-    .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
-    .seat-label { font-size: 11px; font-weight: 300; margin-bottom: 2px; }
-    .seat-num { font-size: 24px; font-weight: 600; }
+    .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 5px 0 #047857; }
+    .seat.booked { background: #e2e8f0; color: #64748b; box-shadow: 0 5px 0 #cbd5e1; cursor: not-allowed; }
+    
+    /* ✅ ขยายเบาะแดง (ชื่อคนจอง) */
+    .seat.booked .seat-num { color: #ef4444; font-size: 20px; font-weight: 600; line-height: 1.2; }
+    
+    .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 5px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
+    
+    /* ✅ ขยายฟอนต์บนเบาะ */
+    .seat-label { font-size: 12px; font-weight: 300; margin-bottom: 2px; }
+    .seat-num { font-size: 28px; font-weight: 600; }
+    
     @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.12); } }
-    #formBox { margin-top: 25px; padding: 25px; background: #eff6ff; border-radius: 25px; border: 1px solid #dbeafe; text-align: left; }
-    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.2s; }
+
+    #formBox { margin-top: 30px; padding: 25px; background: #eff6ff; border-radius: 25px; border: 1px solid #dbeafe; text-align: left; }
+    /* ✅ ขยายฟอนต์หัวข้อข้อมูลผู้จอง */
+    #formBox h3 { font-size: 20px; font-weight: 600; margin-bottom: 20px; }
+
+    /* ✅ ขยายปุ่มให้เต็มมือ */
+    .btn { width: 100%; padding: 20px; border-radius: 18px; border: none; background: #2563eb; color: white; font-size: 20px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: 0.2s; }
     .btn:active { transform: scale(0.97); }
-    .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.8); align-items: center; justify-content: center; padding: 15px; }
-    .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 30px; padding: 30px 20px; text-align: center; }
-    .qr-img { width: 100%; max-width: 240px; height: auto; border-radius: 20px; margin: 15px auto; display: block; border: 1px solid #f1f5f9; }
-    .confirm-box { background: #fff7ed; border: 1px solid #ffedd5; padding: 15px; border-radius: 15px; margin: 20px 0; display: flex; align-items: center; gap: 12px; text-align: left; }
-    .legend { display: flex; justify-content: center; gap: 15px; margin-top: 20px; font-size: 12px; color: #64748b; }
-    .dot { width: 10px; height: 10px; border-radius: 3px; }
+
+    .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 35px; padding: 35px 25px; text-align: center; }
+    /* ✅ ขยายฟอนต์ใน Modal */
+    .modal-content h2 { font-size: 24px; color: #1e3a8a; }
+    .modal-content p { font-size: 18px !important; }
+
+    .confirm-box { background: #fff7ed; border: 1px solid #ffedd5; padding: 18px; border-radius: 15px; margin: 25px 0; display: flex; align-items: center; gap: 14px; text-align: left; }
+    .confirm-box label { font-size: 15px; font-weight: 500; color: #d9480f; }
+
+    .legend { display: flex; justify-content: center; gap: 20px; margin-top: 25px; font-size: 14px; color: #64748b; }
+    .dot { width: 12px; height: 12px; border-radius: 3px; }
     .hidden { display: none !important; }
   </style>
 </head>
@@ -45,7 +77,9 @@
 <div class="card">
   <img src="เที่ย นี่เหอะ.png" class="logo" alt="Logo" />
   <h1 class="title">จองที่นั่งรถตู้ 🚐💨</h1>
-  <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p> <form id="bookingForm">
+  <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
+
+  <form id="bookingForm">
     <div class="field-group">
       <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
       <input id="date" name="date" type="date" class="field-input" required />
@@ -60,12 +94,12 @@
     <input id="seatField" name="seat" type="hidden" />
 
     <div id="formBox" class="hidden">
-      <h3 style="text-align: center; color: #1e40af; margin-bottom: 20px; font-size: 18px; font-weight: 600;">📝 ข้อมูลผู้จอง</h3>
+      <h3 style="text-align: center; color: #1e40af;">📝 ข้อมูลผู้จอง</h3>
       <div class="field-group">
         <label class="field-label">👤 ชื่อ-นามสกุล</label>
         <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
       </div>
-      <div style="display:flex; gap:12px; margin-bottom:18px;">
+      <div style="display:flex; gap:12px; margin-bottom:20px;">
         <div style="flex:1">
           <label class="field-label">🏷️ ชื่อเล่น</label>
           <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
@@ -84,26 +118,27 @@
   </form>
 
   <div class="legend">
-    <div style="display:flex; align-items:center; gap:6px;"><div class="dot" style="background:#10b981"></div> ว่างจัด</div>
-    <div style="display:flex; align-items:center; gap:6px;"><div class="dot" style="background:#e2e8f0; border:1px solid #cbd5e1"></div> อดแดก</div>
+    <div style="display:flex; align-items:center; gap:8px;"><div class="dot" style="background:#10b981"></div> ว่างจัด</div>
+    <div style="display:flex; align-items:center; gap:8px;"><div class="dot" style="background:#e2e8f0; border:1px solid #cbd5e1"></div> อดแดก</div>
   </div>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <h2 style="color: #1e3a8a; font-size: 20px; font-weight: 600;">💰 โอนเถอะอยากไปเที่ยว</h2>
-    <p style="font-size: 16px; color: #ef4444; margin: 10px 0;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
+    <h2>💰 โอนเถอะอยากไปเที่ยว</h2>
+    <p style="color: #ef4444; margin: 12px 0;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
     <img src="slip-qr.png" class="qr-img">
     <div class="confirm-box">
-      <input type="checkbox" id="confirmCheck" style="width: 22px; height: 22px;">
-      <label for="confirmCheck" style="font-size: 13px; font-weight: 500; color: #d9480f; line-height: 1.4;">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่มจ้า</label>
+      <input type="checkbox" id="confirmCheck" style="width: 25px; height: 25px; cursor: pointer;">
+      <label for="confirmCheck" style="cursor: pointer;">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่มจ้า</label>
     </div>
     <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #10b981;">✅ ยืนยันจองสำเร็จแล้วอิห่าจิก!</button>
-    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:#94a3b8; margin-top:20px; font-size: 14px; text-decoration: underline;">ย้อนกลับ</button>
+    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:#94a3b8; margin-top:25px; font-size: 16px; text-decoration: underline; cursor: pointer;">ย้อนกลับ</button>
   </div>
 </div>
 
 <script>
+// ✅ ตรวจสอบ URL นี้ให้เป็นตัวล่าสุดเสมอ
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
