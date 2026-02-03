@@ -15,10 +15,11 @@
     .title { text-align: center; font-size: 26px; font-weight: 700; color: #1e40af; margin-bottom: 5px; }
     .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 25px; }
 
-    .form-row { display: flex; gap: 10px; margin-bottom: 15px; }
-    .field-group { flex: 1; display: flex; flex-direction: column; margin-bottom: 12px; }
-    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #1e40af; }
-    .field-input { width: 100% !important; padding: 12px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 15px; background: #f8fafc; font-family: inherit; }
+    /* ✅ แก้ไขตรงนี้: แยกบรรทัดให้ Input ด้านบน */
+    .field-group { width: 100%; display: flex; flex-direction: column; margin-bottom: 15px; }
+    .field-label { font-weight: 600; margin-bottom: 8px; font-size: 15px; color: #1e40af; display: flex; align-items: center; gap: 5px; }
+    .field-input { width: 100% !important; padding: 14px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 16px; background: #f8fafc; font-family: inherit; outline: none; }
+    .field-input:focus { border-color: #2563eb; background: #fff; }
 
     /* ผังรถ */
     .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 3px solid #f1f5f9; }
@@ -29,7 +30,6 @@
     .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 5px 0 #047857; }
     .seat.booked { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 5px 0 #b91c1c; cursor: not-allowed; font-size: 11px; }
     
-    /* Animation หัวใจสั่น (Heartbeat) */
     .seat.selected { 
       background: linear-gradient(135deg, #fbbf24, #f59e0b); 
       color: #000; 
@@ -43,10 +43,10 @@
       100% { transform: scale(1.1); }
     }
 
-    #formBox { margin-top: 25px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2px solid #dbeafe; }
+    #formBox { margin-top: 25px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2px solid #dbeafe; animation: slideUp 0.4s ease-out; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     
-    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: 0.3s; }
-    .btn:hover { background: #1e40af; transform: translateY(-2px); }
+    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
 
     .legend { display: flex; justify-content: center; gap: 12px; margin-top: 20px; font-size: 12px; }
     .legend-item { display: flex; align-items: center; gap: 5px; }
@@ -58,43 +58,43 @@
 <body>
 
 <div class="card">
-  <img src="เที่ย นี่เหอะ.png" class="logo" alt="Logo" />
+  <img src="https://i.ibb.co/VpkX8Z4/เที่ยวนี่เหอะ-Logo.png" class="logo" alt="Logo" />
   <h1 class="title">จองที่นั่งรถตู้ 🚐💨</h1>
   <p class="subtitle">เลือกทริปที่ชอบ จองเบาะที่ใช่ 🎒✨</p>
 
   <form id="bookingForm" method="POST" target="_blank">
-    <div class="form-row">
-      <div class="field-group">
-        <label class="field-label">📅 วันเดินทาง</label>
-        <input id="date" name="date" type="date" class="field-input" required />
-      </div>
-      <div class="field-group">
-        <label class="field-label">⛺ ชื่อทริป</label>
-        <input id="trip" name="trip" type="text" class="field-input" placeholder="ระบุชื่อทริป" required />
-      </div>
+    <div class="field-group">
+      <label class="field-label">📅 วันเดินทาง</label>
+      <input id="date" name="date" type="date" class="field-input" required />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">⛺ ชื่อทริป</label>
+      <input id="trip" name="trip" type="text" class="field-input" placeholder="ระบุชื่อทริป (เช่น ผ้าห่มปก)" required />
     </div>
 
     <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
+    
+    <label class="field-label" style="justify-content: center; margin-bottom: 0;">💺 เลือกตำแหน่งที่นั่ง</label>
     <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
 
     <div id="formBox" class="hidden">
-      <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px;">📝 ข้อมูลผู้จอง</h3>
+      <h3 style="text-align: center; color: #1e40af; margin-bottom: 20px;">📝 ข้อมูลผู้จอง</h3>
       
       <div class="field-group">
         <label class="field-label">👤 ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริง-นามสกุล" required />
+        <input id="name" name="name" type="text" class="field-input" placeholder="ใส่ชื่อ-นามสกุลจริง" required />
       </div>
 
-      <div class="form-row">
-        <div class="field-group">
-          <label class="field-label">🏷️ ชื่อเล่น</label>
-          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="โชว์บนรถ" required />
-        </div>
-        <div class="field-group">
-          <label class="field-label">📞 เบอร์โทร</label>
-          <input id="phone" name="phone" type="tel" class="field-input" required />
-        </div>
+      <div class="field-group">
+        <label class="field-label">🏷️ ชื่อเล่น</label>
+        <input id="nickname" name="nickname" type="text" class="field-input" placeholder="โชว์บนผังรถ" required />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">📞 เบอร์โทรศัพท์</label>
+        <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxxxxxx" required />
       </div>
 
       <div class="field-group">
@@ -102,14 +102,14 @@
         <input id="line" name="line" type="text" class="field-input" placeholder="ไอดีไลน์" required />
       </div>
 
-      <button type="submit" class="btn">🚀 ยืนยันจองที่นั่งเลย!</button>
+      <button type="submit" class="btn">🚀 ยืนยันการจองที่นั่ง</button>
     </div>
   </form>
 
   <div class="legend">
-    <div class="legend-item"><div class="dot" style="background:#10b981"></div> ว่าง ✅</div>
-    <div class="legend-item"><div class="dot" style="background:#ef4444"></div> เต็ม ❌</div>
-    <div class="legend-item"><div class="dot" style="background:#f59e0b"></div> เลือกอยู่ 💛</div>
+    <div class="legend-item"><div class="dot" style="background:#10b981"></div> ว่าง</div>
+    <div class="legend-item"><div class="dot" style="background:#ef4444"></div> เต็ม</div>
+    <div class="legend-item"><div class="dot" style="background:#f59e0b"></div> กำลังเลือก</div>
   </div>
 </div>
 
@@ -147,9 +147,9 @@ function renderSeats(bookedArray) {
       div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ ${sKey}</span><div>${bookedMap[sKey]}</div>`;
     } else {
       div.classList.add('empty');
-      div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ</span><span style="font-size:18px;">${sKey}</span>`;
+      div.innerHTML = `<span style="font-size:11px; opacity:0.9;">เบาะ</span><span style="font-size:18px;">${sKey}</span>`;
       div.onclick = () => {
-        if(!document.getElementById('date').value) return alert('📅 เลือกวันที่เดินทางก่อนน้า');
+        if(!document.getElementById('date').value) return alert('📅 กรุณาเลือกวันที่เดินทางก่อนครับ');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected');
         document.getElementById('seatField').value = sKey;
@@ -168,7 +168,7 @@ document.getElementById('date').onchange = (e) => {
 
 document.getElementById('bookingForm').onsubmit = () => {
   document.getElementById('bookingForm').action = SCRIPT_URL;
-  document.querySelector('.btn').innerHTML = "⌛ กำลังส่งข้อมูล...";
+  document.querySelector('.btn').innerHTML = "⌛ กำลังบันทึกข้อมูล...";
   setTimeout(() => location.reload(), 2500);
   return true;
 };
