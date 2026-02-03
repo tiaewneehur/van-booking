@@ -11,98 +11,90 @@
     body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; padding: 15px; color: #334155; }
     
     .card { max-width: 480px; margin: 10px auto; background: #ffffff; border-radius: 30px; padding: 25px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-    .logo { display: block; margin: 0 auto 10px; max-width: 160px; height: auto; }
+    .logo { display: block; margin: 0 auto 15px; max-width: 160px; height: auto; }
     .title { text-align: center; font-size: 26px; font-weight: 700; color: #1e40af; margin-bottom: 5px; }
     .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 25px; }
 
-    /* ✅ แก้ไขตรงนี้: แยกบรรทัดให้ Input ด้านบน */
-    .field-group { width: 100%; display: flex; flex-direction: column; margin-bottom: 15px; }
-    .field-label { font-weight: 600; margin-bottom: 8px; font-size: 15px; color: #1e40af; display: flex; align-items: center; gap: 5px; }
-    .field-input { width: 100% !important; padding: 14px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 16px; background: #f8fafc; font-family: inherit; outline: none; }
-    .field-input:focus { border-color: #2563eb; background: #fff; }
+    /* ส่วนหัวฟอร์ม แยกบรรทัดกันเพี้ยน */
+    .header-field { width: 100%; margin-bottom: 15px; }
+    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #1e40af; display: flex; align-items: center; gap: 5px; }
+    .field-input { width: 100% !important; padding: 12px; border-radius: 12px; border: 2px solid #cbd5e1; font-size: 15px; background: #f8fafc; font-family: inherit; }
 
-    /* ผังรถ */
+    /* ผังรถและ Grid */
     .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 3px solid #f1f5f9; }
     .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; margin: 20px 0 !important; padding: 15px !important; background: #f1f5f9; border-radius: 25px; }
 
-    /* ปุ่มเบาะ */
+    /* เบาะนั่ง */
     .seat { aspect-ratio: 1/1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; color: white; text-align: center; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 5px 0 #047857; }
     .seat.booked { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 5px 0 #b91c1c; cursor: not-allowed; font-size: 11px; }
-    
     .seat.selected { 
       background: linear-gradient(135deg, #fbbf24, #f59e0b); 
-      color: #000; 
-      box-shadow: 0 5px 0 #b45309; 
-      transform: scale(1.1); 
+      color: #000; box-shadow: 0 5px 0 #b45309; transform: scale(1.1); 
       animation: heartbeat 1s infinite;
     }
-    @keyframes heartbeat {
-      0% { transform: scale(1.1); }
-      50% { transform: scale(1.18); }
-      100% { transform: scale(1.1); }
-    }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1.1); } 50% { transform: scale(1.18); } }
 
-    #formBox { margin-top: 25px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2px solid #dbeafe; animation: slideUp 0.4s ease-out; }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    
-    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+    /* ส่วนข้อมูลผู้จอง แบบดั้งเดิมที่คุณไอซ์ชอบ */
+    #formBox { margin-top: 25px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2px solid #dbeafe; }
+    .form-row { display: flex; gap: 10px; margin-bottom: 12px; }
+    .sub-field { flex: 1; display: flex; flex-direction: column; }
+
+    .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
 
     .legend { display: flex; justify-content: center; gap: 12px; margin-top: 20px; font-size: 12px; }
     .legend-item { display: flex; align-items: center; gap: 5px; }
     .dot { width: 14px; height: 14px; border-radius: 4px; }
-    
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <img src="https://i.ibb.co/VpkX8Z4/เที่ยวนี่เหอะ-Logo.png" class="logo" alt="Logo" />
+  <img src="เที่ย นี่เหอะ.png" class="logo" alt="Logo" />
   <h1 class="title">จองที่นั่งรถตู้ 🚐💨</h1>
-  <p class="subtitle">เลือกทริปที่ชอบ จองเบาะที่ใช่ 🎒✨</p>
+  <p class="subtitle">เลือกทริปและจองเบาะที่คุณต้องการ ✨</p>
 
   <form id="bookingForm" method="POST" target="_blank">
-    <div class="field-group">
+    <div class="header-field">
       <label class="field-label">📅 วันเดินทาง</label>
       <input id="date" name="date" type="date" class="field-input" required />
     </div>
 
-    <div class="field-group">
+    <div class="header-field">
       <label class="field-label">⛺ ชื่อทริป</label>
-      <input id="trip" name="trip" type="text" class="field-input" placeholder="ระบุชื่อทริป (เช่น ผ้าห่มปก)" required />
+      <input id="trip" name="trip" type="text" class="field-input" placeholder="ระบุชื่อทริป" required />
     </div>
 
     <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
-    
-    <label class="field-label" style="justify-content: center; margin-bottom: 0;">💺 เลือกตำแหน่งที่นั่ง</label>
     <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
 
     <div id="formBox" class="hidden">
-      <h3 style="text-align: center; color: #1e40af; margin-bottom: 20px;">📝 ข้อมูลผู้จอง</h3>
+      <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
       
-      <div class="field-group">
+      <div class="header-field" style="margin-bottom:12px;">
         <label class="field-label">👤 ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" class="field-input" placeholder="ใส่ชื่อ-นามสกุลจริง" required />
+        <input id="name" name="name" type="text" class="field-input" placeholder="ใส่ชื่อจริง" required />
       </div>
 
-      <div class="field-group">
-        <label class="field-label">🏷️ ชื่อเล่น</label>
-        <input id="nickname" name="nickname" type="text" class="field-input" placeholder="โชว์บนผังรถ" required />
+      <div class="form-row">
+        <div class="sub-field">
+          <label class="field-label">🏷️ ชื่อเล่น</label>
+          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="โชว์บนรถ" required />
+        </div>
+        <div class="sub-field">
+          <label class="field-label">📞 เบอร์โทร</label>
+          <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
+        </div>
       </div>
 
-      <div class="field-group">
-        <label class="field-label">📞 เบอร์โทรศัพท์</label>
-        <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxxxxxx" required />
-      </div>
-
-      <div class="field-group">
+      <div class="header-field">
         <label class="field-label">💬 LINE ID</label>
         <input id="line" name="line" type="text" class="field-input" placeholder="ไอดีไลน์" required />
       </div>
 
-      <button type="submit" class="btn">🚀 ยืนยันการจองที่นั่ง</button>
+      <button type="submit" class="btn">🚀 ยืนยันการจองเลย!</button>
     </div>
   </form>
 
@@ -147,9 +139,9 @@ function renderSeats(bookedArray) {
       div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ ${sKey}</span><div>${bookedMap[sKey]}</div>`;
     } else {
       div.classList.add('empty');
-      div.innerHTML = `<span style="font-size:11px; opacity:0.9;">เบาะ</span><span style="font-size:18px;">${sKey}</span>`;
+      div.innerHTML = `<span style="font-size:10px; opacity:0.8;">เบาะ</span><span style="font-size:18px;">${sKey}</span>`;
       div.onclick = () => {
-        if(!document.getElementById('date').value) return alert('📅 กรุณาเลือกวันที่เดินทางก่อนครับ');
+        if(!document.getElementById('date').value) return alert('📅 เลือกวันที่เดินทางก่อนนะจ๊ะ');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected');
         document.getElementById('seatField').value = sKey;
