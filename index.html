@@ -7,14 +7,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* UI ของน้าทั้งหมดคงเดิม */
+    /* UI เดิมของน้าทั้งหมด */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; color: #334155; }
-    
-    /* สไตล์หน้า Login (หน้ากากน้ำเงิน) */
     #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1e40af; z-index: 9999; display: flex; align-items: center; justify-content: center; }
     .login-box { width: 85%; max-width: 350px; background: white; padding: 40px 25px; border-radius: 30px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-
     .card { width: 92%; max-width: 400px; background: #ffffff; border-radius: 30px; padding: 25px 20px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); height: fit-content; text-align: center; overflow: hidden; display: none; }
     .logo { display: block; margin: 0 auto 10px; max-width: 150px; height: auto; }
     .title { font-size: 24px; font-weight: 700; color: #1e40af; margin-bottom: 5px; }
@@ -34,6 +31,8 @@
     .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 15px; }
     .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px 20px; text-align: center; }
     .qr-img { width: 100%; max-width: 250px; height: auto; border-radius: 15px; margin: 0 auto 15px; display: block; }
+    .legend { display: flex; justify-content: center; gap: 10px; margin-top: 15px; font-size: 11px; }
+    .dot { width: 12px; height: 12px; border-radius: 3px; }
     .hidden { display: none !important; }
     .confirm-box { background: #fff4e6; border: 2px dashed #ff922b; padding: 15px; border-radius: 15px; margin: 15px 0; display: flex; align-items: center; gap: 12px; text-align: left; }
   </style>
@@ -57,12 +56,11 @@
 
   <form id="bookingForm">
     <div class="field-group">
-      <label class="field-label">📅 วันเดินทาง</label>
+      <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
       <input id="date" name="date" type="date" class="field-input" required />
     </div>
-
     <div class="field-group">
-      <label class="field-label">⛺ ชื่อทริป</label>
+      <label class="field-label">⛺ ชื่อทริป (ไปไหนบอกด้วย)</label>
       <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ไปดูลิงที่ลพบุรี" required />
     </div>
 
@@ -93,18 +91,24 @@
       <button type="button" onclick="showPayment()" class="btn">🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
     </div>
   </form>
+
+  <div class="legend">
+    <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#10b981"></div> ว่างจัด</div>
+    <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#ef4444"></div> อดแดก</div>
+  </div>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
     <h2 style="color: #1e40af; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
+    <p style="font-size: 20px; color: #ef4444; margin-bottom: 20px;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
     <img src="slip-qr.png" class="qr-img">
     <div class="confirm-box">
       <input type="checkbox" id="confirmCheck" style="width: 25px; height: 25px;">
-      <label for="confirmCheck" style="font-size: 14px; font-weight: 600;">นำสลีปไปอัพโหลดใส่อัลบั้มในกลุ่มจ้า</label>
+      <label for="confirmCheck" style="font-size: 14px; font-weight: 600; color: #d9480f;">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่มจ้า</label>
     </div>
-    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #059669;">✅ ยืนยันจองสำเร็จ!</button>
-    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px;">ย้อนกลับ</button>
+    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #059669;">✅ ยืนยันจองสำเร็จแล้วอิห่าจิก!</button>
+    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px; font-size: 14px;">ย้อนกลับ</button>
   </div>
 </div>
 
@@ -112,32 +116,13 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// --- 🚀 ฟังก์ชัน Login แบบแก้ไขค้างถาวร ---
+// 1. เข้าสู่หน้าจองทันที ไม่ใช้ JSON ดึงชื่อเพื่อป้องกันค้าง
 function doLogin() {
   const ph = document.getElementById('loginPhone').value.trim();
   if (ph.length < 10) return alert('ใส่เบอร์ให้ครบ 10 หลักนะน้า!');
-  
-  // 1. [เข้าก่อนเลย] ปิดหน้ากากน้ำเงินทันที ไม่ต้องรอหลังบ้านตอบ
   document.getElementById('phone').value = ph;
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('mainUI').style.display = 'block';
-
-  // 2. [เด้งตามหลัง] แอบวิ่งไปดึงข้อมูลคนเก่ามาเติมให้เงียบๆ
-  const cbName = "login_" + Date.now();
-  window[cbName] = (res) => {
-    if (res && res.found) {
-      document.getElementById('name').value = res.user.name || '';
-      document.getElementById('nickname').value = res.user.nickname || '';
-      document.getElementById('line').value = res.user.line || '';
-    }
-    delete window[cbName];
-    const s = document.getElementById(cbName); if(s) s.remove();
-  };
-
-  const script = document.createElement('script');
-  script.id = cbName;
-  script.src = `${SCRIPT_URL}?action=search&phone=${ph}&callback=${cbName}`;
-  document.body.appendChild(script);
 }
 
 function loadBookedJSONP(date, callback) {
@@ -159,8 +144,8 @@ function renderSeats(bookedArray) {
     } else {
       div.classList.add('empty'); div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:22px;">${sKey}</span>`;
       div.onclick = () => {
-        if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิ!');
-        if (!document.getElementById('trip').value.trim()) return alert('⛺ กรอกชื่อทริปก่อน!');
+        if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
+        if (!document.getElementById('trip').value.trim()) return alert('⛺ กรุณากรอกชื่อทริปก่อนเลือกเบาะนะจ๊ะ!');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected'); document.getElementById('seatField').value = sKey;
         document.getElementById('formBox').classList.remove('hidden');
@@ -178,13 +163,15 @@ function showPayment() {
 }
 
 function finalSubmit() {
-  if (!document.getElementById('confirmCheck').checked) return alert('ติ๊กยืนยันก่อนน้า!');
+  if (!document.getElementById('confirmCheck').checked) return alert('กรุณาติ๊กยืนยันการโอนก่อนนะจ๊ะเด็กโง่!');
   const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
   const formData = new URLSearchParams();
-  ['date','trip','seat','name','nickname','phone','line'].forEach(k => formData.append(k, document.getElementById(k==='seat'?'seatField':k).value));
+  ['date','trip','seat','name','nickname','phone','line'].forEach(k => {
+    formData.append(k, document.getElementById(k==='seat'?'seatField':k).value);
+  });
   fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData.toString() })
-  .then(() => { alert('จองสำเร็จ! 🎒'); location.reload(); })
-  .catch(() => { alert('จองสำเร็จ! 🎒'); location.reload(); });
+  .then(() => { alert('จองสำเร็จ! เก็บกระเป๋าเลย 🎒'); location.reload(); })
+  .catch(() => { alert('บันทึกสำเร็จ!'); location.reload(); });
 }
 
 document.getElementById('date').onchange = (e) => { renderSeats([]); loadBookedJSONP(e.target.value, renderSeats); };
