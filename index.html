@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -10,20 +9,14 @@
   <style>
     /* UI เดิมของน้าทั้งหมด ห้ามเปลี่ยน */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    
-    /* ✅ เปลี่ยนแค่ font-family เป็นฟอนต์ยอดนิยม */
     body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; background-color: #f0f4f8; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; color: #334155; }
-    
     .card { width: 92%; max-width: 400px; background: #ffffff; border-radius: 30px; padding: 25px 20px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); height: fit-content; text-align: center; overflow: hidden; }
     .logo { display: block; margin: 0 auto 10px; max-width: 150px; height: auto; }
     .title { font-size: 24px; font-weight: 700; color: #1e40af; margin-bottom: 5px; }
     .subtitle { color: #64748b; font-size: 13px; margin-bottom: 25px; }
     .field-group { width: 100%; margin-bottom: 15px; text-align: left; }
     .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #1e40af; display: flex; align-items: center; gap: 6px; }
-    
-    /* ✅ Input ใช้ฟอนต์ใหม่ให้อ่านง่ายขึ้น */
     .field-input { display: block !important; width: 100% !important; padding: 12px 15px !important; border-radius: 15px; border: 1.5px solid #cbd5e1; font-size: 16px; background: #f8fafc; font-family: inherit; outline: none; height: 54px; -webkit-appearance: none; appearance: none; }
-    
     .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 1px solid #eee; }
     .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin: 20px 0 !important; padding: 12px !important; background: #f1f5f9; border-radius: 25px; }
     .seat { aspect-ratio: 1/1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; color: white; transition: 0.2s; }
@@ -31,12 +24,8 @@
     .seat.booked { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 0 #b91c1c; font-size: 10px; cursor: not-allowed; }
     .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
     @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.12); } }
-    
     #formBox { margin-top: 20px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2.5px solid #dbeafe; text-align: left; }
-    
-    /* ✅ ปุ่มกดใช้ฟอนต์ใหม่ */
     .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 18px; font-weight: 700; cursor: pointer; margin-top: 10px; font-family: inherit; }
-    
     .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 15px; }
     .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px 20px; text-align: center; }
     .qr-img { width: 100%; max-width: 250px; height: auto; border-radius: 15px; margin: 0 auto 15px; display: block; }
@@ -94,6 +83,7 @@
 
   <div class="legend">
     <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#10b981"></div> ว่างจัด</div>
+    <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#fbbf24"></div> จองอยู่</div>
     <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#ef4444"></div> อดแดก</div>
   </div>
 </div>
@@ -117,6 +107,12 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpG
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
+// ระบบอัปเดตเบาะอัตโนมัติทุก 10 วินาที
+setInterval(() => {
+  const dateVal = document.getElementById('date').value;
+  if (dateVal) loadBookedJSONP(dateVal, renderSeats);
+}, 10000);
+
 function loadBookedJSONP(date, callback) {
   if (!date) return;
   const cbName = "cb_" + Date.now();
@@ -127,28 +123,68 @@ function loadBookedJSONP(date, callback) {
 }
 
 function renderSeats(bookedArray) {
-  const grid = document.getElementById('seatGrid'); grid.innerHTML = '';
-  const bookedMap = {}; bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
+  const grid = document.getElementById('seatGrid');
+  const myCurrentSeat = document.getElementById('seatField').value;
+  grid.innerHTML = '';
+  
+  const bookedMap = {}; 
+  bookedArray.forEach(b => { 
+    if(b.seat) bookedMap[String(b.seat)] = { nickname: b.nickname, status: b.status }; 
+  });
+
   SEATS.forEach(n => {
     const div = document.createElement('div'); div.className = 'seat'; const sKey = String(n);
-    if (bookedMap[sKey]) {
-      div.classList.add('booked'); div.innerHTML = `<span style="font-size:11px;">เบาะ ${sKey}</span><div style="font-size:22px;">${bookedMap[sKey]}</div>`;
-    } else {
-      div.classList.add('empty'); div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:22px;">${sKey}</span>`;
-      div.onclick = () => {
-    if (!document.getElementById('date').value)
-    return alert('📅 เลือกวันก่อนสิพี่!');
+    const seatData = bookedMap[sKey];
 
-    if (!document.getElementById('trip').value.trim())
-    return alert('⛺ กรุณากรอกชื่อทริปก่อนเลือกเบาะนะจ๊ะ!');
-        document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-        div.classList.add('selected'); document.getElementById('seatField').value = sKey;
-        document.getElementById('formBox').classList.remove('hidden');
-        setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 200);
-      };
+    if (seatData) {
+      if (seatData.status === "CONFIRMED") {
+        // แดง: จองถาวร
+        div.classList.add('booked'); 
+        div.innerHTML = `<span style="font-size:11px;">เบาะ ${sKey}</span><div style="font-size:22px;">${seatData.nickname || 'เต็ม'}</div>`;
+      } else if (seatData.status === "PENDING" && sKey !== myCurrentSeat) {
+        // เหลือง: มีคนอื่นจิ้มอยู่
+        div.classList.add('selected'); 
+        div.innerHTML = `<span style="font-size:11px;">จองอยู่..</span><div style="font-size:18px;">${seatData.nickname || '...'}</div>`;
+      } else {
+        renderEmpty(div, sKey);
+      }
+    } else {
+      renderEmpty(div, sKey);
     }
+
+    // ถ้าเป็นเบาะที่เราจิ้มเอง (เหลืองแบบมี Heartbeat)
+    if (sKey === myCurrentSeat) {
+      div.className = 'seat selected';
+    }
+
     grid.appendChild(div);
   });
+}
+
+function renderEmpty(div, sKey) {
+  div.classList.add('empty'); 
+  div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:22px;">${sKey}</span>`;
+  div.onclick = () => {
+    if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
+    if (!document.getElementById('trip').value.trim()) return alert('⛺ กรุณากรอกชื่อทริปก่อนเลือกเบาะนะจ๊ะ!');
+    
+    // แจ้งหลังบ้านทันทีว่าจิ้มเบาะนี้
+    notifySelect(sKey);
+    
+    document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+    div.classList.add('selected'); 
+    document.getElementById('seatField').value = sKey;
+    document.getElementById('formBox').classList.remove('hidden');
+    setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 200);
+  };
+}
+
+function notifySelect(seatNum) {
+  const formData = new URLSearchParams();
+  formData.append('action', 'select');
+  formData.append('date', document.getElementById('date').value);
+  formData.append('seat', seatNum);
+  fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData });
 }
 
 function showPayment() {
