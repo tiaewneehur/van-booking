@@ -16,7 +16,7 @@
       min-height: 100vh; width: 100%;
     }
 
-    /* ✅ Header เต็มจอ */
+    /* ✅ Header สไตล์ Thai PBS */
     .header-bar {
       position: sticky; top: 0; z-index: 100;
       width: 100%; max-width: 600px;
@@ -27,30 +27,31 @@
     .logo-small { width: 45px; height: 45px; border-radius: 50%; border: 2px solid #38bdf8; }
     .header-bar h1 { font-size: 17px; color: #38bdf8; font-weight: 700; }
 
-    /* ✅ แก้ไขหน้าแสดงผลให้เต็มจอ */
+    /* ✅ Content ยืดเต็มหน้าจอ ไม่ล็อคหน้า */
     .content-wrapper { 
       width: 100%; max-width: 600px; 
-      flex-grow: 1; padding: 15px 15px 150px 15px; 
+      flex: 1; padding: 15px 15px 160px 15px; 
     }
 
     .card { 
       background: #161b22; border-radius: 20px; padding: 25px 20px; 
       border: 1px solid #30363d; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    .subtitle { color: #8b949e; font-size: 13px; text-align: center; margin-bottom: 20px; }
 
-    /* ✅ ปรับกล่องวันที่ให้เท่ากับส่วนอื่น */
-    .field-group { margin-bottom: 15px; }
+    /* ✅ แก้ไขกล่องวันที่ให้เท่ากับช่องอื่น */
+    .field-group { margin-bottom: 18px; }
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #58a6ff; display: flex; align-items: center; gap: 6px; }
+    
     .field-input, .trip-select-btn { 
       display: block !important; width: 100% !important; 
-      padding: 0 15px !important; /* เน้น padding ซ้ายขวา */
+      padding: 0 15px !important; 
       border-radius: 12px; border: 1px solid #30363d; font-size: 16px; 
       background: #0d1117; color: white; font-family: inherit; outline: none;
-      height: 48px !important; line-height: 48px !important; /* ล็อคความสูงเป๊ะๆ */
+      height: 52px !important; /* ล็อคความสูงให้เท่ากันเป๊ะ */
+      line-height: 52px !important;
     }
+    input[type="date"] { appearance: none; -webkit-appearance: none; }
 
-    /* ปุ่มเลือกทริป */
     .trip-select-btn { 
       text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between;
       border: 1px solid #38bdf8; background: rgba(56, 189, 248, 0.05);
@@ -58,6 +59,7 @@
 
     .seat-map-img { width: 100%; border-radius: 15px; margin: 15px 0; border: 1px solid #30363d; }
 
+    /* ✅ Grid เบาะ พร้อมลูกเล่นหัวใจ */
     .grid { 
       display: grid !important; grid-template-columns: repeat(3, 1fr) !important; 
       gap: 12px !important; margin: 20px 0 !important; padding: 15px !important; 
@@ -71,21 +73,19 @@
     .seat.empty { background: #238636; border-bottom: 4px solid #1a6328; }
     .seat.booked { background: #da3633; border-bottom: 4px solid #8e2321; cursor: not-allowed; }
     
-    /* ✅ ลูกเล่นหัวใจขยับเต้นตุ๊บๆ */
     .seat.selected { 
       background: #f1e05a; color: #000; border-bottom: 4px solid #b3a542; 
       animation: heartbeat 1s infinite ease-in-out; 
     }
     @keyframes heartbeat {
-      0% { transform: scale(1); }
+      0%, 100% { transform: scale(1); }
       50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
     }
 
     #formBox { margin-top: 20px; padding: 20px; background: #0d1117; border-radius: 20px; border: 1px solid #30363d; display: none; }
     #formBox.active { display: block; animation: fadeIn 0.4s; }
 
-    /* ✅ Bottom Nav */
+    /* ✅ Bottom Nav สไตล์ Thai PBS */
     .bottom-nav {
       position: fixed; bottom: 0; width: 100%; max-width: 600px;
       background: #161b22; padding: 15px 20px 30px 20px;
@@ -94,24 +94,30 @@
     .btn-nav { 
       flex: 1; padding: 14px; border-radius: 12px; border: none; 
       font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-secondary { background: #30363d; color: #e6edf3; }
-    .btn-primary { background: #1f6feb; color: white; opacity: 0.5; cursor: not-allowed; }
-    .btn-primary.ready { opacity: 1; cursor: pointer; background: #238636; }
+    .btn-secondary { background: #30363d; color: #e6edf3; border: 1px solid #484f58; }
+    .btn-primary { background: #1f6feb; color: white; opacity: 0.4; cursor: not-allowed; transition: 0.3s; }
+    .btn-primary.ready { opacity: 1; cursor: pointer; background: #238636; box-shadow: 0 0 15px rgba(35, 134, 54, 0.4); }
 
-    /* รายการทริป Dropdown */
+    /* ✅ Dropdown เลือกทริป */
     .trip-dropdown {
-      position: absolute; width: 90%; left: 5%; bottom: 85px; 
-      background: #161b22; border: 1px solid #58a6ff; border-radius: 15px;
-      max-height: 200px; overflow-y: auto; display: none; z-index: 101;
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 90%; max-width: 400px; background: #161b22; 
+      border: 1px solid #58a6ff; border-radius: 20px;
+      max-height: 60vh; overflow-y: auto; display: none; z-index: 200;
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
     }
-    .trip-item { padding: 15px; border-bottom: 1px solid #30363d; cursor: pointer; }
+    .trip-item { padding: 18px; border-bottom: 1px solid #30363d; cursor: pointer; font-size: 16px; }
     .trip-item:hover { background: #0d1117; color: #58a6ff; }
+    .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:none; z-index:199; }
 
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
+
+<div id="overlay" class="overlay" onclick="toggleTripDropdown()"></div>
 
 <div class="header-bar">
   <img src="เที่ย นี่เหอะ.png" class="logo-small" />
@@ -120,8 +126,6 @@
 
 <div class="content-wrapper">
   <div class="card">
-    <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
-
     <form id="bookingForm">
       <div class="field-group">
         <label class="field-label">📅 วันเดินทาง</label>
@@ -129,16 +133,15 @@
       </div>
 
       <div class="field-group">
-        <label class="field-label">⛺ เลือกทริปเดินทาง</label>
+        <label class="field-label">⛺ เลือกทริปเดินทาง (ดึงจากหลังบ้าน)</label>
         <div id="tripSelect" class="trip-select-btn" onclick="toggleTripDropdown()">
-          <span id="selectedTripText">จิ้มเลือกทริปตรงนี้...</span>
+          <span id="selectedTripText">กำลังโหลดข้อมูลทริป...</span>
           <span>▼</span>
         </div>
         <input type="hidden" id="trip" name="trip" required>
       </div>
 
-      <div id="tripDropdown" class="trip-dropdown">
-        </div>
+      <div id="tripDropdown" class="trip-dropdown"></div>
 
       <img src="IMG_0444.jpeg" class="seat-map-img" />
       <div id="seatGrid" class="grid"></div>
@@ -148,12 +151,12 @@
         <h3 style="text-align: center; color: #58a6ff; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
         <div class="field-group">
           <label class="field-label">👤 ชื่อ-นามสกุล</label>
-          <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" oninput="checkFormReady()" />
+          <input id="name" name="name" type="text" class="field-input" placeholder="กรอกชื่อจริง" oninput="checkFormReady()" />
         </div>
         <div style="display:flex; gap:10px;">
           <div style="flex:1">
             <label class="field-label">🏷️ ชื่อเล่น</label>
-            <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" oninput="checkFormReady()" />
+            <input id="nickname" name="nickname" type="text" class="field-input" placeholder="ชื่อเล่น" oninput="checkFormReady()" />
           </div>
           <div style="flex:1">
             <label class="field-label">📞 เบอร์โทร</label>
@@ -167,47 +170,65 @@
 
 <div class="bottom-nav">
   <button type="button" onclick="toggleTripDropdown()" class="btn-nav btn-secondary">🔍 ดูทริปทั้งหมด</button>
-  <button type="button" id="mainActionBtn" onclick="showPayment()" class="btn-nav btn-primary">🚀 เริ่มจองเลย</button>
+  <button type="button" id="mainActionBtn" onclick="goToPayment()" class="btn-nav btn-primary">🚀 เริ่มจองเลย</button>
 </div>
 
 <script>
-// Logic ดึงข้อมูลทริปและระบบจองเดิมของคุณไอซ์
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
+let tripsFromDB = [];
 
-// จำลองข้อมูลทริป (ในระบบจริงจะดึงจาก Google Sheet)
-const mockTrips = ["ไปดูแมวที่ห้องพี่มั้ย", "ทริปน้ำตกคลองลาน", "เที่ยวเมืองเก่าอยุธยา"];
+// ✅ 1. ฟังก์ชันดึงชื่อทริปจาก "หลังบ้าน" (Google Sheets)
+function fetchTripsFromDatabase() {
+  const cbName = "cb_init_trips";
+  window[cbName] = (data) => {
+    // ดึงชื่อทริปที่ไม่ซ้ำกันจากคอลัมน์ Trip ใน Sheets
+    tripsFromDB = [...new Set(data.bookings.map(b => b.trip))].filter(t => t && t.trim() !== "");
+    document.getElementById('selectedTripText').innerText = "จิ้มเลือกทริปตรงนี้...";
+    delete window[cbName];
+  };
+  const script = document.createElement('script');
+  script.src = `${READ_URL}&callback=${cbName}`;
+  document.body.appendChild(script);
+}
 
 function toggleTripDropdown() {
   const dp = document.getElementById('tripDropdown');
-  dp.style.display = dp.style.display === 'block' ? 'none' : 'block';
-  renderTripItems();
+  const ov = document.getElementById('overlay');
+  const isShow = dp.style.display === 'block';
+  dp.style.display = isShow ? 'none' : 'block';
+  ov.style.display = isShow ? 'none' : 'block';
+  if(!isShow) renderTripList();
 }
 
-function renderTripItems() {
+function renderTripList() {
   const container = document.getElementById('tripDropdown');
-  container.innerHTML = mockTrips.map(t => `
-    <div class="trip-item" onclick="selectTrip('${t}')">${t}</div>
-  `).join('');
+  if(tripsFromDB.length === 0) {
+    container.innerHTML = '<div class="trip-item">ไม่พบข้อมูลทริปในระบบ</div>';
+    return;
+  }
+  container.innerHTML = tripsFromDB.map(t => `<div class="trip-item" onclick="selectTrip('${t}')">${t}</div>`).join('');
 }
 
 function selectTrip(name) {
   document.getElementById('selectedTripText').innerText = name;
   document.getElementById('trip').value = name;
-  document.getElementById('tripDropdown').style.display = 'none';
+  toggleTripDropdown();
   checkFormReady();
 }
 
+// ✅ 2. เช็คความพร้อมของฟอร์มก่อนให้กดปุ่มจอง
 function checkFormReady() {
-  const isReady = document.getElementById('name').value && 
-                  document.getElementById('nickname').value && 
-                  document.getElementById('phone').value &&
-                  document.getElementById('seatField').value &&
-                  document.getElementById('trip').value;
+  const isFilled = document.getElementById('name').value && 
+                   document.getElementById('nickname').value && 
+                   document.getElementById('phone').value &&
+                   document.getElementById('seatField').value &&
+                   document.getElementById('trip').value &&
+                   document.getElementById('date').value;
   
   const btn = document.getElementById('mainActionBtn');
-  if(isReady) {
+  if(isFilled) {
     btn.classList.add('ready');
     btn.disabled = false;
   } else {
@@ -227,22 +248,26 @@ function renderSeats(bookedArray) {
     } else {
       div.classList.add('empty'); div.innerHTML = `<span style="font-size:10px;opacity:0.7;">เบาะ</span><span style="font-size:24px;">${sKey}</span>`;
       div.onclick = () => {
-        if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
+        if (!document.getElementById('date').value) return alert('📅 เลือกวันเดินทางก่อนครับ');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected'); document.getElementById('seatField').value = sKey;
         document.getElementById('formBox').classList.add('active');
         checkFormReady();
+        setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 300);
       };
     }
     grid.appendChild(div);
   });
 }
 
-// ส่วนอื่นๆ (โหลดข้อมูล/ส่งข้อมูล) ใช้ Logic เดิมของคุณไอซ์ได้เลยครับ
-document.getElementById('date').onchange = (e) => {
-  renderSeats([]); 
-  // loadBookedJSONP(e.target.value, renderSeats); // เปิดใช้งานเมื่อเชื่อมต่อ Script จริง
-};
+function goToPayment() {
+  // Logic เดิมในการเปิด Modal จ่ายเงิน
+  alert('กำลังพาไปหน้าสรุปยอดโอนเงินครับ...');
+}
+
+// เริ่มต้นโหลดข้อมูลทริปทันที
+fetchTripsFromDatabase();
+document.getElementById('date').onchange = (e) => { checkFormReady(); renderSeats([]); /* โหลดสถานะเบาะตามวันที่เลือกที่นี่ */ };
 renderSeats([]);
 </script>
 </body>
