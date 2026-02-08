@@ -194,9 +194,13 @@ function finalSubmit() {
   ['date','trip','seat','name','nickname','phone','line'].forEach(id => {
     fd.append(id, document.getElementById(id === 'seat' ? 'seatField' : id).value);
   });
-  fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: fd.toString() }).then(() => { 
-    alert('จองสำเร็จแล้ว! เตรียมตัวไปเที่ยวได้เลย 🎒'); location.reload(); 
-  });
+  fetch(SCRIPT_URL, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+  },
+  body: fd.toString()
+});
 }
 
 function toggleMenu() {
