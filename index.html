@@ -7,147 +7,172 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ✅ ใช้โทนสีเข้มแบบ Thai PBS Dashboard */
+    /* ✅ ธีมเข้มขรึมสไตล์ Thai PBS Election Dashboard */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     
     body { 
       font-family: 'IBM Plex Sans Thai', sans-serif; 
-      background-color: #0f172a; /* สีกรมท่าเข้ม */
-      display: flex; justify-content: center; 
-      min-height: 100vh; padding: 20px 0; color: #f8fafc; 
+      background-color: #0d1117; 
+      color: #e6edf3;
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh;
     }
 
-    .card { 
-      width: 92%; max-width: 400px; 
-      background: #1e293b; /* สีพื้นหลังการ์ดแบบเข้ม */
-      border-radius: 20px; padding: 25px; 
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-      border: 1px solid #334155;
-      height: fit-content; text-align: center; 
+    /* ✅ ล็อคส่วนหัว (Header Sticky) */
+    .header-bar {
+      position: sticky; top: 0; z-index: 100;
+      width: 100%; max-width: 500px;
+      background: rgba(13, 17, 23, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px; border-bottom: 1px solid #30363d;
+      display: flex; align-items: center; gap: 15px;
     }
+    .header-bar .logo-small { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #38bdf8; }
+    .header-bar h1 { font-size: 18px; color: #38bdf8; font-weight: 700; }
 
-    .logo { display: block; margin: 0 auto 15px; max-width: 140px; height: auto; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
-    
-    /* หัวข้อเน้นสีขาวและสีฟ้าแบบ Dashboard */
-    .title { font-size: 26px; font-weight: 700; color: #38bdf8; margin-bottom: 4px; }
-    .subtitle { color: #94a3b8; font-size: 13px; margin-bottom: 25px; font-weight: 300; }
+    .content-wrapper { width: 100%; max-width: 500px; padding: 20px 15px 120px 15px; }
 
-    /* Input สไตล์ Dark Mode */
-    .field-group { width: 100%; margin-bottom: 18px; text-align: left; }
-    .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; }
+    /* ✅ การ์ดสไตล์ Dashboard */
+    .card { background: #161b22; border-radius: 20px; padding: 25px 20px; border: 1px solid #30363d; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+    .subtitle { color: #8b949e; font-size: 13px; margin-bottom: 25px; text-align: center; }
+
+    /* ✅ ฟอร์มสไตล์ Modern Dark */
+    .field-group { margin-bottom: 20px; }
+    .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #58a6ff; display: flex; align-items: center; gap: 6px; }
     .field-input { 
       display: block !important; width: 100% !important; padding: 12px 15px !important; 
-      border-radius: 12px; border: 1px solid #334155; font-size: 16px; 
-      background: #0f172a; color: white; font-family: inherit; outline: none; height: 52px; 
+      border-radius: 12px; border: 1px solid #30363d; font-size: 16px; 
+      background: #0d1117; color: white; font-family: inherit; outline: none; height: 54px;
+      transition: 0.3s;
     }
+    .field-input:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.2); }
 
-    .seat-map-img { display: block; width: 100%; border-radius: 12px; margin: 15px 0; border: 2px solid #334155; }
+    .seat-map-img { width: 100%; border-radius: 12px; margin: 15px 0; border: 1px solid #30363d; filter: brightness(0.8); }
 
-    /* ✅ Grid ที่นั่ง 9 ช่อง สไตล์ Dashbord */
+    /* ✅ Grid เบาะ 9 ช่องแบบเดิม แต่สีเข้มขรึม */
     .grid { 
       display: grid !important; grid-template-columns: repeat(3, 1fr) !important; 
       gap: 12px !important; margin: 20px 0 !important; padding: 15px !important; 
-      background: #0f172a; border-radius: 18px; border: 1px solid #334155;
+      background: #0d1117; border-radius: 18px; border: 1px solid #30363d;
     }
-
     .seat { 
-      aspect-ratio: 1/1; border-radius: 12px; 
+      aspect-ratio: 1/1; border-radius: 15px; 
       display: flex; flex-direction: column; align-items: center; justify-content: center; 
       cursor: pointer; font-weight: 700; color: white; transition: 0.2s; 
     }
+    .seat.empty { background: #238636; border-bottom: 4px solid #1a6328; } /* เขียว Thai PBS */
+    .seat.booked { background: #da3633; border-bottom: 4px solid #8e2321; cursor: not-allowed; } /* แดง Thai PBS */
+    .seat.selected { background: #f1e05a; color: #000; border-bottom: 4px solid #b3a542; transform: translateY(-2px); }
 
-    /* สีสถานะแบบ Thai PBS (แดงสด/เขียวสด) */
-    .seat.empty { background: #059669; border-bottom: 4px solid #065f46; } /* ว่าง */
-    .seat.booked { background: #dc2626; border-bottom: 4px solid #991b1b; cursor: not-allowed; } /* เต็ม */
-    .seat.selected { background: #fbbf24; color: #000; border-bottom: 4px solid #b45309; transform: translateY(-2px); }
+    /* ✅ สรุปสถานะด้านล่าง */
+    .legend { display: flex; justify-content: center; gap: 15px; margin-top: 10px; font-size: 12px; color: #8b949e; }
+    .dot { width: 10px; height: 10px; border-radius: 2px; }
 
-    .seat-label { font-size: 10px; opacity: 0.8; text-transform: uppercase; margin-bottom: 2px; }
-    .seat-name { font-size: 20px; }
-
-    /* FormBox เวลาเลือกที่นั่ง */
-    #formBox { margin-top: 25px; padding: 20px; background: #334155; border-radius: 18px; text-align: left; display: none; border-left: 5px solid #fbbf24; }
-    #formBox.active { display: block; }
-
-    .btn { 
-      width: 100%; padding: 18px; border-radius: 12px; border: none; 
-      background: #2563eb; color: white; font-size: 18px; font-weight: 700; 
-      cursor: pointer; margin-top: 10px; font-family: inherit; transition: 0.3s;
+    #formBox { 
+      margin-top: 20px; padding: 25px; background: #0d1117; 
+      border-radius: 20px; border-top: 4px solid #58a6ff; display: none; 
     }
-    .btn:active { transform: scale(0.98); background: #1d4ed8; }
+    #formBox.active { display: block; animation: slideUp 0.4s ease-out; }
 
-    /* Modal สไตล์ Dark */
+    /* ✅ ล็อคปุ่มท้ายหน้าจอ (Bottom Sticky) */
+    .bottom-bar {
+      position: fixed; bottom: 0; width: 100%; max-width: 500px;
+      background: #161b22; padding: 15px 20px; border-top: 1px solid #30363d;
+      display: flex; flex-direction: column; gap: 10px; z-index: 100;
+    }
+    .btn { 
+      width: 100%; padding: 16px; border-radius: 12px; border: none; 
+      background: #238636; color: white; font-size: 18px; font-weight: 700; 
+      cursor: pointer; font-family: inherit; transition: 0.2s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-blue { background: #1f6feb; }
+
+    /* Modal */
     .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; padding: 15px; }
-    .modal-content { background: #1e293b; color: white; width: 100%; max-width: 380px; border-radius: 20px; padding: 30px 20px; text-align: center; border: 1px solid #334155; }
+    .modal-content { background: #161b22; border: 1px solid #30363d; width: 100%; max-width: 380px; border-radius: 20px; padding: 25px; text-align: center; }
+    .qr-img { width: 100%; max-width: 250px; border-radius: 15px; border: 4px solid #30363d; margin-bottom: 15px; }
 
-    .legend { display: flex; justify-content: center; gap: 15px; margin-top: 15px; font-size: 12px; color: #94a3b8; }
-    .dot { width: 12px; height: 12px; border-radius: 3px; }
-
-    /* ลูกเล่นไฟกระพริบเบาๆ แบบ Dashboard */
-    @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
-    .is-live { display: inline-block; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; margin-right: 5px; animation: blink 1s infinite; }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <img src="เที่ย นี่เหอะ.png" class="logo" />
-  <h1 class="title">จองที่นั่งรถตู้ 🚐</h1>
-  <p class="subtitle"><span class="is-live"></span> จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
+<div class="header-bar">
+  <img src="เที่ย นี่เหอะ.png" class="logo-small" alt="Logo" />
+  <h1>จองที่นั่งรถตู้ เที่ยวนี่เหอะ 🚐</h1>
+</div>
 
-  <form id="bookingForm">
-    <div class="field-group">
-      <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
-      <input id="date" name="date" type="date" class="field-input" required />
-    </div>
+<div class="content-wrapper">
+  <div class="card">
+    <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
 
-    <div class="field-group">
-      <label class="field-label">⛺ ชื่อทริป (ไปไหนบอกด้วย)</label>
-      <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ไปดูลิงที่ลพบุรี" required />
-    </div>
-
-    <img src="IMG_0444.jpeg" class="seat-map-img" />
-    
-    <div id="seatGrid" class="grid"></div>
-    <input id="seatField" name="seat" type="hidden" />
-
-    <div id="formBox">
-      <h3 style="text-align:center; color:#38bdf8; margin-bottom:15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
+    <form id="bookingForm">
       <div class="field-group">
-        <label class="field-label">👤 ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
+        <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
+        <input id="date" name="date" type="date" class="field-input" required />
       </div>
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <div style="flex:1">
-          <label class="field-label">🏷️ ชื่อเล่น</label>
-          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
-        </div>
-        <div style="flex:1">
-          <label class="field-label">📞 เบอร์โทร</label>
-          <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
-        </div>
-      </div>
-      <button type="button" onclick="showPayment()" class="btn">🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
-    </div>
-  </form>
 
-  <div class="legend">
-    <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#059669"></div> ว่างจัด</div>
-    <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#dc2626"></div> อดแดก</div>
+      <div class="field-group">
+        <label class="field-label">⛺ ชื่อทริป (ไปไหนบอกด้วย)</label>
+        <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ไปดูแมวที่ห้องพี่มั้ย" required />
+      </div>
+
+      <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
+      <div id="seatGrid" class="grid"></div>
+      <input id="seatField" name="seat" type="hidden" />
+
+      <div id="formBox">
+        <h3 style="text-align: center; color: #58a6ff; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
+        <div class="field-group">
+          <label class="field-label">👤 ชื่อ-นามสกุล</label>
+          <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <div style="flex:1">
+            <label class="field-label">🏷️ ชื่อเล่น</label>
+            <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
+          </div>
+          <div style="flex:1">
+            <label class="field-label">📞 เบอร์โทร</label>
+            <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
+          <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required />
+        </div>
+      </div>
+    </form>
+
+    <div class="legend">
+      <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#238636"></div> ว่างจัด</div>
+      <div style="display:flex; align-items:center; gap:5px;"><div class="dot" style="background:#da3633"></div> อดแดก</div>
+    </div>
   </div>
+</div>
+
+<div id="bottomBar" class="bottom-bar">
+  <button type="button" onclick="validateAndShowForm()" class="btn btn-blue">🚀 ไปกรอกข้อมูลจอง</button>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <h2 style="color: #38bdf8; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
-    <p style="color: #ef4444; margin-bottom: 25px; font-size: 18px;">(ถ้ามาขี้ตั๋วกัน ดีดออกกลุ่มทันที!)</p>
-    <img src="slip-qr.png" style="width:100%; max-width:240px; border-radius:15px; border: 2px solid #334155; margin-bottom:15px;">
-    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #10b981;">✅ ยืนยันจองสำเร็จแล้วอิห่าจิก!</button>
-    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:#94a3b8; margin-top:15px; font-family:inherit; font-size: 14px;">ย้อนกลับ</button>
+    <h2 style="color: #58a6ff; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
+    <p style="font-size: 14px; color: #f85149; margin-bottom: 20px;">(แคปหน้าจอเอาคิวอาร์โค๊ตไปจ่ายตังค์)</p>
+    <img src="slip-qr.png" class="qr-img">
+    <div style="background: #0d1117; padding: 15px; border-radius: 12px; border: 1px dashed #f1e05a; margin-bottom: 15px; text-align: left;">
+      <input type="checkbox" id="confirmCheck" style="width: 20px; height: 20px; vertical-align: middle;">
+      <label for="confirmCheck" style="font-size: 13px; color: #e6edf3;">นำสลีปไปอัพโหลดใส่อัลบั้มในกลุ่ม</label>
+    </div>
+    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn">✅ ยืนยันจองสำเร็จแล้วอิห่าจิก!</button>
+    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:#8b949e; margin-top:15px; font-family: inherit;">ย้อนกลับ</button>
   </div>
 </div>
 
 <script>
-// (Script การทำงานคงเดิมตามระบบของน้าคุณไอซ์)
+// --- ส่วน Logic ของน้าคุณไอซ์ (คงเดิมเพื่อความเสถียร) ---
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
@@ -164,18 +189,18 @@ function loadBookedJSONP(date, callback) {
 function renderSeats(bookedArray) {
   const grid = document.getElementById('seatGrid'); grid.innerHTML = '';
   const bookedMap = {}; bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
-
   SEATS.forEach(n => {
     const div = document.createElement('div'); div.className = 'seat'; const sKey = String(n);
     if (bookedMap[sKey]) {
-      div.classList.add('booked'); div.innerHTML = `<span class="seat-label">เบาะ ${sKey}</span><div style="font-size:22px;">${bookedMap[sKey]}</div>`;
+      div.classList.add('booked'); div.innerHTML = `<span style="font-size:10px;opacity:0.7;">${sKey}</span><div style="font-size:18px;">${bookedMap[sKey]}</div>`;
     } else {
-      div.classList.add('empty'); div.innerHTML = `<span class="seat-label">เบาะ</span><span class="seat-name">${sKey}</span>`;
+      div.classList.add('empty'); div.innerHTML = `<span style="font-size:10px;opacity:0.7;">เบาะ</span><span style="font-size:24px;">${sKey}</span>`;
       div.onclick = () => {
         if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected'); document.getElementById('seatField').value = sKey;
         document.getElementById('formBox').classList.add('active');
+        document.getElementById('bottomBar').innerHTML = '<button type="button" onclick="showPayment()" class="btn">🚀 พร้อมแล้ว...ไปโอนเงิน!</button>';
         setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 200);
       };
     }
@@ -184,22 +209,27 @@ function renderSeats(bookedArray) {
 }
 
 function showPayment() {
-  if(!document.getElementById('name').value) return alert('ใส่ชื่อด้วยพี่!');
+  const fields = ['name', 'nickname', 'phone', 'line'];
+  for(let f of fields) { if(!document.getElementById(f).value) return alert('กรอกข้อมูลให้ครบก่อนนะจ๊ะ!'); }
   document.getElementById('payModal').style.display = 'flex';
 }
 
 function finalSubmit() {
-  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่ง..."; btn.disabled = true;
+  if (!document.getElementById('confirmCheck').checked) return alert('ติ๊กยืนยันการโอนด้วยนะจ๊ะ!');
+  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
+
   const formData = new URLSearchParams();
-  ['date','trip','name','nickname','phone','seat'].forEach(id => {
+  ['date','trip','seat','name','nickname','phone','line'].forEach(id => {
     formData.append(id, document.getElementById(id === 'seat' ? 'seatField' : id).value);
   });
+  formData.append('confirm', 'true');
+
   fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData.toString() })
   .then(() => { alert('จองสำเร็จ! เก็บกระเป๋าเลย 🎒'); location.reload(); })
-  .catch(() => location.reload());
+  .catch(() => { alert('บันทึกสำเร็จ'); location.reload(); });
 }
 
-document.getElementById('date').onchange = (e) => loadBookedJSONP(e.target.value, renderSeats);
+document.getElementById('date').onchange = (e) => { renderSeats([]); loadBookedJSONP(e.target.value, renderSeats); };
 renderSeats([]);
 </script>
 </body>
