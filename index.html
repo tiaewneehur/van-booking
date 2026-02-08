@@ -33,9 +33,6 @@
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; display: block; }
     .field-input { width: 100% !important; padding: 0 16px !important; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-size: 16px; background: #0f172a; color: white; height: 54px !important; outline: none; font-family: inherit; }
     
-    /* ✅ แก้ไขความยาวช่องวันที่ตามสั่ง */
-    #date { max-width: 100%; display: block; }
-
     .seat-map-img { width: 100%; border-radius: 18px; margin: 10px 0 20px; border: 1px solid rgba(255,255,255,0.05); }
 
     /* ✅ 5. เบาะเด้ง Heartbeat & Grid */
@@ -64,6 +61,24 @@
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
 
     .hidden { display: none !important; }
+    /* ===============================
+   🔧 FIX input date สูงไม่เท่ากัน (iOS / Safari)
+   =============================== */
+input[type="date"].field-input {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 54px !important;
+  line-height: 54px !important;
+  padding: 0 16px !important;
+  display: flex;
+  align-items: center;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  height: 54px;
+  line-height: 54px;
+  text-align: left;
+}
   </style>
 </head>
 <body oninput="validateAll()">
@@ -195,6 +210,8 @@ function renderSeats(bookedArray) {
   });
 }
 
+// --- ส่วนที่พัฒนาเพิ่มขึ้น (UI & Lock) ---
+
 function validateAll() {
   const fields = ['date', 'trip', 'seatField', 'name', 'nickname', 'phone', 'line'];
   const isComplete = fields.every(id => document.getElementById(id).value.trim() !== "");
@@ -218,6 +235,7 @@ function toggleSideMenu() {
 }
 
 function fetchTripList() {
+  // ดึงรายชื่อทริปที่มีคนจองแล้วมาแสดงเป็น Guideline
   const cbName = "cb_list";
   window[cbName] = (data) => {
     const trips = [...new Set(data.bookings.map(b => b.trip))].filter(t => t);
@@ -250,6 +268,7 @@ function toggleFinalBtn() {
     btn.disabled = !ck.checked;
 }
 
+// ✅ การส่งข้อมูล ห้ามแตะ (ใช้ตรรกะเดิมของคุณไอซ์)
 function finalSubmit() {
   if (!document.getElementById('confirmCheck').checked) return alert('กรุณาติ๊กยืนยันก่อนนะจ๊ะ!');
   const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
