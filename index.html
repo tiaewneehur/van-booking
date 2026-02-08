@@ -5,119 +5,141 @@
   <meta charset="utf-8" />
   <title>จองที่นั่งรถตู้ - เที่ยวนี่เหอะ 🚐✨</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ✅ UI สไตล์ดาร์ค Thai PBS แต่โครงสร้างเดิมของคุณไอซ์ */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     
-    body { font-family: 'IBM Plex Sans Thai', sans-serif; background-color: #0d1117; color: #e6edf3; display: flex; justify-content: center; min-height: 100vh; padding-bottom: 100px; }
+    body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; background-color: #f0f4f8; display: flex; flex-direction: column; align-items: center; min-height: 100vh; color: #334155; }
     
-    .card { width: 95%; max-width: 450px; background: #161b22; border-radius: 30px; padding: 25px 20px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); height: fit-content; text-align: center; border: 1px solid #30363d; margin-top: 20px; }
-    .logo { display: block; margin: 0 auto 10px; max-width: 150px; height: auto; }
-    .title { font-size: 24px; font-weight: 700; color: #58a6ff; margin-bottom: 5px; }
-    .subtitle { color: #8b949e; font-size: 13px; margin-bottom: 25px; }
+    /* ✅ ส่วนหัวแบบล็อค (Sticky Header) สไตล์ Thai PBS */
+    .header-sticky {
+      position: sticky; top: 0; width: 100%; max-width: 500px;
+      background: white; z-index: 1000; padding: 15px 20px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-bottom: 2px solid #1e40af;
+    }
+    .header-sticky img { width: 40px; height: 40px; border-radius: 50%; }
+    .header-sticky h1 { font-size: 18px; color: #1e40af; font-weight: 700; }
 
-    .field-group { width: 100%; margin-bottom: 15px; text-align: left; }
-    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #58a6ff; display: flex; align-items: center; gap: 6px; }
+    .content-area { width: 100%; max-width: 500px; padding: 20px 15px 120px 15px; }
+
+    .card { background: #ffffff; border-radius: 30px; padding: 25px 20px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); text-align: center; }
+    .subtitle { color: #64748b; font-size: 13px; margin-bottom: 25px; }
     
-    /* ✅ แก้ไขกล่องวันที่และช่องเลือกทริปให้เท่ากัน */
-    .field-input, .trip-btn { 
+    .field-group { width: 100%; margin-bottom: 15px; text-align: left; }
+    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #1e40af; display: flex; align-items: center; gap: 6px; }
+    
+    /* ✅ แก้กล่องวันที่ให้เท่ากับทริป */
+    .field-input { 
       display: block !important; width: 100% !important; padding: 0 15px !important; 
-      border-radius: 15px; border: 1px solid #30363d; font-size: 16px; 
-      background: #0d1117; color: white; font-family: inherit; outline: none; 
-      height: 52px !important; line-height: 52px !important;
+      border-radius: 15px; border: 1.5px solid #cbd5e1; font-size: 16px; 
+      background: #f8fafc; font-family: inherit; outline: none; 
+      height: 54px !important; line-height: 54px !important;
     }
 
-    .trip-btn { text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; border: 1px solid #58a6ff; }
-
-    .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 1px solid #30363d; }
-    
-    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin: 20px 0 !important; padding: 12px !important; background: #0d1117; border-radius: 25px; border: 1px solid #30363d; }
+    .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 1px solid #eee; }
+    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin: 20px 0 !important; padding: 12px !important; background: #f1f5f9; border-radius: 25px; }
     .seat { aspect-ratio: 1/1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; color: white; transition: 0.2s; }
+    .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 0 #047857; }
+    .seat.booked { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 4px 0 #b91c1c; font-size: 10px; cursor: not-allowed; }
+    .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
     
-    .seat.empty { background: linear-gradient(135deg, #238636, #1a6328); box-shadow: 0 4px 0 #144d1f; }
-    .seat.booked { background: linear-gradient(135deg, #da3633, #8e2321); box-shadow: 0 4px 0 #671917; font-size: 10px; cursor: not-allowed; }
-    .seat.selected { background: linear-gradient(135deg, #f1e05a, #b3a542); color: #000; box-shadow: 0 4px 0 #8e8235; transform: scale(1.05); animation: heartbeat 1s infinite; }
-    
-    @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.12); } }
-    
-    #formBox { margin-top: 20px; padding: 20px; background: #161b22; border-radius: 25px; border: 2.5px solid #30363d; text-align: left; display: none; }
-    #formBox.active { display: block; }
+    #formBox { margin-top: 20px; padding: 20px; background: #eff6ff; border-radius: 25px; border: 2.5px solid #dbeafe; text-align: left; }
+    .hidden { display: none !important; }
 
-    /* ✅ ล็อคหัวท้ายสไตล์ PBS */
-    .bottom-bar { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #161b22; padding: 15px; border-top: 1px solid #30363d; z-index: 100; }
-    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #238636; color: white; font-size: 18px; font-weight: 700; cursor: pointer; font-family: inherit; }
-    .btn:disabled { background: #30363d; color: #8b949e; cursor: not-allowed; }
+    /* ✅ แถบเมนูล่างแบบ Thai PBS */
+    .bottom-nav {
+      position: fixed; bottom: 0; width: 100%; max-width: 500px;
+      background: white; padding: 15px 20px 30px 20px;
+      border-top: 1px solid #e2e8f0; display: flex; gap: 10px; z-index: 1001;
+    }
+    .btn { flex: 2; padding: 15px; border-radius: 15px; border: none; background: #2563eb; color: white; font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit; }
+    .btn-side { flex: 1; background: #64748b; color: white; font-size: 14px; }
 
-    .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 15px; }
-    .modal-content { background: #161b22; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px; text-align: center; border: 1px solid #30363d; }
-    .qr-img { width: 100%; max-width: 250px; border-radius: 15px; margin-bottom: 15px; }
+    /* ✅ Side Menu ดูรายชื่อทริป */
+    .side-menu {
+      position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%;
+      background: #1e293b; color: white; z-index: 2000; transition: 0.3s; padding: 30px 20px;
+      box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+    }
+    .side-menu.active { right: 0; }
+    .side-menu h2 { font-size: 20px; margin-bottom: 20px; color: #38bdf8; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+    .trip-list-item { padding: 12px; border-bottom: 1px solid #334155; font-size: 14px; cursor: pointer; }
+    .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 1999; }
 
-    .trip-dropdown { position: fixed; bottom: 80px; width: 90%; max-width: 400px; background: #161b22; border: 1px solid #58a6ff; border-radius: 20px; display: none; z-index: 200; max-height: 200px; overflow-y: auto; }
-    .trip-item { padding: 15px; border-bottom: 1px solid #30363d; color: white; cursor: pointer; }
+    .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; padding: 15px; }
+    .modal-content { background: white; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px 20px; text-align: center; }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <img src="เที่ย นี่เหอะ.png" class="logo" />
-  <h1 class="title">จองที่นั่งรถตู้ 🚐💨</h1>
-  <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
-
-  <form id="bookingForm">
-    <div class="field-group">
-      <label class="field-label">📅 วันเดินทาง</label>
-      <input id="date" name="date" type="date" class="field-input" required />
-    </div>
-
-    <div class="field-group">
-      <label class="field-label">⛺ เลือกทริปเดินทาง</label>
-      <div class="trip-btn" onclick="toggleTrips()">
-        <span id="tripLabel">จิ้มเลือกทริปตรงนี้...</span>
-        <span>▼</span>
-      </div>
-      <input type="hidden" id="trip" name="trip" required>
-    </div>
-
-    <div id="tripDropdown" class="trip-dropdown"></div>
-
-    <img src="IMG_0444.jpeg" class="seat-map-img" />
-    <div id="seatGrid" class="grid"></div>
-    <input id="seatField" name="seat" type="hidden" />
-
-    <div id="formBox">
-      <h3 style="text-align: center; color: #58a6ff; margin-bottom: 15px;">📝 ข้อมูลผู้จอง</h3>
-      <div class="field-group">
-        <label class="field-label">👤 ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
-      </div>
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <div style="flex:1">
-          <label class="field-label">🏷️ ชื่อเล่น</label>
-          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
-        </div>
-        <div style="flex:1">
-          <label class="field-label">📞 เบอร์โทร</label>
-          <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
-        <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required />
-      </div>
-    </div>
-  </form>
+<div class="header-sticky">
+  <img src="เที่ย นี่เหอะ.png" alt="Logo">
+  <h1>จองที่นั่งรถตู้ เที่ยวนี่เหอะ</h1>
 </div>
 
-<div class="bottom-bar">
-  <button type="button" id="mainBtn" onclick="showPayment()" class="btn" disabled>🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+<div id="sideMenu" class="side-menu">
+  <h2>📍 ทริปทั้งหมด</h2>
+  <div id="tripListContent">กำลังโหลด...</div>
+  <button onclick="toggleMenu()" style="margin-top: 20px; background: none; border: 1px solid #475569; color: white; padding: 10px; border-radius: 10px; width: 100%;">ปิดเมนู</button>
+</div>
+
+<div class="content-area">
+  <div class="card">
+    <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
+
+    <form id="bookingForm">
+      <div class="field-group">
+        <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
+        <input id="date" name="date" type="date" class="field-input" required />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">⛺ ชื่อทริป (ไปไหนบอกด้วย)</label>
+        <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ไปดูแมวที่ห้องพี่มั้ย" required />
+      </div>
+
+      <img src="IMG_0444.jpeg" class="seat-map-img" />
+      <div id="seatGrid" class="grid"></div>
+      <input id="seatField" name="seat" type="hidden" />
+
+      <div id="formBox" class="hidden">
+        <h3 style="text-align: center; color: #1e40af; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
+        <div class="field-group">
+          <label class="field-label">👤 ชื่อ-นามสกุล</label>
+          <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
+        </div>
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+          <div style="flex:1">
+            <label class="field-label">🏷️ ชื่อเล่น</label>
+            <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
+          </div>
+          <div style="flex:1">
+            <label class="field-label">📞 เบอร์โทร</label>
+            <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
+          <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <button type="button" class="btn btn-side" onclick="toggleMenu()">🔍 ดูทริป</button>
+  <button type="button" id="mainBtn" onclick="showPayment()" class="btn">🚀 ไปโอนเงิน!</button>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <h2 style="color: #58a6ff; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
-    <img src="slip-qr.png" class="qr-img">
-    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn">✅ ยืนยันจองสำเร็จ!</button>
+    <h2 style="color: #1e40af; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
+    <img src="slip-qr.png" style="width:100%; max-width:250px; border-radius:15px; margin-bottom:15px;">
+    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn" style="background: #059669; width:100%;">✅ ยืนยันจองสำเร็จ!</button>
     <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px;">ย้อนกลับ</button>
   </div>
 </div>
@@ -127,20 +149,43 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpG
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// ✅ ระบบเดิม: ดึงข้อมูลชื่อคนที่จองแล้วมาขึ้นบนเบาะ
+// ✅ ฟังก์ชันเปิด-ปิดเมนู Thai PBS Side Panel
+function toggleMenu() {
+  const menu = document.getElementById('sideMenu');
+  const overlay = document.getElementById('overlay');
+  if(menu.classList.contains('active')) {
+    menu.classList.remove('active');
+    overlay.style.display = 'none';
+  } else {
+    menu.classList.add('active');
+    overlay.style.display = 'block';
+    fetchTripList(); // ดึงรายชื่อทริปมาโชว์
+  }
+}
+
+// ✅ ดึงรายชื่อทริปจากหลังบ้านมาแสดงในเมนู
+function fetchTripList() {
+  const cbName = "cb_menu";
+  window[cbName] = (data) => {
+    const trips = [...new Set(data.bookings.map(b => b.trip))].filter(t => t);
+    document.getElementById('tripListContent').innerHTML = trips.map(t => `<div class="trip-list-item" onclick="selectTripFromMenu('${t}')">• ${t}</div>`).join('');
+    delete window[cbName];
+  };
+  const script = document.createElement('script');
+  script.src = `${READ_URL}&callback=${cbName}`;
+  document.body.appendChild(script);
+}
+
+function selectTripFromMenu(name) {
+  document.getElementById('trip').value = name;
+  toggleMenu();
+}
+
 function loadBookedJSONP(date, callback) {
   if (!date) return;
   const cbName = "cb_" + Date.now();
-  window[cbName] = (data) => {
-    callback(data.bookings || []);
-    // ดึงชื่อทริปจากหลังบ้านมาใส่ใน Dropdown ด้วย
-    const trips = [...new Set(data.bookings.map(b => b.trip))].filter(t => t);
-    const container = document.getElementById('tripDropdown');
-    container.innerHTML = trips.map(t => `<div class="trip-item" onclick="selectTrip('${t}')">${t}</div>`).join('');
-    delete window[cbName];
-    document.getElementById(cbName).remove();
-  };
-  const script = document.createElement('script'); script.id = cbName;
+  window[cbName] = (data) => { callback(data.bookings || []); delete window[cbName]; };
+  const script = document.createElement('script');
   script.src = `${READ_URL}&date=${encodeURIComponent(date)}&callback=${cbName}`;
   document.body.appendChild(script);
 }
@@ -149,46 +194,31 @@ function renderSeats(bookedArray) {
   const grid = document.getElementById('seatGrid'); grid.innerHTML = '';
   const bookedMap = {}; 
   bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
-
+  
   SEATS.forEach(n => {
     const div = document.createElement('div'); div.className = 'seat'; const sKey = String(n);
     if (bookedMap[sKey]) {
-      div.classList.add('booked'); 
-      div.innerHTML = `<span style="font-size:11px;">เบาะ ${sKey}</span><div style="font-size:22px;">${bookedMap[sKey]}</div>`;
+      div.classList.add('booked'); div.innerHTML = `<span style="font-size:11px;">เบาะ ${sKey}</span><div style="font-size:22px;">${bookedMap[sKey]}</div>`;
     } else {
-      div.classList.add('empty'); 
-      div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:22px;">${sKey}</span>`;
+      div.classList.add('empty'); div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:22px;">${sKey}</span>`;
       div.onclick = () => {
         if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
+        if (!document.getElementById('trip').value.trim()) return alert('⛺ กรุณากรอกชื่อทริปก่อนนะจ๊ะ!');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-        div.classList.add('selected'); 
-        document.getElementById('seatField').value = sKey;
-        document.getElementById('formBox').classList.add('active');
-        checkForm();
+        div.classList.add('selected'); document.getElementById('seatField').value = sKey;
+        document.getElementById('formBox').classList.remove('hidden');
+        setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 200);
       };
     }
     grid.appendChild(div);
   });
 }
 
-function toggleTrips() {
-  const dp = document.getElementById('tripDropdown');
-  dp.style.display = dp.style.display === 'block' ? 'none' : 'block';
+function showPayment() {
+  const fields = ['name', 'nickname', 'phone', 'line'];
+  for(let f of fields) { if(!document.getElementById(f).value) return alert('กรอกให้ครบ!'); }
+  document.getElementById('payModal').style.display = 'flex';
 }
-
-function selectTrip(name) {
-  document.getElementById('trip').value = name;
-  document.getElementById('tripLabel').innerText = name;
-  toggleTrips();
-  checkForm();
-}
-
-function checkForm() {
-  const ready = document.getElementById('name').value && document.getElementById('seatField').value && document.getElementById('trip').value;
-  document.getElementById('mainBtn').disabled = !ready;
-}
-
-function showPayment() { document.getElementById('payModal').style.display = 'flex'; }
 
 function finalSubmit() {
   const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่ง..."; btn.disabled = true;
@@ -201,7 +231,6 @@ function finalSubmit() {
 }
 
 document.getElementById('date').onchange = (e) => { renderSeats([]); loadBookedJSONP(e.target.value, renderSeats); };
-['name','nickname','phone','line'].forEach(id => document.getElementById(id).oninput = checkForm);
 renderSeats([]);
 </script>
 </body>
