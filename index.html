@@ -7,88 +7,93 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ✅ Midnight Theme & UI มีมิติ */
+    /* ✅ โทนดาร์คพรีเมียม แต่โครงสร้างเดิมคุณไอซ์ 100% */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     
-    body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; background-color: #0b0f19; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0 100px 0; color: #e2e8f0; }
+    body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; background-color: #0b0f19; display: flex; justify-content: center; min-height: 100vh; padding: 20px 0; color: #e2e8f0; }
     
-    .card { width: 95%; max-width: 420px; background: #161b22; border-radius: 30px; padding: 25px 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid #30363d; text-align: center; position: relative; }
-    
-    /* ✅ ปุ่มเมนูขวาบนแบบเลื่อน */
-    .menu-trigger { position: absolute; top: 20px; right: 20px; background: #38bdf8; color: #0f172a; border: none; padding: 8px 15px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; z-index: 10; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3); }
+    .card { 
+      width: 92%; max-width: 400px; background: #161b22; border-radius: 30px; padding: 25px 20px; 
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4); border: 1px solid #30363d; height: fit-content; text-align: center; position: relative; 
+    }
+
+    /* ✅ ปุ่มดูทริปด้านบนขวาตามสั่ง */
+    .menu-btn { 
+      position: absolute; top: 20px; right: 20px; background: #38bdf8; color: #0b0f19; 
+      border: none; padding: 8px 12px; border-radius: 10px; font-weight: 700; font-size: 11px; cursor: pointer; z-index: 10; 
+    }
 
     .logo { display: block; margin: 0 auto 10px; max-width: 150px; height: auto; }
     .title { font-size: 24px; font-weight: 700; color: #38bdf8; margin-bottom: 5px; }
     .subtitle { color: #94a3b8; font-size: 13px; margin-bottom: 25px; }
 
     .field-group { width: 100%; margin-bottom: 15px; text-align: left; }
-    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #38bdf8; }
+    .field-label { font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #38bdf8; display: flex; align-items: center; gap: 6px; }
     
-    /* Input มีมิติ */
+    /* Input มีมิติทรงเดิม */
     .field-input { 
-      display: block !important; width: 100% !important; padding: 0 15px !important; 
-      border-radius: 15px; border: 1px solid #30363d; font-size: 16px; 
-      background: #0d1117; color: white; font-family: inherit; outline: none; 
-      height: 52px !important; line-height: 52px !important; transition: 0.3s;
+      display: block !important; width: 100% !important; padding: 12px 15px !important; 
+      border-radius: 15px; border: 1.5px solid #30363d; font-size: 16px; 
+      background: #0d1117; color: white; font-family: inherit; outline: none; height: 54px; 
     }
-    .field-input:focus { border-color: #38bdf8; background: #161b22; }
+    .field-input:focus { border-color: #38bdf8; }
 
     .seat-map-img { display: block; width: 100%; border-radius: 15px; margin: 15px 0; border: 1px solid #30363d; }
     
-    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; margin: 20px 0 !important; padding: 12px !important; background: #0d1117; border-radius: 25px; border: 1px solid #30363d; }
+    .grid { 
+      display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; 
+      margin: 20px 0 !important; padding: 12px !important; background: #0d1117; border-radius: 25px; border: 1px solid #334155; 
+    }
     
     .seat { aspect-ratio: 1/1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; color: white; transition: 0.2s; }
     .seat.empty { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 0 #047857; }
-    .seat.booked { background: #334155; color: #94a3b8; font-size: 10px; cursor: not-allowed; }
-    .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; animation: heartbeat 1s infinite; }
+    .seat.booked { background: #334155; box-shadow: 0 4px 0 #1e293b; font-size: 10px; cursor: not-allowed; }
+    .seat.selected { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 1s infinite; }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.12); } }
     
-    @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    /* หน้าที่ 2 แบบเดิมเป๊ะ */
+    #formBox { margin-top: 20px; padding: 20px; background: #1e293b; border-radius: 25px; border: 2.5px solid #334155; text-align: left; }
     
-    #formBox { margin-top: 20px; padding: 20px; background: #0d1117; border-radius: 25px; border: 2px solid #30363d; text-align: left; display: none; }
-    #formBox.active { display: block; animation: fadeIn 0.4s; }
+    /* ✅ ปุ่มกดที่จะใช้งานได้ต่อเมื่อกรอกครบเท่านั้น */
+    .btn { 
+      width: 100%; padding: 18px; border-radius: 15px; border: none; 
+      background: #334155; color: #475569; font-size: 18px; font-weight: 700; 
+      cursor: not-allowed; margin-top: 10px; font-family: inherit; transition: 0.3s; 
+    }
+    .btn.active { background: #2563eb; color: white; cursor: pointer; box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); }
 
-    /* ✅ ปุ่มโอนเงินล็อคท้าย ล็อคปุ่มจนกว่าจะกรอกครบ */
-    .bottom-bar { position: fixed; bottom: 0; width: 100%; max-width: 420px; background: #161b22; padding: 15px 15px 30px; border-top: 1px solid #30363d; z-index: 100; left: 50%; transform: translateX(-50%); }
-    .btn { width: 100%; padding: 18px; border-radius: 15px; border: none; background: #334155; color: #94a3b8; font-size: 18px; font-weight: 700; cursor: not-allowed; font-family: inherit; transition: 0.3s; }
-    .btn.ready { background: #238636; color: white; cursor: pointer; box-shadow: 0 5px 15px rgba(35, 134, 54, 0.4); }
-
-    /* ✅ Side Menu (Thai PBS Style) */
-    .side-menu { position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%; background: #0f172a; color: white; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; border-left: 2px solid #38bdf8; }
+    /* ✅ Side Menu ที่เลื่อนได้แบบ Thai PBS */
+    .side-menu { 
+      position: fixed; top: 0; right: -100%; width: 80%; max-width: 300px; height: 100%; 
+      background: #0f172a; color: white; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+      padding: 30px 20px; border-left: 2px solid #38bdf8; 
+    }
     .side-menu.active { right: 0; }
-    .trip-item-link { padding: 15px; border-bottom: 1px solid #1e293b; font-size: 14px; cursor: pointer; color: #e2e8f0; }
-    .trip-item-link:hover { color: #38bdf8; background: #161b22; }
+    .trip-item { padding: 15px; border-bottom: 1px solid #1e293b; cursor: pointer; font-size: 14px; }
     .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 1999; backdrop-filter: blur(4px); }
 
     .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; padding: 15px; }
-    .modal-content { background: #161b22; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px; text-align: center; border: 1px solid #30363d; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-content { background: #161b22; width: 100%; max-width: 380px; border-radius: 25px; padding: 25px; text-align: center; border: 1px solid #334155; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-<button class="menu-trigger" onclick="toggleMenu()">📋 รายชื่อทริป</button>
-
-<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-<div id="sideMenu" class="side-menu">
-  <h2 style="color: #38bdf8; margin-bottom: 20px;">🚩 ทริปที่กำลังเปิด</h2>
-  <div id="tripMenuContent">กำลังโหลด...</div>
-  <button onclick="toggleMenu()" style="margin-top: 20px; background: #30363d; border: none; color: white; padding: 10px; border-radius: 10px; width: 100%;">ปิด</button>
-</div>
-
 <div class="card">
+  <button type="button" class="menu-btn" onclick="toggleMenu()">🔍 ดูทริป</button>
+
   <img src="เที่ย นี่เหอะ.png" class="logo" />
   <h1 class="title">จองที่นั่งรถตู้ 🚐💨</h1>
   <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
 
   <form id="bookingForm">
     <div class="field-group">
-      <label class="field-label">📅 วันเดินทาง</label>
+      <label class="field-label">📅 วันเดินทาง (อย่ามาสายนะขอร้อง)</label>
       <input id="date" name="date" type="date" class="field-input" required onchange="validateAll()" />
     </div>
 
     <div class="field-group">
-      <label class="field-label">⛺ ชื่อทริป (พิมพ์เองหรือกดจากเมนู)</label>
+      <label class="field-label">⛺ ชื่อทริป (ไปไหนบอกด้วย)</label>
       <input id="trip" name="trip" type="text" class="field-input" placeholder="เช่น ไปดูแมวที่ห้องพี่มั้ย" required oninput="validateAll()" />
     </div>
 
@@ -96,39 +101,43 @@
     <div id="seatGrid" class="grid"></div>
     <input id="seatField" name="seat" type="hidden" />
 
-    <div id="formBox">
-      <h3 style="text-align: center; color: #38bdf8; margin-bottom: 15px;">📝 ข้อมูลผู้จอง</h3>
+    <div id="formBox" class="hidden">
+      <h3 style="text-align: center; color: #38bdf8; margin-bottom: 15px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
       <div class="field-group">
         <label class="field-label">👤 ชื่อ-นามสกุล</label>
-        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" oninput="validateAll()" />
+        <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required oninput="validateAll()" />
       </div>
       <div style="display:flex; gap:10px; margin-bottom:15px;">
         <div style="flex:1">
           <label class="field-label">🏷️ ชื่อเล่น</label>
-          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" oninput="validateAll()" />
+          <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required oninput="validateAll()" />
         </div>
         <div style="flex:1">
           <label class="field-label">📞 เบอร์โทร</label>
-          <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" oninput="validateAll()" />
+          <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required oninput="validateAll()" />
         </div>
       </div>
       <div class="field-group">
         <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
-        <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" oninput="validateAll()" />
+        <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required oninput="validateAll()" />
       </div>
+      <button type="button" id="mainBtn" onclick="showPayment()" class="btn" disabled>🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
     </div>
   </form>
 </div>
 
-<div class="bottom-bar">
-  <button type="button" id="mainBtn" onclick="showPayment()" class="btn" disabled>🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
+<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+<div id="sideMenu" class="side-menu">
+  <h2 style="color: #38bdf8; margin-bottom: 20px;">🚩 รายการทริป</h2>
+  <div id="tripListContent">กำลังโหลด...</div>
+  <button onclick="toggleMenu()" style="margin-top: 20px; width: 100%; padding: 10px; background: #334155; color: white; border: none; border-radius: 10px;">ปิดเมนู</button>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
     <h2 style="color: #38bdf8; margin-bottom: 10px;">💰 โอนเถอะอยากไปเที่ยว</h2>
-    <img src="slip-qr.png" style="width:100%; max-width:250px; border-radius:15px; margin-bottom:15px; border: 1px solid #30363d;">
-    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn ready">✅ ยืนยันจองสำเร็จ!</button>
+    <img src="slip-qr.png" style="width:100%; border-radius:15px; margin-bottom:15px;">
+    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn active" style="background:#059669; color:white;">✅ ยืนยันจองสำเร็จ!</button>
     <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:grey; margin-top:15px;">ย้อนกลับ</button>
   </div>
 </div>
@@ -138,7 +147,7 @@ const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpG
 const READ_URL = SCRIPT_URL + "?action=read";
 const SEATS = [3,6,9,2,5,8,1,4,7];
 
-// ✅ เช็คความพร้อมของฟอร์มทั้งหมด
+// ✅ ฟังก์ชันตรวจกรอกครบเพื่อปลดล็อคปุ่ม
 function validateAll() {
   const isFilled = document.getElementById('date').value && 
                    document.getElementById('trip').value.trim() && 
@@ -150,28 +159,28 @@ function validateAll() {
   
   const btn = document.getElementById('mainBtn');
   if(isFilled) {
-    btn.classList.add('ready');
+    btn.classList.add('active');
     btn.disabled = false;
   } else {
-    btn.classList.remove('ready');
+    btn.classList.remove('active');
     btn.disabled = true;
   }
 }
 
-// ✅ เมนู Thai PBS Slide Side
+// ✅ เมนูสไลด์ด้านข้าง
 function toggleMenu() {
   const menu = document.getElementById('sideMenu');
   const overlay = document.getElementById('overlay');
   const isOpen = menu.classList.toggle('active');
   overlay.style.display = isOpen ? 'block' : 'none';
-  if(isOpen) fetchMenuTrips();
+  if(isOpen) fetchTrips();
 }
 
-function fetchMenuTrips() {
+function fetchTrips() {
   const cb = "cb_menu";
   window[cb] = (data) => {
     const trips = [...new Set(data.bookings.map(b => b.trip))].filter(t => t);
-    document.getElementById('tripMenuContent').innerHTML = trips.map(t => `<div class="trip-item-link" onclick="selectFromMenu('${t}')">• ${t}</div>`).join('');
+    document.getElementById('tripListContent').innerHTML = trips.map(t => `<div class="trip-item" onclick="selectFromMenu('${t}')">• ${t}</div>`).join('');
     delete window[cb];
   };
   const s = document.createElement('script'); s.src = `${READ_URL}&callback=${cb}`; document.body.appendChild(s);
@@ -199,16 +208,16 @@ function renderSeats(bookedArray) {
   SEATS.forEach(n => {
     const div = document.createElement('div'); div.className = 'seat'; const sKey = String(n);
     if (bookedMap[sKey]) {
-      div.classList.add('booked'); div.innerHTML = `<span style="font-size:11px;">เบาะ ${sKey}</span><div style="font-size:20px;">${bookedMap[sKey]}</div>`;
+      div.classList.add('booked'); div.innerHTML = `<span style="font-size:11px;">เบาะ ${sKey}</span><div style="font-size:22px;">${bookedMap[sKey]}</div>`;
     } else {
-      div.classList.add('empty'); div.innerHTML = `<span style="font-size:11px;">ว่าง</span><span style="font-size:24px;">${sKey}</span>`;
+      div.classList.add('empty'); div.innerHTML = `<span style="font-size:11px;">เบาะ</span><span style="font-size:24px;">${sKey}</span>`;
       div.onclick = () => {
         if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
         document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
         div.classList.add('selected'); document.getElementById('seatField').value = sKey;
-        document.getElementById('formBox').classList.add('active');
+        document.getElementById('formBox').classList.remove('hidden');
         validateAll();
-        setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 300);
+        setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 200);
       };
     }
     grid.appendChild(div);
@@ -218,13 +227,12 @@ function renderSeats(bookedArray) {
 function showPayment() { document.getElementById('payModal').style.display = 'flex'; }
 
 function finalSubmit() {
-  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังจอง..."; btn.disabled = true;
+  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่ง..."; btn.disabled = true;
   const formData = new URLSearchParams();
   ['date','trip','seat','name','nickname','phone','line'].forEach(id => {
     formData.append(id, document.getElementById(id === 'seat' ? 'seatField' : id).value);
   });
-  fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData.toString() })
-  .then(() => { alert('จองสำเร็จ!'); location.reload(); });
+  fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData.toString() }).then(() => { alert('จองสำเร็จ!'); location.reload(); });
 }
 
 document.getElementById('date').onchange = (e) => { validateAll(); renderSeats([]); loadBookedJSONP(e.target.value, renderSeats); };
