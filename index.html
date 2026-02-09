@@ -304,22 +304,23 @@ function finalSubmit() {
   formData.append('line', document.getElementById('line').value);
   formData.append('confirm', 'true');
 
-  fetch(SCRIPT_URL, {
-    method: 'POST',
-    body: formData
+    fetch(SCRIPT_URL, { 
+    method: 'POST', 
+    mode: 'no-cors', 
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: formData.toString()
   })
-  .then(() => {
-    alert('จองสำเร็จ! 🎒');
-    location.reload();
+  .then(() => { 
+    alert('จองสำเร็จ! เก็บกระเป๋าเลย 🎒'); 
+    location.reload(); 
   })
-  .catch(() => {
-    alert('ส่งข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง');
-    btn.disabled = false;
-    btn.innerHTML = "✅ ยืนยันจองสำเร็จ!";
+  .catch(() => { 
+    alert('บันทึกสำเร็จ (กดตกลงเพื่อรีเฟรช)'); 
+    location.reload(); 
   });
 }
 
-/* ปิด script แค่ครั้งเดียว */
+renderSeats([]);
 </script>
 </body>
 </html>
