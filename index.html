@@ -67,6 +67,24 @@
     .btn-final:disabled { background: #334155; color: #64748b; }
 
     input[type="date"]::-webkit-date-and-time-value { height: 54px; line-height: 54px; text-align: left; }
+    /* ✅ FIX input date ให้กว้างเท่าช่องอื่น (iOS / Safari) */
+input[type="date"].field-input {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  box-sizing: border-box;
+  height: 54px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* ตัวหนังสือภายใน date */
+input[type="date"]::-webkit-date-and-time-value {
+  height: 54px;
+  line-height: 54px;
+  text-align: left;
+}
   </style>
 </head>
 <body oninput="validateAll()">
