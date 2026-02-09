@@ -7,183 +7,217 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ✅ Base Styles & Midnight Theme */
+    /* ✅ สไตล์เดิมทั้งหมดคงไว้ */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; background: #070a13; color: #f1f5f9; min-height: 100vh; overflow-x: hidden; }
-
     .header-sticky { position: sticky; top: 0; width: 100%; background: rgba(7, 10, 19, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1000; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .header-brand { display: flex; align-items: center; gap: 10px; }
     .header-brand img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #38bdf8; }
     .header-brand h1 { font-size: 16px; color: #38bdf8; font-weight: 700; }
-
     .menu-trigger { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 12px; font-weight: 600; font-size: 12px; cursor: pointer; }
     .side-menu { position: fixed; top: 0; right: -100%; width: 80%; height: 100%; background: #0f172a; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
     .side-menu.active { right: 0; }
     .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1999; backdrop-filter: blur(4px); }
-
     .main-wrapper { padding: 20px 15px 120px; display: flex; flex-direction: column; align-items: center; }
     .card { width: 100%; max-width: 420px; background: rgba(30, 41, 59, 0.7); border-radius: 30px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
     .subtitle { color: #94a3b8; font-size: 13px; margin: 10px 0 25px; text-align: center; }
-
     .field-group { width: 100%; margin-bottom: 18px; text-align: left; }
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; display: block; }
     .field-input { width: 100% !important; padding: 0 16px !important; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-size: 16px; background: #0f172a; color: white; height: 54px !important; outline: none; font-family: inherit; }
-    
     .seat-map-img { width: 100%; border-radius: 18px; margin: 10px 0 20px; border: 1px solid rgba(255,255,255,0.05); }
-
-    /* ✅ จัดระเบียบ Grid 3 คัน */
     .van-container { margin-bottom: 30px; width: 100%; }
     .van-title { font-size: 14px; color: #38bdf8; margin-bottom: 10px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.1); padding: 5px; border-radius: 10px; }
-    
     .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; padding: 15px !important; background: rgba(0,0,0,0.3); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
     .seat { aspect-ratio: 1/1; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.2s; position: relative; }
-    
-    /* เบาะพิเศษ (เบาะซ้าย) ให้ยืดเต็มแถวบน */
     .seat.special { grid-column: span 3; aspect-ratio: auto; height: 50px; margin-bottom: 5px; }
-
     .seat.empty { background: linear-gradient(145deg, #10b981, #059669); color: white; box-shadow: 0 4px 0 #047857; }
     .seat.booked { background: linear-gradient(145deg, #ef4444, #b91c1c); color: white; box-shadow: 0 4px 0 #991b1b; cursor: not-allowed; font-size: 10px; }
     .seat.selected { background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 0.8s infinite; }
-    
     @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.10); } }
-
     #formBox { margin-top: 20px; padding: 20px; background: rgba(56, 189, 248, 0.05); border-radius: 25px; border: 1px solid rgba(56, 189, 248, 0.3); display: none; }
     #formBox.visible { display: block; animation: fadeIn 0.4s; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
     .bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(15px); padding: 15px 20px 30px; border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000; display: flex; justify-content: center; }
     .btn-main { width: 100%; max-width: 400px; padding: 18px; border-radius: 18px; border: none; font-size: 18px; font-weight: 700; font-family: inherit; transition: 0.3s; cursor: pointer; background: #334155; color: #64748b; }
     .btn-main.active { background: #38bdf8; color: #0f172a; box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4); }
-
     .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); padding: 20px; overflow-y: auto; align-items: center; justify-content: center; }
     .modal-content { background: #1e293b; width: 100%; max-width: 400px; border-radius: 30px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
     .qr-img { width: 100%; border-radius: 20px; border: 5px solid white; margin: 15px 0; }
     .btn-final { background: #10b981; color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 18px; font-weight: 700; cursor: pointer; }
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
 
-    input[type="date"].field-input { -webkit-appearance: none; appearance: none; height: 54px !important; }
+    /* ✅ ระบบล็อคอิน UI */
+    .login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #070a13; z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .login-card { width: 100%; max-width: 360px; text-align: center; animation: fadeIn 0.5s; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body oninput="validateAll()">
+<body>
 
-<div class="header-sticky">
-  <div class="header-brand">
-    <img src="เที่ย นี่เหอะ.png" alt="Logo">
-    <div class="brand-text">
-      <h1>เที่ยวนี่เหอะ</h1>
-      <span>TIAEWNEEHUR</span>
+<div id="loginScreen" class="login-overlay">
+  <div class="login-card">
+    <img src="เที่ย นี่เหอะ.png" style="width: 100px; border-radius: 50%; border: 3px solid #38bdf8; margin-bottom: 20px;">
+    <h2 style="color: #fff; margin-bottom: 10px;">ยินดีต้อนรับ!</h2>
+    <p style="color: #94a3b8; font-size: 14px; margin-bottom: 30px;">กรอกเบอร์โทรเพื่อเข้าสู่ระบบจองที่นั่ง</p>
+    <div class="field-group">
+      <input id="loginPhone" type="tel" class="field-input" placeholder="กรอกเบอร์โทรศัพท์" maxlength="10" style="text-align: center; font-size: 20px; letter-spacing: 2px;">
+    </div>
+    <button onclick="handleLogin()" class="btn-final" style="background: #38bdf8; color: #0f172a;">เข้าสู่ระบบ 🚀</button>
+  </div>
+</div>
+
+<div id="mainApp" style="display: none;">
+  <div class="header-sticky">
+    <div class="header-brand">
+      <img src="เที่ย นี่เหอะ.png" alt="Logo">
+      <div class="brand-text">
+        <h1>เที่ยวนี่เหอะ</h1>
+        <span>TIAEWNEEHUR</span>
+      </div>
+    </div>
+    <button class="menu-trigger" onclick="toggleSideMenu()">📋 ทริปที่จัด</button>
+  </div>
+
+  <div id="overlay" class="overlay" onclick="toggleSideMenu()"></div>
+  <div id="sideMenu" class="side-menu">
+    <h2 style="color:#38bdf8; margin-bottom:20px; border-bottom:1px solid #38bdf8; padding-bottom:10px;">📍 ทริปที่เปิดจอง</h2>
+    <div id="tripListContent" style="display:flex; flex-direction:column; gap:12px;">
+      <p style="color:#94a3b8; font-size:14px;">กำลังโหลดข้อมูลทริป...</p>
     </div>
   </div>
-  <button class="menu-trigger" onclick="toggleSideMenu()">📋 ทริปที่จัด</button>
-</div>
 
-<div id="overlay" class="overlay" onclick="toggleSideMenu()"></div>
-<div id="sideMenu" class="side-menu">
-  <h2 style="color:#38bdf8; margin-bottom:20px; border-bottom:1px solid #38bdf8; padding-bottom:10px;">📍 ทริปที่เปิดจอง</h2>
-  <div id="tripListContent" style="display:flex; flex-direction:column; gap:12px;">
-    <p style="color:#94a3b8; font-size:14px;">กำลังโหลดข้อมูลทริป...</p>
-  </div>
-</div>
+  <div class="main-wrapper">
+    <div class="card">
+      <h1 style="font-size: 22px; color: #fff; text-align:center;">จองที่นั่งรถตู้ 🚐💨</h1>
+      <p class="subtitle" id="welcomeUser">สวัสดีครับ เลือกทริปที่ชอบได้เลย ✨</p>
 
-<div class="main-wrapper">
-  <div class="card">
-    <h1 style="font-size: 22px; color: #fff; text-align:center;">จองที่นั่งรถตู้ 🚐💨</h1>
-    <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
-
-    <form id="bookingForm">
-      <div class="field-group">
-        <label class="field-label">📅 วันเดินทาง</label>
-        <input id="date" name="date" type="date" class="field-input" required onchange="handleDateChange()" />
-      </div>
-
-      <div class="field-group">
-        <label class="field-label">⛺ ชื่อทริป</label>
-        <input id="trip" name="trip" type="text" class="field-input" placeholder="พิมพ์ชื่อทริปที่จะไป" required oninput="validateAll()" />
-      </div>
-
-      <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
-      
-      <div id="allVans">
-        <div class="van-container">
-            <div class="van-title">🚐 คันที่ 1 (สาย A)</div>
-            <div id="grid-A" class="grid"></div>
-        </div>
-        <div class="van-container">
-            <div class="van-title">🚐 คันที่ 2 (สาย B)</div>
-            <div id="grid-B" class="grid"></div>
-        </div>
-        <div class="van-container">
-            <div class="van-title">🚐 คันที่ 3 (สาย C)</div>
-            <div id="grid-C" class="grid"></div>
-        </div>
-      </div>
-
-      <input id="seatField" name="seat" type="hidden" />
-
-      <div id="formBox">
-        <h3 style="text-align: center; color: #38bdf8; margin-bottom: 20px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
+      <form id="bookingForm" oninput="validateAll()">
         <div class="field-group">
-          <label class="field-label">👤 ชื่อ-นามสกุล</label>
-          <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
+          <label class="field-label">📅 วันเดินทาง</label>
+          <input id="date" name="date" type="date" class="field-input" required onchange="handleDateChange()" />
         </div>
-        <div style="display:flex; gap:12px; margin-bottom:18px;">
-          <div style="flex:1">
-            <label class="field-label">🏷️ ชื่อเล่น</label>
-            <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
+
+        <div class="field-group">
+          <label class="field-label">⛺ ชื่อทริป</label>
+          <input id="trip" name="trip" type="text" class="field-input" placeholder="พิมพ์ชื่อทริปที่จะไป" required />
+        </div>
+
+        <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
+        
+        <div id="allVans">
+          <div class="van-container">
+              <div class="van-title">🚐 คันที่ 1 (สาย A)</div>
+              <div id="grid-A" class="grid"></div>
           </div>
-          <div style="flex:1">
-            <label class="field-label">📞 เบอร์โทร</label>
-            <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
+          <div class="van-container">
+              <div class="van-title">🚐 คันที่ 2 (สาย B)</div>
+              <div id="grid-B" class="grid"></div>
+          </div>
+          <div class="van-container">
+              <div class="van-title">🚐 คันที่ 3 (สาย C)</div>
+              <div id="grid-C" class="grid"></div>
           </div>
         </div>
-        <div class="field-group">
-          <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
-          <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required />
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
 
-<div class="bottom-bar">
-  <button type="button" id="mainPayBtn" onclick="showPayment()" class="btn-main" disabled>🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
+        <input id="seatField" name="seat" type="hidden" />
+
+        <div id="formBox">
+          <h3 style="text-align: center; color: #38bdf8; margin-bottom: 20px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
+          <div class="field-group">
+            <label class="field-label">👤 ชื่อ-นามสกุล</label>
+            <input id="name" name="name" type="text" class="field-input" placeholder="ชื่อจริงนะพี่" required />
+          </div>
+          <div style="display:flex; gap:12px; margin-bottom:18px;">
+            <div style="flex:1">
+              <label class="field-label">🏷️ ชื่อเล่น</label>
+              <input id="nickname" name="nickname" type="text" class="field-input" placeholder="เรียกง่ายๆ" required />
+            </div>
+            <div style="flex:1">
+              <label class="field-label">📞 เบอร์โทร</label>
+              <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" readonly style="background: rgba(255,255,255,0.05); color: #94a3b8;" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
+            <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่" required />
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button type="button" id="mainPayBtn" onclick="showPayment()" class="btn-main" disabled>🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
+  </div>
 </div>
 
 <div id="payModal" class="modal">
   <div class="modal-content">
     <h2 style="color: #38bdf8; margin-bottom: 10px;">💰 ชำระเงิน</h2>
-    <p style="font-size: 16px; color: #ef4444; font-weight: 700; margin-bottom: 10px;">(แคปจอเอา QR ไปจ่ายเงินนะจ๊ะ)</p>
     <img src="slip-qr.png" class="qr-img">
     <div style="display:flex; align-items:center; gap:10px; color:#ff922b; text-align:left; font-size:13px; margin: 15px 0;">
       <input type="checkbox" id="confirmCheck" onchange="toggleFinalBtn()" style="width: 22px; height: 22px;">
       <label for="confirmCheck">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่ม</label>
     </div>
     <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn-final" disabled>✅ ยืนยันจองสำเร็จ!</button>
-    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:#94a3b8; margin-top:20px; font-size: 14px;">ย้อนกลับ</button>
+    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:#94a3b8; margin-top:20px;">ย้อนกลับ</button>
   </div>
 </div>
 
 <script>
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
-
-// ลำดับเบาะ: [เบาะซ้าย(10), 3, 6, 9, 2, 5, 8, 1, 4, 7]
 const SEAT_NUMS = ['เบาะซ้าย', 3, 6, 9, 2, 5, 8, 1, 4, 7];
 
-function loadBookedJSONP(date, callback) {
-  if (!date) return;
-  const cbName = "cb_" + Date.now();
-  window[cbName] = (data) => { callback(data.bookings || []); delete window[cbName]; document.getElementById(cbName)?.remove(); };
-  const script = document.createElement('script'); script.id = cbName;
-  script.src = `${READ_URL}&date=${encodeURIComponent(date)}&callback=${cbName}`;
+// ✅ ฟังก์ชัน Login และ ดึงข้อมูล
+function handleLogin() {
+  const phone = document.getElementById('loginPhone').value.trim();
+  if (phone.length < 9) return alert('กรุณากรอกเบอร์โทรที่ถูกต้อง!');
+
+  Swal.fire({ title: 'กำลังเข้าสู่ระบบ...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  // ดึงข้อมูลทริปทั้งหมดมาหาข้อมูลผู้ใช้เก่า
+  const cbName = "cb_login_" + Date.now();
+  window[cbName] = (data) => {
+    const history = data.bookings || [];
+    const user = history.reverse().find(b => b.phone === phone); // หาอันล่าสุด
+
+    // บันทึกเบอร์ลง Form หลัก
+    document.getElementById('phone').value = phone;
+    
+    if (user) {
+      // ดึงข้อมูลเก่ามาใส่ให้
+      document.getElementById('name').value = user.name || "";
+      document.getElementById('nickname').value = user.nickname || "";
+      document.getElementById('line').value = user.line || "";
+      document.getElementById('welcomeUser').innerHTML = `ยินดีต้อนรับกลับครับ คุณ <b>${user.nickname}</b> ✨`;
+    }
+
+    // ซ่อนหน้า Login แสดงหน้า App
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    Swal.close();
+    delete window[cbName];
+  };
+
+  const script = document.createElement('script');
+  script.src = `${READ_URL}&callback=${cbName}`;
   document.body.appendChild(script);
 }
 
+// ✅ ฟังก์ชันจัดการเบาะ (เหมือนเดิมที่ปรับแก้)
 function handleDateChange() {
   const dateVal = document.getElementById('date').value;
-  ['A','B','C'].forEach(id => document.getElementById(`grid-${id}`).innerHTML = '<p style="grid-column: span 3; color:#38bdf8; padding:10px; font-size:12px;">⌛ กำลังเช็ค...</p>');
+  ['A','B','C'].forEach(id => document.getElementById(`grid-${id}`).innerHTML = '<p style="color:#38bdf8; font-size:12px;">⌛ กำลังเช็ค...</p>');
   loadBookedJSONP(dateVal, renderAllVans);
+}
+
+function loadBookedJSONP(date, callback) {
+  const cbName = "cb_" + Date.now();
+  window[cbName] = (data) => { callback(data.bookings || []); delete window[cbName]; };
+  const script = document.createElement('script');
+  script.src = `${READ_URL}&date=${encodeURIComponent(date)}&callback=${cbName}`;
+  document.body.appendChild(script);
 }
 
 function renderAllVans(bookedArray) {
@@ -193,12 +227,10 @@ function renderAllVans(bookedArray) {
   ['A', 'B', 'C'].forEach(prefix => {
     const grid = document.getElementById(`grid-${prefix}`);
     grid.innerHTML = '';
-    
     SEAT_NUMS.forEach(n => {
       const seatID = prefix + n;
       const div = document.createElement('div');
       div.className = n === 'เบาะซ้าย' ? 'seat special' : 'seat';
-      
       if (bookedMap[seatID]) {
         div.classList.add('booked');
         div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:14px;">${bookedMap[seatID]}</div>`;
@@ -215,13 +247,11 @@ function renderAllVans(bookedArray) {
 function selectSeat(el, id) {
     if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
     if (!document.getElementById('trip').value.trim()) return alert('⛺ กรุณากรอกชื่อทริปก่อนนะจ๊ะ!');
-    
     document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
     el.classList.add('selected');
     document.getElementById('seatField').value = id;
     document.getElementById('formBox').classList.add('visible');
     validateAll();
-    setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 400);
 }
 
 function validateAll() {
@@ -234,9 +264,8 @@ function validateAll() {
 
 function toggleSideMenu() {
   const menu = document.getElementById('sideMenu');
-  const overlay = document.getElementById('overlay');
   const isActive = menu.classList.toggle('active');
-  overlay.style.display = isActive ? 'block' : 'none';
+  document.getElementById('overlay').style.display = isActive ? 'block' : 'none';
   if(isActive) fetchTripList();
 }
 
@@ -244,8 +273,7 @@ function fetchTripList() {
   const cbName = "cb_list";
   window[cbName] = (data) => {
     const trips = [...new Set(data.bookings.map(b => b.trip))].filter(t => t);
-    const content = document.getElementById('tripListContent');
-    content.innerHTML = trips.length > 0 ? trips.map(t => `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border-left:4px solid #38bdf8; cursor:pointer;" onclick="setTrip('${t}')">${t}</div>`).join('') : '<p>ยังไม่มีทริป</p>';
+    document.getElementById('tripListContent').innerHTML = trips.map(t => `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border-left:4px solid #38bdf8; cursor:pointer;" onclick="setTrip('${t}')">${t}</div>`).join('');
     delete window[cbName];
   };
   const script = document.createElement('script');
@@ -298,23 +326,14 @@ function finalSubmit() {
   setTimeout(() => {
     document.getElementById('payModal').style.display = 'none';
     Swal.fire({
-        title: '<h2 style="color:#10b981;">จองสำเร็จ! 🎒</h2>',
-        html: `<div style="text-align: left; padding: 20px; border: 2px dashed #38bdf8; border-radius: 20px; background: #fff; color: #334155;">
-                <p><strong>👤 ชื่อ:</strong> ${data.name}</p>
-                <p><strong>⛺ ทริป:</strong> ${data.trip}</p>
-                <p><strong>📅 วันที่:</strong> ${data.date}</p>
-                <div style="background: #f0f9ff; padding: 10px; border-radius: 12px; text-align: center; margin-top: 10px;">
-                    <span style="font-size: 12px;">เลขที่นั่ง</span><br>
-                    <strong style="font-size: 32px; color: #0ea5e9;">${data.seat}</strong>
-                </div>
-               </div>`,
+        title: 'จองสำเร็จ! 🎒',
+        icon: 'success',
         confirmButtonText: 'ตกลง',
         confirmButtonColor: '#38bdf8'
     }).then(() => location.reload());
   }, 1500); 
 }
 
-// Initial Render
 renderAllVans([]);
 </script>
 </body>
