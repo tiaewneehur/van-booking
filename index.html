@@ -322,25 +322,6 @@ function finalSubmit() {
 
   // 4. หลังจากส่ง (เลียนแบบ .then) ให้โชว์ใบเสร็จทันที
   setTimeout(() => {
-  // ✅ เพิ่มบรรทัดนี้: สั่งให้หน้าต่างโอนเงินหายไปทันที
-    document.getElementById('payModal').style.display = 'none';
-
-    // จากนั้นค่อยโชว์ใบเสร็จ SweetAlert2 ของเรา
-    Swal.fire({
-        title: '<h2 style="color:#10b981;">จองสำเร็จ! 🎒</h2>',
-        html: `
-            <div id="receipt-capture" style="text-align: left; padding: 20px; border: 2px dashed #38bdf8; border-radius: 20px; background: #fff; color: #334155; font-family: 'IBM Plex Sans Thai', sans-serif;">
-                </div>
-        `,
-        confirmButtonText: 'ปิดและกลับหน้าหลัก',
-        confirmButtonColor: '#38bdf8',
-        allowOutsideClick: false
-    }).then((result) => {
-        if (result.isConfirmed) {
-            location.reload(); 
-        }
-    });
-  })
     Swal.fire({
         title: '<h2 style="color:#10b981;">จองสำเร็จ! 🎒</h2>',
         html: `
