@@ -142,12 +142,35 @@ input[type="date"]::-webkit-date-and-time-value {
 
 <div class="header-sticky">
   <div class="header-brand">
-    <img src="เที่ย นี่เหอะ.png" alt="Logo">
+    <style>
+  /* header brand text */
+  .brand-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.05;
+  }
+
+  .brand-th {
+    font-size: 16px;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+
+  .brand-en {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: rgba(226,232,240,0.65);
+  }
+</style>
+    <img ...>
     <h1 class="brand-stack">
-  <span class="brand-th">เที่ยวนี่เหอะ</span>
-  <span class="brand-en">TIAEWNEEHUR</span>
-</h1>
+      <span class="brand-th">เที่ยวนี่เหอะ</span>
+      <span class="brand-en">TIAEWNEEHUR</span>
+    </h1>
   </div>
+</div>
   <button class="menu-trigger" onclick="toggleSideMenu()">📋 ทริปที่จัด</button>
 </div>
 
