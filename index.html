@@ -268,6 +268,22 @@ function showPayment() { document.getElementById('payModal').style.display = 'fl
 function toggleFinalBtn() { document.getElementById('submitBtn').disabled = !document.getElementById('confirmCheck').checked; }
 
 <script>
+function setTrip(name) {
+  document.getElementById('trip').value = name;
+  toggleSideMenu();
+  validateAll();
+}
+
+function showPayment() {
+  document.getElementById('payModal').style.display = 'flex';
+}
+
+function toggleFinalBtn() {
+  document.getElementById('submitBtn').disabled =
+    !document.getElementById('confirmCheck').checked;
+}
+
+/* ✅ วาง finalSubmit ตรงนี้เลย */
 function finalSubmit() {
   if (!document.getElementById('confirmCheck').checked) {
     alert('กรุณาติ๊กยืนยันก่อนนะจ๊ะ!');
@@ -302,6 +318,8 @@ function finalSubmit() {
     btn.innerHTML = "✅ ยืนยันจองสำเร็จ!";
   });
 }
+
+/* ปิด script แค่ครั้งเดียว */
 </script>
 </body>
 </html>
