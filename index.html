@@ -55,8 +55,8 @@
     .btn-main { width: 100%; max-width: 400px; padding: 18px; border-radius: 18px; border: none; font-size: 18px; font-weight: 700; font-family: inherit; transition: 0.3s; cursor: pointer; background: #334155; color: #64748b; }
     .btn-main.active { background: #38bdf8; color: #0f172a; box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4); }
 
-    .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); padding: 20px; overflow-y: auto; align-items: center; justify-content: center; }
-    .modal-content { background: #1e293b; width: 100%; max-width: 400px; border-radius: 30px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+    .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); padding: 20px; overflow-y: scroll; align-items: flex-start; justify-content: center;-webkit-overflow-scrolling: touch; }
+    .modal-content { background: #1e293b; width: 100%; max-width: 400px; border-radius: 30px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px; margin-bottom: 50px; }
     .qr-img { width: 100%; border-radius: 20px; border: 5px solid white; margin: 15px 0; }
     .btn-final { background: #10b981; color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 18px; font-weight: 700; cursor: pointer; }
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
