@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -266,20 +267,41 @@ function setTrip(name) {
 function showPayment() { document.getElementById('payModal').style.display = 'flex'; }
 function toggleFinalBtn() { document.getElementById('submitBtn').disabled = !document.getElementById('confirmCheck').checked; }
 
+<script>
 function finalSubmit() {
-  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่ง..."; btn.disabled = true;
-  const formData = new URLSearchParams();
-  ['date', 'trip', 'seat', 'name', 'nickname', 'phone', 'line'].forEach(id => {
-    const val = (id === 'seat') ? document.getElementById('seatField').value : document.getElementById(id).value;
-    formData.append(id, val);
-  });
+  if (!document.getElementById('confirmCheck').checked) {
+    alert('กรุณาติ๊กยืนยันก่อนนะจ๊ะ!');
+    return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.innerHTML = "⌛ กำลังส่งข้อมูล...";
+  btn.disabled = true;
+
+  const formData = new FormData();
+  formData.append('date', document.getElementById('date').value);
+  formData.append('trip', document.getElementById('trip').value);
+  formData.append('seat', document.getElementById('seatField').value);
+  formData.append('name', document.getElementById('name').value);
+  formData.append('nickname', document.getElementById('nickname').value);
+  formData.append('phone', document.getElementById('phone').value);
+  formData.append('line', document.getElementById('line').value);
   formData.append('confirm', 'true');
 
-  fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData.toString() })
-  .then(() => { alert('จองสำเร็จ! 🎒'); location.reload(); })
-  .catch(() => { alert('บันทึกเรียบร้อย'); location.reload(); });
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: formData
+  })
+  .then(() => {
+    alert('จองสำเร็จ! 🎒');
+    location.reload();
+  })
+  .catch(() => {
+    alert('ส่งข้อมูลไม่สำเร็จ ลองใหม่อีกครั้ง');
+    btn.disabled = false;
+    btn.innerHTML = "✅ ยืนยันจองสำเร็จ!";
+  });
 }
-renderSeats([]);
 </script>
 </body>
 </html>
