@@ -110,6 +110,7 @@
   </style>
 </head>
 <body>
+
   <div class="header-sticky">
   <div class="header-brand">
     <img src="เที่ย นี่เหอะ.png" alt="Logo">
@@ -209,7 +210,8 @@
     🚀 พร้อมแล้ว...ไปโอนเงิน!
   </button>
 </div>
-<div id="payModal" class="modal">
+
+  <div id="payModal" class="modal">
   <div class="modal-content">
     <h2 style="color:#38bdf8; margin-bottom:10px;">💰 ขั้นตอนชำระเงิน</h2>
     <p style="font-size:18px; color:#ef4444; font-weight:700;">
@@ -309,6 +311,7 @@ function renderSeatGroup(gridId, seats, bookedMap) {
     grid.appendChild(div);
   });
 }
+
   function validateAll() {
   const fields = ['date','trip','seatField','name','nickname','phone','line'];
   const isComplete = fields.every(id => document.getElementById(id).value.trim() !== "");
