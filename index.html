@@ -275,13 +275,21 @@ function toggleFinalBtn() {
 // ✅ การส่งข้อมูล ห้ามแตะ (ใช้ตรรกะเดิมของคุณไอซ์)
 function finalSubmit() {
   if (!document.getElementById('confirmCheck').checked) return alert('กรุณาติ๊กยืนยันก่อนนะจ๊ะ!');
-  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
+  const btn = document.getElementById('submitBtn'); 
+  btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; 
+  btn.disabled = true;
+
+  // ดึงข้อมูลเตรียมไว้ใส่ใบเสร็จ
+  const customerName = document.getElementById('name').value;
+  const tripName = document.getElementById('trip').value;
+  const seatNo = document.getElementById('seatField').value;
+  const travelDate = document.getElementById('date').value;
 
   const formData = new URLSearchParams();
-  formData.append('date', document.getElementById('date').value);
-  formData.append('trip', document.getElementById('trip').value);
-  formData.append('seat', document.getElementById('seatField').value);
-  formData.append('name', document.getElementById('name').value);
+  formData.append('date', travelDate);
+  formData.append('trip', tripName);
+  formData.append('seat', seatNo);
+  formData.append('name', customerName);
   formData.append('nickname', document.getElementById('nickname').value);
   formData.append('phone', document.getElementById('phone').value);
   formData.append('line', document.getElementById('line').value);
@@ -292,45 +300,42 @@ function finalSubmit() {
     mode: 'no-cors', 
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: formData.toString()
-  })// ... โค้ดส่วนอื่นๆ ของคุณ ...
-
-.then(() => { 
-    // ดึงค่าจาก Input มาแสดงในใบเสร็จ (แก้ id ให้ตรงกับของคุณ)
-    const userName = document.getElementById('nameInput').value; 
-    const seatSelection = document.getElementById('seatSelect').value;
-    const tripName = "ทริปสุดพิเศษ 🏖️"; // หรือดึงจากตัวแปรทริปที่คุณมี
-
+  })
+  .then(() => { 
+    // ✅ เพิ่มส่วนใบเสร็จแบบเทพๆ (SweetAlert2)
     Swal.fire({
-        title: '<span style="font-family: Kanit">จองสำเร็จ!</span>',
+        title: '<h2 style="color:#10b981; font-family:inherit;">จองสำเร็จ! 🎒</h2>',
         html: `
-            <div id="receipt" style="font-family: 'Kanit', sans-serif; text-align: left; background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                <div style="text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 10px; margin-bottom: 15px;">
-                    <h3 style="margin: 0; color: #2ecc71;">E-RECEIPT</h3>
-                    <small style="color: #999;">ขอบคุณที่ใช้บริการ</small>
+            <div id="receipt-capture" style="text-align: left; padding: 20px; border: 2px dashed #38bdf8; border-radius: 20px; background: #fff; color: #334155; font-family: 'IBM Plex Sans Thai', sans-serif;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="เที่ย นี่เหอะ.png" style="width: 65px; border-radius: 50%;">
+                    <h3 style="margin: 5px 0; color: #0f172a;">ใบยืนยันการจอง</h3>
+                    <p style="font-size: 12px; color: #64748b;">รหัสจอง: ${Date.now().toString().slice(-6)}</p>
                 </div>
-                
-                <p><strong>👤 ผู้เดินทาง:</strong> ${userName}</p>
-                <p><strong>🚌 ทริป:</strong> ${tripName}</p>
-                <p><strong>💺 เลขที่นั่ง:</strong> <span style="font-size: 1.2em; color: #3498db;">${seatSelection}</span></p>
-                <p><strong>📅 วันที่จอง:</strong> ${new Date().toLocaleString('th-TH')}</p>
-
-                <div style="margin-top: 15px; background: #f8f9fa; padding: 10px; border-radius: 5px; text-align: center;">
-                    <small style="color: #e74c3c;">* กรุณาแคปหน้าจอเก็บไว้เป็นหลักฐาน</small>
+                <div style="font-size: 15px; border-top: 1px solid #eee; padding-top: 15px; line-height: 1.8;">
+                    <p><strong>👤 ชื่อผู้จอง:</strong> ${customerName}</p>
+                    <p><strong>⛺ ทริป:</strong> ${tripName}</p>
+                    <p><strong>📅 วันที่เดินทาง:</strong> ${travelDate}</p>
+                    <div style="background: #f0f9ff; padding: 15px; border-radius: 12px; text-align: center; margin-top: 12px; border: 1px solid #bae6fd;">
+                        <span style="font-size: 14px; color: #0369a1;">เลขที่นั่งของคุณ</span><br>
+                        <strong style="font-size: 38px; color: #0ea5e9;">${seatNo}</strong>
+                    </div>
                 </div>
+                <p style="text-align: center; margin-top: 15px; font-size: 12px; color: #ef4444; font-weight: bold;">⚠️ กรุณาแคปภาพหน้าจอนี้เก็บไว้</p>
             </div>
         `,
-        confirmButtonText: 'รับทราบ!',
-        confirmButtonColor: '#2ecc71',
-        allowOutsideClick: false // กันคนเผลอกดข้างนอกแล้วหน้าโหลดใหม่ทันที
+        confirmButtonText: 'ปิดและกลับหน้าหลัก',
+        confirmButtonColor: '#38bdf8',
+        allowOutsideClick: false
     }).then((result) => {
         if (result.isConfirmed) {
-            location.reload(); // รีโหลดหน้าเว็บหลังจากกดปุ่มตกลงแล้วเท่านั้น
+            // ✅ เมื่อปิดใบเสร็จ ค่อยรีโหลดเพื่อให้ชื่อไปขึ้นที่เบาะ (เพราะระบบดึงจาก Sheets)
+            location.reload(); 
         }
     });
-});
   })
   .catch(() => { 
-    alert('บันทึกสำเร็จ (กดตกลงเพื่อรีเฟรช)'); 
+    alert('ระบบขัดข้อง แต่ข้อมูลอาจจะบันทึกแล้ว กรุณาลองใหม่หรือเช็คที่เบาะ'); 
     location.reload(); 
   });
 }
