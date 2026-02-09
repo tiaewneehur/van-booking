@@ -279,32 +279,51 @@ function finalSubmit() {
   btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; 
   btn.disabled = true;
 
-  // ดึงข้อมูลเตรียมไว้ใส่ใบเสร็จ
+  // 1. เตรียมข้อมูลสำหรับใบเสร็จ
   const customerName = document.getElementById('name').value;
   const tripName = document.getElementById('trip').value;
   const seatNo = document.getElementById('seatField').value;
   const travelDate = document.getElementById('date').value;
 
-  const formData = new URLSearchParams();
-  formData.append('date', travelDate);
-  formData.append('trip', tripName);
-  formData.append('seat', seatNo);
-  formData.append('name', customerName);
-  formData.append('nickname', document.getElementById('nickname').value);
-  formData.append('phone', document.getElementById('phone').value);
-  formData.append('line', document.getElementById('line').value);
-  formData.append('confirm', 'true');
+  // 2. สร้าง Form จำลองเพื่อส่งข้อมูล (วิธีนี้ชัวร์ที่สุดสำหรับ Google Script)
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = SCRIPT_URL;
+  form.style.display = 'none';
 
-  fetch(SCRIPT_URL, { 
-    method: 'POST', 
-    mode: 'no-cors', 
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: formData.toString()
-  })
-  .then(() => { 
-    // ✅ เพิ่มส่วนใบเสร็จแบบเทพๆ (SweetAlert2)
+  const data = {
+    date: travelDate,
+    trip: tripName,
+    seat: seatNo,
+    name: customerName,
+    nickname: document.getElementById('nickname').value,
+    phone: document.getElementById('phone').value,
+    line: document.getElementById('line').value,
+    confirm: 'true'
+  };
+
+  for (const key in data) {
+    const input = document.createElement('input');
+    input.name = key;
+    input.value = data[key];
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+
+  // 3. ส่งข้อมูลผ่าน iframe เพื่อไม่ให้หน้าเว็บเปลี่ยนไปหน้าขาวของ Google
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden_iframe';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  form.target = 'hidden_iframe';
+
+  form.submit();
+
+  // 4. หลังจากส่ง (เลียนแบบ .then) ให้โชว์ใบเสร็จทันที
+  setTimeout(() => {
     Swal.fire({
-        title: '<h2 style="color:#10b981; font-family:inherit;">จองสำเร็จ! 🎒</h2>',
+        title: '<h2 style="color:#10b981;">จองสำเร็จ! 🎒</h2>',
         html: `
             <div id="receipt-capture" style="text-align: left; padding: 20px; border: 2px dashed #38bdf8; border-radius: 20px; background: #fff; color: #334155; font-family: 'IBM Plex Sans Thai', sans-serif;">
                 <div style="text-align: center; margin-bottom: 15px;">
@@ -329,16 +348,12 @@ function finalSubmit() {
         allowOutsideClick: false
     }).then((result) => {
         if (result.isConfirmed) {
-            // ✅ เมื่อปิดใบเสร็จ ค่อยรีโหลดเพื่อให้ชื่อไปขึ้นที่เบาะ (เพราะระบบดึงจาก Sheets)
             location.reload(); 
         }
     });
-  })
-  .catch(() => { 
-    alert('ระบบขัดข้อง แต่ข้อมูลอาจจะบันทึกแล้ว กรุณาลองใหม่หรือเช็คที่เบาะ'); 
-    location.reload(); 
-  });
+  }, 1500); // หน่วงเวลา 1.5 วินาทีเพื่อให้มั่นใจว่าข้อมูลถูกส่งออกไปแล้ว
 }
+
 
 renderSeats([]);
 </script>
