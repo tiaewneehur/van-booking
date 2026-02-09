@@ -163,6 +163,28 @@ input[type="date"]::-webkit-date-and-time-value {
     letter-spacing: 2px;
     color: rgba(226,232,240,0.65);
   }
+
+    .title-main {
+  font-size: 22px;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 6px;   /* ลดช่องว่าง */
+}
+
+.title-sub {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 4px;   /* ชิดขึ้น */
+}
+
+.title-desc {
+  font-size: 13px;
+  font-weight: 400;     /* 👈 ตัวบาง */
+  color: #94a3b8;
+  text-align: center;
+}
     
 </style>
     <img src="เที่ย นี่เหอะ.png" alt="Logo">
@@ -187,17 +209,21 @@ input[type="date"]::-webkit-date-and-time-value {
 
 <div class="main-wrapper">
   <div class="card">
-    <h1 style="font-size: 22px; color: #fff; text-align:center;">
+
+    <h1 class="title-main">
       จองที่นั่งรถตู้ 🚐💨
     </h1>
-    
-    <p class="subtitle">
-      <h1 style="font-size: 15px; color: #fff; text-align:center;">
-      ทริปหารเฉลี่ยนะจ๊ะคนดี!! ✨
-    <p class="subtitle">
-      จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨
-    </p>
 
+    <div class="title-sub">
+      ทริปหารเฉลี่ยนะจ๊ะคนดี!! ✨
+    </div>
+
+    <div class="title-desc">
+      จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨
+    </div>
+
+  </div>
+</div>
     <form id="bookingForm">
       <div class="field-group">
         <label class="field-label">📅 วันเดินทาง</label>
