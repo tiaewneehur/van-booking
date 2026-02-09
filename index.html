@@ -80,6 +80,7 @@ input[type="date"]::-webkit-date-and-time-value {
   text-align: left;
 }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body oninput="validateAll()">
 
@@ -293,8 +294,40 @@ function finalSubmit() {
     body: formData.toString()
   })
   .then(() => { 
-    alert('จองสำเร็จ! เก็บกระเป๋าเลย 🎒'); 
-    location.reload(); 
+    // 1. ดึงข้อมูลจากหน้าจอมาโชว์ในตั๋ว
+    // เปลี่ยนไอดี (เช่น 'name', 'seat') ให้ตรงกับที่คุณใช้ใน input ของคุณนะครับ
+    const customerName = document.getElementById('name').value || 'ลูกค้าทั่วไป';
+    const seatNo = document.getElementById('seat_number').innerText || '-'; 
+    const trip = document.getElementById('trip_select').value || 'ไม่ระบุทริป';
+
+    // 2. เรียกใช้ SweetAlert2 สร้างใบเสร็จสวยๆ
+    Swal.fire({
+        title: 'จองสำเร็จ! เก็บกระเป๋าเลย 🎒',
+        html: `
+            <div id="capture-ticket" style="text-align: left; padding: 20px; border: 2px dashed #3498db; border-radius: 15px; background: #fff; font-family: 'Kanit', sans-serif;">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <img src="เที่ยว นี่เหอะ.png" style="width: 80px; margin-bottom: 5px;">
+                    <h2 style="color: #3498db; margin: 0;">BOARDING PASS</h2>
+                </div>
+                <div style="font-size: 16px; line-height: 1.8;">
+                    <p><strong>ผู้เดินทาง:</strong> ${customerName}</p>
+                    <p><strong>ทริป:</strong> ${trip}</p>
+                    <p><strong>ที่นั่ง:</strong> <span style="font-size: 24px; color: #e74c3c; font-weight: bold;">${seatNo}</span></p>
+                    <p><strong>วันที่จอง:</strong> ${new Date().toLocaleDateString('th-TH')}</p>
+                </div>
+                <hr style="border-top: 1px dashed #ccc;">
+                <p style="text-align: center; color: #888; font-size: 12px;">แคปภาพนี้ไว้แสดงตอนขึ้นรถนะครับ</p>
+            </div>
+        `,
+        confirmButtonText: 'ตกลง',
+        confirmButtonColor: '#3498db',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            location.reload(); // พอกดปุ่มตกลงปุ๊บ หน้าเว็บค่อยรีโหลด
+        }
+    });
+});
+ 
   })
   .catch(() => { 
     alert('บันทึกสำเร็จ (กดตกลงเพื่อรีเฟรช)'); 
