@@ -292,42 +292,42 @@ function finalSubmit() {
     mode: 'no-cors', 
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: formData.toString()
-  })
-  .then(() => { 
-    // 1. ดึงข้อมูลจากหน้าจอมาโชว์ในตั๋ว
-    // เปลี่ยนไอดี (เช่น 'name', 'seat') ให้ตรงกับที่คุณใช้ใน input ของคุณนะครับ
-    const customerName = document.getElementById('name').value || 'ลูกค้าทั่วไป';
-    const seatNo = document.getElementById('seat_number').innerText || '-'; 
-    const trip = document.getElementById('trip_select').value || 'ไม่ระบุทริป';
+  })// ... โค้ดส่วนอื่นๆ ของคุณ ...
 
-    // 2. เรียกใช้ SweetAlert2 สร้างใบเสร็จสวยๆ
+.then(() => { 
+    // ดึงค่าจาก Input มาแสดงในใบเสร็จ (แก้ id ให้ตรงกับของคุณ)
+    const userName = document.getElementById('nameInput').value; 
+    const seatSelection = document.getElementById('seatSelect').value;
+    const tripName = "ทริปสุดพิเศษ 🏖️"; // หรือดึงจากตัวแปรทริปที่คุณมี
+
     Swal.fire({
-        title: 'จองสำเร็จ! เก็บกระเป๋าเลย 🎒',
+        title: '<span style="font-family: Kanit">จองสำเร็จ!</span>',
         html: `
-            <div id="capture-ticket" style="text-align: left; padding: 20px; border: 2px dashed #3498db; border-radius: 15px; background: #fff; font-family: 'Kanit', sans-serif;">
-                <div style="text-align: center; margin-bottom: 15px;">
-                    <img src="เที่ยว นี่เหอะ.png" style="width: 80px; margin-bottom: 5px;">
-                    <h2 style="color: #3498db; margin: 0;">BOARDING PASS</h2>
+            <div id="receipt" style="font-family: 'Kanit', sans-serif; text-align: left; background: #fff; border: 1px solid #eee; padding: 15px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                <div style="text-align: center; border-bottom: 2px dashed #ddd; padding-bottom: 10px; margin-bottom: 15px;">
+                    <h3 style="margin: 0; color: #2ecc71;">E-RECEIPT</h3>
+                    <small style="color: #999;">ขอบคุณที่ใช้บริการ</small>
                 </div>
-                <div style="font-size: 16px; line-height: 1.8;">
-                    <p><strong>ผู้เดินทาง:</strong> ${customerName}</p>
-                    <p><strong>ทริป:</strong> ${trip}</p>
-                    <p><strong>ที่นั่ง:</strong> <span style="font-size: 24px; color: #e74c3c; font-weight: bold;">${seatNo}</span></p>
-                    <p><strong>วันที่จอง:</strong> ${new Date().toLocaleDateString('th-TH')}</p>
+                
+                <p><strong>👤 ผู้เดินทาง:</strong> ${userName}</p>
+                <p><strong>🚌 ทริป:</strong> ${tripName}</p>
+                <p><strong>💺 เลขที่นั่ง:</strong> <span style="font-size: 1.2em; color: #3498db;">${seatSelection}</span></p>
+                <p><strong>📅 วันที่จอง:</strong> ${new Date().toLocaleString('th-TH')}</p>
+
+                <div style="margin-top: 15px; background: #f8f9fa; padding: 10px; border-radius: 5px; text-align: center;">
+                    <small style="color: #e74c3c;">* กรุณาแคปหน้าจอเก็บไว้เป็นหลักฐาน</small>
                 </div>
-                <hr style="border-top: 1px dashed #ccc;">
-                <p style="text-align: center; color: #888; font-size: 12px;">แคปภาพนี้ไว้แสดงตอนขึ้นรถนะครับ</p>
             </div>
         `,
-        confirmButtonText: 'ตกลง',
-        confirmButtonColor: '#3498db',
+        confirmButtonText: 'รับทราบ!',
+        confirmButtonColor: '#2ecc71',
+        allowOutsideClick: false // กันคนเผลอกดข้างนอกแล้วหน้าโหลดใหม่ทันที
     }).then((result) => {
         if (result.isConfirmed) {
-            location.reload(); // พอกดปุ่มตกลงปุ๊บ หน้าเว็บค่อยรีโหลด
+            location.reload(); // รีโหลดหน้าเว็บหลังจากกดปุ่มตกลงแล้วเท่านั้น
         }
     });
 });
- 
   })
   .catch(() => { 
     alert('บันทึกสำเร็จ (กดตกลงเพื่อรีเฟรช)'); 
