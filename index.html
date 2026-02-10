@@ -244,9 +244,31 @@ function toggleSideMenu() {
 function fetchTripList() {
   const cbName = "cb_list";
   window[cbName] = (data) => {
-    const trips = [...new Set(data.bookings.map(b => b.trip))].filter(t => t);
+    // กรองข้อมูลที่มีทั้งชื่อทริปและวันที่ และลบรายการที่ซ้ำกัน
+    const tripData = data.bookings
+      .filter(b => b.trip && b.date)
+      .map(b => ({ trip: b.trip, date: b.date }));
+
+    const uniqueTrips = Array.from(new Set(tripData.map(a => JSON.stringify(a))))
+      .map(a => JSON.parse(a));
+
     const content = document.getElementById('tripListContent');
-    content.innerHTML = trips.length > 0 ? trips.map(t => `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border-left:4px solid #38bdf8; cursor:pointer;" onclick="setTrip('${t}')">${t}</div>`).join('') : '<p>ยังไม่มีทริป</p>';
+    if (uniqueTrips.length > 0) {
+      content.innerHTML = uniqueTrips.map(item => {
+        // จัดรูปแบบวันที่แสดงผล (เช่น 15 ก.พ. 67)
+        const d = new Date(item.date);
+        const dateStr = d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
+        
+        return `
+          <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border-left:4px solid #38bdf8; cursor:pointer; margin-bottom:8px;" 
+               onclick="setTrip('${item.trip}', '${item.date}')">
+            <div style="font-weight:700; color:#fff; font-size:15px;">${item.trip}</div>
+            <div style="font-size:12px; color:#38bdf8; margin-top:4px;">📅 วันเดินทาง: ${dateStr}</div>
+          </div>`;
+      }).join('');
+    } else {
+      content.innerHTML = '<p style="color:#94a3b8; font-size:14px;">ยังไม่มีข้อมูลทริป</p>';
+    }
     delete window[cbName];
   };
   const script = document.createElement('script');
@@ -254,9 +276,26 @@ function fetchTripList() {
   document.body.appendChild(script);
 }
 
-function setTrip(name) {
+function setTrip(name, dateValue) {
+    // 1. กรอกชื่อทริป
     document.getElementById('trip').value = name;
+    
+    // 2. แปลงและกรอกวันที่ลงใน Input Date
+    if (dateValue) {
+        const d = new Date(dateValue);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        document.getElementById('date').value = `${year}-${month}-${day}`;
+    }
+    
+    // 3. ปิดเมนูข้าง
     toggleSideMenu();
+    
+    // 4. สั่งโหลดข้อมูลที่นั่งของวันที่นั้นทันที (ไม่ต้องรอกดเอง)
+    handleDateChange(); 
+    
+    // 5. ตรวจสอบความครบถ้วนของฟอร์ม
     validateAll();
 }
 
