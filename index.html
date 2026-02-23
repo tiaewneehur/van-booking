@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ✅ Base Styles & Midnight Theme */
+    /* ✅ Base Styles */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; background: #070a13; color: #f1f5f9; min-height: 100vh; overflow-x: hidden; }
 
@@ -29,17 +29,19 @@
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; display: block; }
     .field-input { width: 100% !important; padding: 0 16px !important; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-size: 16px; background: #0f172a; color: white; height: 54px !important; outline: none; font-family: inherit; }
     
-    .seat-map-img { width: 100%; border-radius: 18px; margin: 10px 0 20px; border: 1px solid rgba(255,255,255,0.05); }
-
-    /* ✅ จัดระเบียบ Grid 3 คัน */
     .van-container { margin-bottom: 30px; width: 100%; }
     .van-title { font-size: 14px; color: #38bdf8; margin-bottom: 10px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.1); padding: 5px; border-radius: 10px; }
     
-    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; padding: 15px !important; background: rgba(0,0,0,0.3); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
+    /* ผังรถตู้ใหม่ */
+    .van-map-wrapper { background: rgba(0,0,0,0.3); border-radius: 24px; padding: 15px; border: 1px solid rgba(255,255,255,0.05); }
+    .direction-info { display: flex; justify-content: space-between; padding: 0 10px 10px; font-size: 12px; color: #64748b; font-weight: 600; }
+
+    .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
     .seat { aspect-ratio: 1/1; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.2s; position: relative; }
     
-    /* เบาะพิเศษ (เบาะซ้าย) ให้ยืดเต็มแถวบน */
-    .seat.special { grid-column: span 3; aspect-ratio: auto; height: 50px; margin-bottom: 5px; }
+    /* เบาะแถวหน้าพิเศษ */
+    .seat.special { grid-column: span 2; aspect-ratio: auto; height: 60px; margin-bottom: 5px; }
+    .seat.driver { grid-column: span 1; aspect-ratio: auto; height: 60px; margin-bottom: 5px; background: #1e293b; color: #475569; border: 1px dashed #475569; cursor: default; pointer-events: none; }
 
     .seat.empty { background: linear-gradient(145deg, #10b981, #059669); color: white; box-shadow: 0 4px 0 #047857; }
     .seat.booked { background: linear-gradient(145deg, #ef4444, #b91c1c); color: white; box-shadow: 0 4px 0 #991b1b; cursor: not-allowed; font-size: 10px; }
@@ -60,8 +62,6 @@
     .qr-img { width: 100%; border-radius: 20px; border: 5px solid white; margin: 15px 0; }
     .btn-final { background: #10b981; color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 18px; font-weight: 700; cursor: pointer; }
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
-
-    input[type="date"].field-input { -webkit-appearance: none; appearance: none; height: 54px !important; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -69,7 +69,7 @@
 
 <div class="header-sticky">
   <div class="header-brand">
-    <img src="เที่ย นี่เหอะ.png" alt="Logo">
+    <img src="เที่ยวนี่เหอะ.png" alt="Logo">
     <div class="brand-text">
       <h1>เที่ยวนี่เหอะ</h1>
       <span>TIAEWNEEHUR</span>
@@ -81,7 +81,7 @@
 <div id="overlay" class="overlay" onclick="toggleSideMenu()"></div>
 <div id="sideMenu" class="side-menu">
   <h2 style="color:#38bdf8; margin-bottom:20px; border-bottom:1px solid #38bdf8; padding-bottom:10px;">📍 ทริปที่เปิดจอง</h2>
-  <div id="tripListContent" style="display:flex; flex-direction:column; gap:12px;">
+  <div id="tripListContent">
     <p style="color:#94a3b8; font-size:14px;">กำลังโหลดข้อมูลทริป...</p>
   </div>
 </div>
@@ -102,20 +102,27 @@
         <input id="trip" name="trip" type="text" class="field-input" placeholder="เลือกทริปจากมุมขวาบน" required oninput="validateAll()" />
       </div>
 
-      <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
-      
       <div id="allVans">
         <div class="van-container">
             <div class="van-title">🚐 คันที่ 1 (สาย A)</div>
-            <div id="grid-A" class="grid"></div>
+            <div class="van-map-wrapper">
+                <div class="direction-info"><span>หน้ารถ 🚐</span><span>หลังรถ 🏁</span></div>
+                <div id="grid-A" class="grid"></div>
+            </div>
         </div>
         <div class="van-container">
             <div class="van-title">🚐 คันที่ 2 (สาย B)</div>
-            <div id="grid-B" class="grid"></div>
+            <div class="van-map-wrapper">
+                <div class="direction-info"><span>หน้ารถ 🚐</span><span>หลังรถ 🏁</span></div>
+                <div id="grid-B" class="grid"></div>
+            </div>
         </div>
         <div class="van-container">
             <div class="van-title">🚐 คันที่ 3 (สาย C)</div>
-            <div id="grid-C" class="grid"></div>
+            <div class="van-map-wrapper">
+                <div class="direction-info"><span>หน้ารถ 🚐</span><span>หลังรถ 🏁</span></div>
+                <div id="grid-C" class="grid"></div>
+            </div>
         </div>
       </div>
 
@@ -152,7 +159,6 @@
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <br>
     <h2 style="color: #38bdf8; margin-bottom: 5px;">💰 ชำระค่ามัดจำนะจ๊ะ 💰</h2>
     <p style="font-size: 16px; color: #ef4444; font-weight: 700; margin-bottom: 3px;">(แคปจอเอา QR ไปจ่ายเงินนะจ๊ะ)</p>
     <img src="slip-qr.png" class="qr-img">
@@ -169,8 +175,14 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 
-// ลำดับเบาะ: [เบาะซ้าย(10), 3, 6, 9, 2, 5, 8, 1, 4, 7]
-const SEAT_NUMS = ['เบาะซ้าย', 3, 6, 9, 2, 5, 8, 1, 4, 7];
+// ลำดับการ Render: เบาะซ้าย(หน้า), คนขับ(หน้า), 3, 6, 9, 2, 5, 8, 1, 4, 7
+const SEAT_ORDER = ['เบาะซ้าย', 'driver', 3, 6, 9, 2, 5, 8, 1, 4, 7];
+
+function handleDateChange() {
+  const dateVal = document.getElementById('date').value;
+  ['A','B','C'].forEach(id => document.getElementById(`grid-${id}`).innerHTML = '<p style="grid-column: span 3; color:#38bdf8; padding:10px; font-size:12px; text-align:center;">⌛ กำลังเช็คที่นั่ง...</p>');
+  loadBookedJSONP(dateVal, renderAllVans);
+}
 
 function loadBookedJSONP(date, callback) {
   if (!date) return;
@@ -181,12 +193,6 @@ function loadBookedJSONP(date, callback) {
   document.body.appendChild(script);
 }
 
-function handleDateChange() {
-  const dateVal = document.getElementById('date').value;
-  ['A','B','C'].forEach(id => document.getElementById(`grid-${id}`).innerHTML = '<p style="grid-column: span 3; color:#38bdf8; padding:10px; font-size:12px;">⌛ กำลังเช็ค...</p>');
-  loadBookedJSONP(dateVal, renderAllVans);
-}
-
 function renderAllVans(bookedArray) {
   const bookedMap = {}; 
   bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
@@ -195,18 +201,24 @@ function renderAllVans(bookedArray) {
     const grid = document.getElementById(`grid-${prefix}`);
     grid.innerHTML = '';
     
-    SEAT_NUMS.forEach(n => {
-      const seatID = prefix + n;
+    SEAT_ORDER.forEach(n => {
       const div = document.createElement('div');
-      div.className = n === 'เบาะซ้าย' ? 'seat special' : 'seat';
       
-      if (bookedMap[seatID]) {
-        div.classList.add('booked');
-        div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:14px;">${bookedMap[seatID]}</div>`;
+      if (n === 'driver') {
+        div.className = 'seat driver';
+        div.innerHTML = `<span style="font-size:20px;">👨‍✈️</span><span style="font-size:10px;">คนขับ</span>`;
       } else {
-        div.classList.add('empty');
-        div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${seatID}</span>`;
-        div.onclick = () => selectSeat(div, seatID);
+        const seatID = prefix + n;
+        div.className = n === 'เบาะซ้าย' ? 'seat special' : 'seat';
+        
+        if (bookedMap[seatID]) {
+          div.classList.add('booked');
+          div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:14px;">${bookedMap[seatID]}</div>`;
+        } else {
+          div.classList.add('empty');
+          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${seatID}</span>`;
+          div.onclick = () => selectSeat(div, seatID);
+        }
       }
       grid.appendChild(div);
     });
@@ -244,32 +256,17 @@ function toggleSideMenu() {
 function fetchTripList() {
   const cbName = "cb_list";
   window[cbName] = (data) => {
-    // กรองข้อมูลที่มีทั้งชื่อทริปและวันที่ และลบรายการที่ซ้ำกัน
-    const tripData = data.bookings
-      .filter(b => b.trip && b.date)
-      .map(b => ({ trip: b.trip, date: b.date }));
-
-    const uniqueTrips = Array.from(new Set(tripData.map(a => JSON.stringify(a))))
-      .map(a => JSON.parse(a));
-
+    const tripData = data.bookings.filter(b => b.trip && b.date).map(b => ({ trip: b.trip, date: b.date }));
+    const uniqueTrips = Array.from(new Set(tripData.map(a => JSON.stringify(a)))).map(a => JSON.parse(a));
     const content = document.getElementById('tripListContent');
-    if (uniqueTrips.length > 0) {
-      content.innerHTML = uniqueTrips.map(item => {
-        // จัดรูปแบบวันที่แสดงผล (เช่น 15 ก.พ. 67)
+    content.innerHTML = uniqueTrips.length > 0 ? uniqueTrips.map(item => {
         const d = new Date(item.date);
         const dateStr = d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
-        
-        return `
-          <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border-left:4px solid #38bdf8; cursor:pointer; margin-bottom:8px;" 
-               onclick="setTrip('${item.trip}', '${item.date}')">
+        return `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border-left:4px solid #38bdf8; cursor:pointer; margin-bottom:8px;" onclick="setTrip('${item.trip}', '${item.date}')">
             <div style="font-weight:700; color:#fff; font-size:15px;">${item.trip}</div>
             <div style="font-size:12px; color:#38bdf8; margin-top:4px;">📅 วันเดินทาง: ${dateStr}</div>
           </div>`;
-      }).join('');
-    } else {
-      content.innerHTML = '<p style="color:#94a3b8; font-size:14px;">ยังไม่มีข้อมูลทริป</p>';
-    }
-    delete window[cbName];
+    }).join('') : '<p style="color:#94a3b8; font-size:14px;">ยังไม่มีข้อมูลทริป</p>';
   };
   const script = document.createElement('script');
   script.src = `${READ_URL}&callback=${cbName}`;
@@ -277,25 +274,13 @@ function fetchTripList() {
 }
 
 function setTrip(name, dateValue) {
-    // 1. กรอกชื่อทริป
     document.getElementById('trip').value = name;
-    
-    // 2. แปลงและกรอกวันที่ลงใน Input Date
     if (dateValue) {
         const d = new Date(dateValue);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        document.getElementById('date').value = `${year}-${month}-${day}`;
+        document.getElementById('date').value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
-    
-    // 3. ปิดเมนูข้าง
     toggleSideMenu();
-    
-    // 4. สั่งโหลดข้อมูลที่นั่งของวันที่นั้นทันที (ไม่ต้องรอกดเอง)
     handleDateChange(); 
-    
-    // 5. ตรวจสอบความครบถ้วนของฟอร์ม
     validateAll();
 }
 
@@ -319,14 +304,8 @@ function finalSubmit() {
   };
 
   const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = SCRIPT_URL;
-  form.style.display = 'none';
-  for (const key in data) {
-    const input = document.createElement('input');
-    input.name = key; input.value = data[key];
-    form.appendChild(input);
-  }
+  form.method = 'POST'; form.action = SCRIPT_URL; form.style.display = 'none';
+  for (const key in data) { const input = document.createElement('input'); input.name = key; input.value = data[key]; form.appendChild(input); }
   document.body.appendChild(form);
   
   const iframe = document.createElement('iframe');
@@ -342,7 +321,6 @@ function finalSubmit() {
         html: `<div style="text-align: left; padding: 20px; border: 2px dashed #38bdf8; border-radius: 20px; background: #fff; color: #334155;">
                 <p><strong>👤 ชื่อ:</strong> ${data.name}</p>
                 <p><strong>⛺ ทริป:</strong> ${data.trip}</p>
-                <p><strong>📅 วันที่:</strong> ${data.date}</p>
                 <div style="background: #f0f9ff; padding: 10px; border-radius: 12px; text-align: center; margin-top: 10px;">
                     <span style="font-size: 12px;">เลขที่นั่ง</span><br>
                     <strong style="font-size: 32px; color: #0ea5e9;">${data.seat}</strong>
@@ -354,7 +332,6 @@ function finalSubmit() {
   }, 1500); 
 }
 
-// Initial Render
 renderAllVans([]);
 </script>
 </body>
