@@ -29,14 +29,12 @@
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; display: block; }
     .field-input { width: 100% !important; padding: 0 16px !important; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-size: 16px; background: #0f172a; color: white; height: 54px !important; outline: none; font-family: inherit; }
     
-    .seat-map-img { width: 100%; border-radius: 18px; margin: 10px 0 20px; border: 1px solid rgba(255,255,255,0.05); }
-
     .van-container { margin-bottom: 30px; width: 100%; }
     .van-title { font-size: 14px; color: #38bdf8; margin-bottom: 10px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.1); padding: 5px; border-radius: 10px; }
     
     .grid-header { display: flex; justify-content: space-between; padding: 0 10px; margin-bottom: 5px; font-size: 11px; font-weight: 700; color: #38bdf8; opacity: 0.8; }
 
-    /* ✅ ปรับเป็น 4 คอลัมน์ตามรูปสเก็ตช์ */
+    /* ✅ Grid 4 คอลัมน์ตามภาพสเก็ตช์ */
     .grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; padding: 12px !important; background: rgba(0,0,0,0.3); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
     .seat { aspect-ratio: 1/1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.2s; position: relative; }
     
@@ -51,19 +49,16 @@
 
     #formBox { margin-top: 20px; padding: 20px; background: rgba(56, 189, 248, 0.05); border-radius: 25px; border: 1px solid rgba(56, 189, 248, 0.3); display: none; }
     #formBox.visible { display: block; animation: fadeIn 0.4s; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     .bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(15px); padding: 15px 20px 30px; border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000; display: flex; justify-content: center; }
     .btn-main { width: 100%; max-width: 400px; padding: 18px; border-radius: 18px; border: none; font-size: 18px; font-weight: 700; font-family: inherit; transition: 0.3s; cursor: pointer; background: #334155; color: #64748b; }
     .btn-main.active { background: #38bdf8; color: #0f172a; box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4); }
 
-    .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); padding: 20px; overflow-y: scroll; align-items: flex-start; justify-content: center;-webkit-overflow-scrolling: touch; }
+    .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); padding: 20px; overflow-y: scroll; align-items: flex-start; justify-content: center; }
     .modal-content { background: #1e293b; width: 100%; max-width: 400px; border-radius: 30px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.1); margin-top: 20px; margin-bottom: 50px; }
     .qr-img { width: 100%; border-radius: 20px; border: 5px solid white; margin: 15px 0; }
     .btn-final { background: #10b981; color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 18px; font-weight: 700; cursor: pointer; }
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
-
-    input[type="date"].field-input { -webkit-appearance: none; appearance: none; height: 54px !important; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -83,7 +78,7 @@
 <div id="overlay" class="overlay" onclick="toggleSideMenu()"></div>
 <div id="sideMenu" class="side-menu">
   <h2 style="color:#38bdf8; margin-bottom:20px; border-bottom:1px solid #38bdf8; padding-bottom:10px;">📍 ทริปที่เปิดจอง</h2>
-  <div id="tripListContent" style="display:flex; flex-direction:column; gap:12px;">
+  <div id="tripListContent">
     <p style="color:#94a3b8; font-size:14px;">กำลังโหลดข้อมูลทริป...</p>
   </div>
 </div>
@@ -104,8 +99,6 @@
         <input id="trip" name="trip" type="text" class="field-input" placeholder="เลือกทริปจากมุมขวาบน" required oninput="validateAll()" />
       </div>
 
-      <img src="IMG_0444.jpeg" class="seat-map-img" alt="Map" />
-      
       <div id="allVans">
         <div class="van-container">
             <div class="van-title">🚐 คันที่ 1 (สาย A)</div>
@@ -157,7 +150,6 @@
 
 <div id="payModal" class="modal">
   <div class="modal-content">
-    <br>
     <h2 style="color: #38bdf8; margin-bottom: 5px;">💰 ชำระค่ามัดจำนะจ๊ะ 💰</h2>
     <p style="font-size: 16px; color: #ef4444; font-weight: 700; margin-bottom: 3px;">(แคปจอเอา QR ไปจ่ายเงินนะจ๊ะ)</p>
     <img src="slip-qr.png" class="qr-img">
@@ -174,12 +166,7 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 
-/**
- * ✅ ปรับผังที่นั่งตามรูปสเก็ตช์ (Grid 4 คอลัมน์):
- * แถว 1: คนขับ | A3 | A6 | A9
- * แถว 2: spacer | A2 | A5 | A8
- * แถว 3: เบาะซ้าย | A1 | A4 | A7
- */
+// ✅ กลับมาใช้ผังตามภาพสเก็ตช์ พร้อมคืนชีพตัวอักษรสาย
 const SEAT_LAYOUT = [
   'driver', 3, 6, 9,
   'spacer', 2, 5, 8,
@@ -218,7 +205,8 @@ function renderAllVans(bookedArray) {
       } else if (n === 'spacer') {
         div.className = 'seat spacer';
       } else {
-        const seatID = prefix + n;
+        // ✅ คืนค่าตัวอักษรสาย (prefix) เข้าไปใน ID และการแสดงผลหน้าเว็บ
+        const seatID = prefix + n; 
         div.className = 'seat';
         
         if (bookedMap[seatID]) {
@@ -226,7 +214,9 @@ function renderAllVans(bookedArray) {
           div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:13px;">${bookedMap[seatID]}</div>`;
         } else {
           div.classList.add('empty');
-          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${n === 'เบาะซ้าย' ? 'ซ้าย' : n}</span>`;
+          // ✅ แสดงชื่อเบาะเป็น A1, A2, Aซ้าย...
+          const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
+          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
           div.onclick = () => selectSeat(div, seatID);
         }
       }
