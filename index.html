@@ -25,9 +25,23 @@
     .card { width: 100%; max-width: 420px; background: rgba(30, 41, 59, 0.7); border-radius: 30px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
     .subtitle { color: #94a3b8; font-size: 13px; margin: 10px 0 25px; text-align: center; }
 
+    /* ✅ แก้ไขช่องวันที่ล้นกรอบ */
     .field-group { width: 100%; margin-bottom: 18px; text-align: left; }
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; display: block; }
-    .field-input { width: 100% !important; padding: 0 16px !important; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-size: 16px; background: #0f172a; color: white; height: 54px !important; outline: none; font-family: inherit; }
+    .field-input { 
+        width: 100% !important; 
+        max-width: 100%;
+        padding: 0 16px !important; 
+        border-radius: 16px; 
+        border: 1px solid rgba(255,255,255,0.1); 
+        font-size: 16px; 
+        background: #0f172a; 
+        color: white; 
+        height: 54px !important; 
+        outline: none; 
+        font-family: inherit;
+        box-sizing: border-box !important;
+    }
     
     .van-container { margin-bottom: 30px; width: 100%; }
     .van-title { font-size: 14px; color: #38bdf8; margin-bottom: 10px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.1); padding: 5px; border-radius: 10px; }
@@ -166,7 +180,6 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 
-// ✅ กลับมาใช้ผังตามภาพสเก็ตช์ พร้อมคืนชีพตัวอักษรสาย
 const SEAT_LAYOUT = [
   'driver', 3, 6, 9,
   'spacer', 2, 5, 8,
@@ -205,7 +218,6 @@ function renderAllVans(bookedArray) {
       } else if (n === 'spacer') {
         div.className = 'seat spacer';
       } else {
-        // ✅ คืนค่าตัวอักษรสาย (prefix) เข้าไปใน ID และการแสดงผลหน้าเว็บ
         const seatID = prefix + n; 
         div.className = 'seat';
         
@@ -214,7 +226,6 @@ function renderAllVans(bookedArray) {
           div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:13px;">${bookedMap[seatID]}</div>`;
         } else {
           div.classList.add('empty');
-          // ✅ แสดงชื่อเบาะเป็น A1, A2, Aซ้าย...
           const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
           div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
           div.onclick = () => selectSeat(div, seatID);
@@ -332,7 +343,7 @@ function finalSubmit() {
                     <strong style="font-size: 32px; color: #0ea5e9;">${data.seat}</strong>
                 </div>
                </div>`,
-        confirmButtonText: 'ตกลง',
+        confirmButtonText: 'ตกลง (แคปจอไว้เลยนะ)',
         confirmButtonColor: '#38bdf8'
     }).then(() => location.reload());
   }, 1500); 
