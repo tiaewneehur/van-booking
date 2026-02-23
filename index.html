@@ -31,14 +31,13 @@
     
     .seat-map-img { width: 100%; border-radius: 18px; margin: 10px 0 20px; border: 1px solid rgba(255,255,255,0.05); }
 
-    /* ✅ จัดระเบียบ Grid 3 คัน */
+    /* ✅ Grid Layout ปรับตามผังภาพรถตู้ */
     .van-container { margin-bottom: 30px; width: 100%; }
     .van-title { font-size: 14px; color: #38bdf8; margin-bottom: 10px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.1); padding: 5px; border-radius: 10px; }
     
     .grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; padding: 15px !important; background: rgba(0,0,0,0.3); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
     .seat { aspect-ratio: 1/1; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.2s; position: relative; }
     
-    /* สไตล์พิเศษสำหรับเบาะ */
     .seat.driver { background: #1e293b; color: #475569; border: 1px dashed #475569; cursor: default; pointer-events: none; }
     .seat.spacer { visibility: hidden; pointer-events: none; }
 
@@ -170,9 +169,14 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
 
-// 🚀 แก้ไขลำดับเบาะใหม่ตามสั่ง: คอลัมน์ 1 (ซ้าย) | คอลัมน์ 2 (กลาง) | คอลัมน์ 3 (ขวา)
+/**
+ * 🚀 ยึดผังเบาะตามรูปภาพที่ส่งมา:
+ * คอลัมน์ซ้าย (ฝั่งคนขับ): [คนขับ, 3, 6, 9]
+ * คอลัมน์กลาง: [ว่าง, 2, 5, 8]
+ * คอลัมน์ขวา (ฝั่งประตู): [เบาะซ้าย, 1, 4, 7]
+ */
 const SEAT_LAYOUT = [
-    'driver', 'spacer', 'เบาะซ้าย', // แถวหน้าสุด
+    'driver', 'spacer', 'เบาะซ้าย', // แถวหน้าสุด (คนขับ | ว่าง | เบาะซ้าย)
     3, 2, 1,                        // แถว 1
     6, 5, 4,                        // แถว 2
     9, 8, 7                         // แถว 3
