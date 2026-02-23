@@ -24,7 +24,6 @@
     .card { width: 100%; max-width: 420px; background: rgba(30, 41, 59, 0.7); border-radius: 30px; padding: 25px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
     .subtitle { color: #94a3b8; font-size: 13px; margin: 10px 0 25px; text-align: center; }
 
-    /* ✅ แก้ไขช่องวันที่ล้น (เฉพาะส่วนนี้เท่านั้นที่แก้) */
     .field-group { width: 100%; margin-bottom: 18px; text-align: left; }
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; display: block; }
 
@@ -51,7 +50,13 @@
     input[type="date"]::-webkit-calendar-picker-indicator {
         opacity: 0.7;
     }
-    /* ✅ จบส่วนที่แก้ */
+
+    .seat-map-img {
+      width: 100%;
+      border-radius: 20px;
+      margin: 10px 0 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
 
     .van-container { margin-bottom: 30px; width: 100%; }
     .van-title { font-size: 14px; color: #38bdf8; margin-bottom: 10px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.1); padding: 5px; border-radius: 10px; }
@@ -122,6 +127,9 @@
         <input id="trip" name="trip" type="text" class="field-input" placeholder="เลือกทริปจากมุมขวาบน" required oninput="validateAll()" />
       </div>
 
+      <!-- ✅ รูปผังรถ -->
+      <img src="/IMG_0444.jpeg" class="seat-map-img" alt="ผังรถ" />
+
       <div id="allVans">
         <div class="van-container">
             <div class="van-title">🚐 คันที่ 1 (สาย A)</div>
@@ -141,7 +149,6 @@
       </div>
 
       <input id="seatField" name="seat" type="hidden" />
-
       <div id="formBox">
         <h3 style="text-align: center; color: #38bdf8; margin-bottom: 20px; font-size: 18px;">📝 ข้อมูลผู้จอง</h3>
         <div class="field-group">
