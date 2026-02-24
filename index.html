@@ -87,12 +87,6 @@
     .qr-img { width: 100%; border-radius: 20px; border: 5px solid white; margin: 15px 0; }
     .btn-final { background: #10b981; color: white; width: 100%; padding: 18px; border-radius: 15px; border: none; font-size: 18px; font-weight: 700; cursor: pointer; }
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
-  /* === HOLDING SEAT (กำลังเลือก) === */
-    .seat.selecting {
-  background: linear-gradient(145deg, #fbbf24, #f59e0b);
-  color: #000;
-  box-shadow: 0 4px 0 #b45309;
-}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -199,8 +193,8 @@
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9WoGmd8BiJ8kuscpXwr88cESPUq9AAyTyBAOFjb8O2qRysc-cC2ZNhUUd0kOGEQBt/exec";
-const READ_URL = SCRIPT_URL + "?";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
+const READ_URL = SCRIPT_URL + "?action=read";
 
 const SEAT_LAYOUT = [
   'driver', 3, 6, 9,
@@ -261,10 +255,6 @@ function renderAllVans(bookedArray) {
 function selectSeat(el, id) {
     if (!document.getElementById('date').value) return alert('📅 เลือกวันก่อนสิพี่!');
     if (!document.getElementById('trip').value.trim()) return alert('⛺ กรุณากรอกชื่อทริปก่อนนะจ๊ะ!');
-
-    const date = document.getElementById('date').value;
-    fetch(`${SCRIPT_URL}?action=hold&seat=${id}&date=${date}`);
-
     document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
     el.classList.add('selected');
     document.getElementById('seatField').value = id;
@@ -374,39 +364,7 @@ function finalSubmit() {
     }).then(() => location.reload());
   }, 1500); 
 }
-/* === CHECK HOLD SEAT EVERY 3s === */
-setInterval(() => {
-  const dateVal = document.getElementById('date').value;
-  if (!dateVal) return;
 
-  fetch(`${SCRIPT_URL}?action=readHolds&date=${dateVal}`)
-    .then(res => res.json())
-    .then(data => {
-      updateHoldSeats(data.holds || []);
-    });
-}, 3000);
-/* === UPDATE HOLD SEATS === */
-function updateHoldSeats(holds) {
-
-  document.querySelectorAll('.seat.empty, .seat.selecting').forEach(seat => {
-
-    const seatID = seat.querySelector("span:last-child")?.innerText?.trim();
-
-    if (!seatID) return;
-
-    if (holds.includes(seatID)) {
-      seat.classList.remove('empty');
-      seat.classList.add('selecting');
-    } else {
-      if (!seat.classList.contains('booked')) {
-        seat.classList.remove('selecting');
-        seat.classList.add('empty');
-      }
-    }
-
-  });
-
-}
 renderAllVans([]);
 </script>
 </body>
