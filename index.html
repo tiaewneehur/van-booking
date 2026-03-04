@@ -7,20 +7,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* --- CSS ของเดิมของคุณทั้งหมด --- */
+    /* --- CSS เดิมของคุณทั้งหมด --- */
     * { box-sizing: border-box !important; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; background: #070a13; color: #f1f5f9; min-height: 100vh; overflow-x: hidden; }
 
-    /* 🛡️ ส่วน Login ที่เพิ่มเข้าไปใหม่ */
+    /* 🛡️ Login Overlay (เพิ่มใหม่) */
     #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #070a13; z-index: 5000; display: flex; align-items: center; justify-content: center; }
     .login-card { width: 90%; max-width: 400px; text-align: center; background: rgba(30, 41, 59, 0.7); padding: 40px 25px; border-radius: 30px; border: 1px solid rgba(56, 189, 248, 0.3); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
     .hidden { display: none !important; }
 
-    /* 🏷️ Header ปรับเป็น 19px ตามสั่ง */
+    /* 🏷️ Header ปรับ 19px ตามสั่ง */
     .header-sticky { position: sticky; top: 0; width: 100%; background: rgba(7, 10, 19, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1000; padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .header-brand { display: flex; align-items: center; gap: 10px; }
     .header-brand img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #38bdf8; }
-    .header-brand h1 { font-size: 19px; color: #38bdf8; font-weight: 700; line-height: 1.0; } /* แก้จาก 24px เป็น 19px */
+    .header-brand h1 { font-size: 19px; color: #38bdf8; font-weight: 700; line-height: 1.0; }
 
     .menu-trigger { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid #38bdf8; padding: 8px 12px; border-radius: 12px; font-weight: 600; font-size: 12px; cursor: pointer; }
     .side-menu { position: fixed; top: 0; right: -100%; width: 80%; height: 100%; background: #0f172a; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
@@ -33,22 +33,22 @@
 
     .field-group { width: 100%; margin-bottom: 18px; text-align: left; }
     .field-label { font-weight: 600; margin-bottom: 8px; font-size: 14px; color: #38bdf8; display: block; }
-
     .field-input { width: 100%; padding: 0 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); font-size: 16px; background: #0f172a; color: white; height: 54px; outline: none; font-family: inherit; box-sizing: border-box; appearance: none; -webkit-appearance: none; }
-    
+
     .seat-map-img { width: 100%; border-radius: 20px; margin: 10px 0 20px; border: 1px solid rgba(255,255,255,0.08); }
     .van-container { margin-bottom: 30px; width: 100%; }
     .van-title { font-size: 14px; color: #38bdf8; margin-bottom: 10px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.1); padding: 5px; border-radius: 10px; }
     .grid-header { display: flex; justify-content: space-between; padding: 0 10px; margin-bottom: 5px; font-size: 11px; font-weight: 700; color: #38bdf8; opacity: 0.8; }
     .grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 8px !important; padding: 12px !important; background: rgba(0,0,0,0.3); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05); }
+    
     .seat { aspect-ratio: 1/1; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.2s; position: relative; }
     .seat.driver { background: #1e293b; color: #475569; border: 1px dashed #475569; cursor: default; pointer-events: none; }
     .seat.spacer { visibility: hidden; pointer-events: none; }
     .seat.empty { background: linear-gradient(145deg, #10b981, #059669); color: white; box-shadow: 0 4px 0 #047857; }
     .seat.booked { background: linear-gradient(145deg, #ef4444, #b91c1c); color: white; box-shadow: 0 4px 0 #991b1b; cursor: not-allowed; font-size: 10px; }
     .seat.selected { background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 0.8s infinite; }
-    
     @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.10); } }
+
     #formBox { margin-top: 20px; padding: 20px; background: rgba(56, 189, 248, 0.05); border-radius: 25px; border: 1px solid rgba(56, 189, 248, 0.3); display: none; }
     #formBox.visible { display: block; animation: fadeIn 0.4s; }
 
@@ -103,6 +103,7 @@
         <label class="field-label">📅 วันเดินทาง</label>
         <input id="date" name="date" type="date" class="field-input" required onchange="handleDateChange()" />
       </div>
+
       <div class="field-group">
         <label class="field-label">⛺ ชื่อทริป</label>
         <input id="trip" name="trip" type="text" class="field-input" placeholder="เลือกทริปจากมุมขวาบน" required oninput="validateAll()" />
@@ -173,20 +174,21 @@
 </div>
 
 <script>
-/* ------------------------------------------------------------------
-   ⚙️ SYSTEM LOGIC ของเดิมของคุณ (ไม่มีการแก้ Logic)
-   ------------------------------------------------------------------ */
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const READ_URL = SCRIPT_URL + "?action=read";
-const SEAT_LAYOUT = ['driver', 3, 6, 9, 'spacer', 2, 5, 8, 'เบาะซ้าย', 1, 4, 7];
 
-// จัดการเรื่อง Login และการจำเบอร์โทร
+const SEAT_LAYOUT = [
+  'driver', 3, 6, 9,
+  'spacer', 2, 5, 8,
+  'เบาะซ้าย', 1, 4, 7
+];
+
+/* 🛠️ ส่วน Login Logic */
 let currentUser = localStorage.getItem('van_user_phone') || "";
 if (currentUser) {
     document.getElementById('loginOverlay').classList.add('hidden');
     document.getElementById('phone').value = currentUser;
 }
-
 function handleLogin() {
     const p = document.getElementById('loginPhone').value;
     if (p.length < 10) return Swal.fire('เบอร์ไม่ครบ', 'กรุณากรอกเบอร์โทร 10 หลัก', 'error');
@@ -194,7 +196,7 @@ function handleLogin() {
     location.reload();
 }
 
-// ฟังก์ชันดึงข้อมูลทริปและที่นั่ง (Logic เดิมทั้งหมด)
+/* ⚙️ ฟังก์ชันดั้งเดิมของคุณทั้งหมด (ห้ามตัด) */
 function loadBookedJSONP(date, callback) {
   if (!date) return;
   const cbName = "cb_" + Date.now();
@@ -221,8 +223,9 @@ function renderAllVans(bookedArray) {
       if (n === 'driver') {
         div.className = 'seat driver';
         div.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
-      } else if (n === 'spacer') { div.className = 'seat spacer'; }
-      else {
+      } else if (n === 'spacer') {
+        div.className = 'seat spacer';
+      } else {
         const seatID = prefix + n; div.className = 'seat';
         if (bookedMap[seatID]) {
           div.classList.add('booked');
@@ -291,10 +294,8 @@ function setTrip(name, dateValue) {
     document.getElementById('trip').value = name;
     if (dateValue) {
         const d = new Date(dateValue);
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
-        document.getElementById('date').value = `${year}-${month}-${day}`;
+        const y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
+        document.getElementById('date').value = `${y}-${m}-${day}`;
     }
     toggleSideMenu(); handleDateChange(); validateAll();
 }
@@ -303,9 +304,7 @@ function showPayment() { document.getElementById('payModal').style.display = 'fl
 function toggleFinalBtn() { document.getElementById('submitBtn').disabled = !document.getElementById('confirmCheck').checked; }
 
 function finalSubmit() {
-  const btn = document.getElementById('submitBtn'); 
-  btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; 
-  btn.disabled = true;
+  const btn = document.getElementById('submitBtn'); btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; btn.disabled = true;
   const data = {
     date: document.getElementById('date').value,
     trip: document.getElementById('trip').value,
@@ -316,19 +315,12 @@ function finalSubmit() {
     line: document.getElementById('line').value,
     confirm: 'true'
   };
-  const form = document.createElement('form');
-  form.method = 'POST'; form.action = SCRIPT_URL; form.style.display = 'none';
-  for (const key in data) {
-    const input = document.createElement('input');
-    input.name = key; input.value = data[key];
-    form.appendChild(input);
-  }
+  const form = document.createElement('form'); form.method = 'POST'; form.action = SCRIPT_URL; form.style.display = 'none';
+  for (const key in data) { const input = document.createElement('input'); input.name = key; input.value = data[key]; form.appendChild(input); }
   document.body.appendChild(form);
-  const iframe = document.createElement('iframe');
-  iframe.name = 'hidden_iframe'; iframe.style.display = 'none';
+  const iframe = document.createElement('iframe'); iframe.name = 'hidden_iframe'; iframe.style.display = 'none';
   document.body.appendChild(iframe);
-  form.target = 'hidden_iframe';
-  form.submit();
+  form.target = 'hidden_iframe'; form.submit();
   setTimeout(() => {
     document.getElementById('payModal').style.display = 'none';
     Swal.fire({
