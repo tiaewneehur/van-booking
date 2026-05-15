@@ -324,7 +324,12 @@ function sendLockState(date, trip, seat) {
   formData.append('seat', seat);
   formData.append('session_id', MY_SESSION_ID);
 
-  fetch(SCRIPT_URL, { method: 'POST', body: formData })
+  fetch(SCRIPT_URL, { 
+  method: 'POST', 
+  body: formData,
+  mode: 'no-cors' 
+})
+
     .catch(err => console.log("Lock sync error: ", err));
 }
 
