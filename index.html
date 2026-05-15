@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -72,6 +73,17 @@
     .seat.empty { background: linear-gradient(145deg, #10b981, #059669); color: white; box-shadow: 0 4px 0 #047857; }
     .seat.booked { background: linear-gradient(145deg, #ef4444, #b91c1c); color: white; box-shadow: 0 4px 0 #991b1b; cursor: not-allowed; font-size: 10px; }
     .seat.selected { background: linear-gradient(145deg, #fbbf24, #f59e0b); color: #000; box-shadow: 0 4px 0 #b45309; transform: scale(1.05); animation: heartbeat 0.8s infinite; }
+    .seat.holding {
+  background: linear-gradient(145deg, #fb923c, #ea580c);
+  color: white;
+  box-shadow: 0 4px 0 #9a3412;
+  animation: pulseHold 1s infinite;
+}
+
+@keyframes pulseHold {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
     
     @keyframes heartbeat { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1.10); } }
 
@@ -209,6 +221,10 @@ function loadBookedJSONP(date, callback) {
   const script = document.createElement('script'); script.id = cbName;
   script.src = `${READ_URL}&date=${encodeURIComponent(date)}&callback=${cbName}`;
   document.body.appendChild(script);
+  script.onerror = () => {
+  delete window[cbName];
+  script.remove();
+};
 }
 
 function handleDateChange() {
@@ -218,8 +234,20 @@ function handleDateChange() {
 }
 
 function renderAllVans(bookedArray) {
-  const bookedMap = {}; 
-  bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
+  const bookedMap = {};
+
+bookedArray.forEach(b => {
+
+  if(b.seat) {
+
+    bookedMap[String(b.seat)] = {
+      status: b.status || 'booked',
+      nickname: b.nickname || 'เต็ม'
+    };
+
+  }
+
+});
 
   ['A', 'B', 'C'].forEach(prefix => {
     const grid = document.getElementById(`grid-${prefix}`);
@@ -237,16 +265,49 @@ function renderAllVans(bookedArray) {
         const seatID = prefix + n; 
         div.className = 'seat';
         
-        if (bookedMap[seatID]) {
-          div.classList.add('booked');
-          div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:13px;">${bookedMap[seatID]}</div>`;
-        } else {
-          div.classList.add('empty');
-          const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
-          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
-          div.onclick = () => selectSeat(div, seatID);
-        }
-      }
+       if (bookedMap[seatID]?.status === 'booked') {
+
+  div.classList.add('booked');
+
+  div.innerHTML = `
+    <span style="font-size:9px;">${seatID}</span>
+    <div style="font-size:13px;">
+      ${bookedMap[seatID].nickname}
+    </div>
+  `;
+
+}
+else if (bookedMap[seatID]?.status === 'holding') {
+
+  div.classList.add('holding');
+
+  div.innerHTML = `
+    <span style="font-size:9px;">${seatID}</span>
+    <div style="font-size:11px;">
+      กำลังเลือก
+    </div>
+  `;
+
+}
+else {
+
+  div.classList.add('empty');
+
+  const displayLabel =
+    n === 'เบาะซ้าย'
+      ? prefix + 'ซ้าย'
+      : prefix + n;
+
+  div.innerHTML = `
+    <span style="font-size:10px;">เบาะ</span>
+    <span style="font-size:18px;">
+      ${displayLabel}
+    </span>
+  `;
+
+  div.onclick = () => holdSeat(div, seatID);
+
+}
       grid.appendChild(div);
     });
   });
@@ -263,6 +324,52 @@ function selectSeat(el, id) {
     setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 400);
 }
 
+async function holdSeat(el, seatID) {
+
+  if (!document.getElementById('date').value)
+    return alert('📅 เลือกวันก่อนสิพี่!');
+
+  if (!document.getElementById('trip').value.trim())
+    return alert('⛺ กรุณากรอกชื่อทริปก่อนนะจ๊ะ!');
+
+  const data = new URLSearchParams();
+
+  data.append("action", "hold");
+  data.append("seat", seatID);
+  data.append("date", document.getElementById('date').value);
+
+  try {
+
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: data
+    });
+
+    const result = await res.json();
+
+    if (result.status === "success") {
+
+  selectSeat(el, seatID);
+
+  handleDateChange();
+
+} else {
+
+  Swal.fire({
+    icon: 'warning',
+    title: 'เบาะนี้มีคนกำลังเลือกอยู่ 😢'
+  });
+
+  handleDateChange();
+    }
+
+  } catch(err) {
+
+    console.log(err);
+
+  }
+
+}
 function validateAll() {
   const fields = ['date', 'trip', 'seatField', 'name', 'nickname', 'phone', 'line'];
   const isComplete = fields.every(id => document.getElementById(id).value.trim() !== "");
@@ -296,6 +403,8 @@ function fetchTripList() {
       }).join('');
     } else { content.innerHTML = '<p style="color:#94a3b8; font-size:14px;">ยังไม่มีข้อมูลทริป...</p>'; }
     delete window[cbName];
+    script.remove();
+
   };
   const script = document.createElement('script');
   script.src = `${READ_URL}&callback=${cbName}`;
@@ -319,53 +428,104 @@ function setTrip(name, dateValue) {
 function showPayment() { document.getElementById('payModal').style.display = 'flex'; }
 function toggleFinalBtn() { document.getElementById('submitBtn').disabled = !document.getElementById('confirmCheck').checked; }
 
-function finalSubmit() {
-  const btn = document.getElementById('submitBtn'); 
-  btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; 
+async function finalSubmit() {
+
+  const btn = document.getElementById('submitBtn');
+
+  btn.innerHTML = "⌛ กำลังส่งข้อมูล...";
   btn.disabled = true;
-  const data = {
-    date: document.getElementById('date').value,
-    trip: document.getElementById('trip').value,
-    seat: document.getElementById('seatField').value,
-    name: document.getElementById('name').value,
-    nickname: document.getElementById('nickname').value,
-    phone: document.getElementById('phone').value,
-    line: document.getElementById('line').value,
-    confirm: 'true'
-  };
-  const form = document.createElement('form');
-  form.method = 'POST'; form.action = SCRIPT_URL; form.style.display = 'none';
-  for (const key in data) {
-    const input = document.createElement('input');
-    input.name = key; input.value = data[key];
-    form.appendChild(input);
-  }
-  document.body.appendChild(form);
-  const iframe = document.createElement('iframe');
-  iframe.name = 'hidden_iframe'; iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-  form.target = 'hidden_iframe';
-  form.submit();
-  setTimeout(() => {
-    document.getElementById('payModal').style.display = 'none';
-    Swal.fire({
+
+  const data = new URLSearchParams();
+
+  data.append("action", "confirm");
+  data.append("date", document.getElementById('date').value);
+  data.append("trip", document.getElementById('trip').value);
+  data.append("seat", document.getElementById('seatField').value);
+  data.append("name", document.getElementById('name').value);
+  data.append("nickname", document.getElementById('nickname').value);
+  data.append("phone", document.getElementById('phone').value);
+  data.append("line", document.getElementById('line').value);
+  data.append("confirm", "true");
+
+  try {
+
+    const res = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: data
+    });
+
+    const result = await res.json();
+
+    if(result.status === "success") {
+
+      document.getElementById('payModal').style.display = 'none';
+
+      Swal.fire({
         title: '<h2 style="color:#10b981;">จองสำเร็จ! 🎒</h2>',
-        html: `<div style="text-align: left; padding: 20px; border: 2px dashed #38bdf8; border-radius: 20px; background: #fff; color: #334155;">
-                <p><strong>👤 ชื่อ:</strong> ${data.name}</p>
-                <p><strong>⛺ ทริป:</strong> ${data.trip}</p>
-                <p><strong>📅 วันที่:</strong> ${data.date}</p>
-                <div style="background: #f0f9ff; padding: 10px; border-radius: 12px; text-align: center; margin-top: 10px;">
-                    <span style="font-size: 12px;">เลขที่นั่ง</span><br>
-                    <strong style="font-size: 32px; color: #0ea5e9;">${data.seat}</strong>
-                </div>
-               </div>`,
+        html: `
+          <div style="text-align:left;padding:20px;border:2px dashed #38bdf8;border-radius:20px;background:#fff;color:#334155;">
+            <p><strong>👤 ชื่อ:</strong> ${document.getElementById('name').value}</p>
+            <p><strong>⛺ ทริป:</strong> ${document.getElementById('trip').value}</p>
+            <p><strong>📅 วันที่:</strong> ${document.getElementById('date').value}</p>
+
+            <div style="background:#f0f9ff;padding:10px;border-radius:12px;text-align:center;margin-top:10px;">
+              <span style="font-size:12px;">เลขที่นั่ง</span><br>
+              <strong style="font-size:32px;color:#0ea5e9;">
+                ${document.getElementById('seatField').value}
+              </strong>
+            </div>
+          </div>
+        `,
         confirmButtonText: 'ตกลง (แคปจอไว้เลยนะ)',
         confirmButtonColor: '#38bdf8'
-    }).then(() => location.reload());
-  }, 1500); 
+      }).then(() => location.reload());
+
+    } else {
+
+      Swal.fire({
+        icon: 'error',
+        title: 'จองไม่สำเร็จ 😢',
+        text: result.message || 'เกิดข้อผิดพลาด'
+      });
+
+      btn.innerHTML = "✅ ยืนยันจองสำเร็จ!";
+      btn.disabled = false;
+
+    }
+
+  } catch(err) {
+
+    console.log(err);
+
+    Swal.fire({
+      icon: 'error',
+      title: 'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้',
+      text: 'ลองใหม่อีกครั้งนะ'
+    });
+
+    btn.innerHTML = "✅ ยืนยันจองสำเร็จ!";
+    btn.disabled = false;
+
+  }
+
 }
 
 renderAllVans([]);
+  setInterval(() => {
+
+  const dateVal =
+    document.getElementById('date').value;
+
+  if(dateVal) {
+
+    loadBookedJSONP(
+      dateVal,
+      renderAllVans
+    );
+
+  }
+
+}, 3000);
 </script>
 </body>
 </html>
