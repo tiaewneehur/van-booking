@@ -316,22 +316,53 @@ function selectSeat(el, id) {
 }
 
 // ฟังก์ชันยิงสัญญาณแจ้งหลังบ้านว่า "ฉันจองเบาะนี้อยู่นะ"
+<script>
+
 function sendLockState(date, trip, seat) {
-  const formData = new FormData();
-  formData.append('action', 'lock_seat');
-  formData.append('date', date);
-  formData.append('trip', trip);
-  formData.append('seat', seat);
-  formData.append('session_id', MY_SESSION_ID);
 
-  fetch(SCRIPT_URL, { 
-  method: 'POST', 
-  body: formData,
-  mode: 'no-cors' 
-})
+  const params = new URLSearchParams();
 
-    .catch(err => console.log("Lock sync error: ", err));
+  params.append('action', 'lock_seat');
+
+  params.append('date', date);
+
+  params.append('trip', trip);
+
+  params.append('seat', seat);
+
+  params.append('session_id', MY_SESSION_ID);
+
+  fetch(SCRIPT_URL, {
+
+    method: 'POST',
+
+    headers: {
+
+      'Content-Type': 'application/x-www-form-urlencoded'
+
+    },
+
+    body: params.toString()
+
+  })
+
+  .then(r => r.text())
+
+  .then(res => {
+
+    console.log("ล็อกเบาะสำเร็จ:", res);
+
+  })
+
+  .catch(err => {
+
+    console.error("Lock sync error:", err);
+
+  });
+
 }
+
+</script>
 
 function validateAll() {
   const fields = ['date', 'trip', 'seatField', 'name', 'nickname', 'phone', 'line'];
