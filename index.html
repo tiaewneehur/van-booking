@@ -88,7 +88,7 @@
 
 <div class="header-sticky">
   <div class="header-brand">
-    <img src="เที่ย นี่เหอะ.png" alt="Logo">
+    <img src="เที่ยวนี่เหอะ.png" alt="Logo">
     <div class="brand-text">
       <h1>เที่ยวนี่เหอะ</h1>
       <span>TIAEWNEEHUR</span>
@@ -159,4 +159,280 @@
           </div>
           <div style="flex:1">
             <label class="field-label">📞 เบอร์โทร</label>
-            <input id="phone" name="phone" typ
+            <input id="phone" name="phone" type="tel" class="field-input" placeholder="08x-xxx" required />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">💬 ชื่อไลน์ นะจ๊ะ</label>
+          <input id="line" name="line" type="text" class="field-input" placeholder="ใส่ชื่อไลน์ที่นี่นะจ๊ะ" required />
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <button type="button" id="mainPayBtn" onclick="showPayment()" class="btn-main" disabled>🚀 พร้อมแล้ว...ไปโอนเงิน!</button>
+</div>
+
+<div id="payModal" class="modal">
+  <div class="modal-content">
+    <h2 style="color: #38bdf8; margin-bottom: 5px;">💰 ชำระค่ามัดจำนะจ๊ะ 💰</h2>
+    <p style="font-size: 16px; color: #ef4444; font-weight: 700; margin-bottom: 3px;">(แคปจอเอา QR ไปจ่ายเงินนะจ๊ะ)</p>
+    <img src="slip-qr.png" class="qr-img">
+    <div style="display:flex; align-items:center; gap:10px; color:#ff922b; text-align:left; font-size:13px; margin: 15px 0;">
+      <input type="checkbox" id="confirmCheck" onchange="toggleFinalBtn()" style="width: 22px; height: 22px;">
+      <label for="confirmCheck">นำสลีปไปอัพโหลดใส่อัลบั้มค่ามัดจำในกลุ่ม</label>
+    </div>
+    <button type="button" onclick="finalSubmit()" id="submitBtn" class="btn-final" disabled>✅ ยืนยันจองสำเร็จ!</button>
+    <button type="button" onclick="document.getElementById('payModal').style.display='none'" style="background:none; border:none; color:#94a3b8; margin-top:20px; font-size: 14px;">ย้อนกลับ</button>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
+const READ_URL = SCRIPT_URL + "?action=read";
+
+// สร้างสุ่ม Session ID ประจำตัวผู้ใช้คนนี้ (กันทับไลน์กับคนอื่นตอนจองพร้อมกัน)
+const MY_SESSION_ID = "user_" + Math.random().toString(36).substring(2, 9);
+document.getElementById('sessionIdField').value = MY_SESSION_ID;
+
+const SEAT_LAYOUT = [
+  'driver', 3, 6, 9,
+  'spacer', 2, 5, 8,
+  'เบาะซ้าย', 1, 4, 7
+];
+
+let autoRefreshInterval = null;
+
+function loadBookedJSONP(date, callback) {
+  if (!date) return;
+  const cbName = "cb_" + Date.now();
+  window[cbName] = (data) => { 
+    // ยิง data กลับไปอัปเดตหน้าจอ ทั้งส่วนของคนจองแล้ว และคนล็อกส้ม
+    callback(data.bookings || [], data.locks || []); 
+    delete window[cbName]; 
+    document.getElementById(cbName)?.remove(); 
+  };
+  const script = document.createElement('script'); script.id = cbName;
+  script.src = `${READ_URL}&date=${encodeURIComponent(date)}&callback=${cbName}`;
+  document.body.appendChild(script);
+}
+
+function handleDateChange() {
+  const dateVal = document.getElementById('date').value;
+  ['A','B','C'].forEach(id => document.getElementById(`grid-${id}`).innerHTML = '<p style="grid-column: span 4; color:#38bdf8; padding:10px; font-size:12px;">⌛ กำลังเช็ค...</p>');
+  
+  // เรียกครั้งแรก
+  loadBookedJSONP(dateVal, renderAllVans);
+
+  // 🔄 ระบบ Polling: คอยดึงข้อมูลความเคลื่อนไหวเบาะส้ม/เบาะแดง ทุกๆ 5 วินาที
+  clearInterval(autoRefreshInterval);
+  autoRefreshInterval = setInterval(() => {
+    const currentDate = document.getElementById('date').value;
+    if (currentDate) {
+      loadBookedJSONP(currentDate, renderAllVans);
+    }
+  }, 5000); 
+}
+
+function renderAllVans(bookedArray, lockArray) {
+  const bookedMap = {}; 
+  const lockMap = {};
+  const currentSelectedSeat = document.getElementById('seatField').value;
+  const targetTrip = document.getElementById('trip').value;
+  const targetDate = document.getElementById('date').value;
+
+  // 1. แมปข้อมูลคนจองสำเร็จแล้ว (สีแดง)
+  bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
+
+  // 2. แมปข้อมูลคนกำลังเลือกอยู่ (สีส้ม) เฉพาะทริปและวันเดียวกัน แต่ไม่ใช่ตัวเราเอง
+  lockArray.forEach(l => {
+    if (l.seat && l.session_id !== MY_SESSION_ID && l.trip === targetTrip && l.date.includes(targetDate)) {
+      lockMap[String(l.seat)] = true;
+    }
+  });
+
+  ['A', 'B', 'C'].forEach(prefix => {
+    const grid = document.getElementById(`grid-${prefix}`);
+    grid.innerHTML = '';
+    
+    SEAT_LAYOUT.forEach(n => {
+      const div = document.createElement('div');
+      
+      if (n === 'driver') {
+        div.className = 'seat driver';
+        div.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
+      } else if (n === 'spacer') {
+        div.className = 'seat spacer';
+      } else {
+        const seatID = prefix + n; 
+        div.className = 'seat';
+        
+        if (bookedMap[seatID]) {
+          // 🔴 เบาะแดง (จองแล้ว)
+          div.classList.add('booked');
+          div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:13px;">${bookedMap[seatID]}</div>`;
+        } else if (lockMap[seatID]) {
+          // 🟠 เบาะส้ม (คนอื่นกำลังเลือกอยู่)
+          div.classList.add('locking');
+          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n}</span>`;
+          // กดไม่ได้จนกว่าเขาจะปล่อย
+        } else if (seatID === currentSelectedSeat) {
+          // 🟡 เบาะเหลือง (ตัวเราเองกำลังเลือก)
+          div.classList.add('selected');
+          const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
+          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
+          div.onclick = () => selectSeat(div, seatID);
+        } else {
+          // 🟢 เบาะว่าง
+          div.classList.add('empty');
+          const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
+          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
+          div.onclick = () => selectSeat(div, seatID);
+        }
+      }
+      grid.appendChild(div);
+    });
+  });
+}
+
+function selectSeat(el, id) {
+    const dateVal = document.getElementById('date').value;
+    const tripVal = document.getElementById('trip').value.trim();
+    if (!dateVal) return alert('📅 เลือกวันก่อนสิพี่!');
+    if (!tripVal) return alert('⛺ กรุณากรอกชื่อทริปก่อนนะจ๊ะ!');
+    
+    document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('seatField').value = id;
+    document.getElementById('formBox').classList.add('visible');
+    validateAll();
+
+    // 🟠 ส่งข้อมูลขึ้นไปล็อกเบาะที่ Google Sheets ทันทีที่กดเลือก
+    sendLockState(dateVal, tripVal, id);
+
+    setTimeout(() => document.getElementById('formBox').scrollIntoView({behavior:'smooth'}), 400);
+}
+
+// ฟังก์ชันยิงสัญญาณแจ้งหลังบ้านว่า "ฉันจองเบาะนี้อยู่นะ"
+function sendLockState(date, trip, seat) {
+  const formData = new FormData();
+  formData.append('action', 'lock_seat');
+  formData.append('date', date);
+  formData.append('trip', trip);
+  formData.append('seat', seat);
+  formData.append('session_id', MY_SESSION_ID);
+
+  fetch(SCRIPT_URL, { method: 'POST', body: formData })
+    .catch(err => console.log("Lock sync error: ", err));
+}
+
+function validateAll() {
+  const fields = ['date', 'trip', 'seatField', 'name', 'nickname', 'phone', 'line'];
+  const isComplete = fields.every(id => document.getElementById(id).value.trim() !== "");
+  const btn = document.getElementById('mainPayBtn');
+  btn.disabled = !isComplete;
+  isComplete ? btn.classList.add('active') : btn.classList.remove('active');
+}
+
+function toggleSideMenu() {
+  const menu = document.getElementById('sideMenu');
+  const overlay = document.getElementById('overlay');
+  const isActive = menu.classList.toggle('active');
+  overlay.style.display = isActive ? 'block' : 'none';
+  if(isActive) fetchTripList();
+}
+
+function fetchTripList() {
+  const cbName = "cb_list";
+  window[cbName] = (data) => {
+    const tripData = data.bookings.filter(b => b.trip && b.date).map(b => ({ trip: b.trip, date: b.date }));
+    const uniqueTrips = Array.from(new Set(tripData.map(a => JSON.stringify(a)))).map(a => JSON.parse(a));
+    const content = document.getElementById('tripListContent');
+    if (uniqueTrips.length > 0) {
+      content.innerHTML = uniqueTrips.map(item => {
+        const d = new Date(item.date);
+        const dateStr = d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
+        return `<div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; border-left:4px solid #38bdf8; cursor:pointer; margin-bottom:8px;" onclick="setTrip('${item.trip}', '${item.date}')">
+            <div style="font-weight:700; color:#fff; font-size:15px;">${item.trip}</div>
+            <div style="font-size:12px; color:#38bdf8; margin-top:4px;">📅 วันเดินทาง: ${dateStr}</div>
+          </div>`;
+      }).join('');
+    } else { content.innerHTML = '<p style="color:#94a3b8; font-size:14px;">ยังไม่มีข้อมูลทริป...</p>'; }
+    delete window[cbName];
+  };
+  const script = document.createElement('script');
+  script.src = `${READ_URL}&callback=${cbName}`;
+  document.body.appendChild(script);
+}
+
+function setTrip(name, dateValue) {
+    document.getElementById('trip').value = name;
+    if (dateValue) {
+        const d = new Date(dateValue);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        document.getElementById('date').value = `${year}-${month}-${day}`;
+    }
+    toggleSideMenu();
+    handleDateChange(); 
+    validateAll();
+}
+
+function showPayment() { document.getElementById('payModal').style.display = 'flex'; }
+function toggleFinalBtn() { document.getElementById('submitBtn').disabled = !document.getElementById('confirmCheck').checked; }
+
+function finalSubmit() {
+  const btn = document.getElementById('submitBtn'); 
+  btn.innerHTML = "⌛ กำลังส่งข้อมูล..."; 
+  btn.disabled = true;
+  const data = {
+    date: document.getElementById('date').value,
+    trip: document.getElementById('trip').value,
+    seat: document.getElementById('seatField').value,
+    name: document.getElementById('name').value,
+    nickname: document.getElementById('nickname').value,
+    phone: document.getElementById('phone').value,
+    line: document.getElementById('line').value,
+    session_id: MY_SESSION_ID, // ส่งไปด้วยเพื่อให้ระบบหลังบ้านรู้ว่าต้องปลดล็อกของใคร
+    confirm: 'true'
+  };
+  const form = document.createElement('form');
+  form.method = 'POST'; form.action = SCRIPT_URL; form.style.display = 'none';
+  for (const key in data) {
+    const input = document.createElement('input');
+    input.name = key; input.value = data[key];
+    form.appendChild(input);
+  }
+  document.body.appendChild(form);
+  const iframe = document.createElement('iframe');
+  iframe.name = 'hidden_iframe'; iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  form.target = 'hidden_iframe';
+  form.submit();
+  setTimeout(() => {
+    document.getElementById('payModal').style.display = 'none';
+    Swal.fire({
+        title: '<h2 style="color:#10b981;">จองสำเร็จ! 🎒</h2>',
+        html: `<div style="text-align: left; padding: 20px; border: 2px dashed #38bdf8; border-radius: 20px; background: #fff; color: #334155;">
+                <p><strong>👤 ชื่อ:</strong> ${data.name}</p>
+                <p><strong>⛺ ทริป:</strong> ${data.trip}</p>
+                <p><strong>📅 วันที่:</strong> ${data.date}</p>
+                <div style="background: #f0f9ff; padding: 10px; border-radius: 12px; text-align: center; margin-top: 10px;">
+                    <span style="font-size: 12px;">เลขที่นั่ง</span><br>
+                    <strong style="font-size: 32px; color: #0ea5e9;">${data.seat}</strong>
+                </div>
+               </div>`,
+        confirmButtonText: 'ตกลง (แคปจอไว้เลยนะ)',
+        confirmButtonColor: '#38bdf8'
+    }).then(() => location.reload());
+  }, 1500); 
+}
+
+// เริ่มต้นหน้าเว็บด้วยอาเรย์ว่าง
+renderAllVans([], []);
+</script>
+</body>
+</html>
