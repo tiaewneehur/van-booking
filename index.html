@@ -610,7 +610,11 @@ function selectSeat(el, id) {
 
   });
   
-  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+  currentSelectedSeat = id;
+
+document.querySelectorAll('.seat').forEach(s => 
+  s.classList.remove('selected')
+);
     el.classList.add('selected');
     document.getElementById('seatField').value = id;
     document.getElementById('formBox').classList.add('visible');
@@ -740,6 +744,11 @@ setInterval(() => {
 }, 3000);
   
 renderAllVans([]);
+  div.classList.add('empty');
+
+if (seatID === currentSelectedSeat) {
+  div.classList.add('selected');
+}
 </script>
 </body>
 </html>
