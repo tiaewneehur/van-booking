@@ -588,7 +588,27 @@ function renderAllVans(bookedArray) {
 function selectSeat(el, id) {
     if (!document.getElementById('date').value) return Swal.fire({ icon: 'warning', title: '📅 ลืมเลือกวันหรือเปล่าเอ่ย?', text: 'กรุณาเลือกวันเดินทางก่อนนะจ๊ะพี่!' });
     if (!document.getElementById('trip').value.trim()) return Swal.fire({ icon: 'warning', title: '⛺ ยังไม่ได้ระบุชื่อทริป', text: 'กรุณากรอกชื่อทริปหรือกดเลือกจากมุมบนขวาก่อนนะจ๊ะ!' });
-    document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+  
+
+  // ส่ง lock ไปหลังบ้าน
+
+  fetch(SCRIPT_URL, {
+
+    method: 'POST',
+
+    body: new URLSearchParams({
+
+      action: 'lockSeat',
+
+      seat: id,
+
+      date: document.getElementById('date').value
+
+    })
+
+  });
+  
+  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
     el.classList.add('selected');
     document.getElementById('seatField').value = id;
     document.getElementById('formBox').classList.add('visible');
@@ -710,7 +730,13 @@ function finalSubmit() {
     }).then(() => location.reload());
   }, 1500); 
 }
-
+  setInterval(() => {
+  const dateVal = document.getElementById('date').value;
+  if(dateVal){
+    loadBookedJSONP(dateVal, renderAllVans);
+  }
+}, 3000);
+  
 renderAllVans([]);
 </script>
 </body>
