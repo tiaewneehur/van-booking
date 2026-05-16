@@ -205,25 +205,22 @@
     /* จัดเรียงรูปภาพ 18 รูป เป็นตาราง Grid ฝั่งละ 3 รูปบนมือถือ */
 .memory-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  grid-template-columns: 1fr;
+  gap: 14px;
   margin-top: 10px;
 }
 
 /* ตกแต่งรูปภาพเล็กไอเทม */
 .memory-grid img {
   width: 100%;
-  aspect-ratio: 1/1;   /* สัดส่วนสี่เหลี่ยมจัตุรัสเท่ากันทุกรูป */
-  object-fit: cover;    /* ตัดสัดส่วนภาพให้เต็มบล็อกพอดี */
-  border-radius: 8px;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: transform 0.2s, filter 0.2s;
-}
+  border-radius: 16px;
 
-.memory-grid img:hover {
-  transform: scale(1.04);
-  filter: brightness(1.2);
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+
+  border: 1px solid rgba(255,255,255,0.1);
+
+  transition: 0.25s;
 }
 
 /* พื้นหลังหน้าต่างป๊อปอัพรูปภาพขยายใหญ่ */
