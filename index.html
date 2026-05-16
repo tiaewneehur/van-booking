@@ -598,6 +598,8 @@ function selectSeat(el, id) {
 
 // ส่ง lock ไปหลังบ้าน
 
+// ส่ง lock ไปหลังบ้าน
+
 fetch(SCRIPT_URL, {
 
   method: 'POST',
@@ -631,10 +633,7 @@ fetch(SCRIPT_URL, {
 
   })
 
-})
-.then(r => r.text())
-.then(console.log)
-.catch(console.error);
+});
 
 document.querySelectorAll('.seat').forEach(s => 
   s.classList.remove('selected')
