@@ -596,24 +596,42 @@ function selectSeat(el, id) {
     if (!document.getElementById('trip').value.trim()) return Swal.fire({ icon: 'warning', title: '⛺ ยังไม่ได้ระบุชื่อทริป', text: 'กรุณากรอกชื่อทริปหรือกดเลือกจากมุมบนขวาก่อนนะจ๊ะ!' });
   
 
-  // ส่ง lock ไปหลังบ้าน
+// ส่ง lock ไปหลังบ้าน
 
-  fetch(SCRIPT_URL, {
+fetch(SCRIPT_URL, {
 
-    method: 'POST',
+  method: 'POST',
 
-    body: new URLSearchParams({
+  body: new URLSearchParams({
 
-      action: 'lockSeat',
+    action: 'lockSeat',
 
-      seat: id,
+    seat: id,
 
-      date: document.getElementById('date').value
+    date: document.getElementById('date').value,
 
-    })
+    trip: document.getElementById('trip').value,
 
-  });
-  
+    session_id:
+      localStorage.getItem('seat_session') ||
+
+      (() => {
+
+        const sid =
+          'SID_' + Date.now();
+
+        localStorage.setItem(
+          'seat_session',
+          sid
+        );
+
+        return sid;
+
+      })()
+
+  })
+
+});
   currentSelectedSeat = id;
 
 document.querySelectorAll('.seat').forEach(s => 
