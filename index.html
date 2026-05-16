@@ -594,9 +594,7 @@ if (seatID === currentSelectedSeat) {
 function selectSeat(el, id) {
     if (!document.getElementById('date').value) return Swal.fire({ icon: 'warning', title: '📅 ลืมเลือกวันหรือเปล่าเอ่ย?', text: 'กรุณาเลือกวันเดินทางก่อนนะจ๊ะพี่!' });
     if (!document.getElementById('trip').value.trim()) return Swal.fire({ icon: 'warning', title: '⛺ ยังไม่ได้ระบุชื่อทริป', text: 'กรุณากรอกชื่อทริปหรือกดเลือกจากมุมบนขวาก่อนนะจ๊ะ!' });
-  
 
-// ส่ง lock ไปหลังบ้าน
 
 // ส่ง lock ไปหลังบ้าน
 
@@ -638,7 +636,10 @@ fetch(SCRIPT_URL, {
 document.querySelectorAll('.seat').forEach(s => 
   s.classList.remove('selected')
 );
-    el.classList.add('selected');
+
+currentSelectedSeat = id;
+
+el.classList.add('selected');
     document.getElementById('seatField').value = id;
     document.getElementById('formBox').classList.add('visible');
     validateAll();
