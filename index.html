@@ -119,7 +119,7 @@
         <input id="date" name="date" type="date" class="field-input" required onchange="handleDateChange()" />
       </div>
 
-      <!-- ✅ รูปผังรถ -->
+      <!-- รูปผังรถ -->
       <img src="IMG_0444.jpeg" class="seat-map-img" alt="ผังรถ" onerror="this.style.display='none'" />
 
       <div id="allVans">
@@ -201,15 +201,15 @@ const SEAT_LAYOUT = [
 
 let autoRefreshInterval = null;
 
-// แสดงสถานะรอตอนเริ่มเว็บก่อนเลือกทริป
 function initGridPlaceholder() {
   ['A','B','C'].forEach(id => {
     document.getElementById(`grid-${id}`).innerHTML = '<p style="grid-column: span 4; color:#38bdf8; padding:15px; font-size:13px; text-align:center;">⌛ กรุณาเลือกทริปและวันที่เดินทางด้านบน...</p>';
   });
 }
 
-function loadBookedJSONP(date, callback) {
-  if (!date) return;
+// ✅ อัพเดตฟังก์ชันดึงข้อมูล: ให้แนบค่า &trip ไปยังหลังบ้านด้วย เพื่อให้เงื่อนไขหลังบ้านดึงข้อมูลได้ถูกต้อง
+function loadBookedJSONP(date, trip, callback) {
+  if (!date || !trip) return;
   const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
   window[cbName] = (data) => { 
     callback(data.bookings || [], data.locks || []); 
@@ -218,7 +218,7 @@ function loadBookedJSONP(date, callback) {
   };
   const script = document.createElement('script'); 
   script.id = cbName;
-  script.src = `${READ_URL}&date=${encodeURIComponent(date)}&callback=${cbName}`;
+  script.src = `${READ_URL}&date=${encodeURIComponent(date)}&trip=${encodeURIComponent(trip)}&callback=${cbName}`;
   document.body.appendChild(script);
 }
 
@@ -240,14 +240,15 @@ function handleDateChange() {
     document.getElementById(`grid-${id}`).innerHTML = '<p style="grid-column: span 4; color:#38bdf8; padding:15px; font-size:13px; text-align:center;">⌛ กำลังเช็คเบาะว่างล่าสุด...</p>';
   });
   
-  loadBookedJSONP(dateVal, renderAllVans);
+  loadBookedJSONP(dateVal, tripVal, renderAllVans);
 
   // Polling รีเฟรชอัตโนมัติทุกๆ 5 วินาที
   clearInterval(autoRefreshInterval);
   autoRefreshInterval = setInterval(() => {
     const currentDate = document.getElementById('date').value;
-    if (currentDate) {
-      loadBookedJSONP(currentDate, renderAllVans);
+    const currentTrip = document.getElementById('trip').value.trim();
+    if (currentDate && currentTrip) {
+      loadBookedJSONP(currentDate, currentTrip, renderAllVans);
     }
   }, 5000); 
 }
@@ -256,30 +257,16 @@ function renderAllVans(bookedArray, lockArray) {
   const bookedMap = {}; 
   const lockMap = {};
   const currentSelectedSeat = document.getElementById('seatField').value;
-  const targetTrip = document.getElementById('trip').value.trim();
-  const targetDate = document.getElementById('date').value; // Format: YYYY-MM-DD
 
-  // 1. แมปข้อมูลคนจองสำเร็จแล้ว (สีแดง) -> ต้องตรงทั้งชื่อทริป และวันเดินทาง
+  // คัดกรองเบาะแดง
   bookedArray.forEach(b => { 
-    if(b.seat && b.trip && b.trip.trim() === targetTrip) { 
-      let bDate = String(b.date);
-      if(bDate.includes("T")) bDate = bDate.split("T")[0];
-      
-      if(bDate === targetDate) {
-         bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; 
-      }
-    } 
+    if(b.seat) { bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; }
   });
 
-  // 2. แมปข้อมูลคนกำลังเลือกอยู่ (สีส้ม) -> ต้องตรงทั้งชื่อทริป, วันเดินทาง และไม่ใช่ Session ของตัวเอง
+  // คัดกรองเบาะส้มคนอื่น
   lockArray.forEach(l => {
-    if (l.seat && l.trip && l.trip.trim() === targetTrip && l.session_id !== MY_SESSION_ID) {
-      let lockDate = String(l.date);
-      if(lockDate.includes("T")) lockDate = lockDate.split("T")[0];
-      
-      if(lockDate === targetDate) {
-         lockMap[String(l.seat)] = true;
-      }
+    if (l.seat && l.session_id !== MY_SESSION_ID) {
+       lockMap[String(l.seat)] = true;
     }
   });
 
@@ -301,20 +288,16 @@ function renderAllVans(bookedArray, lockArray) {
         const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
         
         if (bookedMap[seatID]) {
-          // 🔴 เบาะแดง (จองเรียบร้อย)
           div.classList.add('booked');
           div.innerHTML = `<span style="font-size:9px; opacity:0.7;">${displayLabel}</span><div style="font-size:12px; font-weight:600; word-break:break-all;">${bookedMap[seatID]}</div>`;
         } else if (lockMap[seatID]) {
-          // 🟠 เบาะส้ม (คนอื่นล็อกทริปนี้/วันนี้อยู่)
           div.classList.add('locking');
           div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
         } else if (seatID === currentSelectedSeat) {
-          // 🟡 เบาะเหลือง (เราเลือกเอง)
           div.classList.add('selected');
           div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
           div.onclick = () => selectSeat(div, seatID);
         } else {
-          // 🟢 เบาะว่าง
           div.classList.add('empty');
           div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
           div.onclick = () => selectSeat(div, seatID);
@@ -345,7 +328,6 @@ function selectSeat(el, id) {
     document.getElementById('formBox').classList.add('visible');
     validateAll();
 
-    // ล็อกเบาะส่งพิกัด ทริป + วันที่ ไปเก็บที่ชีตทันที
     sendLockState(dateVal, tripVal, id);
 
     setTimeout(() => {
@@ -391,6 +373,7 @@ function toggleSideMenu() {
   if(isActive) fetchTripList();
 }
 
+// ✅ ฟังชันดึงทริปตรงนี้ จะไม่ส่งสัญญานระบุเจาะจง เพื่อดึงทุกอย่างที่มีในชีตขึ้นมาในแถบเมนู
 function fetchTripList() {
   const cbName = "cb_list";
   const content = document.getElementById('tripListContent');
@@ -430,7 +413,7 @@ function fetchTripList() {
   
   const script = document.createElement('script');
   script.id = cbName;
-  script.src = `${READ_URL}&callback=${cbName}`;
+  script.src = `${READ_URL}&callback=${cbName}`; // ไม่กรอง เพื่อดึงรายการทั้งหมดไปทำเมนูเลือกทริป
   document.body.appendChild(script);
 }
 
@@ -521,7 +504,6 @@ function finalSubmit() {
   }, 2000); 
 }
 
-// เรียกตัวเซ็ตอัพเริ่มต้น
 initGridPlaceholder();
 </script>
 </body>
