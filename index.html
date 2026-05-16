@@ -197,13 +197,51 @@
 }
 
 /* ปุ่มกากบาทปิด */
+/* หน้าต่างป๊อปอัพสีดำ */
+.img-preview-modal {
+  display: none; 
+  position: fixed;
+  z-index: 9999; /* ดันให้อยู่หน้าสุดของทุกเมนู */
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.95); /* มืดสนิทเพื่อให้รูปเด่น */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ส่วนสำคัญ: บังคับให้รูปภาพขยายพอดีหน้าจอ */
+.img-preview-modal img {
+  max-width: 95vw;    /* กว้างสูงสุดไม่เกิน 95% ของความกว้างจอ */
+  max-height: 85vh;   /* สูงสุดไม่เกิน 85% ของความสูงจอ เพื่อให้เหลือพื้นที่ด้านบน-ล่าง */
+  width: auto;        /* ปรับอัตราส่วนกว้างอัตโนมัติ */
+  height: auto;       /* ปรับอัตราส่วนสูงอัตโนมัติ */
+  object-fit: contain;/* บีบ/ขยายภาพให้เห็นครบถ้วนสมบูรณ์ ไม่โดนครอปตัดเนื้อหา */
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+  animation: zoomInEffect 0.2s ease-out;
+}
+
+@keyframes zoomInEffect {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ปุ่มกากบาทปิด (ขยายให้กดง่ายขึ้นบนมือถือ) */
 .img-preview-close {
   position: absolute;
-  top: 25px; right: 25px;
-  color: #fff;
-  font-size: 35px;
-  font-weight: bold;
+  top: 20px; 
+  right: 25px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 40px;
+  font-weight: 300;
   cursor: pointer;
+  user-select: none;
+  z-index: 10000;
+}
+.img-preview-close:hover { color: #fff; }
 }
     // ฟังก์ชันสำหรับเปิดป๊อปอัพขยายรูปภาพ
 function openPreview(imgSrc) {
@@ -214,8 +252,25 @@ function openPreview(imgSrc) {
 }
 
 // ฟังก์ชันสำหรับปิดป๊อปอัพรูปภาพ
+/* วางไว้ในแท็ก <script> ... </script> */
+
+function openPreview(imgSrc) {
+  const modal = document.getElementById('imagePreviewModal');
+  const modalImg = document.getElementById('imgPreviewTarget');
+  
+  if (modal && modalImg) {
+    modalImg.src = imgSrc;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // ล็อกหน้ารายการไม่ให้เลื่อนตามตอนเปิดดูรูป
+  }
+}
+
 function closePreview() {
-  document.getElementById('imagePreviewModal').style.display = 'none';
+  const modal = document.getElementById('imagePreviewModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = ''; // คืนค่าให้หน้าเว็บเลื่อนได้ปกติ
+  }
 }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
