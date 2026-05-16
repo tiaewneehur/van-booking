@@ -566,6 +566,10 @@ function renderAllVans(bookedArray) {
 
           div.classList.add('empty');
 
+if (seatID === currentSelectedSeat) {
+  div.classList.add('selected');
+}
+
           const displayLabel =
             n === 'เบาะซ้าย'
             ? prefix + 'ซ้าย'
@@ -744,11 +748,6 @@ setInterval(() => {
 }, 3000);
   
 renderAllVans([]);
-  div.classList.add('empty');
-
-if (seatID === currentSelectedSeat) {
-  div.classList.add('selected');
-}
 </script>
 </body>
 </html>
