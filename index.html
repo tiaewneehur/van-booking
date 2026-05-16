@@ -52,12 +52,11 @@
     .header-brand h1 { font-size: 20px; color: #fff; font-weight: 700; line-height: 1.1; }
     .header-brand span { font-size: 11px; color: var(--primary); letter-spacing: 1px; font-weight: 600; }
 
-    .header-actions { display: flex; gap: 8px; }
     .btn-action { 
       background: rgba(56, 189, 248, 0.1); 
       color: var(--primary); 
       border: 1px solid rgba(56, 189, 248, 0.3); 
-      padding: 8px 14px; 
+      padding: 8px 16px; 
       border-radius: 12px; 
       font-weight: 600; 
       font-size: 13px; 
@@ -68,11 +67,9 @@
       gap: 6px;
     }
     .btn-action:hover { background: rgba(56, 189, 248, 0.2); transform: translateY(-1px); }
-    .btn-info-trigger { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: rgba(245, 158, 11, 0.3); }
-    .btn-info-trigger:hover { background: rgba(245, 158, 11, 0.2); }
 
     /* Side Menu & Overlay */
-    .side-menu { position: fixed; top: 0; right: -100%; width: 85%; max-width: 360px; height: 100%; background: #111827; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 24px; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
+    .side-menu { position: fixed; top: 0; right: -100%; width: 85%; max-width: 360px; height: 100%; background: #111827; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; overflow-y: auto; box-shadow: -10px 0 30px rgba(0,0,0,0.5); }
     .side-menu.active { right: 0; }
     .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 1999; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 
@@ -120,7 +117,7 @@
     .btn-main { width: 100%; max-width: 400px; padding: 16px; border-radius: 16px; border: none; font-size: 16px; font-weight: 700; font-family: inherit; transition: all 0.3s; cursor: pointer; background: #1e293b; color: #475569; }
     .btn-main.active { background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #0f172a; box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3); font-size: 17px; }
 
-    /* Modals & Popups (Page 2 / Info View) */
+    /* Modals & Popups (Page 2) */
     .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(7, 10, 19, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 16px; align-items: center; justify-content: center; overflow-y: auto; }
     .modal-content { background: #1e293b; width: 100%; max-width: 380px; border-radius: 24px; padding: 28px 24px; text-align: center; border: 1px solid rgba(255,255,255,0.12); margin: auto; max-height: 90vh; overflow-y: auto; }
     
@@ -129,16 +126,17 @@
     .btn-final { background: linear-gradient(135deg, #059669, #10b981); color: white; width: 100%; padding: 16px; border-radius: 14px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); transition: all 0.2s; }
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; box-shadow: none; }
 
-    /* Info Content Style */
-    .info-list { text-align: left; margin: 16px 0; }
-    .info-item { background: rgba(255,255,255,0.03); padding: 12px 14px; border-radius: 12px; margin-bottom: 10px; border-left: 3px solid var(--warning); font-size: 14px; line-height: 1.5; color: #cbd5e1; }
-    .info-img { width: 100%; border-radius: 14px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.1); }
+    /* Info Content Style (ย้ายมาอยู่ใน Side Menu) */
+    .info-section { margin-top: 35px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; }
+    .info-list { text-align: left; margin: 14px 0; }
+    .info-item { background: rgba(255,255,255,0.03); padding: 12px 14px; border-radius: 12px; margin-bottom: 10px; border-left: 3px solid var(--warning); font-size: 13px; line-height: 1.5; color: #cbd5e1; }
+    .info-img { width: 100%; border-radius: 12px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.1); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body oninput="validateAll()">
 
-<!-- Re-designed Header -->
+<!-- Header -->
 <div class="header-sticky">
   <div class="header-brand">
     <img src="เที่ยวนี่เหอะ.png" alt="Logo" onerror="this.src='https://via.placeholder.com/100'">
@@ -148,47 +146,42 @@
     </div>
   </div>
   <div class="header-actions">
-    <button class="btn-action btn-info-trigger" onclick="toggleInfoModal()">💡 สาระน่ารู้</button>
-    <button class="btn-action" onclick="toggleSideMenu()">📋 ทริปที่จัด</button>
+    <button class="btn-action" onclick="toggleSideMenu()">📋 เมนู & ทริปที่จัด</button>
   </div>
 </div>
 
 <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-<!-- Drawer: Trip List -->
+<!-- Drawer: Side Menu (รวมทริปที่จัด และ สาระน่ารู้ไว้ที่นี่แล้ว) -->
 <div id="sideMenu" class="side-menu">
-  <h2 style="color:var(--primary); margin-bottom:20px; border-bottom:1px solid rgba(56,189,248,0.2); padding-bottom:12px; font-size: 18px;">📍 ทริปที่เปิดจอง</h2>
+  <!-- ส่วนที่ 1: รายการทริป -->
+  <h2 style="color:var(--primary); margin-bottom:16px; border-bottom:1px solid rgba(56,189,248,0.2); padding-bottom:12px; font-size: 17px;">📍 ทริปที่เปิดจอง</h2>
   <div id="tripListContent">
-    <p style="color:var(--text-muted); font-size:14px; text-align: center; padding: 20px 0;">กำลังโหลดข้อมูลทริป...</p>
+    <p style="color:var(--text-muted); font-size:13px; text-align: center; padding: 15px 0;">กำลังโหลดข้อมูลทริป...</p>
   </div>
-</div>
 
-<!-- Modal: สาระความรู้ / ข้อแนะนำการเดินทาง (ใหม่) -->
-<div id="infoModal" class="modal">
-  <div class="modal-content" style="max-width: 420px;">
-    <h2 style="color: var(--warning); font-size: 20px; margin-bottom: 4px;">💡 สาระความรู้และข้อแนะนำ</h2>
-    <p style="font-size: 13px; color: var(--text-muted);">เตรียมความพร้อมก่อนออกเดินทางไปสนุกด้วยกัน</p>
+  <!-- ส่วนที่ 2: สาระน่ารู้ด้านล่างทริป (ย้ายมาไว้ตรงนี้ตามต้องการ) -->
+  <div class="info-section">
+    <h2 style="color: var(--warning); font-size: 17px; padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">💡 สาระความรู้ & ข้อแนะนำ</h2>
+    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">ข้อควรรู้ก่อนออกเดินทางไปสนุกด้วยกัน</p>
     
     <div class="info-list">
       <div class="info-item">
-        <strong>🚌 การเลือกที่นั่ง:</strong> แถวหน้าสุด (เบาะ A1-B1) เหมาะสำหรับผู้ที่เมารถง่าย แถวหลังสุดจะได้รับความสะเทือนมากกว่าปกติเล็กน้อยแต่มีความเป็นส่วนตัวสูง
+        <strong>🚌 การเลือกที่นั่ง:</strong> แถวหน้าสุด (เบาะ A1-B1) เหมาะสำหรับผู้ที่เมารถง่าย แถวหลังสุดจะได้รับความสะเทือนมากกว่าปกติเล็กน้อย
       </div>
       <div class="info-item">
-        <strong>🎒 การเตรียมสัมภาระ:</strong> แนะนำให้ใช้กระเป๋าขนาดพอดีเนื่องจากพื้นที่จัดเก็บท้ายรถตู้มีจำกัด ของมีค่าควรพกติดตัวตลอดเวลา
+        <strong>🎒 สัมภาระเดินทาง:</strong> แนะนำกระเป๋าขนาดพอดีเนื่องจากพื้นที่ท้ายรถตู้มีจำกัด ของมีค่าและยาประจำตัวควรพกติดตัวไว้ตลอดเวลาครับ
       </div>
       <div class="info-item">
-        <strong>⏰ การรักษาเวลา:</strong> เพื่อความสนุกเต็มอิ่มของทุกคนในทริป กรุณามาถึงจุดนัดพบก่อนเวลารถออกอย่างน้อย 15 นาทีนะครับ
+        <strong>⏰ การรักษาเวลา:</strong> เพื่อความสนุกเต็มอิ่มของทริป กรุณามาถึงจุดนัดพบก่อนเวลารถออกอย่างน้อย 15 นาทีน้า
       </div>
       
-      <!-- บล็อกภาพประกอบความรู้ (คุณสามารถเปลี่ยน src เป็นลิงก์รูปของคุณได้เลย) -->
+      <!-- บล็อกภาพประกอบสาระความรู้ (สามารถเปลี่ยน src เป็นลิงก์รูปภาพของคุณได้เลย) -->
       <div style="margin-top: 15px;">
-        <span style="font-size: 12px; color: var(--primary); display:block; margin-bottom:5px; font-weight:600;">🗺️ แผนผังจุดนัดพบ/ข้อมูลเดินทางเพิ่มเติม</span>
-        <!-- คุณสามารถนำภาพความรู้มาใส่แทนที่ลิงก์นี้ได้เลยครับ -->
+        <span style="font-size: 12px; color: var(--primary); display:block; margin-bottom:6px; font-weight:600;">🗺️ ข้อมูลแผนที่/คู่มือเดินทางเพิ่มเติม:</span>
         <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=600" class="info-img" alt="ข้อมูลเดินทาง">
       </div>
     </div>
-    
-    <button type="button" onclick="toggleInfoModal()" class="btn-final" style="background: var(--warning); color: #0f172a; margin-top: 10px;">เข้าใจแล้ว ลุยกันเลย!</button>
   </div>
 </div>
 
@@ -261,7 +254,7 @@
 
 <!-- Sticky Bottom Action Button -->
 <div class="bottom-bar">
-  <button type="button" id="mainPayBtn" onclick="showPayment()" class="btn-main" disabled>🚀 กรอกข้อมูลให้ครบถ้วนเพื่อไปโอนเงิน</button>
+  <button type="button" id="mainPayBtn" onclick="showPayment()" class="btn-main" disabled>🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
 </div>
 
 <!-- Modal: Payment Receipt (Page 2) -->
@@ -375,15 +368,8 @@ function toggleSideMenu() {
   if(isActive) fetchTripList();
 }
 
-function toggleInfoModal() {
-  const modal = document.getElementById('infoModal');
-  const isVisible = modal.style.display === 'flex';
-  modal.style.display = isVisible ? 'none' : 'flex';
-}
-
 function closeAllDrawers() {
   document.getElementById('sideMenu').classList.remove('active');
-  document.getElementById('infoModal').style.display = 'none';
   document.getElementById('payModal').style.display = 'none';
   document.getElementById('overlay').style.display = 'none';
 }
@@ -403,7 +389,7 @@ function fetchTripList() {
             <div style="font-size:12px; color:var(--primary); margin-top:6px; font-weight:500;">📅 วันเดินทาง: ${dateStr}</div>
           </div>`;
       }).join('');
-    } else { content.innerHTML = '<p style="color:var(--text-muted); font-size:14px; text-align:center; padding:20px 0;">ยังไม่มีข้อมูลทริปในขณะนี้...</p>'; }
+    } else { content.innerHTML = '<p style="color:var(--text-muted); font-size:13px; text-align:center; padding:15px 0;">ยังไม่มีข้อมูลทริปในขณะนี้...</p>'; }
     delete window[cbName];
   };
   const script = document.createElement('script');
