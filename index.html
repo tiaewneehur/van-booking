@@ -162,15 +162,15 @@
     <h1 style="font-size: 22px; color: #fff; text-align:center;">จองที่นั่งรถตู้ 🚐💨</h1>
     <p class="subtitle">จองก่อนได้นั่ง จองทีหลังยืนไปนะจ๊ะ ✨</p>
 
+    <div class="field-group">
+        <label class="field-label">⛺ ชื่อทริป</label>
+        <input id="trip" name="trip" type="text" class="field-input" placeholder="เลือกทริปจากมุมขวาบน" required oninput="validateAll()" />
+      </div>
+    
     <form id="bookingForm">
       <div class="field-group">
         <label class="field-label">📅 วันเดินทาง</label>
         <input id="date" name="date" type="date" class="field-input" required onchange="handleDateChange()" />
-      </div>
-
-      <div class="field-group">
-        <label class="field-label">⛺ ชื่อทริป</label>
-        <input id="trip" name="trip" type="text" class="field-input" placeholder="เลือกทริปจากมุมขวาบน" required oninput="validateAll()" />
       </div>
 
       <!-- ✅ รูปผังรถ -->
