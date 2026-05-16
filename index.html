@@ -730,12 +730,6 @@ function finalSubmit() {
     }).then(() => location.reload());
   }, 1500); 
 }
-  setInterval(() => {
-  const dateVal = document.getElementById('date').value;
-  if(dateVal){
-    loadBookedJSONP(dateVal, renderAllVans);
-  }
-}, 10000);
   
 renderAllVans([]);
 </script>
