@@ -103,58 +103,75 @@
 .van-container { margin-bottom: 24px; width: 100%; }
 .van-title { font-size: 14px; color: var(--primary); margin-bottom: 12px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.08); padding: 8px; border-radius: 12px; border: 1px solid rgba(56,189,248,0.15); }
 .grid-header { display: flex; justify-content: space-between; padding: 0 12px; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-/* บังคับตารางรถตู้ให้เป็นช่องเท่ากัน 4 ช่องแบบ Fixed สัดส่วน ไม่มียืดหดตามตัวหนังสือ */
-.grid { 
-  display: grid !important; 
-  grid-template-columns: repeat(4, 1fr) !important; 
-  grid-auto-rows: auto !important;
-  gap: 8px !important; 
+.grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 8px !important;
+  padding: 12px !important;
+  background: rgba(0,0,0,0.3);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .seat {
-  width: 100% !important;
-  aspect-ratio: 1 / 1 !important;
-  min-width: 0 !important;
+  height: 72px !important;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s;
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
 }
-.seat.driver { background: #1e293b; color: #64748b; border: 1px dashed #475569; cursor: default; pointer-events: none; }
-.seat.spacer { visibility: hidden; pointer-events: none; }
-.seat.empty { background: linear-gradient(135deg, #059669, #10b981); color: white; box-shadow: 0 4px 0 #047857; }
-.seat.empty:active { transform: translateY(4px); box-shadow: 0 0px 0 #047857; }
 
-/* เบาะสีแดงที่จองแล้ว บังคับจัดการตัวอักษรทุกตัวที่อยู่ข้างในให้ตัดคำทันที */
-.seat.booked {
-  background: linear-gradient(135deg, #dc2626, #ef4444);
+.seat.driver {
+  background: #1e293b;
+  color: #475569;
+  border: 1px dashed #475569;
+  cursor: default;
+  pointer-events: none;
+}
+
+.seat.spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.seat.empty {
+  background: linear-gradient(145deg, #10b981, #059669);
   color: white;
-  border: 1px solid rgba(255,255,255,0.08);
-  cursor: not-allowed;
+  box-shadow: 0 4px 0 #047857;
+}
+
+.seat.booked {
+  background: linear-gradient(145deg, #ef4444, #b91c1c);
+  color: white;
   box-shadow: 0 4px 0 #991b1b;
+  cursor: not-allowed;
 
-  font-size: 10px !important;
-  line-height: 1.2 !important;
-
-  overflow: hidden !important;
-
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: center !important;
-  align-items: center !important;
-
-  text-align: center !important;
-  padding: 4px !important;
+  font-size: 10px;
+  text-align: center;
+  padding: 4px;
 }
 
-.seat.booked * {
-  max-width: 100% !important;
-
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-
-  white-space: nowrap !important;
-
-  font-size: 10px !important;
+.seat.booked div,
+.seat.booked span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-    .seat.selected { background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 4px 0 #b45309; transform: scale(1.02); animation: heartbeat 1.2s infinite; }
+
+.seat.selected {
+  background: linear-gradient(145deg, #fbbf24, #f59e0b);
+  color: #000;
+  box-shadow: 0 4px 0 #b45309;
+  transform: scale(1.05);
+}
     
     @keyframes heartbeat { 0%, 100% { transform: scale(1.02); } 50% { transform: scale(1.06); } }
 
@@ -497,40 +514,76 @@ function handleDateChange() {
 }
 
 function renderAllVans(bookedArray) {
-  const bookedMap = {}; 
-  bookedArray.forEach(b => { if(b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม'; });
+  const bookedMap = {};
+
+  bookedArray.forEach(b => {
+    if (b.seat) bookedMap[String(b.seat)] = b.nickname || 'เต็ม';
+  });
 
   ['A', 'B', 'C'].forEach(prefix => {
+
     const grid = document.getElementById(`grid-${prefix}`);
     grid.innerHTML = '';
-    
+
     SEAT_LAYOUT.forEach(n => {
+
       const div = document.createElement('div');
-      
+
       if (n === 'driver') {
+
         div.className = 'seat driver';
-        div.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px; font-weight:500; margin-top:2px;">คนขับ</span>`;
+
+        div.innerHTML = `
+          <span>👨‍✈️</span>
+          <span style="font-size:9px;">คนขับ</span>
+        `;
+
       } else if (n === 'spacer') {
+
         div.className = 'seat spacer';
+
       } else {
-        const seatID = prefix + n; 
+
+        const seatID = prefix + n;
+
         div.className = 'seat';
-        
+
         if (bookedMap[seatID]) {
+
           div.classList.add('booked');
-          div.innerHTML = `<span style="font-size:9px; opacity:0.5;">${seatID}</span><div style="font-size:12px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; width:100%; text-align:center;">${bookedMap[seatID]}</div>`;
+
+          div.innerHTML = `
+            <span style="font-size:9px;">${seatID}</span>
+            <div style="font-size:12px;">
+              ${bookedMap[seatID]}
+            </div>
+          `;
+
         } else {
+
           div.classList.add('empty');
-          const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
-          div.innerHTML = `<span style="font-size:9px; opacity:0.8; font-weight:500;">เบาะ</span><span style="font-size:16px; margin-top:-2px;">${displayLabel}</span>`;
+
+          const displayLabel =
+            n === 'เบาะซ้าย'
+            ? prefix + 'ซ้าย'
+            : prefix + n;
+
+          div.innerHTML = `
+            <span style="font-size:10px;">เบาะ</span>
+            <span style="font-size:18px;">
+              ${displayLabel}
+            </span>
+          `;
+
           div.onclick = () => selectSeat(div, seatID);
         }
       }
+
       grid.appendChild(div);
     });
   });
 }
-
+  
 function selectSeat(el, id) {
     if (!document.getElementById('date').value) return Swal.fire({ icon: 'warning', title: '📅 ลืมเลือกวันหรือเปล่าเอ่ย?', text: 'กรุณาเลือกวันเดินทางก่อนนะจ๊ะพี่!' });
     if (!document.getElementById('trip').value.trim()) return Swal.fire({ icon: 'warning', title: '⛺ ยังไม่ได้ระบุชื่อทริป', text: 'กรุณากรอกชื่อทริปหรือกดเลือกจากมุมบนขวาก่อนนะจ๊ะ!' });
