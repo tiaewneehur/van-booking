@@ -96,7 +96,7 @@
 }
     .field-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
 
- /* ========================================== */
+/* ========================================== */
 /* วางแทนที่กลุ่ม Seat Section & Grid ได้เลยครับ  */
 /* ========================================== */
 .seat-map-img { width: 100%; border-radius: 16px; margin: 10px 0 24px; border: 1px solid var(--border-color); }
@@ -104,10 +104,11 @@
 .van-title { font-size: 14px; color: var(--primary); margin-bottom: 12px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.08); padding: 8px; border-radius: 12px; border: 1px solid rgba(56,189,248,0.15); }
 .grid-header { display: flex; justify-content: space-between; padding: 0 12px; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-/* ปรับปรุงแก้บั๊กเบาะล้นขอบตรงนี้ */
+/* บังคับตารางรถตู้ให้เป็นช่องเท่ากัน 4 ช่องแบบ Fixed สัดส่วน ไม่มียืดหดตามตัวหนังสือ */
 .grid { 
   display: grid !important; 
   grid-template-columns: repeat(4, 1fr) !important; 
+  grid-auto-rows: 1fr !important; /* บังคับให้ความสูงของทุกแถวเท่ากันเป๊ะ */
   gap: 8px !important; 
   padding: 10px !important; 
   background: #090d16; 
@@ -117,21 +118,23 @@
   box-sizing: border-box !important;
 }
 
-/* ปรับปรุงขนาดเบาะและ padding ให้ยืดหยุ่น */
+/* ล็อกขนาดเบาะนั่งให้เป็นสี่เหลี่ยมจัตุรัส ห้ามขยาย ห้ามเบี้ยวเด็ดขาด */
 .seat { 
   width: 100% !important;
-  aspect-ratio: 1/1; 
+  max-width: 100% !important;
+  aspect-ratio: 1 / 1 !important; 
   border-radius: 12px; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center; 
+  display: flex !important; 
+  flex-direction: column !important; 
+  align-items: center !important; 
+  justify-content: center !important; 
   cursor: pointer; 
   font-weight: 700; 
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
   position: relative; 
   padding: 4px !important; 
   box-sizing: border-box !important;
+  overflow: hidden !important; /* บังคับไม่ให้ชื่อล้นทะลุเบาะ */
 }
 
 .seat.driver { background: #1e293b; color: #64748b; border: 1px dashed #475569; cursor: default; pointer-events: none; }
@@ -139,24 +142,28 @@
 .seat.empty { background: linear-gradient(135deg, #059669, #10b981); color: white; box-shadow: 0 4px 0 #047857; }
 .seat.empty:active { transform: translateY(4px); box-shadow: 0 0px 0 #047857; }
 
-/* เบาะสีแดงที่จองแล้ว + บังคับตัดคำตัวหนังสือชื่อเล่น ไม่ให้ดันปุ่มเบี้ยว */
+/* เบาะสีแดงที่จองแล้ว บังคับจัดการตัวอักษรทุกตัวที่อยู่ข้างในให้ตัดคำทันที */
 .seat.booked {
   background: linear-gradient(135deg, #dc2626, #ef4444);
   color: white;
   border: 1px solid rgba(255,255,255,0.08);
   cursor: not-allowed;
   box-shadow: 0 4px 0 #991b1b;
+  font-size: 11px !important; /* ปรับฟอนต์ชื่อเล่นให้เล็กลงพอดีเบาะ */
+  line-height: 1.3 !important;
+  white-space: nowrap !important; 
+  text-overflow: ellipsis !important; 
+  overflow: hidden !important;
 }
 
-/* ควบคุมตัวหนังสือชื่อคนจองด้านในเบาะ ไม่ให้หลุดขอบ */
-.seat.booked div {
-  font-size: 11px !important; 
-  font-weight: 500; 
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  width: 100%; 
-  text-align: center;
+/* ป้องกันไว้ก่อน: ถ้าในสคริปต์น้าสร้างเป็น div หรือ text สั่งตัดคำให้เรียบ */
+.seat.booked * {
+  font-size: 11px !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+  max-width: 100% !important;
+}
 }
     .seat.selected { background: linear-gradient(135deg, #d97706, #f59e0b); color: #0f172a; box-shadow: 0 4px 0 #b45309; transform: scale(1.02); animation: heartbeat 1.2s infinite; }
     
