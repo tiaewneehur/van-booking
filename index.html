@@ -187,7 +187,7 @@
 <!-- Main Booking Card -->
 <div class="main-wrapper">
   <div class="card">
-    <h1 style="font-size: 24px; color: #fff; text-align:center; font-weight: 700;">จองที่นั่งรถตู้  Vans</h1>
+    <h1 style="font-size: 24px; color: #fff; text-align:center; font-weight: 700;">จองที่นั่งรถตู้ 🚐✨</h1>
     <p class="subtitle">จองก่อนเลือกทำเลดีๆ ก่อน จองทีหลังระวังตกรถนะจ๊ะ ⚡</p>
 
     <div class="field-group">
@@ -197,7 +197,7 @@
     
     <form id="bookingForm">
       <div class="field-group">
-        <label class="field-label">📅 วันเดินทาง</label>
+        <label class="field-label">📅 วันเดินทางไม่ต้องกรอก</label>
         <input id="date" name="date" type="date" class="field-input" required onchange="handleDateChange()" />
       </div>
 
@@ -230,7 +230,7 @@
         <h3 style="text-align: center; color: var(--primary); margin-bottom: 20px; font-size: 16px; font-weight: 600; letter-spacing: 0.5px;">📝 ข้อมูลผู้จอง (กรอกให้ครบถ้วนนะจ๊ะ)</h3>
         <div class="field-group">
           <label class="field-label">👤 ชื่อ-นามสกุลจริง</label>
-          <input id="name" name="name" type="text" class="field-input" placeholder="ใส่ชื่อและนามสกุลจริงของคุณ" required />
+          <input id="name" name="name" type="text" class="field-input" placeholder="ใส่ชื่อและนามสกุลจริงอย่ามึน" required />
         </div>
         <div style="display:flex; gap:12px; margin-bottom:4px;">
           <div style="flex:1">
@@ -243,8 +243,8 @@
           </div>
         </div>
         <div class="field-group" style="margin-top: 16px;">
-          <label class="field-label">💬 LINE ID</label>
-          <input id="line" name="line" type="text" class="field-input" placeholder="ไอดีไลน์เพื่อดึงเข้ากลุ่มเดินทาง" required />
+          <label class="field-label">💬 LINE</label>
+          <input id="line" name="line" type="text" class="field-input" placeholder="ชื่อไลน์นะไม่ใชไอดี" required />
         </div>
       </div>
     </form>
@@ -444,7 +444,7 @@ function finalSubmit() {
   setTimeout(() => {
     document.getElementById('payModal').style.display = 'none';
     Swal.fire({
-        title: '<h2 style="color:#10b981; font-family:inherit;">🎉 จองสำเร็จเสร็จสิ้น!</h2>',
+        title: '<h2 style="color:#10b981; font-family:inherit;">🎉 จองสำเร็จ!</h2>',
         html: `<div style="text-align: left; padding: 18px; border: 2px dashed var(--primary); border-radius: 16px; background: #fafafa; color: #334155; font-size:14px; line-height:1.6;">
                 <p><strong>👤 ชื่อผู้จอง:</strong> ${data.name}</p>
                 <p><strong>⛺ ทริปเดินทาง:</strong> ${data.trip}</p>
