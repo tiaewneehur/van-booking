@@ -631,8 +631,10 @@ fetch(SCRIPT_URL, {
 
   })
 
-});
-  currentSelectedSeat = id;
+})
+.then(r => r.text())
+.then(console.log)
+.catch(console.error);
 
 document.querySelectorAll('.seat').forEach(s => 
   s.classList.remove('selected')
