@@ -213,16 +213,16 @@
 }
 
 /* ส่วนสำคัญ: บังคับให้รูปภาพขยายพอดีหน้าจอ */
+/* ค้นหาอันนี้ในแท็ก <style> แล้ววางทับได้เลยครับน้า */
 .img-preview-modal img {
-  max-width: 95vw;    /* กว้างสูงสุดไม่เกิน 95% ของความกว้างจอ */
-  max-height: 85vh;   /* สูงสุดไม่เกิน 85% ของความสูงจอ เพื่อให้เหลือพื้นที่ด้านบน-ล่าง */
-  width: auto;        /* ปรับอัตราส่วนกว้างอัตโนมัติ */
-  height: auto;       /* ปรับอัตราส่วนสูงอัตโนมัติ */
-  object-fit: contain;/* บีบ/ขยายภาพให้เห็นครบถ้วนสมบูรณ์ ไม่โดนครอปตัดเนื้อหา */
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-  animation: zoomInEffect 0.2s ease-out;
+  width: 100vw;         /* ขยายความกว้างเต็มจอ 100% */
+  height: 100vh;        /* ขยายความสูงเต็มจอ 100% */
+  object-fit: cover;    /* บังคับให้ภาพขยายเต็มจอพอดีเป๊ะ (เนื้อหาภาพจะถูกซูมให้เต็มบล็อกพอดีจอ) */
+  border-radius: 0;     /* เอาขอบมนออกเพื่อให้เต็มขอบจอจริง ๆ */
+  box-shadow: none;
+  animation: zoomInEffect 0.25s ease-out;
 }
+
 
 @keyframes zoomInEffect {
   from { transform: scale(0.9); opacity: 0; }
