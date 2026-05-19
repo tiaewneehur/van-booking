@@ -327,7 +327,7 @@ padding: 16px !important;
 
 <div class="header-sticky">
   <div class="header-brand" onclick="navigateToPage('catalogPage')">
-    <img src="เที่ยวนี่เหอะ.png" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
+    <img src="เที่ย นี่เหอะ.png" alt="Logo" onerror="this.src='https://via.placeholder.com/100?text=LOGO'">
     <div>
       <h1>เที่ยวนี่เหอะ</h1>
       <span>TIAEWNEEHUR</span>
@@ -641,8 +641,14 @@ function renderVansWithData(bookedList) {
   const mapping = {};
 
   bookedList.forEach(b => {
-    if (b.seat) mapping[String(b.seat)] = b.nickname || 'เต็ม';
-  });
+
+  const seatKey = String(b.seat || '').trim();
+
+  if (seatKey) {
+    mapping[seatKey] = b.nickname || 'เต็ม';
+  }
+
+});
 
   ['A', 'B', 'C'].forEach(prefix => {
 
@@ -669,11 +675,11 @@ function renderVansWithData(bookedList) {
 
       } else {
 
-        const id = prefix + n;
+        const id = String(prefix + n).trim();
 
         cell.className = 'seat';
 
-        if (mapping[id]) {
+        if (mapping.hasOwnProperty(id)) {
 
           cell.classList.add('booked');
 
