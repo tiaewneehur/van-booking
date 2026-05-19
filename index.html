@@ -642,13 +642,11 @@ function renderVansWithData(bookedList) {
 
   bookedList.forEach(b => {
 
-  const seatKey = String(b.seat || '').trim();
+    if (b.seat) {
+      mapping[String(b.seat)] = b.nickname || 'เต็ม';
+    }
 
-  if (seatKey) {
-    mapping[seatKey] = b.nickname || 'เต็ม';
-  }
-
-});
+  });
 
   ['A', 'B', 'C'].forEach(prefix => {
 
@@ -675,11 +673,11 @@ function renderVansWithData(bookedList) {
 
       } else {
 
-        const id = String(prefix + n).trim();
+        const id = prefix + n;
 
         cell.className = 'seat';
 
-        if (mapping.hasOwnProperty(id)) {
+        if (mapping[id]) {
 
           cell.classList.add('booked');
 
@@ -718,7 +716,6 @@ function renderVansWithData(bookedList) {
   });
 
 }
-
 // ฟังก์ชันจองล็อกเบาะที่นั่ง
 function selectSeatHandler(element, seatId) {
   // ยิงส่ง API ไปสั่ง Lock เบาะหลังบ้านไว้ชั่วคราวทันที
