@@ -560,7 +560,15 @@ function searchTripEngine() {
 // เมื่อเลือกทริปจากหน้าแรก
 function chooseTripFromMenu(name, rawDate) {
   document.getElementById('tripDisplay').value = name;
-  document.getElementById('hidden_date_raw').value = rawDate;
+  const cleanDate = new Date(rawDate);
+
+const yyyy = cleanDate.getFullYear();
+const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
+const dd = String(cleanDate.getDate()).padStart(2, '0');
+
+const formattedRaw = `${yyyy}-${mm}-${dd}`;
+
+document.getElementById('hidden_date_raw').value = formattedRaw;
   
   const d = new Date(rawDate);
   document.getElementById('dateDisplay').value = d.toLocaleDateString('th-TH', { day:'2-digit', month:'2-digit', year:'numeric' });
@@ -572,9 +580,9 @@ function chooseTripFromMenu(name, rawDate) {
   
   // สั่งเปลี่ยนหน้าและยิงดึงข้อมูลสถานะผังรถทันที
   ['A','B','C'].forEach(p => document.getElementById(`vanGrid${p}`).innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>');
-  navigateToPage('bookingPage');
+  navigateToPage('booking');
   
-  loadSeatStatusBackend(rawDate);
+  loadSeatStatusBackend(formattedRaw);
   validateFormInput();
 }
 
