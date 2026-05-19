@@ -128,23 +128,103 @@
 
     .seat-layout-map { width: 100%; border-radius: 12px; margin: 8px 0 20px; border: 1px solid var(--border-color); }
 
-    /* Vans Grid Container Layout */
-    .van-block { margin-bottom: 20px; width: 100%; }
-    .van-block-title { font-size: 12px; color: var(--primary); margin-bottom: 10px; font-weight: 600; background: rgba(56,189,248,0.06); padding: 6px 12px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.1); }
-    .van-grid-header { display: flex; justify-content: space-between; padding: 0 10px; margin-bottom: 6px; font-size: 10px; color: #475569; font-weight: 500; }
-    .van-grid-seats { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 6px !important; padding: 10px !important; background: #090f18; border-radius: 14px; border: 1px solid rgba(255,255,255,0.04); }
+    /* ======================================================== */
+/* OLD VAN STYLE */
+/* ======================================================== */
 
-    /* Seats Engine Style */
-    .seat { aspect-ratio: 1/1; width: 100%; border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; font-weight: 700; transition: 0.15s; position: relative; }
-    .seat.driver { background: #131b26; color: #334155; border: 1px dashed #222f3e; cursor: default; pointer-events: none; }
-    .seat.spacer { visibility: hidden; pointer-events: none; }
-    
-    /* ถอดรหัสสีตามภาพที่ 2 */
-    .seat.empty { background: #16a34a; color: white; font-size: 11px; } /* เขียว */
-    .seat.booked { background: #dc2626; color: white; cursor: not-allowed; font-size: 9px; padding: 2px; text-align: center; } /* แดง */
-    .seat.booked div { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 500; margin-top: 1px; }
-    .seat.selected { background: #eab308; color: #000; font-size: 11px; animation: pulseEffect 1s infinite; } /* เหลือง */
-    @keyframes pulseEffect { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+.van-block {
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.van-block-title {
+  font-size: 14px;
+  color: #38bdf8;
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-align: center;
+  background: rgba(56,189,248,0.1);
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.van-grid-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  margin-bottom: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  opacity: 0.8;
+}
+
+.van-grid-seats {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 8px !important;
+  padding: 12px !important;
+  background: rgba(0,0,0,0.3);
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.seat {
+  aspect-ratio: 1/1;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.2s;
+  position: relative;
+}
+
+.seat.driver {
+  background: #1e293b;
+  color: #475569;
+  border: 1px dashed #475569;
+  cursor: default;
+  pointer-events: none;
+}
+
+.seat.spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.seat.empty {
+  background: linear-gradient(145deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 0 #047857;
+}
+
+.seat.booked {
+  background: linear-gradient(145deg, #ef4444, #b91c1c);
+  color: white;
+  box-shadow: 0 4px 0 #991b1b;
+  cursor: not-allowed;
+  font-size: 10px;
+}
+
+.seat.selected {
+  background: linear-gradient(145deg, #fbbf24, #f59e0b);
+  color: #000;
+  box-shadow: 0 4px 0 #b45309;
+  transform: scale(1.05);
+  animation: heartbeat 0.8s infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(1.10);
+  }
+}
 
     /* Form Data Block */
     .booking-form-header { font-size: 13px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px; margin-top: 24px; margin-bottom: 16px; font-weight: 500; }
@@ -460,49 +540,127 @@ function loadSeatStatusBackend(dateValue) {
 }
 
 function buildEmptyVanGrid() {
-  ['A', 'B', 'C'].forEach(p => {
-    const grid = document.getElementById(`vanGrid${p}`);
-    grid.innerHTML = BUS_GRID_STRUCTURE.map(n => {
-      if (n === 'driver') return `<div class="seat driver"><span>👨‍✈️</span></div>`;
-      if (n === 'spacer') return `<div class="seat spacer"></div>`;
-      return `<div class="seat empty"><span>${p}${n === 'เบาะซ้าย' ? 'ซ้าย' : n}</span></div>`;
-    }).join('');
-  });
-}
-
-function renderVansWithData(bookedList) {
-  const mapping = {};
-  bookedList.forEach(b => { if(b.seat) mapping[String(b.seat)] = b.nickname || 'เต็ม'; });
 
   ['A', 'B', 'C'].forEach(prefix => {
+
     const grid = document.getElementById(`vanGrid${prefix}`);
+
     grid.innerHTML = '';
 
     BUS_GRID_STRUCTURE.forEach(n => {
-      const cell = document.createElement('div');
+
+      const div = document.createElement('div');
+
       if (n === 'driver') {
-        cell.className = 'seat driver';
-        cell.innerHTML = '<span>👨‍✈️</span>';
+
+        div.className = 'seat driver';
+
+        div.innerHTML = `
+          <span>👨‍✈️</span>
+          <span style="font-size:9px;">คนขับ</span>
+        `;
+
       } else if (n === 'spacer') {
-        cell.className = 'seat spacer';
+
+        div.className = 'seat spacer';
+
       } else {
+
+        div.className = 'seat empty';
+
+        const label = n === 'เบาะซ้าย'
+          ? prefix + 'ซ้าย'
+          : prefix + n;
+
+        div.innerHTML = `
+          <span style="font-size:10px;">เบาะ</span>
+          <span style="font-size:18px;">${label}</span>
+        `;
+      }
+
+      grid.appendChild(div);
+
+    });
+
+  });
+
+}
+
+function renderVansWithData(bookedList) {
+
+  const mapping = {};
+
+  bookedList.forEach(b => {
+    if (b.seat) mapping[String(b.seat)] = b.nickname || 'เต็ม';
+  });
+
+  ['A', 'B', 'C'].forEach(prefix => {
+
+    const grid = document.getElementById(`vanGrid${prefix}`);
+
+    grid.innerHTML = '';
+
+    BUS_GRID_STRUCTURE.forEach(n => {
+
+      const cell = document.createElement('div');
+
+      if (n === 'driver') {
+
+        cell.className = 'seat driver';
+
+        cell.innerHTML = `
+          <span>👨‍✈️</span>
+          <span style="font-size:9px;">คนขับ</span>
+        `;
+
+      } else if (n === 'spacer') {
+
+        cell.className = 'seat spacer';
+
+      } else {
+
         const id = prefix + n;
+
         cell.className = 'seat';
-        const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
 
         if (mapping[id]) {
+
           cell.classList.add('booked');
-          cell.innerHTML = `<span>${id}</span><div>${mapping[id]}</div>`;
+
+          cell.innerHTML = `
+            <span style="font-size:9px;">${id}</span>
+            <div style="font-size:13px;">${mapping[id]}</div>
+          `;
+
         } else {
+
           cell.classList.add('empty');
-          if (id === targetSelectedSeat) cell.classList.add('selected');
-          cell.innerHTML = `<span>${label}</span>`;
+
+          if (id === targetSelectedSeat) {
+            cell.classList.add('selected');
+          }
+
+          const label = n === 'เบาะซ้าย'
+            ? prefix + 'ซ้าย'
+            : prefix + n;
+
+          cell.innerHTML = `
+            <span style="font-size:10px;">เบาะ</span>
+            <span style="font-size:18px;">${label}</span>
+          `;
+
           cell.onclick = () => selectSeatHandler(cell, id);
+
         }
+
       }
+
       grid.appendChild(cell);
+
     });
+
   });
+
 }
 
 // ฟังก์ชันจองล็อกเบาะที่นั่ง
