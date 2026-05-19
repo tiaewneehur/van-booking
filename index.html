@@ -1160,6 +1160,52 @@ async function selectSeatHandler(element, seatId) {
 }
 
 // คอนโทรลหน้าต่างป๊อปอัพชำระเงิน
+function validateFormInput() {
+
+  const seat =
+    document.getElementById('hidden_seat').value;
+
+  const name =
+    document.getElementById('form_name').value.trim();
+
+  const nickname =
+    document.getElementById('form_nickname').value.trim();
+
+  const phone =
+    document.getElementById('form_phone').value.trim();
+
+  const line =
+    document.getElementById('form_line').value.trim();
+
+  const btn =
+    document.getElementById('actionTriggerBtn');
+
+  const completed =
+    seat &&
+    name &&
+    nickname &&
+    phone &&
+    line;
+
+  btn.disabled = !completed;
+
+  if (completed) {
+
+    btn.classList.add('ready-to-click');
+
+    btn.innerHTML =
+      '🚀 ดำเนินการจองต่อ';
+
+  } else {
+
+    btn.classList.remove('ready-to-click');
+
+    btn.innerHTML =
+      '🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง';
+
+  }
+
+}  
 function openPaymentModal() {
   document.getElementById('paymentModal').style.display = 'flex';
 }
