@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <title>จองที่นั่งรถตู้ - เที่ยวนี่เหอะ 🚐✨</title>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700&family=IBM+Plex+Sans+Thai:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     /* ======================================================== */
     /* GLOBAL RESET & MODERN DARK MAGAZINE DESIGN SYSTEM */
@@ -67,7 +67,7 @@
     .main-container { max-width: 480px; margin: 0 auto; padding: 16px 16px 140px; }
 
     /* ======================================================== */
-    /* PAGE 1: TRIP CATALOG COMPONENT */
+    /* PAGE 1: TRIP CATALOG COMPONENT (ถอดแบบภาพที่ 2) */
     /* ======================================================== */
     .catalog-title { text-align: center; margin-top: 10px; margin-bottom: 24px; }
     .catalog-title h2 { font-size: 22px; font-weight: 700; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px; }
@@ -107,7 +107,7 @@
     }
 
     /* ======================================================== */
-    /* PAGE 2: BOOKING SEAT & FORM COMPONENT */
+    /* PAGE 2: BOOKING SEAT & FORM COMPONENT (ถอดแบบภาพที่ 2) */
     /* ======================================================== */
     .section-header-flow { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
     .btn-back-flow { background: none; border: none; color: var(--primary); font-size: 14px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px; }
@@ -139,10 +139,11 @@
     .seat.driver { background: #131b26; color: #334155; border: 1px dashed #222f3e; cursor: default; pointer-events: none; }
     .seat.spacer { visibility: hidden; pointer-events: none; }
     
-    .seat.empty { background: #16a34a; color: white; font-size: 11px; } 
-    .seat.booked { background: #dc2626; color: white; cursor: not-allowed; font-size: 9px; padding: 2px; text-align: center; } 
+    /* ถอดรหัสสีตามภาพที่ 2 */
+    .seat.empty { background: #16a34a; color: white; font-size: 11px; } /* เขียว */
+    .seat.booked { background: #dc2626; color: white; cursor: not-allowed; font-size: 9px; padding: 2px; text-align: center; } /* แดง */
     .seat.booked div { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; font-weight: 500; margin-top: 1px; }
-    .seat.selected { background: #eab308; color: #000; font-size: 11px; animation: pulseEffect 1s infinite; } 
+    .seat.selected { background: #eab308; color: #000; font-size: 11px; animation: pulseEffect 1s infinite; } /* เหลือง */
     @keyframes pulseEffect { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 
     /* Form Data Block */
@@ -157,7 +158,7 @@
     .btn-submit-trigger.ready-to-click { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.3); }
 
     /* ======================================================== */
-    /* PAGE 3: PAYMENT MODAL DIAGRAM */
+    /* PAGE 3: PAYMENT MODAL DIAGRAM (ถอดแบบภาพที่ 2) */
     /* ======================================================== */
     .popup-modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(4, 7, 12, 0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 16px; align-items: center; justify-content: center; }
     .popup-container { background: var(--bg-card); width: 100%; max-width: 360px; border-radius: 20px; padding: 24px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.08); box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
@@ -170,7 +171,7 @@
     .btn-popup-final:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
 
     /* ======================================================== */
-    /* PAGE 4: SUCCESS RECEIPT LAYOUT */
+    /* PAGE 4: SUCCESS RECEIPT LAYOUT (ถอดแบบภาพที่ 2) */
     /* ======================================================== */
     .success-container { text-align: center; padding: 10px 0; }
     .success-icon-badge { width: 64px; height: 64px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 32px; color: white; box-shadow: 0 0 20px rgba(16,185,129,0.4); }
@@ -283,7 +284,7 @@
 
     <div id="formFieldsBox">
       <div class="booking-form-header">ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
-      <form id="mainBookingForm" onsubmit="event.preventDefault();">
+      <form id="mainBookingForm">
         <div class="input-box-group">
           <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
           <input id="form_name" class="input-box-field" placeholder="นาย เที่ยวนี่ เหอะ" required>
@@ -353,6 +354,7 @@
 </div>
 
 <script>
+// ตั้งค่าลิงก์ Web App Google Apps Script ของน้าตรงนี้
 const API_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const QUERY_URL = API_URL + "?action=read";
 
@@ -370,6 +372,7 @@ window.addEventListener('DOMContentLoaded', () => {
   buildEmptyVanGrid();
 });
 
+// ระบบเปลี่ยนหน้าจอจำลอง (Dynamic Router Flow)
 function navigateToPage(pageId) {
   document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active-page'));
   document.getElementById(pageId).classList.add('active-page');
@@ -381,15 +384,14 @@ function toggleSideDrawer(open) {
   document.getElementById('overlay').style.display = open ? 'block' : 'none';
 }
 
-// 1. ดึงรายการทริปจากระบบหลังบ้านมาแสดงที่หน้าแรกแบบแมกกาซีน
+// ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
 function fetchCatalogBackend() {
   const cb = "cb_catalog";
   window[cb] = (res) => {
-    const filterValid = (res.bookings || []).filter(b => b.trip && b.date).map(b => ({ trip: b.trip, date: b.date }));
+    const filterValid = res.bookings.filter(b => b.trip && b.date).map(b => ({ trip: b.trip, date: b.date }));
     cacheTrips = Array.from(new Set(filterValid.map(t => JSON.stringify(t)))).map(t => JSON.parse(t));
     renderCatalogCards(cacheTrips);
     delete window[cb];
-    document.getElementById(cb)?.remove();
   };
   appendScriptTag(`${QUERY_URL}&callback=${cb}`);
 }
@@ -403,10 +405,10 @@ function renderCatalogCards(data) {
   
   listFrame.innerHTML = data.map((item, index) => {
     const formattedDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-    const imgId = (index % 18) + 1; // สุ่มรูป 1.jpg ถึง 18.jpg วนซ้ำอัตโนมัติตามโครงสร้างของพี่
+    const imgId = (index % 18) + 1; // ลูปรูป 1.jpg ถึง 18.jpg วนซ้ำอัตโนมัติตามภาพที่ 2
     
     return `
-      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="chooseTripFromMenu('${item.trip.replace(/'/g, "\\'")}', '${item.date}')">
+      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="chooseTripFromMenu('${item.trip}', '${item.date}')">
         <img src="${imgId}.jpg" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
         <div class="trip-card-overlay">
           <div class="trip-title-text">${item.trip}</div>
@@ -425,7 +427,7 @@ function searchTripEngine() {
   });
 }
 
-// 2. เมื่อเลือกทริป -> สลับไปหน้าสองและยิงค้นหาผังที่นั่งว่างแยกตามทริปและวันที่ทันที
+// เมื่อเลือกทริปจากหน้าแรก
 function chooseTripFromMenu(name, rawDate) {
   document.getElementById('tripDisplay').value = name;
   document.getElementById('hidden_date_raw').value = rawDate;
@@ -433,18 +435,20 @@ function chooseTripFromMenu(name, rawDate) {
   const d = new Date(rawDate);
   document.getElementById('dateDisplay').value = d.toLocaleDateString('th-TH', { day:'2-digit', month:'2-digit', year:'numeric' });
   
+  // รีเซ็ตล้างสถานะเบาะที่นั่ง
   targetSelectedSeat = null;
   document.getElementById('hidden_seat').value = "";
   document.getElementById('formFieldsBox').classList.remove('show-form');
   
-  // แจ้งสเตตัสกำลังอัปเดตเบาะ
+  // สั่งเปลี่ยนหน้าและยิงดึงข้อมูลสถานะผังรถทันที
   ['A','B','C'].forEach(p => document.getElementById(`vanGrid${p}`).innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>');
-  
   navigateToPage('bookingPage');
+  
   loadSeatStatusBackend(rawDate);
   validateFormInput();
 }
 
+// ฟังก์ชัน JSONP: ดึงสถานะที่นั่งของวันที่เลือก
 function loadSeatStatusBackend(dateValue) {
   const cb = "cb_seats_" + Date.now();
   window[cb] = (res) => {
@@ -461,22 +465,14 @@ function buildEmptyVanGrid() {
     grid.innerHTML = BUS_GRID_STRUCTURE.map(n => {
       if (n === 'driver') return `<div class="seat driver"><span>👨‍✈️</span></div>`;
       if (n === 'spacer') return `<div class="seat spacer"></div>`;
-      const label = n === 'เบาะซ้าย' ? p + 'ซ้าย' : p + n;
-      return `<div class="seat empty"><span>${label}</span></div>`;
+      return `<div class="seat empty"><span>${p}${n === 'เบาะซ้าย' ? 'ซ้าย' : n}</span></div>`;
     }).join('');
   });
 }
 
-// 3. แสดงเบาะรถ เขียว(ว่าง)/แดง(เต็ม)/เหลือง(เลือก) โดยกรองตรงกับชื่อทริปและวันที่ปัจจุบัน
 function renderVansWithData(bookedList) {
   const mapping = {};
-  const currentTrip = document.getElementById('tripDisplay').value.trim();
-
-  bookedList.forEach(b => { 
-    if(b.seat && b.trip && b.trip.trim() === currentTrip) { 
-      mapping[String(b.seat)] = b.nickname || 'เต็ม'; 
-    } 
-  });
+  bookedList.forEach(b => { if(b.seat) mapping[String(b.seat)] = b.nickname || 'เต็ม'; });
 
   ['A', 'B', 'C'].forEach(prefix => {
     const grid = document.getElementById(`vanGrid${prefix}`);
@@ -490,7 +486,7 @@ function renderVansWithData(bookedList) {
       } else if (n === 'spacer') {
         cell.className = 'seat spacer';
       } else {
-        const id = prefix + (n === 'เบาะซ้าย' ? 'ซ้าย' : n);
+        const id = prefix + n;
         cell.className = 'seat';
         const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
 
@@ -509,12 +505,13 @@ function renderVansWithData(bookedList) {
   });
 }
 
+// ฟังก์ชันจองล็อกเบาะที่นั่ง
 function selectSeatHandler(element, seatId) {
-  // สั่ง Lock ที่นั่งชั่วคราวบน Google Sheets
+  // ยิงส่ง API ไปสั่ง Lock เบาะหลังบ้านไว้ชั่วคราวทันที
   fetch(API_URL, {
     method: 'POST',
     body: new URLSearchParams({ action: 'lockSeat', seat: seatId, date: document.getElementById('hidden_date_raw').value })
-  }).catch(err => console.log("Lock seat offline mode"));
+  });
 
   targetSelectedSeat = seatId;
   document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
@@ -527,6 +524,7 @@ function selectSeatHandler(element, seatId) {
   setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
 }
 
+// ตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมดแบบ Real-time
 function validateFormInput() {
   const list = ['form_name', 'form_nickname', 'form_phone', 'form_line', 'hidden_seat'];
   const pass = list.every(id => document.getElementById(id).value.trim() !== "");
@@ -542,13 +540,18 @@ function validateFormInput() {
   }
 }
 
-function openPaymentModal() { document.getElementById('paymentModal').style.display = 'flex'; }
-function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
+// คอนโทรลหน้าต่างป๊อปอัพชำระเงิน
+function openPaymentModal() {
+  document.getElementById('paymentModal').style.display = 'flex';
+}
+function closePaymentModal() {
+  document.getElementById('paymentModal').style.display = 'none';
+}
 function toggleFinalSubmitBtn() {
   document.getElementById('finalSubmitBtn').disabled = !document.getElementById('slipCheckbox').checked;
 }
 
-// 4. บันทึกข้อมูลขั้นสุดท้ายลงชีต และแสดงผลสลิปจองสำเร็จ (หน้า 4)
+// ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
 function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
   btn.innerHTML = "⌛ กำลังส่งข้อมูลเข้าระบบ...";
@@ -565,6 +568,7 @@ function processDataToSheets() {
     confirm: 'true'
   };
 
+  // สร้างฟอร์มซ่อนเพื่อยิง POST ข้ามโดเมน
   const mockForm = document.createElement('form');
   mockForm.method = 'POST'; mockForm.action = API_URL; mockForm.style.display = 'none';
   
@@ -582,9 +586,11 @@ function processDataToSheets() {
   mockForm.target = 'iframe_post_target';
   mockForm.submit();
 
+  // ปิดป๊อปอัพเซ็ตข้อมูลเข้าสลิปจองสำเร็จ (หน้า 4)
   setTimeout(() => {
     document.getElementById('paymentModal').style.display = 'none';
     
+    // ผูกค่าเข้ากล่องข้อความบิลจองสำเร็จตามแบบภาพที่ 2
     document.getElementById('rec_name').innerText = payload.name;
     document.getElementById('rec_trip').innerText = payload.trip;
     
@@ -592,6 +598,7 @@ function processDataToSheets() {
     document.getElementById('rec_date').innerText = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
     document.getElementById('rec_seat').innerText = payload.seat;
     
+    // เปลี่ยนหน้าไปหน้าระบบจองสำเร็จ (หน้า 4)
     navigateToPage('successPage');
   }, 1800);
 }
