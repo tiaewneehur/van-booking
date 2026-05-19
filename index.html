@@ -318,26 +318,8 @@ padding: 16px !important;
 
     /* Info Photo Section & Media */
     .info-item-block { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--warning); font-size: 12px; line-height: 1.5; }
-    .memory-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 12px;
-}
-
-.memory-grid img {
-  width: 100%;
-  display: block;
-
-  border-radius: 16px;
-
-  object-fit: cover;
-
-  border: 1px solid rgba(255,255,255,0.08);
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,0.35);
-}
+    .memory-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .memory-grid img { width: 100%; border-radius: 10px; aspect-ratio: 4/5; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -380,36 +362,7 @@ padding: 16px !important;
     onerror="this.src='https://via.placeholder.com/600x800'"
   >
 </div>
-  <div id="sideMenu" class="side-menu">
-
-<h3 style="color:var(--warning); font-size:15px; margin-bottom:12px;">
-💡 สาระความรู้ & ข้อแนะนำ
-</h3>
-
-<div class="info-item-block">
-<strong>🚌 การเลือกที่นั่ง:</strong>
-แถวหน้าสุดเหมาะสำหรับผู้ที่เมารถง่าย แถวหลังสุดจะได้รับความสะเทือนมากกว่าปกติเล็กน้อย
-</div>
-
-<div class="info-item-block">
-<strong>🎒 สัมภาระเดินทาง:</strong>
-แนะนำกระเป๋าขนาดพอดีไม่ต้องขนบ้านทั้งหลังไปเข้าป่า ของมีค่าและยาประจำตัวควรพกติดตัวไว้ตลอดเวลาครับ
-</div>
-
-<div class="info-item-block">
-<strong>⏰ การรักษาเวลา:</strong>
-กรุณามาถึงจุดนัดพบก่อนเวลาออกเดินทางอย่างน้อย 15 นาที อย่าให้ตาม เพราะจะโดนด่า
-</div>
-
-<h3 style="
-  color: var(--primary);
-  font-size: 14px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-weight: 700;
-">
-🗺️ ข้อมูลดูแลร่างกายเวลาเดินป่า
-</h3>
+  
   <h3 style="color:var(--primary); font-size:14px; margin-top:20px; margin-bottom:10px;">✨ ภาพความทรงจำตลอด 17 ป่า</h3>
   <div class="memory-grid">
     <img src="1.jpg" onerror="this.src='https://via.placeholder.com/150'">
