@@ -342,7 +342,26 @@ padding: 16px !important;
   animation: heartbeat 0.8s infinite;
   margin: 2px;
 }
+.seat.hidden-seat {
 
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10,18,30,0.95),
+      rgba(3,7,15,0.98)
+    );
+
+  border: none;
+
+  box-shadow: none;
+
+  pointer-events: none;
+
+  cursor: default;
+
+  opacity: 0.2;
+}
+    
 @keyframes heartbeat {
   0%, 100% {
     transform: scale(1.05);
@@ -1015,14 +1034,28 @@ function renderVansWithData(bookedList) {
 
         if (mapping[id]) {
 
-          cell.classList.add('booked');
+  // ถ้าเป็นเบาะงดจอง
+  if (mapping[id] === 'งดจอง') {
 
-          cell.innerHTML = `
-            <span style="font-size:9px;">${id}</span>
-            <div style="font-size:13px;">${mapping[id]}</div>
-          `;
+    cell.classList.add('hidden-seat');
 
-        } else {
+    cell.innerHTML = '';
+
+  } else {
+
+    // จองปกติ = สีแดงเหมือนเดิม
+    cell.classList.add('booked');
+
+    cell.innerHTML = `
+      <span style="font-size:9px;">${id}</span>
+      <div style="font-size:13px;">
+        ${mapping[id]}
+      </div>
+    `;
+
+  }
+
+} else {
 
           cell.classList.add('empty');
 
