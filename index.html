@@ -559,33 +559,44 @@ function searchTripEngine() {
 
 // เมื่อเลือกทริปจากหน้าแรก
 function chooseTripFromMenu(name, rawDate) {
+
   document.getElementById('tripDisplay').value = name;
+
   const cleanDate = new Date(rawDate);
 
-const yyyy = cleanDate.getFullYear();
-const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
-const dd = String(cleanDate.getDate()).padStart(2, '0');
+  const yyyy = cleanDate.getFullYear();
+  const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
+  const dd = String(cleanDate.getDate()).padStart(2, '0');
 
-const formattedRaw = `${yyyy}-${mm}-${dd}`;
+  const formattedRaw = `${yyyy}-${mm}-${dd}`;
 
-document.getElementById('hidden_date_raw').value = formattedRaw;
-  
-  const d = new Date(rawDate);
-  document.getElementById('dateDisplay').value = d.toLocaleDateString('th-TH', { day:'2-digit', month:'2-digit', year:'numeric' });
-  
-  // รีเซ็ตล้างสถานะเบาะที่นั่ง
+  document.getElementById('hidden_date_raw').value = formattedRaw;
+
+  document.getElementById('dateDisplay').value =
+    cleanDate.toLocaleDateString('th-TH', {
+      day:'2-digit',
+      month:'2-digit',
+      year:'numeric'
+    });
+
   targetSelectedSeat = null;
+
   document.getElementById('hidden_seat').value = "";
-  document.getElementById('formFieldsBox').classList.remove('show-form');
-  
-  // สั่งเปลี่ยนหน้าและยิงดึงข้อมูลสถานะผังรถทันที
-  ['A','B','C'].forEach(p => document.getElementById(`vanGrid${p}`).innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>');
-  navigateToPage('booking');
-  
+
+  document.getElementById('formFieldsBox')
+    .classList.remove('show-form');
+
+  ['A','B','C'].forEach(p => {
+    document.getElementById(`vanGrid${p}`).innerHTML =
+      '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
+  });
+
+  navigateToPage('bookingPage');
+
   loadSeatStatusBackend(formattedRaw);
+
   validateFormInput();
 }
-
 // ฟังก์ชัน JSONP: ดึงสถานะที่นั่งของวันที่เลือก
 function loadSeatStatusBackend(dateValue) {
   const cb = "cb_seats_" + Date.now();
