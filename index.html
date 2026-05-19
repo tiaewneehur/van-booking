@@ -318,8 +318,19 @@ padding: 16px !important;
 
     /* Info Photo Section & Media */
     .info-item-block { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--warning); font-size: 12px; line-height: 1.5; }
-    .memory-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
-    .memory-grid img { width: 100%; border-radius: 10px; aspect-ratio: 4/5; object-fit: cover; border: 1px solid rgba(255,255,255,0.05); }
+    .memory-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.memory-grid img {
+  width: 100%;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.05);
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
