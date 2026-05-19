@@ -508,28 +508,84 @@ padding: 16px !important;
     </p>
 
   </div>
-<!-- TEAM SHOWCASE -->
-<div class="team-showcase">
+<div style="
+  margin-top:18px;
+  border-radius:24px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.06);
+  background:#0b1220;
+  box-shadow:0 10px 30px rgba(0,0,0,0.35);
+">
 
-  <img src="team.jpg"
-       class="team-cover"
-       onerror="this.src='https://via.placeholder.com/800x1000?text=TEAM'">
+  <img 
+    src="team.jpg"
+    onerror="this.src='https://via.placeholder.com/800x1000?text=TEAM'"
+    style="
+      width:100%;
+      aspect-ratio:4/5;
+      object-fit:cover;
+      object-position:center top;
+      display:block;
+    "
+  >
 
-  <div class="team-overlay"></div>
+  <div style="
+    padding:18px;
+    background:linear-gradient(
+      180deg,
+      rgba(10,15,25,0),
+      rgba(10,15,25,0.95)
+    );
+  ">
 
-  <div class="team-content">
-    <h3>🔥 ทีมงานเที่ยวนี่เหอะ</h3>
+    <h3 style="
+      color:#fff;
+      font-size:20px;
+      margin-bottom:8px;
+    ">
+      🔥 ทีมงานเที่ยวนี่เหอะ
+    </h3>
 
-    <p>
+    <p style="
+      color:#cbd5e1;
+      font-size:13px;
+      line-height:1.7;
+      margin-bottom:14px;
+    ">
       ทีมงานสายลุยที่พร้อมพาทุกคนออกเดินทาง
       ตั้งแต่ขึ้นรถ ยันถึงยอดเขา ⛰️
     </p>
 
-    <div class="team-tags">
-      <span>🏕️ สายแคมป์</span>
-      <span>🚐 สายเดินทาง</span>
-      <span>🌿 สายธรรมชาติ</span>
+    <div style="
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    ">
+      <span style="
+        background:rgba(56,189,248,0.12);
+        color:#38bdf8;
+        padding:6px 10px;
+        border-radius:999px;
+        font-size:11px;
+      ">🏕️ สายแคมป์</span>
+
+      <span style="
+        background:rgba(16,185,129,0.12);
+        color:#10b981;
+        padding:6px 10px;
+        border-radius:999px;
+        font-size:11px;
+      ">🚐 สายเดินทาง</span>
+
+      <span style="
+        background:rgba(245,158,11,0.12);
+        color:#f59e0b;
+        padding:6px 10px;
+        border-radius:999px;
+        font-size:11px;
+      ">🌿 สายธรรมชาติ</span>
     </div>
+
   </div>
 
 </div>
