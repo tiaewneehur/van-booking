@@ -549,7 +549,28 @@ function renderCatalogCards(data) {
   
   listFrame.innerHTML = data.map((item, index) => {
     const formattedDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-    const imgId = (index % 18) + 1; // ลูปรูป 1.jpg ถึง 18.jpg วนซ้ำอัตโนมัติตามภาพที่ 2
+    const tripImages = {
+  "โป่งลึกบางกลอย 2 ตู้": "โป่งลึกบางกลอย.jpg",
+  "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg",
+  "โบลาเวน 3 ตู้": "โบลาเวน.jpg",
+  "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+  "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg",
+  "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "phukradueng.jpg",
+  "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
+  "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg",
+  "เขาหลัก 2 ตู้": "เขาหลัก.jpg",
+  "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
+  "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg",
+  "ภูสอยดาว": "ภูสอยดาว.jpg",
+  "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
+  "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg",
+  "เลอกวาเดาะ": "เลอกวาเดาะ.jpg",
+  "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
+  "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
+};
+
+const imgSrc =
+  tripImages[item.trip] || "default.jpg";
     
     return `
       <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="chooseTripFromMenu('${item.trip}', '${item.date}')">
