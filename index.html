@@ -782,10 +782,9 @@ padding: 16px !important;
 <script>
 // ตั้งค่าลิงก์ Web App Google Apps Script ของน้าตรงนี้
 const API_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
-const QUERY_URL = API_URL;
+const QUERY_URL = API_URL + "?action=read";
 
 let cacheTrips = [];
-let currentTripData = null;
 let targetSelectedSeat = null;
 
 const BUS_GRID_STRUCTURE = [
@@ -795,25 +794,8 @@ const BUS_GRID_STRUCTURE = [
 ];
 
 window.addEventListener('DOMContentLoaded', () => {
-
   fetchCatalogBackend();
-
   buildEmptyVanGrid();
-
-  // รีเฟรชสถานะเบาะทุก 5 วิ
-  setInterval(() => {
-
-    const currentDate =
-      document.getElementById('hidden_date_raw').value;
-
-    if (currentDate) {
-
-      loadSeatStatusBackend(currentDate);
-
-    }
-
-  }, 5000);
-
 });
 
 // ระบบเปลี่ยนหน้าจอจำลอง (Dynamic Router Flow)
@@ -830,21 +812,14 @@ function toggleSideDrawer(open) {
 
 // ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
 function fetchCatalogBackend() {
-
   const cb = "cb_catalog";
-
   window[cb] = (res) => {
-
-    cacheTrips = res.trips || [];
-
+    const filterValid = res.bookings.filter(b => b.trip && b.date).map(b => ({ trip: b.trip, date: b.date }));
+    cacheTrips = Array.from(new Set(filterValid.map(t => JSON.stringify(t)))).map(t => JSON.parse(t));
     renderCatalogCards(cacheTrips);
-
     delete window[cb];
   };
-
-  appendScriptTag(
-    `${QUERY_URL}&callback=${cb}`
-  );
+  appendScriptTag(`${QUERY_URL}&callback=${cb}`);
 }
 
 function renderCatalogCards(data) {
@@ -856,11 +831,31 @@ function renderCatalogCards(data) {
   
   listFrame.innerHTML = data.map((item, index) => {
     const formattedDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-    const imgSrc =
-  item.image || "default.jpg";
+    const tripImages = {
+  "โป่งลึกบางกลอย 2 ตู้": "โป่งลึกบางกลอย.jpg",
+  "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg",
+  "โบลาเวน 3 ตู้": "โบลาเวน.jpg",
+  "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+  "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg",
+  "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+  "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
+  "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg",
+  "เขาหลัก 2 ตู้": "เขาหลัก.jpg",
+  "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
+  "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg",
+  "ภูสอยดาว": "ภูสอยดาว.jpg",
+  "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
+  "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg",
+  "เลอกวาเดาะ": "เลอกวาเดาะ.jpg",
+  "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
+  "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
+};
+
+const imgSrc =
+  tripImages[item.trip] || "default.jpg";
     
     return `
-      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="chooseTripFromMenu('${item.trip}', '${item.date}', ${item.vans})">
+      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="chooseTripFromMenu('${item.trip}', '${item.date}')">
         <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
         <div class="trip-card-overlay">
           <div class="trip-title-text">${item.trip}</div>
@@ -880,12 +875,7 @@ function searchTripEngine() {
 }
 
 // เมื่อเลือกทริปจากหน้าแรก
-function chooseTripFromMenu(name, rawDate, vans) {
- currentTripData = {
-  trip: name,
-  date: rawDate,
-  vans: vans
-};
+function chooseTripFromMenu(name, rawDate) {
 
   document.getElementById('tripDisplay').value = name;
 
@@ -913,26 +903,11 @@ function chooseTripFromMenu(name, rawDate, vans) {
   document.getElementById('formFieldsBox')
     .classList.remove('show-form');
 
- const vanBlocks = [
-  document.getElementById('vanGridA').parentElement,
-  document.getElementById('vanGridB').parentElement,
-  document.getElementById('vanGridC').parentElement
-];
+  ['A','B','C'].forEach(p => {
+    document.getElementById(`vanGrid${p}`).innerHTML =
+      '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
+  });
 
-// ซ่อนทั้งหมดก่อน
-vanBlocks.forEach(v => v.style.display = 'none');
-
-// เปิดตามจำนวนตู้
-for(let i = 0; i < vans; i++) {
-
-  vanBlocks[i].style.display = 'block';
-
-  const grid =
-    vanBlocks[i].querySelector('.van-grid-seats');
-
-  grid.innerHTML =
-    '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
-}
   navigateToPage('bookingPage');
 
   loadSeatStatusBackend(formattedRaw);
@@ -943,10 +918,7 @@ for(let i = 0; i < vans; i++) {
 function loadSeatStatusBackend(dateValue) {
   const cb = "cb_seats_" + Date.now();
   window[cb] = (res) => {
-   renderVansWithData(
-  res.bookings || [],
-  res.locks || []
-);
+    renderVansWithData(res.bookings || []);
     delete window[cb];
     document.getElementById(cb)?.remove();
   };
@@ -1000,10 +972,9 @@ function buildEmptyVanGrid() {
 
 }
 
-function renderVansWithData(bookedList, lockList) {
+function renderVansWithData(bookedList) {
 
   const mapping = {};
-  const lockMapping = {};
 
   bookedList.forEach(b => {
 
@@ -1012,14 +983,6 @@ function renderVansWithData(bookedList, lockList) {
     }
 
   });
-
-  lockList.forEach(l => {
-
-  if (l.seat) {
-    lockMapping[String(l.seat)] = true;
-  }
-
-});
 
   ['A', 'B', 'C'].forEach(prefix => {
 
@@ -1052,25 +1015,14 @@ function renderVansWithData(bookedList, lockList) {
 
         if (mapping[id]) {
 
-  cell.classList.add('booked');
+          cell.classList.add('booked');
 
-  cell.innerHTML = `
-    <span style="font-size:9px;">${id}</span>
-    <div style="font-size:13px;">${mapping[id]}</div>
-  `;
+          cell.innerHTML = `
+            <span style="font-size:9px;">${id}</span>
+            <div style="font-size:13px;">${mapping[id]}</div>
+          `;
 
-} else if (lockMapping[id]) {
-
-  cell.classList.add('selected');
-
-  cell.innerHTML = `
-    <span style="font-size:9px;">${id}</span>
-    <div style="font-size:11px;">
-      ⏳ กำลังเลือก
-    </div>
-  `;
-
-} else {
+        } else {
 
           cell.classList.add('empty');
 
@@ -1100,112 +1052,42 @@ function renderVansWithData(bookedList, lockList) {
   });
 
 }
-
-// ตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมดแบบ Real-time
-async function selectSeatHandler(element, seatId) {
-
-  const response = await fetch(API_URL, {
+// ฟังก์ชันจองล็อกเบาะที่นั่ง
+function selectSeatHandler(element, seatId) {
+  // ยิงส่ง API ไปสั่ง Lock เบาะหลังบ้านไว้ชั่วคราวทันที
+  fetch(API_URL, {
     method: 'POST',
-    body: new URLSearchParams({
-      action: 'lockSeat',
-      seat: seatId,
-      trip: document.getElementById('tripDisplay').value,
-      date: document.getElementById('hidden_date_raw').value
-    })
+    body: new URLSearchParams({ action: 'lockSeat', seat: seatId, date: document.getElementById('hidden_date_raw').value })
   });
 
-  const result = await response.json();
-
-  // มีคนล็อกก่อนแล้ว
-  if (!result.ok) {
-
-    Swal.fire({
-      icon: 'warning',
-      title: 'เบาะถูกเลือกแล้ว 😢',
-      text: 'มีคนกำลังกดเลือกเบาะนี้อยู่'
-    });
-
-    loadSeatStatusBackend(
-      document.getElementById('hidden_date_raw').value
-    );
-
-    return;
-  }
-
   targetSelectedSeat = seatId;
-
-  document
-    .querySelectorAll('.seat')
-    .forEach(s => s.classList.remove('selected'));
-
+  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
   element.classList.add('selected');
-
-  document.getElementById('hidden_seat').value =
-    seatId;
-
-  document.getElementById('formFieldsBox')
-    .classList.add('show-form');
-
+  
+  document.getElementById('hidden_seat').value = seatId;
+  document.getElementById('formFieldsBox').classList.add('show-form');
+  
   validateFormInput();
+  setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
+}
 
-  setTimeout(() => {
-
-    document.getElementById('formFieldsBox')
-      .scrollIntoView({
-        behavior:'smooth',
-        block:'center'
-      });
-
-  }, 200);
+// ตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมดแบบ Real-time
+function validateFormInput() {
+  const list = ['form_name', 'form_nickname', 'form_phone', 'form_line', 'hidden_seat'];
+  const pass = list.every(id => document.getElementById(id).value.trim() !== "");
+  const btn = document.getElementById('actionTriggerBtn');
+  
+  btn.disabled = !pass;
+  if (pass) {
+    btn.classList.add('ready-to-click');
+    btn.innerHTML = "👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨";
+  } else {
+    btn.classList.remove('ready-to-click');
+    btn.innerHTML = "🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง";
+  }
 }
 
 // คอนโทรลหน้าต่างป๊อปอัพชำระเงิน
-function validateFormInput() {
-
-  const seat =
-    document.getElementById('hidden_seat').value;
-
-  const name =
-    document.getElementById('form_name').value.trim();
-
-  const nickname =
-    document.getElementById('form_nickname').value.trim();
-
-  const phone =
-    document.getElementById('form_phone').value.trim();
-
-  const line =
-    document.getElementById('form_line').value.trim();
-
-  const btn =
-    document.getElementById('actionTriggerBtn');
-
-  const completed =
-    seat &&
-    name &&
-    nickname &&
-    phone &&
-    line;
-
-  btn.disabled = !completed;
-
-  if (completed) {
-
-    btn.classList.add('ready-to-click');
-
-    btn.innerHTML =
-      '🚀 ดำเนินการจองต่อ';
-
-  } else {
-
-    btn.classList.remove('ready-to-click');
-
-    btn.innerHTML =
-      '🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง';
-
-  }
-
-}  
 function openPaymentModal() {
   document.getElementById('paymentModal').style.display = 'flex';
 }
