@@ -1100,29 +1100,6 @@ function renderVansWithData(bookedList, lockList) {
   });
 
 }
-// ฟังก์ชันจองล็อกเบาะที่นั่ง
-function selectSeatHandler(element, seatId) {
-  // ยิงส่ง API ไปสั่ง Lock เบาะหลังบ้านไว้ชั่วคราวทันที
-  fetch(API_URL, {
-    method: 'POST',
-    body: new URLSearchParams({
-  action: 'lockSeat',
-  seat: seatId,
-  trip: document.getElementById('tripDisplay').value,
-  date: document.getElementById('hidden_date_raw').value
-})
-  });
-
-  targetSelectedSeat = seatId;
-  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-  element.classList.add('selected');
-  
-  document.getElementById('hidden_seat').value = seatId;
-  document.getElementById('formFieldsBox').classList.add('show-form');
-  
-  validateFormInput();
-  setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
-}
 
 // ตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมดแบบ Real-time
 async function selectSeatHandler(element, seatId) {
