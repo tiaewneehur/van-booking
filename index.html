@@ -86,98 +86,94 @@
       background: #0f172a; color: white; height: 52px; outline: none; 
       font-family: inherit; transition: all 0.2s;
       appearance: none;
-  -webkit-appearance: none;
-  min-height: 52px;
+      -webkit-appearance: none;
+      min-height: 52px;
     }
     input[type="date"] {
-  display: flex;
-  align-items: center;
-  line-height: normal;
-}
+      display: flex;
+      align-items: center;
+      line-height: normal;
+    }
     .field-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
 
-/* ========================================== */
-/* วางแทนที่กลุ่ม Seat Section & Grid ได้เลยครับ  */
-/* ========================================== */
-.seat-map-img { width: 100%; border-radius: 16px; margin: 10px 0 24px; border: 1px solid var(--border-color); }
-.van-container { margin-bottom: 24px; width: 100%; }
-.van-title { font-size: 14px; color: var(--primary); margin-bottom: 12px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.08); padding: 8px; border-radius: 12px; border: 1px solid rgba(56,189,248,0.15); }
-.grid-header { display: flex; justify-content: space-between; padding: 0 12px; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-.grid {
-  display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
-  gap: 8px !important;
-  padding: 12px !important;
-  background: rgba(0,0,0,0.3);
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.05);
-}
+    /* ========================================== */
+    /* Seat Section & Grid */
+    /* ========================================== */
+    .seat-map-img { width: 100%; border-radius: 16px; margin: 10px 0 24px; border: 1px solid var(--border-color); }
+    .van-container { margin-bottom: 24px; width: 100%; }
+    .van-title { font-size: 14px; color: var(--primary); margin-bottom: 12px; font-weight: 700; text-align: center; background: rgba(56,189,248,0.08); padding: 8px; border-radius: 12px; border: 1px solid rgba(56,189,248,0.15); }
+    .grid-header { display: flex; justify-content: space-between; padding: 0 12px; margin-bottom: 6px; font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .grid {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr) !important;
+      gap: 8px !important;
+      padding: 12px !important;
+      background: rgba(0,0,0,0.3);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
 
-.seat {
-  aspect-ratio: 1 / 1;
-  width: 100%;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-weight: 700;
-  transition: 0.2s;
-  position: relative;
-  overflow: hidden;
-  min-width: 0;
-}
+    .seat {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s;
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
 
-.seat.driver {
-  background: #1e293b;
-  color: #475569;
-  border: 1px dashed #475569;
-  cursor: default;
-  pointer-events: none;
-}
+    .seat.driver {
+      background: #1e293b;
+      color: #475569;
+      border: 1px dashed #475569;
+      cursor: default;
+      pointer-events: none;
+    }
 
-.seat.spacer {
-  visibility: hidden;
-  pointer-events: none;
-}
+    .seat.spacer {
+      visibility: hidden;
+      pointer-events: none;
+    }
 
-.seat.empty {
-  background: linear-gradient(145deg, #10b981, #059669);
-  color: white;
-  box-shadow: 0 4px 0 #047857;
-}
+    .seat.empty {
+      background: linear-gradient(145deg, #10b981, #059669);
+      color: white;
+      box-shadow: 0 4px 0 #047857;
+    }
 
-.seat.booked {
-  background: linear-gradient(145deg, #ef4444, #b91c1c);
-  color: white;
-  box-shadow: 0 4px 0 #991b1b;
-  cursor: not-allowed;
+    .seat.booked {
+      background: linear-gradient(145deg, #ef4444, #b91c1c);
+      color: white;
+      box-shadow: 0 4px 0 #991b1b;
+      cursor: not-allowed;
+      font-size: 10px;
+      text-align: center;
+      padding: 4px;
+    }
 
-  font-size: 10px;
-  text-align: center;
-  padding: 4px;
-}
+    .seat.booked div,
+    .seat.booked span {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-.seat.booked div,
-.seat.booked span {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.seat.selected {
-  background: linear-gradient(145deg, #fbbf24, #f59e0b);
-  color: #000;
-  box-shadow: 0 4px 0 #b45309;
-
-  transform: scale(1.05);
-  animation: heartbeat 0.9s infinite;
-}
-    @keyframes heartbeat { 0%, 100% { transform: scale(1.02); } 50% { transform: scale(1.06); 
-  } 
-}
+    .seat.selected {
+      background: linear-gradient(145deg, #fbbf24, #f59e0b);
+      color: #000;
+      box-shadow: 0 4px 0 #b45309;
+      transform: scale(1.05);
+      animation: heartbeat 0.9s infinite;
+    }
+    @keyframes heartbeat { 0%, 100% { transform: scale(1.02); } 50% { transform: scale(1.06); } }
 
     #formBox { margin-top: 24px; padding: 22px; background: rgba(30, 41, 59, 0.5); border-radius: 20px; border: 1px solid var(--border-color); display: none; }
     #formBox.visible { display: block; animation: fadeIn 0.4s ease-out; }
@@ -197,125 +193,68 @@
     .btn-final { background: linear-gradient(135deg, #059669, #10b981); color: white; width: 100%; padding: 16px; border-radius: 14px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2); transition: all 0.2s; }
     .btn-final:disabled { background: #334155; color: #64748b; cursor: not-allowed; box-shadow: none; }
 
-    /* Info Content Style (ย้ายมาอยู่ใน Side Menu) */
+    /* Info Content Style */
     .info-section { margin-top: 35px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 25px; }
     .info-list { text-align: left; margin: 14px 0; }
     .info-item { background: rgba(255,255,255,0.03); padding: 12px 14px; border-radius: 12px; margin-bottom: 10px; border-left: 3px solid var(--warning); font-size: 13px; line-height: 1.5; color: #cbd5e1; }
     .info-img { width: 100%; border-radius: 12px; margin-top: 8px; border: 1px solid rgba(255,255,255,0.1); }
-    /* จัดเรียงรูปภาพ 18 รูป เป็นตาราง Grid ฝั่งละ 3 รูปบนมือถือ */
-.memory-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-  margin-top: 10px;
-}
 
-/* ตกแต่งรูปภาพเล็กไอเทม */
-.memory-grid img {
-  width: 100%;
-  border-radius: 16px;
+    .memory-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
 
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
+    .memory-grid img {
+      width: 100%;
+      border-radius: 16px;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: 0.25s;
+    }
 
-  border: 1px solid rgba(255,255,255,0.1);
+    /* Popup รูปภาพขยายใหญ่ */
+    .img-preview-modal {
+      display: none; 
+      position: fixed;
+      z-index: 9999;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
 
-  transition: 0.25s;
-}
+    .img-preview-modal img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      border-radius: 0;
+      box-shadow: none;
+      animation: zoomInEffect 0.25s ease-out;
+    }
 
-/* พื้นหลังหน้าต่างป๊อปอัพรูปภาพขยายใหญ่ */
-.img-preview-modal {
-  display: none; 
-  position: fixed;
-  z-index: 5000; /* ให้อยู่เหนือชั้นทุกอย่าง */
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.9);
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-}
+    @keyframes zoomInEffect {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
 
-/* รูปภาพหลักด้านในป๊อปอัพ */
-.img-preview-modal img {
-  max-width: 90%;
-  max-height: 80vh;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  animation: zoomInEffect 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@keyframes zoomInEffect {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* ปุ่มกากบาทปิด */
-/* หน้าต่างป๊อปอัพสีดำ */
-.img-preview-modal {
-  display: none; 
-  position: fixed;
-  z-index: 9999; /* ดันให้อยู่หน้าสุดของทุกเมนู */
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.95); /* มืดสนิทเพื่อให้รูปเด่น */
-  display: none;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-/* ส่วนสำคัญ: บังคับให้รูปภาพขยายพอดีหน้าจอ */
-/* ค้นหาอันนี้ในแท็ก <style> แล้ววางทับได้เลยครับน้า */
-.img-preview-modal img {
-  width: 100vw;         /* ขยายความกว้างเต็มจอ 100% */
-  height: 100vh;        /* ขยายความสูงเต็มจอ 100% */
-  object-fit: cover;    /* บังคับให้ภาพขยายเต็มจอพอดีเป๊ะ (เนื้อหาภาพจะถูกซูมให้เต็มบล็อกพอดีจอ) */
-  border-radius: 0;     /* เอาขอบมนออกเพื่อให้เต็มขอบจอจริง ๆ */
-  box-shadow: none;
-  animation: zoomInEffect 0.25s ease-out;
-}
-
-
-@keyframes zoomInEffect {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* ปุ่มกากบาทปิด (ขยายให้กดง่ายขึ้นบนมือถือ) */
-.img-preview-close {
-  position: absolute;
-  top: 20px; 
-  right: 25px;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 40px;
-  font-weight: 300;
-  cursor: pointer;
-  user-select: none;
-  z-index: 10000;
-}
-.img-preview-close:hover { color: #fff; }
-}
-      function openPreview(imgSrc) {
-  const modal = document.getElementById('imagePreviewModal');
-  const modalImg = document.getElementById('imgPreviewTarget');
-  
-  if (modal && modalImg) {
-    modalImg.src = imgSrc;
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
-}
-
-function closePreview() {
-  const modal = document.getElementById('imagePreviewModal');
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = '';
-  }
-}
+    .img-preview-close {
+      position: absolute;
+      top: 20px; 
+      right: 25px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 40px;
+      font-weight: 300;
+      cursor: pointer;
+      user-select: none;
+      z-index: 10000;
+    }
+    .img-preview-close:hover { color: #fff; }
   </style>
   
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -338,15 +277,13 @@ function closePreview() {
 
 <div id="overlay" class="overlay" onclick="closeAllDrawers()"></div>
 
-<!-- Drawer: Side Menu (รวมทริปที่จัด และ สาระน่ารู้ไว้ที่นี่แล้ว) -->
+<!-- Drawer: Side Menu -->
 <div id="sideMenu" class="side-menu">
-  <!-- ส่วนที่ 1: รายการทริป -->
   <h2 style="color:var(--primary); margin-bottom:16px; border-bottom:1px solid rgba(56,189,248,0.2); padding-bottom:12px; font-size: 17px;">📍 ทริปที่เปิดจอง</h2>
   <div id="tripListContent">
     <p style="color:var(--text-muted); font-size:13px; text-align: center; padding: 15px 0;">กำลังโหลดข้อมูลทริป...</p>
   </div>
 
-  <!-- ส่วนที่ 2: สาระน่ารู้ด้านล่างทริป (ย้ายมาไว้ตรงนี้ตามต้องการ) -->
   <div class="info-section">
     <h2 style="color: var(--warning); font-size: 17px; padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">💡 สาระความรู้ & ข้อแนะนำ</h2>
     <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">ข้อควรรู้ก่อนออกเดินทางไปสนุกด้วยกัน</p>
@@ -362,39 +299,38 @@ function closePreview() {
         <strong>⏰ การรักษาเวลา:</strong> เพื่อความสนุกเต็มอิ่มของทริป กรุณามาถึงจุดนัดพบก่อนเวลารถออกอย่างน้อย 15 นาทีน้า และฟังแอดมินไอซ์ด้วยนะจ๊ะ
       </div>
       
-      <!-- บล็อกภาพประกอบสาระความรู้ (สามารถเปลี่ยน src เป็นลิงก์รูปภาพของคุณได้เลย) -->
       <div style="margin-top: 15px;">
         <span style="font-size: 12px; color: var(--primary); display:block; margin-bottom:6px; font-weight:600;">🗺️ ข้อมูลแผนที่/คู่มือเดินทางเพิ่มเติม:</span>
         <img src="IMG_4778.jpeg" class="info-img" alt="ข้อมูลเดินทาง">
       </div>
       <div style="margin-top: 25px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
-  <span style="font-size: 13px; color: var(--warning); display:block; margin-bottom:8px; font-weight:600;">✨ ภาพความทรงจำตลอด 17 ป่าที่ผ่านมา:</span>
-  
-  <div class="memory-grid">
-    <img src="1.jpg" alt="ทริปปีที่ 1" onclick="openPreview(this.src)">
-    <img src="2.jpg" alt="ทริปปีที่ 2" onclick="openPreview(this.src)">
-    <img src="3.jpg" alt="ทริปปีที่ 3" onclick="openPreview(this.src)">
-    <img src="4.jpg" alt="ทริปปีที่ 4" onclick="openPreview(this.src)">
-    <img src="5.jpg" alt="ทริปปีที่ 5" onclick="openPreview(this.src)">
-    <img src="6.jpg" alt="ทริปปีที่ 6" onclick="openPreview(this.src)">
-    <img src="7.jpg" alt="ทริปปีที่ 7" onclick="openPreview(this.src)">
-    <img src="8.jpg" alt="ทริปปีที่ 8" onclick="openPreview(this.src)">
-    <img src="9.jpg" alt="ทริปปีที่ 9" onclick="openPreview(this.src)">
-    <img src="10.jpg" alt="ทริปปีที่ 10" onclick="openPreview(this.src)">
-    <img src="11.jpg" alt="ทริปปีที่ 11" onclick="openPreview(this.src)">
-    <img src="12.jpg" alt="ทริปปีที่ 12" onclick="openPreview(this.src)">
-    <img src="13.jpg" alt="ทริปปีที่ 13" onclick="openPreview(this.src)">
-    <img src="14.jpg" alt="ทริปปีที่ 14" onclick="openPreview(this.src)">
-    <img src="15.jpg" alt="ทริปปีที่ 15" onclick="openPreview(this.src)">
-    <img src="16.jpg" alt="ทริปปีที่ 16" onclick="openPreview(this.src)">
-    <img src="17.jpg" alt="ทริปปีที่ 17" onclick="openPreview(this.src)">
-    <img src="18.jpg" alt="ภาพรวมทริป" onclick="openPreview(this.src)">
-  </div>
-</div>
-<div id="imagePreviewModal" class="img-preview-modal" onclick="closePreview()">
-  <span class="img-preview-close">&times;</span>
-  <img id="imgPreviewTarget" src="" alt="ขยายใหญ่">
-</div>
+        <span style="font-size: 13px; color: var(--warning); display:block; margin-bottom:8px; font-weight:600;">✨ ภาพความทรงจำตลอด 17 ป่าที่ผ่านมา:</span>
+        
+        <div class="memory-grid">
+          <img src="1.jpg" alt="ทริปปีที่ 1" onclick="openPreview(this.src)">
+          <img src="2.jpg" alt="ทริปปีที่ 2" onclick="openPreview(this.src)">
+          <img src="3.jpg" alt="ทริปปีที่ 3" onclick="openPreview(this.src)">
+          <img src="4.jpg" alt="ทริปปีที่ 4" onclick="openPreview(this.src)">
+          <img src="5.jpg" alt="ทริปปีที่ 5" onclick="openPreview(this.src)">
+          <img src="6.jpg" alt="ทริปปีที่ 6" onclick="openPreview(this.src)">
+          <img src="7.jpg" alt="ทริปปีที่ 7" onclick="openPreview(this.src)">
+          <img src="8.jpg" alt="ทริปปีที่ 8" onclick="openPreview(this.src)">
+          <img src="9.jpg" alt="ทริปปีที่ 9" onclick="openPreview(this.src)">
+          <img src="10.jpg" alt="ทริปปีที่ 10" onclick="openPreview(this.src)">
+          <img src="11.jpg" alt="ทริปปีที่ 11" onclick="openPreview(this.src)">
+          <img src="12.jpg" alt="ทริปปีที่ 12" onclick="openPreview(this.src)">
+          <img src="13.jpg" alt="ทริปปีที่ 13" onclick="openPreview(this.src)">
+          <img src="14.jpg" alt="ทริปปีที่ 14" onclick="openPreview(this.src)">
+          <img src="15.jpg" alt="ทริปปีที่ 15" onclick="openPreview(this.src)">
+          <img src="16.jpg" alt="ทริปปีที่ 16" onclick="openPreview(this.src)">
+          <img src="17.jpg" alt="ทริปปีที่ 17" onclick="openPreview(this.src)">
+          <img src="18.jpg" alt="ภาพรวมทริป" onclick="openPreview(this.src)">
+        </div>
+      </div>
+      <div id="imagePreviewModal" class="img-preview-modal" onclick="closePreview()">
+        <span class="img-preview-close" onclick="closePreview()">&times;</span>
+        <img id="imgPreviewTarget" src="" alt="ขยายใหญ่">
+      </div>
     </div>
   </div>
 </div>
@@ -501,6 +437,24 @@ const SEAT_LAYOUT = [
   'เบาะซ้าย', 1, 4, 7
 ];
 
+function openPreview(imgSrc) {
+  const modal = document.getElementById('imagePreviewModal');
+  const modalImg = document.getElementById('imgPreviewTarget');
+  if (modal && modalImg) {
+    modalImg.src = imgSrc;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closePreview() {
+  const modal = document.getElementById('imagePreviewModal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
 function loadBookedJSONP(date, callback) {
   if (!date) return;
   const cbName = "cb_" + Date.now();
@@ -524,68 +478,35 @@ function renderAllVans(bookedArray) {
   });
 
   ['A', 'B', 'C'].forEach(prefix => {
-
     const grid = document.getElementById(`grid-${prefix}`);
     grid.innerHTML = '';
 
     SEAT_LAYOUT.forEach(n => {
-
       const div = document.createElement('div');
 
       if (n === 'driver') {
-
         div.className = 'seat driver';
-
-        div.innerHTML = `
-          <span>👨‍✈️</span>
-          <span style="font-size:9px;">คนขับ</span>
-        `;
-
+        div.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
       } else if (n === 'spacer') {
-
         div.className = 'seat spacer';
-
       } else {
-
         const seatID = prefix + n;
-
         div.className = 'seat';
 
         if (bookedMap[seatID]) {
-
           div.classList.add('booked');
-
-          div.innerHTML = `
-            <span style="font-size:9px;">${seatID}</span>
-            <div style="font-size:12px;">
-              ${bookedMap[seatID]}
-            </div>
-          `;
-
+          div.innerHTML = `<span style="font-size:9px;">${seatID}</span><div style="font-size:12px;">${bookedMap[seatID]}</div>`;
         } else {
-
           div.classList.add('empty');
+          if (seatID === currentSelectedSeat) {
+            div.classList.add('selected');
+          }
 
-if (seatID === currentSelectedSeat) {
-  div.classList.add('selected');
-}
-
-          const displayLabel =
-            n === 'เบาะซ้าย'
-            ? prefix + 'ซ้าย'
-            : prefix + n;
-
-          div.innerHTML = `
-            <span style="font-size:10px;">เบาะ</span>
-            <span style="font-size:18px;">
-              ${displayLabel}
-            </span>
-          `;
-
+          const displayLabel = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
+          div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${displayLabel}</span>`;
           div.onclick = () => selectSeat(div, seatID);
         }
       }
-
       grid.appendChild(div);
     });
   });
@@ -595,30 +516,17 @@ function selectSeat(el, id) {
     if (!document.getElementById('date').value) return Swal.fire({ icon: 'warning', title: '📅 ลืมเลือกวันหรือเปล่าเอ่ย?', text: 'กรุณาเลือกวันเดินทางก่อนนะจ๊ะพี่!' });
     if (!document.getElementById('trip').value.trim()) return Swal.fire({ icon: 'warning', title: '⛺ ยังไม่ได้ระบุชื่อทริป', text: 'กรุณากรอกชื่อทริปหรือกดเลือกจากมุมบนขวาก่อนนะจ๊ะ!' });
   
-
-  // ส่ง lock ไปหลังบ้าน
-
-  fetch(SCRIPT_URL, {
-
-    method: 'POST',
-
-    body: new URLSearchParams({
-
-      action: 'lockSeat',
-
-      seat: id,
-
-      date: document.getElementById('date').value
-
-    })
-
-  });
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      body: new URLSearchParams({
+        action: 'lockSeat',
+        seat: id,
+        date: document.getElementById('date').value
+      })
+    });
   
-  currentSelectedSeat = id;
-
-document.querySelectorAll('.seat').forEach(s => 
-  s.classList.remove('selected')
-);
+    currentSelectedSeat = id;
+    document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
     el.classList.add('selected');
     document.getElementById('seatField').value = id;
     document.getElementById('formBox').classList.add('visible');
@@ -740,13 +648,7 @@ function finalSubmit() {
     }).then(() => location.reload());
   }, 1500); 
 }
-setInterval(() => {
-  const dateVal = document.getElementById('date').value;
-  if(dateVal){
-    loadBookedJSONP(dateVal, renderAllVans);
-  }
-}, 3000);
-  
+
 renderAllVans([]);
 </script>
 </body>
