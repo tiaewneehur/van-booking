@@ -485,18 +485,24 @@ padding: 16px !important;
 
   display: none;
 
-  align-items: center;
+  align-items: flex-start;
 
   justify-content: center;
 
-  padding: 18px;
-}
+  padding: 20px;
 
+  overflow-y: auto;
+
+}
 .trip-detail-popup {
 
   width: 100%;
 
   max-width: 460px;
+
+  max-height: 90vh;
+
+  overflow-y: auto;
 
   background:
     linear-gradient(
@@ -516,7 +522,6 @@ padding: 16px !important;
 
   animation: popupShow 0.25s ease;
 }
-
 @keyframes popupShow {
 
   from {
