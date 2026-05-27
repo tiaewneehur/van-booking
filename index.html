@@ -1182,9 +1182,9 @@ function fetchCatalogBackend() {
 
     const groupedTrips = {};
 
-    window.allBookings = res.bookings;
+    window.allBookings = res.data || res.bookings || [];
 
-    res.bookings.forEach(b => {
+    (window.allBookings).forEach(b => {
 
       if (!b.trip || !b.date) return;
 
