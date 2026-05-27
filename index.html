@@ -1327,7 +1327,6 @@ const seatStatus =
         <div class="trip-card-overlay">
           <div class="trip-title-text">${item.trip}</div>
           <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
-          ${seatStatus}
           ${isLocked ? `
 
   <div class="locked-center">
@@ -1348,7 +1347,6 @@ const seatStatus =
 
 ` : seatStatus}
         </div>
-      </div>
     `;
   }).join('');
 }
