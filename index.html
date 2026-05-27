@@ -1772,34 +1772,46 @@ function toggleFinalSubmitBtn() {
 
   });
 
-  // เบาะที่ถูกใช้
+  // เบาะที่จองจริง
   const usedSeats = bookings
     .filter(b =>
       b.trip === tripName &&
-      b.date === tripDate
+      b.date === tripDate &&
+      b.nickname !== 'งดจอง'
     )
     .map(b => b.seat);
 
-  // นับเฉพาะเบาะที่ยังว่างจริง
+  // เบาะงดจอง
+  const blockedSeats = bookings
+    .filter(b =>
+      b.trip === tripName &&
+      b.date === tripDate &&
+      b.nickname === 'งดจอง'
+    )
+    .map(b => b.seat);
+
+  // นับเฉพาะเบาะเขียวจริง
   const emptySeats = allSeats.filter(
-    seat => !usedSeats.includes(seat)
+    seat =>
+      !usedSeats.includes(seat) &&
+      !blockedSeats.includes(seat)
   ).length;
 
-if (emptySeats <= 0) {
+  if (emptySeats <= 0) {
+
+    return `
+      <div class="trip-seat-badge full">
+        🔴 เต็ม
+      </div>
+    `;
+
+  }
 
   return `
-    <div class="trip-seat-badge full">
-      🔴 เต็ม
+    <div class="trip-seat-badge available">
+      🟢 ว่าง ${emptySeats} ที่
     </div>
   `;
-
-}
-
-return `
-  <div class="trip-seat-badge available">
-    🟢 ว่าง ${emptySeats} ที่
-  </div>
-`;
 }
   function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
