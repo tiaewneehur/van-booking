@@ -1221,42 +1221,39 @@ padding: 16px !important;
   class="trip-detail-btn"
   onclick="confirmTripSelection()"
   style="
-    /* ตำแหน่งและการวาง */
+    /* ตำแหน่ง */
     position: absolute;
     left: 50%;
-    top: 195px;
+    top: 200px;
     transform: translateX(-50%);
-    
-    /* ขนาดและระยะห่างภายใน */
+
+    /* ดีไซน์สีดาร์กโปร่งแสง */
     width: 140px;
-    height: 38px;
-    padding: 0;
-    margin: 0;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     
-    /* ดีไซน์กระจกฝ้า (Glassmorphism) */
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    
-    /* ตัวหนังสือ */
+    /* ขอบและเงา */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+
+    /* ปรับแต่งฟอนต์ให้ดูทันสมัย */
     color: #ffffff;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    
-    /* เงาที่ทำให้ดูเหมือนลอยอยู่ */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+
     /* การตอบสนอง */
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 30;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   "
-  onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.transform='translateX(-50%) scale(1.05)';"
-  onmouseout="this.style.background='rgba(255, 255, 255, 0.12)'; this.style.transform='translateX(-50%) scale(1)';"
+  onmouseover="this.style.background='rgba(0, 0, 0, 0.8)'; this.style.borderColor='rgba(255, 255, 255, 0.3)'; this.style.transform='translateX(-50%) scale(1.05)';"
+  onmouseout="this.style.background='rgba(0, 0, 0, 0.6)'; this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(-50%) scale(1)';"
   onmousedown="this.style.transform='translateX(-50%) scale(0.95)';"
   onmouseup="this.style.transform='translateX(-50%) scale(1.05)';"
 >
