@@ -1747,12 +1747,9 @@ function toggleFinalSubmitBtn() {
 }
 
 // ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
-  function getTripSeatStatus(bookings, tripName, tripDate) {
+function getTripSeatStatus(bookings, tripName, tripDate) {
 
-  // จำนวนเบาะจริงทั้งหมด
-  const TOTAL_SEATS = 30;
-
-  // นับเฉพาะเบาะที่ถูกจองจริง
+  // นับเฉพาะเบาะที่ "จองจริง"
   const bookedSeats = bookings.filter(b => {
 
     return (
@@ -1764,24 +1761,27 @@ function toggleFinalSubmitBtn() {
 
   }).length;
 
-  // เบาะว่าง = ทั้งหมด - เบาะแดง
+  // จำนวนเบาะจริง
+  const TOTAL_SEATS = 30;
+
+  // ว่าง = ทั้งหมด - จองจริง
   const emptySeats = TOTAL_SEATS - bookedSeats;
 
   if (emptySeats <= 0) {
 
-    return `
-      <div class="trip-seat-status full">
-        🔴 เต็ม
-      </div>
-    `;
+   return `
+  <div class="trip-seat-badge full">
+    🔴 เต็ม
+  </div>
+`;
 
   }
 
   return `
-    <div class="trip-seat-status available">
-      🟢 ว่าง ${emptySeats} ที่
-    </div>
-  `;
+  <div class="trip-seat-badge available">
+    🟢 ว่าง ${emptySeats} ที่
+  </div>
+`;
 }
   function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
