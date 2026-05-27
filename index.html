@@ -672,6 +672,80 @@ padding: 16px !important;
 
   color:#ef4444;
 }
+
+/* =========================
+   LOCKED TRIP CARD
+========================= */
+
+.locked-card .trip-card-bg{
+  filter:
+    brightness(0.35)
+    contrast(1.05);
+}
+
+.locked-card .trip-card-overlay{
+  justify-content: space-between;
+}
+
+.locked-top{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+}
+
+.locked-center{
+  position:absolute;
+
+  top:50%;
+  left:50%;
+
+  transform:translate(-50%,-50%);
+
+  z-index:5;
+
+  text-align:center;
+
+  pointer-events:none;
+}
+
+.locked-center .lock-icon{
+  font-size:34px;
+
+  margin-bottom:6px;
+
+  filter:
+    drop-shadow(0 4px 10px rgba(0,0,0,0.45));
+}
+
+.locked-center .lock-text{
+  font-size:24px;
+
+  font-weight:800;
+
+  color:#fff;
+
+  text-shadow:
+    0 4px 14px rgba(0,0,0,0.55);
+}
+
+.locked-card .trip-seat-badge{
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(120,0,0,0.88),
+      rgba(239,68,68,0.82)
+    );
+
+  color:#fff;
+
+  border:1px solid rgba(255,255,255,0.12);
+
+  box-shadow:
+    0 8px 20px rgba(239,68,68,0.18);
+}
+    
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -1259,16 +1333,50 @@ const seatStatus =
     item.date
   );
     
-    return `
-      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
-        <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
-        <div class="trip-card-overlay">
-          <div class="trip-title-text">${item.trip}</div>
-          <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
-          ${seatStatus}
-        </div>
+return `
+  <div class="trip-card locked-card"
+    data-keyword="${item.trip.toLowerCase()}">
+
+    <img src="${imgSrc}"
+      class="trip-card-bg"
+      onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
+
+    <div class="trip-card-overlay">
+
+      <!-- ด้านบน -->
+      <div class="locked-top">
+
+        <span class="trip-date-badge">
+          📅 จัดทริป: ${formattedDate}
+        </span>
+
       </div>
-    `;
+
+      <!-- ตรงกลาง -->
+      <div class="locked-center">
+
+        <div class="lock-icon">
+          🔒
+        </div>
+
+        <div class="lock-text">
+          ยังไม่เปิดจอง
+        </div>
+
+      </div>
+
+      <!-- ด้านล่าง -->
+      <div class="trip-title-text">
+        ${item.trip}
+      </div>
+
+      <div class="trip-seat-badge full">
+        รอประกาศ
+      </div>
+
+    </div>
+  </div>
+`;
   }).join('');
 }
 
