@@ -1333,26 +1333,24 @@ const seatStatus =
     item.date
   );
     
+if (
+  item.trip === "ดอยผาเวียง" ||
+  item.trip === "ดอยห้วยทู่" ||
+  item.trip === "ดอยทูเลจอวาเล"
+) {
+
 return `
-  <div class="trip-card locked-card"
-    data-keyword="${item.trip.toLowerCase()}">
+  <div class="trip-card locked-card">
 
     <img src="${imgSrc}"
-      class="trip-card-bg"
-      onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
+      class="trip-card-bg">
 
     <div class="trip-card-overlay">
 
-      <!-- ด้านบน -->
-      <div class="locked-top">
+      <span class="trip-date-badge">
+        📅 จัดทริป: ${formattedDate}
+      </span>
 
-        <span class="trip-date-badge">
-          📅 จัดทริป: ${formattedDate}
-        </span>
-
-      </div>
-
-      <!-- ตรงกลาง -->
       <div class="locked-center">
 
         <div class="lock-icon">
@@ -1365,18 +1363,18 @@ return `
 
       </div>
 
-      <!-- ด้านล่าง -->
       <div class="trip-title-text">
         ${item.trip}
       </div>
 
       <div class="trip-seat-badge full">
-        รอประกาศ
+        🔒 รอประกาศ
       </div>
 
     </div>
   </div>
 `;
+}
   }).join('');
 }
 
