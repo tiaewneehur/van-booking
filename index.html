@@ -161,7 +161,7 @@
     .trip-grid { display: flex; flex-direction: column; gap: 12px; }
     
     .trip-card {
-      position: relative; isolation:isolate; width: 100%; height: 110px; border-radius: 16px; overflow: hidden;
+      position: relative; width: 100%; height: 110px; border-radius: 16px; overflow: hidden;
       cursor: pointer; border: 1px solid rgba(255,255,255,0.05);
       box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.2s ease;
     }
@@ -671,93 +671,6 @@ padding: 16px !important;
   background:rgba(239,68,68,0.18);
 
   color:#ef4444;
-}
-    .trip-coming-overlay{
-
-  position:absolute;
-
-  inset:0;
-
-  z-index:5;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:flex-end;
-
-  padding-right:48px;
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(0,0,0,0.05) 0%,
-      rgba(0,0,0,0.18) 40%,
-      rgba(0,0,0,0.78) 100%
-    );
-
-  border-radius:18px;
-
-  backdrop-filter:blur(1px);
-}
-
-.trip-coming-content{
-
-  text-align:center;
-
-  color:#fff;
-}
-
-.trip-coming-lock{
-
-  font-size:64px;
-
-  margin-bottom:10px;
-}
-
-.trip-coming-title{
-
-  font-size:42px;
-
-  font-weight:900;
-
-  line-height:1.05;
-
-  margin-bottom:10px;
-}
-
-.trip-coming-sub{
-
-  font-size:20px;
-
-  color:rgba(255,255,255,0.82);
-
-  margin-bottom:28px;
-}
-
-.trip-coming-badge{
-
-  display:inline-flex;
-
-  align-items:center;
-
-  gap:8px;
-
-  padding:12px 22px;
-
-  border-radius:999px;
-
-  background:
-    rgba(255,255,255,0.08);
-
-  border:
-    1px solid rgba(255,255,255,0.12);
-
-  font-size:16px;
-
-  font-weight:700;
-
-  backdrop-filter:blur(10px);
 }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1269,43 +1182,25 @@ function fetchCatalogBackend() {
 
     const groupedTrips = {};
 
-window.allBookings = res.bookings;
+    window.allBookings = res.bookings;
 
-window.tripStatuses = {};
+    res.bookings.forEach(b => {
 
-(res.trips || []).forEach(t => {
+      if (!b.trip || !b.date) return;
 
-  const tripKey =
-    t.trip + "_" + t.date;
+      const key = b.trip + "_" + b.date;
 
-  window.tripStatuses[tripKey] =
-    t.status || 'open';
+      if (!groupedTrips[key]) {
 
-});
+        groupedTrips[key] = {
+          trip: b.trip,
+          date: b.date
+        };
 
-res.bookings.forEach(b => {
+      }
 
-  if (!b.trip || !b.date) return;
+    });
 
-  const key =
-    b.trip + "_" + b.date;
-
-  if (!groupedTrips[key]) {
-
-    groupedTrips[key] = {
-
-      trip: b.trip,
-
-      date: b.date,
-
-      status:
-        window.tripStatuses[key] || 'open'
-
-    };
-
-  }
-
-});
     cacheTrips = Object.values(groupedTrips);
 
     renderCatalogCards(cacheTrips);
@@ -1365,49 +1260,7 @@ const seatStatus =
   );
     
     return `
-
-<div
-  class="trip-card"
-
-  data-keyword="${item.trip.toLowerCase()}"
-
- onclick="
-  ${
-    item.status === 'open'
-      ? `openTripDetailModal('${item.trip}','${item.date}')`
-      : ''
-  }
-"
->
-${
-  item.status === 'closed'
-  ? `
-    <div class="trip-coming-overlay">
-
-      <div class="trip-coming-content">
-
-        <div class="trip-coming-lock">
-          🔒
-        </div>
-
-        <div class="trip-coming-title">
-          — ยังไม่เปิดจอง —
-        </div>
-
-        <div class="trip-coming-sub">
-          โปรดติดตามประกาศ
-        </div>
-
-        <div class="trip-coming-badge">
-          🔒 ยังไม่เปิดจอง
-        </div>
-
-      </div>
-
-    </div>
-  `
-  : ''
-}
+      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
         <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
         <div class="trip-card-overlay">
           <div class="trip-title-text">${item.trip}</div>
