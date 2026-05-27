@@ -1339,41 +1339,75 @@ if (
   item.trip === "ดอยทูเลจอวาเล"
 ) {
 
-return `
-  <div class="trip-card locked-card">
+  return `
+    <div class="trip-card locked-card">
 
-    <img src="${imgSrc}"
-      class="trip-card-bg">
+      <img src="${imgSrc}"
+        class="trip-card-bg">
 
-    <div class="trip-card-overlay">
+      <div class="trip-card-overlay">
 
-      <span class="trip-date-badge">
-        📅 จัดทริป: ${formattedDate}
-      </span>
+        <span class="trip-date-badge">
+          📅 จัดทริป: ${formattedDate}
+        </span>
 
-      <div class="locked-center">
+        <div class="locked-center">
 
-        <div class="lock-icon">
-          🔒
+          <div class="lock-icon">
+            🔒
+          </div>
+
+          <div class="lock-text">
+            ยังไม่เปิดจอง
+          </div>
+
         </div>
 
-        <div class="lock-text">
-          ยังไม่เปิดจอง
+        <div class="trip-title-text">
+          ${item.trip}
+        </div>
+
+        <div class="trip-seat-badge full">
+          🔒 รอประกาศ
         </div>
 
       </div>
-
-      <div class="trip-title-text">
-        ${item.trip}
-      </div>
-
-      <div class="trip-seat-badge full">
-        🔒 รอประกาศ
-      </div>
-
     </div>
-  </div>
-`;
+  `;
+
+} else {
+
+  const seatStatus =
+    getTripSeatStatus(
+      window.allBookings,
+      item.trip,
+      item.date
+    );
+
+  return `
+    <div class="trip-card"
+      data-keyword="${item.trip.toLowerCase()}"
+      onclick="openTripDetailModal('${item.trip}','${item.date}')"
+      style="height:130px; margin-bottom:4px;">
+
+      <img src="${imgSrc}"
+        class="trip-card-bg">
+
+      <div class="trip-card-overlay">
+
+        <div class="trip-title-text">
+          ${item.trip}
+        </div>
+
+        <span class="trip-date-badge">
+          📅 จัดทริป: ${formattedDate}
+        </span>
+
+        ${seatStatus}
+
+      </div>
+    </div>
+  `;
 }
   }).join('');
 }
