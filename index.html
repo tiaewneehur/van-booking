@@ -673,40 +673,13 @@ padding: 16px !important;
   color:#ef4444;
 }
 
-/* ========================= */
-/* LOCKED CARD FIX */
-/* ========================= */
-
-/* ========================= */
-/* LOCKED CARD STYLE */
-/* ========================= */
+/* LOCK OVERLAY ONLY */
 
 .locked-card .trip-card-bg{
 
   filter:
-    brightness(0.28)
+    brightness(0.38)
     contrast(1.05);
-}
-
-.locked-card .trip-card-overlay{
-
-  justify-content:flex-end;
-
-  padding:14px 18px;
-}
-
-.locked-card .trip-title-text{
-
-  font-size:19px !important;
-
-  line-height:1.2;
-
-  max-width:52%;
-}
-
-.locked-card .trip-date-badge{
-
-  font-size:11px !important;
 }
 
 .locked-card .lock-center{
@@ -728,22 +701,26 @@ padding: 16px !important;
   pointer-events:none;
 }
 
-.locked-card .lock-center h3{
+.locked-card .lock-icon{
 
-  font-size:18px;
+  font-size:30px;
+
+  margin-bottom:4px;
+
+  filter:
+    drop-shadow(0 4px 10px rgba(0,0,0,0.45));
+}
+
+.locked-card .lock-text{
+
+  font-size:16px;
+
+  font-weight:700;
 
   color:#fff;
 
-  margin-top:4px;
-
-  font-weight:800;
-
-  text-shadow:0 2px 10px rgba(0,0,0,0.45);
-}
-
-.locked-card .lock-center p{
-
-  display:none;
+  text-shadow:
+    0 2px 8px rgba(0,0,0,0.55);
 }
     
   </style>
@@ -1355,20 +1332,15 @@ function renderCatalogCards(data) {
             
              <div class="lock-center">
 
-  <div style="font-size:30px;">
+  <div class="lock-icon">
     🔒
   </div>
 
-  <h3>ยังไม่เปิดจอง</h3>
+  <div class="lock-text">
+    ยังไม่เปิดจอง
+  </div>
 
 </div>
-
-            </div>
-
-            <div class="trip-seat-badge full">
-  🔒 รอประกาศ
-</div>
-          </div>
         </div>
       `;
     } else {
