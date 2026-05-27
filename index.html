@@ -1199,19 +1199,33 @@ function fetchCatalogBackend() {
 
           date: b.date,
 
-          status: b.status || 'open'
+          status:
+  (b.status || 'open')
+    .trim()
+    .toLowerCase()
 
         };
 
       } else {
 
         if (
-          b.status === 'closed' ||
-          b.status === 'done'
-        ) {
 
+  (b.status || '')
+    .trim()
+    .toLowerCase() === 'closed'
+
+  ||
+
+  (b.status || '')
+    .trim()
+    .toLowerCase() === 'done'
+
+)
+        {
           groupedTrips[key].status =
-            b.status;
+  (b.status || '')
+    .trim()
+    .toLowerCase();
 
         }
 
