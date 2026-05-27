@@ -203,7 +203,58 @@
     .input-box-field:disabled { background: #0b1320; color: #64748b; cursor: not-allowed; }
 
     .seat-layout-map { width: 100%; border-radius: 12px; margin: 8px 0 20px; border: 1px solid var(--border-color); }
+    .seat-legend{
 
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:14px;
+
+  margin:14px 0 22px;
+
+  padding:12px 14px;
+
+  border-radius:18px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(12,21,36,0.95),
+      rgba(6,11,19,0.98)
+    );
+
+  border:1px solid rgba(255,255,255,0.05);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.03),
+    0 10px 24px rgba(0,0,0,0.28);
+
+  overflow-x:auto;
+
+  white-space:nowrap;
+
+  scrollbar-width:none;
+}
+
+.seat-legend::-webkit-scrollbar{
+  display:none;
+}
+
+.legend-item{
+
+  flex:0 0 auto;
+
+  font-size:12px;
+
+  font-weight:600;
+
+  color:#e2e8f0;
+
+  white-space:nowrap;
+}
     /* ======================================================== */
 /* OLD VAN STYLE */
 /* ======================================================== */
@@ -711,7 +762,17 @@ padding: 16px !important;
 
     <label class="input-box-label" style="margin-top:16px;">🚌 เลือกที่นั่งที่คุณต้องการ</label>
     <img src="IMG_0444.jpeg" class="seat-layout-map" onerror="this.style.display='none'">
+    <div class="seat-legend">
 
+  <div class="legend-item">🟢 ว่าง</div>
+
+  <div class="legend-item">🔴 ถูกจอง</div>
+
+  <div class="legend-item">🟡 ของคุณ</div>
+
+  <div class="legend-item">⚫ งดจอง</div>
+
+</div>
     <div class="van-block">
       <div class="van-block-title">🚐 คันที่ 1 (สาย A)</div>
       <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
