@@ -1177,8 +1177,33 @@ function toggleSideDrawer(open) {
 function fetchCatalogBackend() {
   const cb = "cb_catalog";
   window[cb] = (res) => {
-    const filterValid = res.bookings.filter(b => b.trip && b.date).map(b => ({ trip: b.trip, date: b.date }));
-    cacheTrips = Array.from(new Set(filterValid.map(t => JSON.stringify(t)))).map(t => JSON.parse(t));
+    const groupedTrips = {};
+
+res.bookings.forEach(b => {
+
+  if (!b.trip || !b.date) return;
+
+  const key = b.trip + "_" + b.date;
+
+  if (!groupedTrips[key]) {
+
+    groupedTrips[key] = {
+      trip: b.trip,
+      date: b.date,
+      booked: 0
+    };
+  }
+
+  if (
+    b.seat &&
+    b.nickname !== 'งดจอง'
+  ) {
+    groupedTrips[key].booked++;
+  }
+
+});
+
+cacheTrips = Object.values(groupedTrips);
     renderCatalogCards(cacheTrips);
     delete window[cb];
   };
@@ -1218,6 +1243,17 @@ function renderCatalogCards(data) {
 
 const imgSrc =
   tripImages[item.trip] || "default.jpg";
+
+const bookedCount =
+  cacheTrips.filter(
+    t => t.trip === item.trip
+  ).length;
+
+const seatStatus =
+  getTripSeatStatus(
+    item.trip,
+    item.booked
+  );
     
     return `
       <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
@@ -1225,6 +1261,7 @@ const imgSrc =
         <div class="trip-card-overlay">
           <div class="trip-title-text">${item.trip}</div>
           <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
+          ${seatStatus}
         </div>
       </div>
     `;
