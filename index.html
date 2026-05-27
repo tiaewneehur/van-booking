@@ -372,15 +372,30 @@ padding: 16px !important;
   }
   .seat-legend{
   display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin:12px 0 18px;
+
   justify-content:center;
+
+  align-items:center;
+
+  gap:8px;
+
+  margin:12px 0 18px;
+
+  flex-wrap:nowrap;
+
+  overflow-x:auto;
+
+  scrollbar-width:none;
+}
+
+.seat-legend::-webkit-scrollbar{
+  display:none;
 }
 
 .legend-item{
   display:flex;
   align-items:center;
+  white-space:nowrap;
   gap:6px;
 
   background:rgba(255,255,255,0.03);
@@ -763,22 +778,22 @@ padding: 16px !important;
 
   <div class="legend-item">
     <span class="legend-dot available"></span>
-    <span>ว่าง</span>
+    <span>🟢 ว่าง</span>
   </div>
 
   <div class="legend-item">
     <span class="legend-dot booked"></span>
-    <span>ถูกจอง</span>
+    <span>🔴 ถูกจอง</span>
   </div>
 
   <div class="legend-item">
     <span class="legend-dot selected"></span>
-    <span>ของคุณ</span>
+    <span>🟡 ของคุณ</span>
   </div>
 
   <div class="legend-item">
     <span class="legend-dot hidden"></span>
-    <span>งดจอง</span>
+    <span>⚫ งดจอง</span>
   </div>
 
 </div>
