@@ -1269,30 +1269,43 @@ function fetchCatalogBackend() {
 
     const groupedTrips = {};
 
-    window.allBookings = res.bookings;
+window.allBookings = res.bookings;
 
-    res.bookings.forEach(b => {
+window.tripStatuses = {};
 
-      if (!b.trip || !b.date) return;
+(res.trips || []).forEach(t => {
 
-      const key = b.trip + "_" + b.date;
+  const tripKey =
+    t.trip + "_" + t.date;
 
-      if (!groupedTrips[key]) {
+  window.tripStatuses[tripKey] =
+    t.status || 'open';
 
-       groupedTrips[key] = {
+});
 
-  trip: b.trip,
+res.bookings.forEach(b => {
 
-  date: b.date,
+  if (!b.trip || !b.date) return;
 
-  status: b.status || 'open'
+  const key =
+    b.trip + "_" + b.date;
 
-};
+  if (!groupedTrips[key]) {
 
-      }
+    groupedTrips[key] = {
 
-    });
+      trip: b.trip,
 
+      date: b.date,
+
+      status:
+        window.tripStatuses[key] || 'open'
+
+    };
+
+  }
+
+});
     cacheTrips = Object.values(groupedTrips);
 
     renderCatalogCards(cacheTrips);
