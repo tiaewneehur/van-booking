@@ -498,10 +498,6 @@ padding: 16px !important;
   padding: 20px;
 }
 
-.trip-detail-content{
-  padding:60px 20px 20px;
-}
-
 .trip-detail-box{
 
   width:100%;
@@ -1225,52 +1221,34 @@ padding: 16px !important;
   class="trip-detail-btn"
   onclick="confirmTripSelection()"
   style="
-    position:absolute;
-    left:50%;
-    bottom:-26px;
-    transform:translateX(-50%);
+    position: absolute;
+    left: 50%;
+    top: 110px;
+    transform: translateX(-50%);
+    width: 220px;
+    z-index: 30;
 
-    width:82%;
-    height:58px;
-
-    border:none;
-    border-radius:22px;
-
-    background:
-      linear-gradient(
-        135deg,
-        rgba(56,189,248,0.95),
-        rgba(2,132,199,0.95)
-      );
-
-    color:#fff;
-
-    font-size:16px;
-    font-weight:800;
-    letter-spacing:0.3px;
-
-    backdrop-filter:blur(18px);
-
-    box-shadow:
-      0 10px 35px rgba(2,132,199,0.45),
-      inset 0 1px 0 rgba(255,255,255,0.25);
-
-    z-index:50;
-
-    cursor:pointer;
-
-    transition:0.25s;
+    /* --- ลูกเล่นที่เพิ่มและปรับปรุง --- */
+    padding: 12px 24px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+    backdrop-filter: blur(10px);
+    
+    /* ควบคุมความสมูทเวลาแสดง Effect */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   "
-
-  onmouseover="
-    this.style.transform='translateX(-50%) scale(1.03)'
-  "
-
-  onmouseout="
-    this.style.transform='translateX(-50%) scale(1)'
-  "
+  onmouseover="this.style.transform='translateX(-50%) scale(1.05)'; this.style.boxShadow='0 12px 28px rgba(255, 107, 107, 0.6)';"
+  onmouseout="this.style.transform='translateX(-50%) scale(1)'; this.style.boxShadow='0 8px 20px rgba(255, 107, 107, 0.4)';"
+  onmousedown="this.style.transform='translateX(-50%) scale(0.95)';"
+  onmouseup="this.style.transform='translateX(-50%) scale(1.05)';"
 >
-  🚐 จองที่นั่งทริปนี้
+  🚐 จองที่นั่ง
 </button>
 
     </div>
