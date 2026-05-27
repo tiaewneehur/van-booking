@@ -498,6 +498,10 @@ padding: 16px !important;
   padding: 20px;
 }
 
+.trip-detail-content{
+  padding:60px 20px 20px;
+}
+
 .trip-detail-box{
 
   width:100%;
@@ -1217,25 +1221,56 @@ padding: 16px !important;
         class="trip-highlight">
       </div>
 
-      <button
+     <button
   class="trip-detail-btn"
   onclick="confirmTripSelection()"
   style="
     position:absolute;
     left:50%;
-    top:110px;
+    bottom:-26px;
     transform:translateX(-50%);
 
-    width:220px;
+    width:82%;
+    height:58px;
 
-    z-index:30;
+    border:none;
+    border-radius:22px;
 
-    backdrop-filter:blur(10px);
+    background:
+      linear-gradient(
+        135deg,
+        rgba(56,189,248,0.95),
+        rgba(2,132,199,0.95)
+      );
 
-    box-shadow:0 10px 25px rgba(0,0,0,0.35);
+    color:#fff;
+
+    font-size:16px;
+    font-weight:800;
+    letter-spacing:0.3px;
+
+    backdrop-filter:blur(18px);
+
+    box-shadow:
+      0 10px 35px rgba(2,132,199,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.25);
+
+    z-index:50;
+
+    cursor:pointer;
+
+    transition:0.25s;
+  "
+
+  onmouseover="
+    this.style.transform='translateX(-50%) scale(1.03)'
+  "
+
+  onmouseout="
+    this.style.transform='translateX(-50%) scale(1)'
   "
 >
-  🚐 จองที่นั่ง
+  🚐 จองที่นั่งทริปนี้
 </button>
 
     </div>
