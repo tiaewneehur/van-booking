@@ -1174,43 +1174,37 @@ function toggleSideDrawer(open) {
 }
 
 // ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
+// ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
 function fetchCatalogBackend() {
-
   const cb = "cb_catalog";
 
   window[cb] = (res) => {
-
     const groupedTrips = {};
-
     window.allBookings = res.bookings;
 
+    // ✨ ปรับปรุงการดึงข้อมูล: ดึงรายชื่อทริปทั้งหมดและเช็คสถานะ "ปิด" จากทุกแถวในคอลัมน์ K
     res.bookings.forEach(b => {
-
       if (!b.trip || !b.date) return;
-
       const key = b.trip + "_" + b.date;
 
+      // ถ้ายังไม่เคยเก็บทริปนี้ หรือถ้าเจอแถวที่มีคำว่า "ปิด" ให้บันทึกสถานะปิดลงไป
       if (!groupedTrips[key]) {
-
         groupedTrips[key] = {
           trip: b.trip,
-          date: b.date
+          date: b.date,
+          status: b.status || "" // รับค่าสถานะมาจากหลังบ้าน
         };
-
+      } else if (b.status === "ปิด") {
+        groupedTrips[key].status = "ปิด";
       }
-
     });
 
     cacheTrips = Object.values(groupedTrips);
-
     renderCatalogCards(cacheTrips);
-
     delete window[cb];
-
   };
 
   appendScriptTag(`${QUERY_URL}&callback=${cb}`);
-
 }
 
 function renderCatalogCards(data) {
@@ -1223,52 +1217,86 @@ function renderCatalogCards(data) {
   listFrame.innerHTML = data.map((item, index) => {
     const formattedDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
     const tripImages = {
-  "ดอยผาเวียง": "ดอยผาเวียง.jpg",
-  "ดอยห้วยทู่": "ดอยห้วยทู่.jpg", 
-  "ดอยทูเลจอวาเล": "ดอยทูเลจอวาเล.jpg",
-  "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg",
-  "โบลาเวน 3 ตู้": "โบลาเวน.jpg",
-  "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
-  "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg",
-  "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
-  "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
-  "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg",
-  "เขาหลัก 2 ตู้": "เขาหลัก.jpg",
-  "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
-  "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg",
-  "ภูสอยดาว": "ภูสอยดาว.jpg",
-  "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
-  "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg",
-  "เลอกวาเดาะ": "เลอกวาเดาะ.jpg",
-  "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
-  "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
-};
+      "ดอยผาเวียง": "ดอยผาเวียง.jpg",
+      "ดอยห้วยทู่": "ดอยห้วยทู่.jpg", 
+      "ดอยทูเลจอวาเล": "ดอยทูเลจอวาเล.jpg",
+      "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg",
+      "โบลาเวน 3 ตู้": "โบลาเวน.jpg",
+      "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+      "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg",
+      "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+      "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
+      "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg",
+      "เขาหลัก 2 ตู้": "เขาหลัก.jpg",
+      "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
+      "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg",
+      "ภูสอยดาว": "ภูสอยดาว.jpg",
+      "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
+      "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg",
+      "เลอกวาเดาะ": "เลอกวาเดาะ.jpg",
+      "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
+      "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
+    };
 
-const imgSrc =
-  tripImages[item.trip] || "default.jpg";
+    const imgSrc = tripImages[item.trip] || "default.jpg";
 
-const bookedCount =
-  cacheTrips.filter(
-    t => t.trip === item.trip
-  ).length;
+    // 🌟 เช็คเงื่อนไขถ้าสถานะตรงกับคำว่า "ปิด" ให้ล็อกการ์ดเป็นแบบพรีเมียมทันที
+    const isLocked = item.status === "ปิด";
 
-const seatStatus =
-  getTripSeatStatus(
-    window.allBookings,
-    item.trip,
-    item.date
-  );
-    
-    return `
-      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
-        <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
-        <div class="trip-card-overlay">
-          <div class="trip-title-text">${item.trip}</div>
-          <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
-          ${seatStatus}
+    if (isLocked) {
+      // ----------------------------------------------------------------------
+      // รูปแบบการ์ดสไตล์หรูหราสำหรับทริปที่ยังไม่เปิดจอง (สูง 200px และกดคลิกไม่ได้)
+      // ----------------------------------------------------------------------
+      return `
+        <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" style="height: 200px; cursor: not-allowed; margin-bottom: 4px; position: relative; overflow: hidden; border-radius: 16px;">
+          <img src="${imgSrc}" class="trip-card-bg" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.25) contrast(1.1);" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
+          
+          <div class="trip-card-overlay" style="background: transparent; display: block; padding: 20px; position: absolute; inset: 0;">
+            
+            <div style="position: absolute; bottom: 20px; left: 20px; z-index: 5; text-align: left;">
+              <div class="trip-title-text" style="font-size: 26px; font-weight: 800; margin-bottom: 12px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.6);">${item.trip}</div>
+              <span class="trip-date-badge" style="background: rgba(15, 23, 42, 0.6); padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #ffffff; display: inline-flex; align-items: center;">
+                📅 จัดทริป: ${formattedDate}
+              </span>
+            </div>
+            
+            <div style="position: absolute; top: 50%; left: 58%; transform: translate(-50%, -50%); text-align: center; width: 50%; z-index: 5;">
+              <div style="font-size: 32px; margin-bottom: 2px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); text-align: center;">🔒</div>
+              
+              <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px;">
+                <span style="height: 1px; width: 24px; background: rgba(255,255,255,0.3);"></span>
+                <span style="font-size: 13px; color: rgba(255,255,255,0.5); transform: translateY(-1px);">✦</span>
+                <h3 style="font-size: 24px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px; margin: 0; white-space: nowrap;">ยังไม่เปิดจอง</h3>
+                <span style="font-size: 13px; color: rgba(255,255,255,0.5); transform: translateY(-1px);">✦</span>
+                <span style="height: 1px; width: 24px; background: rgba(255,255,255,0.3);"></span>
+              </div>
+              
+              <p style="font-size: 13px; color: #cbd5e1; font-weight: 400; opacity: 0.85; margin: 0; text-align: center;">PROUD TO WAIT FOR ANNOUNCEMENT</p>
+            </div>
+
+            <div class="trip-seat-badge full" style="position: absolute; right: 20px; bottom: 20px; background: rgba(30, 41, 59, 0.7); color: #94a3b8; border: 1px solid rgba(255,255,255,0.15); font-size: 12px; padding: 6px 14px; border-radius: 20px; display: flex; align-items: center; gap: 4px;">
+              🔒 NOT OPEN
+            </div>
+
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    } else {
+      // ----------------------------------------------------------------------
+      // รูปแบบการ์ดปกติ สำหรับทริปที่เปิดจอง (สูง 130px และกดจองได้ปกติ)
+      // ----------------------------------------------------------------------
+      const seatStatus = getTripSeatStatus(window.allBookings, item.trip, item.date);
+      return `
+        <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')" style="height: 130px; margin-bottom: 4px;">
+          <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
+          <div class="trip-card-overlay">
+            <div class="trip-title-text">${item.trip}</div>
+            <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
+            ${seatStatus}
+          </div>
+        </div>
+      `;
+    }
   }).join('');
 }
 
