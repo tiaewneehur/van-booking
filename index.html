@@ -1174,27 +1174,28 @@ function toggleSideDrawer(open) {
 }
 
 // ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
-// ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
 function fetchCatalogBackend() {
   const cb = "cb_catalog";
 
   window[cb] = (res) => {
     const groupedTrips = {};
-    window.allBookings = res.bookings;
+    window.allBookings = res.bookings || [];
 
-    // ✨ ปรับปรุงการดึงข้อมูล: ดึงรายชื่อทริปทั้งหมดและเช็คสถานะ "ปิด" จากทุกแถวในคอลัมน์ K
+    // วนลูปหาแถวที่มีคำว่า "ปิด" มาบันทึกเป็นมาสเตอร์สถานะไว้ก่อน
     res.bookings.forEach(b => {
       if (!b.trip || !b.date) return;
       const key = b.trip + "_" + b.date;
 
-      // ถ้ายังไม่เคยเก็บทริปนี้ หรือถ้าเจอแถวที่มีคำว่า "ปิด" ให้บันทึกสถานะปิดลงไป
       if (!groupedTrips[key]) {
         groupedTrips[key] = {
           trip: b.trip,
           date: b.date,
-          status: b.status || "" // รับค่าสถานะมาจากหลังบ้าน
+          status: b.status || ""
         };
-      } else if (b.status === "ปิด") {
+      }
+      
+      // ถ้าเจอแถวไหนในทริปนี้ถูกตั้งค่าว่า "ปิด" ให้ล็อกทริปนั้นทันที
+      if (b.status === "ปิด") {
         groupedTrips[key].status = "ปิด";
       }
     });
@@ -1239,13 +1240,11 @@ function renderCatalogCards(data) {
     };
 
     const imgSrc = tripImages[item.trip] || "default.jpg";
-
-    // 🌟 เช็คเงื่อนไขถ้าสถานะตรงกับคำว่า "ปิด" ให้ล็อกการ์ดเป็นแบบพรีเมียมทันที
     const isLocked = item.status === "ปิด";
 
     if (isLocked) {
       // ----------------------------------------------------------------------
-      // รูปแบบการ์ดสไตล์หรูหราสำหรับทริปที่ยังไม่เปิดจอง (สูง 200px และกดคลิกไม่ได้)
+      // รูปแบบการ์ดพรีเมียม "ยังไม่เปิดจอง" สูง 200px (คลิกไม่ได้)
       // ----------------------------------------------------------------------
       return `
         <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" style="height: 200px; cursor: not-allowed; margin-bottom: 4px; position: relative; overflow: hidden; border-radius: 16px;">
@@ -1283,7 +1282,7 @@ function renderCatalogCards(data) {
       `;
     } else {
       // ----------------------------------------------------------------------
-      // รูปแบบการ์ดปกติ สำหรับทริปที่เปิดจอง (สูง 130px และกดจองได้ปกติ)
+      // รูปแบบการ์ดปกติ สำหรับทริปที่เปิดจอง (สูง 130px)
       // ----------------------------------------------------------------------
       const seatStatus = getTripSeatStatus(window.allBookings, item.trip, item.date);
       return `
@@ -1300,6 +1299,25 @@ function renderCatalogCards(data) {
   }).join('');
 }
 
+// ฟังก์ชันนับจำนวนที่นั่ง (ปรับปรุงไม่ให้นับแถวที่ "ปิด" เป็นเบาะจองปกติ)
+function getTripSeatStatus(bookings, tripName, tripDate) {
+  const bookedSeats = bookings.filter(b => {
+    return (
+      b.trip === tripName &&
+      b.date === tripDate &&
+      b.seat &&
+      b.status !== "ปิด" // 🌟 ไม่เอาแถวที่ล็อกทริปมาคำนวณที่นั่งติดลบ
+    );
+  }).length;
+
+  const TOTAL_SEATS = 30;
+  const emptySeats = TOTAL_SEATS - bookedSeats;
+
+  if (emptySeats <= 0) {
+    return `<div class="trip-seat-badge full">🔴 เต็ม</div>`;
+  }
+  return `<div class="trip-seat-badge available">🟢 ว่าง ${emptySeats} ที่</div>`;
+}
 function searchTripEngine() {
   const query = document.getElementById('searchInput').value.toLowerCase();
   document.querySelectorAll('.trip-card').forEach(card => {
@@ -1774,42 +1792,6 @@ function toggleFinalSubmitBtn() {
   document.getElementById('finalSubmitBtn').disabled = !document.getElementById('slipCheckbox').checked;
 }
 
-// ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
-function getTripSeatStatus(bookings, tripName, tripDate) {
-
-  // นับเฉพาะเบาะที่ "จองจริง"
-  const bookedSeats = bookings.filter(b => {
-
-  return (
-    b.trip === tripName &&
-    b.date === tripDate &&
-    b.seat
-  );
-
-}).length;
-
-  // จำนวนเบาะจริง
-  const TOTAL_SEATS = 30;
-
-  // ว่าง = ทั้งหมด - จองจริง
-  const emptySeats = TOTAL_SEATS - bookedSeats;
-
-  if (emptySeats <= 0) {
-
-   return `
-  <div class="trip-seat-badge full">
-    🔴 เต็ม
-  </div>
-`;
-
-  }
-
-  return `
-  <div class="trip-seat-badge available">
-    🟢 ว่าง ${emptySeats} ที่
-  </div>
-`;
-}
   function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
   btn.innerHTML = "⌛ กำลังส่งข้อมูลเข้าระบบ...";
