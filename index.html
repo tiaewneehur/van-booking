@@ -1175,34 +1175,43 @@ function toggleSideDrawer(open) {
 
 // ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
 function fetchCatalogBackend() {
+
   const cb = "cb_catalog";
+
   window[cb] = (res) => {
+
     const groupedTrips = {};
 
-res.bookings.forEach(b => {
+    window.allBookings = res.bookings;
 
-  if (!b.trip || !b.date) return;
+    res.bookings.forEach(b => {
 
-  const key = b.trip + "_" + b.date;
+      if (!b.trip || !b.date) return;
 
-  if (!groupedTrips[key]) {
+      const key = b.trip + "_" + b.date;
 
-    groupedTrips[key] = {
-      trip: b.trip,
-      date: b.date,
-      booked: 0
-    };
-  }
+      if (!groupedTrips[key]) {
 
-  if (
-    b.seat &&
-    b.nickname !== 'งดจอง'
-  ) {
-    groupedTrips[key].booked++;
-  }
+        groupedTrips[key] = {
+          trip: b.trip,
+          date: b.date
+        };
 
-});
+      }
 
+    });
+
+    cacheTrips = Object.values(groupedTrips);
+
+    renderCatalogCards(cacheTrips);
+
+    delete window[cb];
+
+  };
+
+  appendScriptTag(`${QUERY_URL}&callback=${cb}`);
+
+}
 cacheTrips = Object.values(groupedTrips);
     renderCatalogCards(cacheTrips);
     delete window[cb];
@@ -1782,21 +1791,21 @@ function toggleFinalSubmitBtn() {
     seat => !usedSeats.includes(seat)
   ).length;
 
-  if (emptySeats <= 0) {
-
-    return `
-      <div class="trip-seat-status full">
-        🔴 เต็ม
-      </div>
-    `;
-
-  }
+if (emptySeats <= 0) {
 
   return `
-    <div class="trip-seat-status available">
-      🟢 ว่าง ${emptySeats} ที่
+    <div class="trip-seat-badge full">
+      🔴 เต็ม
     </div>
   `;
+
+}
+
+return `
+  <div class="trip-seat-badge available">
+    🟢 ว่าง ${emptySeats} ที่
+  </div>
+`;
 }
   function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
