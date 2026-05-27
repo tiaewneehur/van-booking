@@ -1146,8 +1146,24 @@ padding: 16px !important;
 // ตั้งค่าลิงก์ Web App Google Apps Script ของน้าตรงนี้
 const API_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const QUERY_URL = API_URL + "?action=read";
+const CLOSED_TRIPS = [
+
+  "ดอยผาเวียง",
+
+  "ดอยหัวทู่",
+
+  "ดอยทูเลจอวาเล"
+
+];
+
+const DONE_TRIPS = [
+
+  "โป่งลึกบางกลอย"
+
+];
 
 let cacheTrips = [];
+
 let targetSelectedSeat = null;
 
 const BUS_GRID_STRUCTURE = [
