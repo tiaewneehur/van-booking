@@ -1217,7 +1217,9 @@ padding: 16px !important;
         class="trip-highlight">
       </div>
 
-   <button
+   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600&display=swap" rel="stylesheet">
+
+<button
   class="trip-detail-btn"
   onclick="confirmTripSelection()"
   style="
@@ -1226,37 +1228,36 @@ padding: 16px !important;
     top: 200px;
     transform: translateX(-50%);
     
-    /* ขนาดกระชับ สวยงาม */
-    width: 160px;
-    height: 44px;
+    /* ขนาดกระชับ สไตล์ Modern App */
+    width: 150px; 
+    height: 40px;
     
-    /* ดีไซน์พรีเมียมมินิมอล */
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    /* สไตล์ดาร์กกลาสแบบพรีเมียม */
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 14px;
+    border-radius: 12px;
     
-    /* ฟอนต์ Inter: สะอาด ทันสมัย และอ่านง่ายที่สุดในยุคนี้ */
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* ฟอนต์ IBM Plex Sans Thai ตรงตามที่ต้องการ */
+    font-family: 'IBM Plex Sans Thai', sans-serif;
     color: #ffffff;
     font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.2px;
+    font-weight: 500;
     
-    /* เงาแบบนุ่มนวลให้มิติที่ดูแพง */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    /* เงาละมุนแบบมินิมอล */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+    transition: all 0.3s ease;
     z-index: 30;
     
     display: flex;
     align-items: center;
     justify-content: center;
   "
-  onmouseover="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.transform='translateX(-50%) scale(1.03)';"
-  onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(-50%) scale(1)';"
+  onmouseover="this.style.background='rgba(0, 0, 0, 0.7)'; this.style.transform='translateX(-50%) scale(1.03)';"
+  onmouseout="this.style.background='rgba(0, 0, 0, 0.5)'; this.style.transform='translateX(-50%) scale(1)';"
   onmousedown="this.style.transform='translateX(-50%) scale(0.97)';"
   onmouseup="this.style.transform='translateX(-50%) scale(1.03)';"
 >
