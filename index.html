@@ -1313,42 +1313,58 @@ const bookedCount =
     t => t.trip === item.trip
   ).length;
 
-const seatStatus =
+const isLocked =
   CLOSED_TRIPS.includes(item.trip);
+
+const seatStatus =
   getTripSeatStatus(
     window.allBookings,
     item.trip,
     item.date
   );
     
-    return `
-       <div class="trip-card ${isLocked ? 'locked-card' : ''}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
-        <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
-        <div class="trip-card-overlay">
-          <div class="trip-title-text">${item.trip}</div>
-          <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
-          ${isLocked ? `
+return `
+  <div class="trip-card ${isLocked ? 'locked-card' : ''}" 
+       onclick="openTripDetailModal('${item.trip}','${item.date}')">
 
-  <div class="locked-center">
+    <img src="${imgSrc}" class="trip-card-bg"
+      onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
 
-    <div class="lock-icon">
-      🔒
-    </div>
+    <div class="trip-card-overlay">
 
-    <div class="lock-text">
-      ยังไม่เปิดจอง
-    </div>
+      <div class="trip-title-text">
+        ${item.trip}
+      </div>
 
-  </div>
+      <span class="trip-date-badge">
+        📅 จัดทริป: ${formattedDate}
+      </span>
 
-  <div class="trip-seat-badge full">
-    🔒 รอประกาศ
-  </div>
+      ${isLocked ? `
 
-` : seatStatus}
+        <div class="locked-center">
+
+          <div class="lock-icon">
+            🔒
+          </div>
+
+          <div class="lock-text">
+            ยังไม่เปิดจอง
+          </div>
+
         </div>
-    `;
-  }).join('');
+
+        <div class="trip-seat-badge full">
+          🔒 รอประกาศ
+        </div>
+
+      ` : seatStatus}
+
+    </div>
+
+  </div>
+`;
+}).join('');
 }
 
 function searchTripEngine() {
