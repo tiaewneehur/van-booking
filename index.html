@@ -1217,54 +1217,51 @@ padding: 16px !important;
         class="trip-highlight">
       </div>
 
-     นี่คือโค้ดปุ่มกล่องใสกระจกฝ้า (Glassmorphic Button) แบบเคลียร์ๆ คลีนๆ ตรงตามตำแหน่งที่คุณเลือกครับ นำไปใช้วางแทนโค้ดเดิมได้เลยครับ:
-
-```html
-<button
+    <button
   class="trip-detail-btn"
   onclick="confirmTripSelection()"
   style="
+    /* ตำแหน่งและการวาง */
     position: absolute;
     left: 50%;
-    top: 200px; /* ตำแหน่งตรงพุ่มไม้ด้านล่างของรูป */
+    top: 195px;
     transform: translateX(-50%);
     
-    /* ขนาดกล่องพอดีคำ ไม่กว้างและไม่หนาเกินไป */
+    /* ขนาดและระยะห่างภายใน */
     width: 140px;
     height: 38px;
-    z-index: 30;
-
-    /* ลูกเล่นกล่องใสกระจกฝ้า */
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    padding: 0;
+    margin: 0;
     
-    /* เส้นขอบกระจกบางๆ และความโค้งมนที่สมส่วน */
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    /* ดีไซน์กระจกฝ้า (Glassmorphism) */
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 20px;
     
-    /* ข้อความสีขาว คลีนๆ */
+    /* ตัวหนังสือ */
     color: #ffffff;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-
-    /* เงาละมุนช่วยดันให้ปุ่มดูลอยแยกชั้นจากพุ่มไม้ */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     
-    /* อนิเมชั่นเวลาสัมผัส */
-    transition: all 0.2s ease-in-out;
+    /* เงาที่ทำให้ดูเหมือนลอยอยู่ */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    
+    /* การตอบสนอง */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 30;
   "
-  /* เอฟเฟกต์ตอบสนองการกดและเอาเมาส์วาง */
-  onmouseover="this.style.background='rgba(255, 255, 255, 0.25)'; this.style.transform='translateX(-50%) scale(1.03)';"
-  onmouseout="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.transform='translateX(-50%) scale(1)';"
-  onmousedown="this.style.transform='translateX(-50%) scale(0.97)';"
-  onmouseup="this.style.transform='translateX(-50%) scale(1.03)';"
+  onmouseover="this.style.background='rgba(255, 255, 255, 0.2)'; this.style.transform='translateX(-50%) scale(1.05)';"
+  onmouseout="this.style.background='rgba(255, 255, 255, 0.12)'; this.style.transform='translateX(-50%) scale(1)';"
+  onmousedown="this.style.transform='translateX(-50%) scale(0.95)';"
+  onmouseup="this.style.transform='translateX(-50%) scale(1.05)';"
 >
   จองที่นั่ง
 </button>
-
-```
 
     </div>
 
