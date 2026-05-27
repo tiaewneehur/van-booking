@@ -1218,11 +1218,25 @@ padding: 16px !important;
       </div>
 
       <button
-        class="trip-detail-btn"
-        onclick="confirmTripSelection()"
-      >
-        🚐 เลือกทริปนี้
-      </button>
+  class="trip-detail-btn"
+  onclick="confirmTripSelection()"
+  style="
+    position:absolute;
+    left:50%;
+    top:110px;
+    transform:translateX(-50%);
+
+    width:220px;
+
+    z-index:30;
+
+    backdrop-filter:blur(10px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.35);
+  "
+>
+  🚐 จองที่นั่ง
+</button>
 
     </div>
 
