@@ -672,6 +672,58 @@ padding: 16px !important;
 
   color:#ef4444;
 }
+
+/* LOCKED CARD */
+
+.locked-card .trip-card-bg{
+
+  filter:
+    brightness(0.35)
+    contrast(1.05);
+}
+
+.locked-center{
+
+  position:absolute;
+
+  inset:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  z-index:5;
+
+  pointer-events:none;
+}
+
+.lock-icon{
+
+  font-size:30px;
+
+  margin-bottom:6px;
+
+  filter:
+    drop-shadow(
+      0 4px 12px rgba(0,0,0,0.45)
+    );
+}
+
+.lock-text{
+
+  font-size:18px;
+
+  font-weight:800;
+
+  color:#fff;
+
+  text-shadow:
+    0 2px 10px rgba(0,0,0,0.45);
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -1149,6 +1201,15 @@ const QUERY_URL = API_URL + "?action=read";
 
 let cacheTrips = [];
 let targetSelectedSeat = null;
+const CLOSED_TRIPS = [
+
+  "ดอยผาเวียง",
+
+  "ดอยห้วยทู่",
+
+  "ดอยทูเลจอวาเล"
+
+];
 
 const BUS_GRID_STRUCTURE = [
   'driver', 3, 6, 9,
@@ -1253,6 +1314,7 @@ const bookedCount =
   ).length;
 
 const seatStatus =
+  CLOSED_TRIPS.includes(item.trip);
   getTripSeatStatus(
     window.allBookings,
     item.trip,
@@ -1260,12 +1322,31 @@ const seatStatus =
   );
     
     return `
-      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
+       <div class="trip-card ${isLocked ? 'locked-card' : ''}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
         <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
         <div class="trip-card-overlay">
           <div class="trip-title-text">${item.trip}</div>
           <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
           ${seatStatus}
+          ${isLocked ? `
+
+  <div class="locked-center">
+
+    <div class="lock-icon">
+      🔒
+    </div>
+
+    <div class="lock-text">
+      ยังไม่เปิดจอง
+    </div>
+
+  </div>
+
+  <div class="trip-seat-badge full">
+    🔒 รอประกาศ
+  </div>
+
+` : seatStatus}
         </div>
       </div>
     `;
