@@ -481,18 +481,21 @@ padding: 16px !important;
 .trip-detail-modal{
   position: fixed;
   inset: 0;
+
+  display: none;
+
+  align-items: center;
+  justify-content: center;
+
   overflow-y: auto;
+
   -webkit-overflow-scrolling: touch;
-}
 
-.popup-content{
-  min-height: 0;
-  overflow-y: auto;
-  max-height: 100vh;
-}
+  background: rgba(0,0,0,0.75);
 
-.popup-content{
-  padding-bottom: 120px;
+  z-index: 5000;
+
+  padding: 20px;
 }
 
 .trip-detail-box{
@@ -502,7 +505,9 @@ padding: 16px !important;
 
   border-radius:28px;
 
-  overflow:hidden;
+  overflow-y:auto;
+
+  max-height:90vh;
 
   background:
     linear-gradient(
