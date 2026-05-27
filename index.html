@@ -639,6 +639,39 @@ padding: 16px !important;
 
   cursor:pointer;
 }
+    .trip-seat-badge{
+
+  position:absolute;
+
+  right:16px;
+  bottom:16px;
+
+  padding:8px 14px;
+
+  border-radius:999px;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  backdrop-filter:blur(8px);
+
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.trip-seat-badge.available{
+
+  background:rgba(16,185,129,0.18);
+
+  color:#22c55e;
+}
+
+.trip-seat-badge.full{
+
+  background:rgba(239,68,68,0.18);
+
+  color:#ef4444;
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -1673,7 +1706,29 @@ function toggleFinalSubmitBtn() {
 }
 
 // ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
-function processDataToSheets() {
+  function getTripSeatStatus(tripName, bookedCount) {
+
+  const MAX_SEATS = 27;
+
+  const remain = MAX_SEATS - bookedCount;
+
+  if (remain <= 0) {
+
+    return `
+      <div class="trip-seat-badge full">
+        🔴 เต็ม
+      </div>
+    `;
+
+  }
+
+  return `
+    <div class="trip-seat-badge available">
+      🟢 ว่าง ${remain} ที่
+    </div>
+  `;
+}
+  function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
   btn.innerHTML = "⌛ กำลังส่งข้อมูลเข้าระบบ...";
   btn.disabled = true;
