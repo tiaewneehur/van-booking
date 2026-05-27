@@ -1401,6 +1401,7 @@ const seatStatus =
     
 return `
   <div class="trip-card ${isLocked ? 'locked-card' : ''}" 
+       data-keyword="${item.trip.toLowerCase()}"
        onclick="openTripDetailModal('${item.trip}','${item.date}')">
 
     <img src="${imgSrc}" class="trip-card-bg"
