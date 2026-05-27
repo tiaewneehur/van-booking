@@ -1221,39 +1221,42 @@ padding: 16px !important;
   class="trip-detail-btn"
   onclick="confirmTripSelection()"
   style="
-    /* ตำแหน่ง */
     position: absolute;
     left: 50%;
     top: 200px;
     transform: translateX(-50%);
-
-    /* ดีไซน์สีดาร์กโปร่งแสง */
-    width: 140px;
-    height: 40px;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
     
-    /* ขอบและเงา */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-
-    /* ปรับแต่งฟอนต์ให้ดูทันสมัย */
+    /* ขยายขนาดกล่องให้ใหญ่และกดง่ายขึ้น */
+    width: 180px;
+    height: 50px;
+    
+    /* สไตล์ดาร์กกลาสแบบพรีเมียม */
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    
+    /* ปรับฟอนต์ให้ใหญ่และอ่านง่ายขึ้น */
     color: #ffffff;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: 0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-
-    /* การตอบสนอง */
+    
+    /* เงาและรายละเอียด */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     cursor: pointer;
+    transition: all 0.3s ease;
     z-index: 30;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* จัดตำแหน่งตัวอักษรให้อยู่กลาง */
+    display: flex;
+    align-items: center;
+    justify-content: center;
   "
-  onmouseover="this.style.background='rgba(0, 0, 0, 0.8)'; this.style.borderColor='rgba(255, 255, 255, 0.3)'; this.style.transform='translateX(-50%) scale(1.05)';"
-  onmouseout="this.style.background='rgba(0, 0, 0, 0.6)'; this.style.borderColor='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(-50%) scale(1)';"
+  onmouseover="this.style.background='rgba(0, 0, 0, 0.85)'; this.style.transform='translateX(-50%) scale(1.05)';"
+  onmouseout="this.style.background='rgba(0, 0, 0, 0.7)'; this.style.transform='translateX(-50%) scale(1)';"
   onmousedown="this.style.transform='translateX(-50%) scale(0.95)';"
   onmouseup="this.style.transform='translateX(-50%) scale(1.05)';"
 >
