@@ -370,6 +370,53 @@ padding: 16px !important;
   50% {
     transform: scale(1.10);
   }
+  .seat-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:12px 0 18px;
+  justify-content:center;
+}
+
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+
+  background:rgba(255,255,255,0.03);
+
+  border:1px solid rgba(255,255,255,0.05);
+
+  padding:7px 10px;
+
+  border-radius:999px;
+
+  font-size:11px;
+
+  color:#cbd5e1;
+}
+
+.legend-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+}
+
+.legend-dot.available{
+  background:#10b981;
+}
+
+.legend-dot.booked{
+  background:#ef4444;
+}
+
+.legend-dot.selected{
+  background:#fbbf24;
+}
+
+.legend-dot.hidden{
+  background:#1e293b;
+}
 }
 
     /* Form Data Block */
@@ -712,6 +759,29 @@ padding: 16px !important;
     <label class="input-box-label" style="margin-top:16px;">🚌 เลือกที่นั่งที่คุณต้องการ</label>
     <img src="IMG_0444.jpeg" class="seat-layout-map" onerror="this.style.display='none'">
 
+  <div class="seat-legend">
+
+  <div class="legend-item">
+    <span class="legend-dot available"></span>
+    <span>ว่าง</span>
+  </div>
+
+  <div class="legend-item">
+    <span class="legend-dot booked"></span>
+    <span>ถูกจอง</span>
+  </div>
+
+  <div class="legend-item">
+    <span class="legend-dot selected"></span>
+    <span>ของคุณ</span>
+  </div>
+
+  <div class="legend-item">
+    <span class="legend-dot hidden"></span>
+    <span>งดจอง</span>
+  </div>
+
+</div>
     <div class="van-block">
       <div class="van-block-title">🚐 คันที่ 1 (สาย A)</div>
       <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
