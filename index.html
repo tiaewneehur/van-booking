@@ -1212,12 +1212,6 @@ function fetchCatalogBackend() {
   appendScriptTag(`${QUERY_URL}&callback=${cb}`);
 
 }
-cacheTrips = Object.values(groupedTrips);
-    renderCatalogCards(cacheTrips);
-    delete window[cb];
-  };
-  appendScriptTag(`${QUERY_URL}&callback=${cb}`);
-}
 
 function renderCatalogCards(data) {
   const listFrame = document.getElementById('tripCatalogList');
@@ -1260,7 +1254,7 @@ const bookedCount =
 
 const seatStatus =
   getTripSeatStatus(
-    data,
+    window.allBookings,
     item.trip,
     item.date
   );
