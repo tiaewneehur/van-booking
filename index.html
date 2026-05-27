@@ -1251,8 +1251,9 @@ const bookedCount =
 
 const seatStatus =
   getTripSeatStatus(
+    data,
     item.trip,
-    item.booked
+    item.date
   );
     
     return `
@@ -1743,16 +1744,48 @@ function toggleFinalSubmitBtn() {
 }
 
 // ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
-  function getTripSeatStatus(tripName, bookedCount) {
+  function getTripSeatStatus(bookings, tripName, tripDate) {
 
-  const MAX_SEATS = 27;
+  const allSeats = [];
 
-  const remain = MAX_SEATS - bookedCount;
+  ['A','B','C'].forEach(prefix => {
 
-  if (remain <= 0) {
+    BUS_GRID_STRUCTURE.forEach(n => {
+
+      if (
+        n !== 'driver' &&
+        n !== 'spacer'
+      ) {
+
+        const seatId =
+          n === 'เบาะซ้าย'
+            ? prefix + 'ซ้าย'
+            : prefix + n;
+
+        allSeats.push(seatId);
+      }
+
+    });
+
+  });
+
+  // เบาะที่ถูกใช้
+  const usedSeats = bookings
+    .filter(b =>
+      b.trip === tripName &&
+      b.date === tripDate
+    )
+    .map(b => b.seat);
+
+  // นับเฉพาะเบาะที่ยังว่างจริง
+  const emptySeats = allSeats.filter(
+    seat => !usedSeats.includes(seat)
+  ).length;
+
+  if (emptySeats <= 0) {
 
     return `
-      <div class="trip-seat-badge full">
+      <div class="trip-seat-status full">
         🔴 เต็ม
       </div>
     `;
@@ -1760,8 +1793,8 @@ function toggleFinalSubmitBtn() {
   }
 
   return `
-    <div class="trip-seat-badge available">
-      🟢 ว่าง ${remain} ที่
+    <div class="trip-seat-status available">
+      🟢 ว่าง ${emptySeats} ที่
     </div>
   `;
 }
