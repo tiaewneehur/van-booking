@@ -1749,58 +1749,28 @@ function toggleFinalSubmitBtn() {
 // ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
   function getTripSeatStatus(bookings, tripName, tripDate) {
 
-  const allSeats = [];
+  // จำนวนเบาะจริงทั้งหมด
+  const TOTAL_SEATS = 30;
 
-  ['A','B','C'].forEach(prefix => {
+  // นับเฉพาะเบาะที่ถูกจองจริง
+  const bookedSeats = bookings.filter(b => {
 
-    BUS_GRID_STRUCTURE.forEach(n => {
-
-      if (
-        n !== 'driver' &&
-        n !== 'spacer'
-      ) {
-
-        const seatId =
-          n === 'เบาะซ้าย'
-            ? prefix + 'ซ้าย'
-            : prefix + n;
-
-        allSeats.push(seatId);
-      }
-
-    });
-
-  });
-
-  // เบาะที่จองจริง
-  const usedSeats = bookings
-    .filter(b =>
+    return (
       b.trip === tripName &&
       b.date === tripDate &&
+      b.seat &&
       b.nickname !== 'งดจอง'
-    )
-    .map(b => b.seat);
+    );
 
-  // เบาะงดจอง
-  const blockedSeats = bookings
-    .filter(b =>
-      b.trip === tripName &&
-      b.date === tripDate &&
-      b.nickname === 'งดจอง'
-    )
-    .map(b => b.seat);
+  }).length;
 
-  // นับเฉพาะเบาะเขียวจริง
-  const emptySeats = allSeats.filter(
-    seat =>
-      !usedSeats.includes(seat) &&
-      !blockedSeats.includes(seat)
-  ).length;
+  // เบาะว่าง = ทั้งหมด - เบาะแดง
+  const emptySeats = TOTAL_SEATS - bookedSeats;
 
   if (emptySeats <= 0) {
 
     return `
-      <div class="trip-seat-badge full">
+      <div class="trip-seat-status full">
         🔴 เต็ม
       </div>
     `;
@@ -1808,7 +1778,7 @@ function toggleFinalSubmitBtn() {
   }
 
   return `
-    <div class="trip-seat-badge available">
+    <div class="trip-seat-status available">
       🟢 ว่าง ${emptySeats} ที่
     </div>
   `;
