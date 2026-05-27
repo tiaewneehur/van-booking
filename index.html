@@ -1752,14 +1752,13 @@ function getTripSeatStatus(bookings, tripName, tripDate) {
   // นับเฉพาะเบาะที่ "จองจริง"
   const bookedSeats = bookings.filter(b => {
 
-    return (
-      b.trip === tripName &&
-      b.date === tripDate &&
-      b.seat &&
-      b.nickname !== 'งดจอง'
-    );
+  return (
+    b.trip === tripName &&
+    b.date === tripDate &&
+    b.seat
+  );
 
-  }).length;
+}).length;
 
   // จำนวนเบาะจริง
   const TOTAL_SEATS = 30;
