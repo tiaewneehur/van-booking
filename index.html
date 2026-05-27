@@ -672,57 +672,6 @@ padding: 16px !important;
 
   color:#ef4444;
 }
-
-/* LOCK OVERLAY ONLY */
-
-.locked-card .trip-card-bg{
-
-  filter:
-    brightness(0.38)
-    contrast(1.05);
-}
-
-.locked-card .lock-center{
-
-  position:absolute;
-
-  inset:0;
-
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-
-  justify-content:center;
-
-  z-index:5;
-
-  pointer-events:none;
-}
-
-.locked-card .lock-icon{
-
-  font-size:30px;
-
-  margin-bottom:4px;
-
-  filter:
-    drop-shadow(0 4px 10px rgba(0,0,0,0.45));
-}
-
-.locked-card .lock-text{
-
-  font-size:16px;
-
-  font-weight:700;
-
-  color:#fff;
-
-  text-shadow:
-    0 2px 8px rgba(0,0,0,0.55);
-}
-    
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -1197,24 +1146,8 @@ padding: 16px !important;
 // ตั้งค่าลิงก์ Web App Google Apps Script ของน้าตรงนี้
 const API_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const QUERY_URL = API_URL + "?action=read";
-const CLOSED_TRIPS = [
-
-  "ดอยผาเวียง",
-
-  "ดอยหัวทู่",
-
-  "ดอยทูเลจอวาเล"
-
-];
-
-const DONE_TRIPS = [
-
-  "โป่งลึกบางกลอย"
-
-];
 
 let cacheTrips = [];
-
 let targetSelectedSeat = null;
 
 const BUS_GRID_STRUCTURE = [
@@ -1242,37 +1175,42 @@ function toggleSideDrawer(open) {
 
 // ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
 function fetchCatalogBackend() {
+
   const cb = "cb_catalog";
 
   window[cb] = (res) => {
-    const groupedTrips = {};
-    window.allBookings = res.bookings || [];
 
-    // วนลูปหาแถวที่มีคำว่า "ปิด" มาบันทึกเป็นมาสเตอร์สถานะไว้ก่อน
+    const groupedTrips = {};
+
+    window.allBookings = res.bookings;
+
     res.bookings.forEach(b => {
+
       if (!b.trip || !b.date) return;
+
       const key = b.trip + "_" + b.date;
 
       if (!groupedTrips[key]) {
+
         groupedTrips[key] = {
           trip: b.trip,
-          date: b.date,
-          status: b.status || ""
+          date: b.date
         };
+
       }
-      
-      // ถ้าเจอแถวไหนในทริปนี้ถูกตั้งค่าว่า "ปิด" ให้ล็อกทริปนั้นทันที
-      if (b.status === "ปิด") {
-        groupedTrips[key].status = "ปิด";
-      }
+
     });
 
     cacheTrips = Object.values(groupedTrips);
+
     renderCatalogCards(cacheTrips);
+
     delete window[cb];
+
   };
 
   appendScriptTag(`${QUERY_URL}&callback=${cb}`);
+
 }
 
 function renderCatalogCards(data) {
@@ -1285,102 +1223,55 @@ function renderCatalogCards(data) {
   listFrame.innerHTML = data.map((item, index) => {
     const formattedDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
     const tripImages = {
-      "ดอยผาเวียง": "ดอยผาเวียง.jpg",
-      "ดอยห้วยทู่": "ดอยห้วยทู่.jpg", 
-      "ดอยทูเลจอวาเล": "ดอยทูเลจอวาเล.jpg",
-      "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg",
-      "โบลาเวน 3 ตู้": "โบลาเวน.jpg",
-      "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
-      "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg",
-      "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
-      "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
-      "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg",
-      "เขาหลัก 2 ตู้": "เขาหลัก.jpg",
-      "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
-      "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg",
-      "ภูสอยดาว": "ภูสอยดาว.jpg",
-      "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
-      "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg",
-      "เลอกวาเดาะ": "เลอกวาเดาะ.jpg",
-      "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
-      "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
-    };
+  "ดอยผาเวียง": "ดอยผาเวียง.jpg",
+  "ดอยห้วยทู่": "ดอยห้วยทู่.jpg", 
+  "ดอยทูเลจอวาเล": "ดอยทูเลจอวาเล.jpg",
+  "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg",
+  "โบลาเวน 3 ตู้": "โบลาเวน.jpg",
+  "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+  "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg",
+  "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+  "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
+  "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg",
+  "เขาหลัก 2 ตู้": "เขาหลัก.jpg",
+  "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
+  "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg",
+  "ภูสอยดาว": "ภูสอยดาว.jpg",
+  "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
+  "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg",
+  "เลอกวาเดาะ": "เลอกวาเดาะ.jpg",
+  "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
+  "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
+};
 
-    const imgSrc = tripImages[item.trip] || "default.jpg";
-    const isLocked =
-  CLOSED_TRIPS.includes(item.trip);
+const imgSrc =
+  tripImages[item.trip] || "default.jpg";
 
-    const isDone =
-  DONE_TRIPS.includes(item.trip);
+const bookedCount =
+  cacheTrips.filter(
+    t => t.trip === item.trip
+  ).length;
 
-    if (isLocked || isDone) {
-      // ----------------------------------------------------------------------
-      // รูปแบบการ์ดพรีเมียม "ยังไม่เปิดจอง" สูง 200px (คลิกไม่ได้)
-      // ----------------------------------------------------------------------
-      return `
-        <div class="trip-card locked-card" data-keyword="${item.trip.toLowerCase()}" style="height: 200px; cursor: not-allowed; margin-bottom: 4px; position: relative; overflow: hidden; border-radius: 16px;">
-          <img src="${imgSrc}" class="trip-card-bg" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.25) contrast(1.1);" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
-          
-          <div class="trip-card-overlay" style="background: transparent; display: block; padding: 20px; position: absolute; inset: 0;">
-            
-            <div style="position: absolute; bottom: 20px; left: 20px; z-index: 5; text-align: left;">
-              <div class="trip-title-text" style="font-size: 26px; font-weight: 800; margin-bottom: 12px; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.6);">${item.trip}</div>
-              <span class="trip-date-badge" style="background: rgba(15, 23, 42, 0.6); padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #ffffff; display: inline-flex; align-items: center;">
-                📅 จัดทริป: ${formattedDate}
-              </span>
-            </div>
-            
-             <div class="lock-center">
-
-  <div class="lock-icon">
-    🔒
-  </div>
-
-  <div class="lock-text">
-    ยังไม่เปิดจอง
-  </div>
-
-</div>
+const seatStatus =
+  getTripSeatStatus(
+    window.allBookings,
+    item.trip,
+    item.date
+  );
+    
+    return `
+      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
+        <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
+        <div class="trip-card-overlay">
+          <div class="trip-title-text">${item.trip}</div>
+          <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
+          ${seatStatus}
         </div>
-      `;
-    } else {
-      // ----------------------------------------------------------------------
-      // รูปแบบการ์ดปกติ สำหรับทริปที่เปิดจอง (สูง 130px)
-      // ----------------------------------------------------------------------
-      const seatStatus = getTripSeatStatus(window.allBookings, item.trip, item.date);
-      return `
-        <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')" style="height: 130px; margin-bottom: 4px;">
-          <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
-          <div class="trip-card-overlay">
-            <div class="trip-title-text">${item.trip}</div>
-            <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
-            ${seatStatus}
-          </div>
-        </div>
-      `;
-    }
+      </div>
+    `;
   }).join('');
 }
 
-// ฟังก์ชันนับจำนวนที่นั่ง (ปรับปรุงไม่ให้นับแถวที่ "ปิด" เป็นเบาะจองปกติ)
-function getTripSeatStatus(bookings, tripName, tripDate) {
-  const bookedSeats = bookings.filter(b => {
-    return (
-      b.trip === tripName &&
-      b.date === tripDate &&
-      b.seat &&
-      b.status !== "ปิด" // 🌟 ไม่เอาแถวที่ล็อกทริปมาคำนวณที่นั่งติดลบ
-    );
-  }).length;
-
-  const TOTAL_SEATS = 30;
-  const emptySeats = TOTAL_SEATS - bookedSeats;
-
-  if (emptySeats <= 0) {
-    return `<div class="trip-seat-badge full">🔴 เต็ม</div>`;
-  }
-  return `<div class="trip-seat-badge available">🟢 ว่าง ${emptySeats} ที่</div>`;
-}
 function searchTripEngine() {
   const query = document.getElementById('searchInput').value.toLowerCase();
   document.querySelectorAll('.trip-card').forEach(card => {
@@ -1855,6 +1746,42 @@ function toggleFinalSubmitBtn() {
   document.getElementById('finalSubmitBtn').disabled = !document.getElementById('slipCheckbox').checked;
 }
 
+// ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
+function getTripSeatStatus(bookings, tripName, tripDate) {
+
+  // นับเฉพาะเบาะที่ "จองจริง"
+  const bookedSeats = bookings.filter(b => {
+
+  return (
+    b.trip === tripName &&
+    b.date === tripDate &&
+    b.seat
+  );
+
+}).length;
+
+  // จำนวนเบาะจริง
+  const TOTAL_SEATS = 30;
+
+  // ว่าง = ทั้งหมด - จองจริง
+  const emptySeats = TOTAL_SEATS - bookedSeats;
+
+  if (emptySeats <= 0) {
+
+   return `
+  <div class="trip-seat-badge full">
+    🔴 เต็ม
+  </div>
+`;
+
+  }
+
+  return `
+  <div class="trip-seat-badge available">
+    🟢 ว่าง ${emptySeats} ที่
+  </div>
+`;
+}
   function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
   btn.innerHTML = "⌛ กำลังส่งข้อมูลเข้าระบบ...";
