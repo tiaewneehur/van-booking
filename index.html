@@ -672,6 +672,69 @@ padding: 16px !important;
 
   color:#ef4444;
 }
+
+/* ========================= */
+/* LOCKED CARD FIX */
+/* ========================= */
+
+.locked-card{
+
+  height:200px !important;
+
+}
+
+.locked-card .trip-title-text{
+
+  font-size:22px !important;
+
+  line-height:1.15;
+
+  max-width:75%;
+}
+
+.locked-card .trip-date-badge{
+
+  font-size:12px !important;
+
+  padding:6px 12px !important;
+}
+
+.locked-card .lock-center{
+
+  position:absolute;
+
+  top:50%;
+  left:60%;
+
+  transform:translate(-50%,-50%);
+
+  z-index:5;
+
+  text-align:center;
+
+  width:46%;
+}
+
+.locked-card .lock-center h3{
+
+  font-size:20px;
+
+  color:#fff;
+
+  white-space:nowrap;
+}
+
+.locked-card .lock-center p{
+
+  display:none;
+}
+
+.locked-card .trip-seat-badge{
+
+  bottom:18px !important;
+
+  right:18px !important;
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -1267,7 +1330,7 @@ function renderCatalogCards(data) {
       // รูปแบบการ์ดพรีเมียม "ยังไม่เปิดจอง" สูง 200px (คลิกไม่ได้)
       // ----------------------------------------------------------------------
       return `
-        <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" style="height: 200px; cursor: not-allowed; margin-bottom: 4px; position: relative; overflow: hidden; border-radius: 16px;">
+        <div class="trip-card locked-card" data-keyword="${item.trip.toLowerCase()}" style="height: 200px; cursor: not-allowed; margin-bottom: 4px; position: relative; overflow: hidden; border-radius: 16px;">
           <img src="${imgSrc}" class="trip-card-bg" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.25) contrast(1.1);" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
           
           <div class="trip-card-overlay" style="background: transparent; display: block; padding: 20px; position: absolute; inset: 0;">
@@ -1279,7 +1342,7 @@ function renderCatalogCards(data) {
               </span>
             </div>
             
-            <div style="position: absolute; top: 50%; left: 58%; transform: translate(-50%, -50%); text-align: center; width: 50%; z-index: 5;">
+              <div class="lock-center">
               <div style="font-size: 32px; margin-bottom: 2px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4)); text-align: center;">🔒</div>
               
               <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px;">
