@@ -1190,20 +1190,33 @@ function fetchCatalogBackend() {
 
       const key = b.trip + "_" + b.date;
 
-      if (!groupedTrips[key]) {
+if (!groupedTrips[key]) {
 
-        groupedTrips[key] = {
+  groupedTrips[key] = {
 
-  trip: b.trip,
+    trip: b.trip,
 
-  date: b.date,
+    date: b.date,
 
-  status: b.status || 'open'
+    status: b.status || 'open'
 
-};
-      }
+  };
 
-    });
+} else {
+
+  // ถ้ามี closed หรือ done
+  // ให้ทับค่าเดิมทันที
+
+  if (
+    b.status === 'closed' ||
+    b.status === 'done'
+  ) {
+
+    groupedTrips[key].status =
+      b.status;
+  }
+
+}
 
     cacheTrips = Object.values(groupedTrips);
 
