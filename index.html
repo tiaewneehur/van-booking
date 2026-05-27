@@ -161,7 +161,7 @@
     .trip-grid { display: flex; flex-direction: column; gap: 12px; }
     
     .trip-card {
-      position: relative; width: 100%; height: 110px; border-radius: 16px; overflow: hidden;
+      position: relative; isolation:isolate; width: 100%; height: 110px; border-radius: 16px; overflow: hidden;
       cursor: pointer; border: 1px solid rgba(255,255,255,0.05);
       box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: all 0.2s ease;
     }
@@ -1371,11 +1371,13 @@ const seatStatus =
 
   data-keyword="${item.trip.toLowerCase()}"
 
+ onclick="
   ${
-    item.status !== 'open'
-      ? 'style="pointer-events:none;"'
-      : `onclick="openTripDetailModal('${item.trip}','${item.date}')"`
+    item.status === 'open'
+      ? `openTripDetailModal('${item.trip}','${item.date}')`
+      : ''
   }
+"
 >
 ${
   item.status === 'closed'
