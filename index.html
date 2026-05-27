@@ -1193,10 +1193,14 @@ function fetchCatalogBackend() {
       if (!groupedTrips[key]) {
 
         groupedTrips[key] = {
-          trip: b.trip,
-          date: b.date
-        };
 
+  trip: b.trip,
+
+  date: b.date,
+
+  status: b.status || 'open'
+
+};
       }
 
     });
@@ -1260,15 +1264,143 @@ const seatStatus =
   );
     
     return `
-      <div class="trip-card" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
-        <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
-        <div class="trip-card-overlay">
-          <div class="trip-title-text">${item.trip}</div>
-          <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
-          ${seatStatus}
+
+<div
+  class="trip-card"
+
+  data-keyword="${item.trip.toLowerCase()}"
+
+  ${
+    item.status !== 'open'
+      ? ''
+      : `onclick="openTripDetailModal('${item.trip}','${item.date}')"`
+  }
+>
+
+  ${
+    item.status === 'closed'
+    ? `
+      <div style="
+        position:absolute;
+        inset:0;
+        z-index:20;
+
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+
+        background:rgba(0,0,0,0.55);
+
+        backdrop-filter:blur(3px);
+
+        color:white;
+
+        text-align:center;
+      ">
+
+        <div style="
+          font-size:42px;
+          margin-bottom:8px;
+        ">
+          🔒
         </div>
+
+        <div style="
+          font-size:28px;
+          font-weight:800;
+          margin-bottom:6px;
+        ">
+          ยังไม่เปิดจอง
+        </div>
+
+        <div style="
+          font-size:14px;
+          opacity:0.9;
+        ">
+          โปรดติดตามประกาศ
+        </div>
+
       </div>
-    `;
+    `
+    : ''
+  }
+
+  ${
+    item.status === 'done'
+    ? `
+      <div style="
+        position:absolute;
+        inset:0;
+        z-index:20;
+
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+
+        background:rgba(0,0,0,0.6);
+
+        backdrop-filter:blur(3px);
+
+        color:white;
+
+        text-align:center;
+      ">
+
+        <div style="
+          font-size:42px;
+          margin-bottom:8px;
+        ">
+          ✅
+        </div>
+
+        <div style="
+          font-size:28px;
+          font-weight:800;
+          margin-bottom:6px;
+        ">
+          จบทริปแล้ว
+        </div>
+
+        <div style="
+          font-size:14px;
+          opacity:0.9;
+        ">
+          แล้วพบกันทริปต่อไป 🌿
+        </div>
+
+      </div>
+    `
+    : ''
+  }
+
+  <img
+    src="${imgSrc}"
+    class="trip-card-bg"
+    onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'"
+  >
+
+  <div class="trip-card-overlay">
+
+    <div class="trip-title-text">
+      ${item.trip}
+    </div>
+
+    <span class="trip-date-badge">
+      📅 จัดทริป: ${formattedDate}
+    </span>
+
+    ${
+      item.status === 'open'
+        ? seatStatus
+        : ''
+    }
+
+  </div>
+
+</div>
+`;
   }).join('');
 }
 
