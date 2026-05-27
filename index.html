@@ -1226,29 +1226,29 @@ padding: 16px !important;
     top: 200px;
     transform: translateX(-50%);
     
-    /* ขนาดกระชับกำลังดี */
-    width: 155px; 
-    height: 42px;
+    /* ขนาดกระชับ สวยงาม */
+    width: 160px;
+    height: 44px;
     
-    /* โทนดาร์กกลาสแบบในรูป */
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    /* ดีไซน์พรีเมียมมินิมอล */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
+    border-radius: 14px;
     
-    /* ใช้ฟอนต์ Sarabun เพื่อให้เข้ากับ UI เดิมของคุณ */
-    font-family: 'Sarabun', sans-serif;
+    /* ฟอนต์ Inter: สะอาด ทันสมัย และอ่านง่ายที่สุดในยุคนี้ */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     color: #ffffff;
     font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
     
-    /* เงาละมุนแบบพรีเมียม */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* เงาแบบนุ่มนวลให้มิติที่ดูแพง */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
     
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
     z-index: 30;
     
     display: flex;
@@ -1256,7 +1256,7 @@ padding: 16px !important;
     justify-content: center;
   "
   onmouseover="this.style.background='rgba(255, 255, 255, 0.15)'; this.style.transform='translateX(-50%) scale(1.03)';"
-  onmouseout="this.style.background='rgba(255, 255, 255, 0.08)'; this.style.transform='translateX(-50%) scale(1)';"
+  onmouseout="this.style.background='rgba(255, 255, 255, 0.1)'; this.style.transform='translateX(-50%) scale(1)';"
   onmousedown="this.style.transform='translateX(-50%) scale(0.97)';"
   onmouseup="this.style.transform='translateX(-50%) scale(1.03)';"
 >
