@@ -1226,35 +1226,104 @@
       <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
       <div id="vanGridC" class="van-grid-seats"></div>
     </div>
+  </div>
+</div>
 
-    <div id="formFieldsBox">
-      <div class="booking-form-header">ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
-      <form id="mainBookingForm">
-        <div class="input-box-group">
-          <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
-          <input id="form_name" class="input-box-field" placeholder="กรุณากรอก ชื่อ-นาสกุล จริง" required>
-        </div>
-        <div class="input-box-group">
-          <label class="input-box-label">🏷️ ชื่อเล่น</label>
-          <input id="form_nickname" class="input-box-field" placeholder="บักควย" required>
-        </div>
-        <div class="input-box-group">
-          <label class="input-box-label">📞 เบอร์โทรศัพท์</label>
-          <input id="form_phone" type="tel" class="input-box-field" placeholder="เบอร์โทรจริงๆ" required>
-        </div>
-        <div class="input-box-group">
-          <label class="input-box-label">💬 ชื่อ LINE</label>
-          <input id="form_line" class="input-box-field" placeholder="เที่ยวนี่เหอะ" required>
-        </div>
-        <input type="hidden" id="hidden_seat">
-        <input type="hidden" id="hidden_date_raw">
-      </form>
-    </div>
+  <div id="bookingPopup" class="popup-modal">
+
+  <div class="popup-container">
+
+    <h3 style="
+      font-size:24px;
+      margin-bottom:18px;
+      color:#38bdf8;
+    ">
+      ✨ ข้อมูลผู้จอง
+    </h3>
+
+    <form id="mainBookingForm">
+
+      <div class="input-box-group">
+        <label class="input-box-label">
+          👤 ชื่อ-นามสกุลจริง
+        </label>
+
+        <input
+          id="form_name"
+          class="input-box-field"
+          placeholder="ชื่อจริง นามสกุล"
+          required
+        >
+      </div>
+
+      <div class="input-box-group">
+        <label class="input-box-label">
+          🏷️ ชื่อเล่น
+        </label>
+
+        <input
+          id="form_nickname"
+          class="input-box-field"
+          placeholder="ชื่อเล่น"
+          required
+        >
+      </div>
+
+      <div class="input-box-group">
+        <label class="input-box-label">
+          📞 เบอร์โทร
+        </label>
+
+        <input
+          id="form_phone"
+          type="tel"
+          class="input-box-field"
+          placeholder="08xxxxxxxx"
+          required
+        >
+      </div>
+
+      <div class="input-box-group">
+        <label class="input-box-label">
+          💬 LINE
+        </label>
+
+        <input
+          id="form_line"
+          class="input-box-field"
+          placeholder="LINE ID"
+          required
+        >
+      </div>
+
+      <input type="hidden" id="hidden_seat">
+      <input type="hidden" id="hidden_date_raw">
+
+      <button
+        type="button"
+        onclick="openPaymentModal()"
+        class="btn-popup-final"
+        style="margin-top:10px;"
+      >
+        🚀 ยืนยันข้อมูล
+      </button>
+
+      <p
+        onclick="closeBookingPopup()"
+        style="
+          margin-top:14px;
+          color:#64748b;
+          cursor:pointer;
+          font-size:13px;
+        "
+      >
+        เปลี่ยนเบาะ
+      </p>
+
+    </form>
+
   </div>
 
-  <div class="sticky-action-bar">
-    <button id="actionTriggerBtn" onclick="openPaymentModal()" class="btn-submit-trigger" disabled>🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
-  </div>
 </div>
 
 <div id="paymentModal" class="popup-modal">
@@ -2034,8 +2103,13 @@ function renderVansWithData(bookedList) {
             <span style="font-size:18px;">${label}</span>
           `;
 
-          cell.onclick = () => selectSeatHandler(cell, id);
+          cell.onclick = () => {
 
+           selectSeatHandler(cell, id);
+
+           openBookingPopup();
+
+          };
         }
 
       }
@@ -2062,24 +2136,43 @@ function selectSeatHandler(element, seatId) {
   document.getElementById('hidden_seat').value = seatId;
   document.getElementById('formFieldsBox').classList.add('show-form');
   
-  validateFormInput();
+  openBookingPopup();
   setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
 }
 
 // ตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมดแบบ Real-time
 function validateFormInput() {
-  const list = ['form_name', 'form_nickname', 'form_phone', 'form_line', 'hidden_seat'];
-  const pass = list.every(id => document.getElementById(id).value.trim() !== "");
-  const btn = document.getElementById('actionTriggerBtn');
-  
-  btn.disabled = !pass;
-  if (pass) {
-    btn.classList.add('ready-to-click');
-    btn.innerHTML = "👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨";
-  } else {
-    btn.classList.remove('ready-to-click');
-    btn.innerHTML = "🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง";
+
+  const btn =
+    document.getElementById('actionTriggerBtn');
+
+  if (!btn) return;
+
+}
+}
+function toggleSideDrawer(open)
+
+function openBookingPopup() {
+
+  if (!targetSelectedSeat) {
+
+    Swal.fire({
+      icon:'warning',
+      title:'เลือกเบาะก่อน',
+      text:'กรุณาเลือกที่นั่งก่อนกรอกข้อมูล'
+    });
+
+    return;
   }
+
+  document.getElementById('bookingPopup')
+    .style.display = 'flex';
+}
+
+function closeBookingPopup() {
+
+  document.getElementById('bookingPopup')
+    .style.display = 'none';
 }
 
 // คอนโทรลหน้าต่างป๊อปอัพชำระเงิน
