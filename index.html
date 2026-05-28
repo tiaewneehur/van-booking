@@ -1379,8 +1379,37 @@
 
    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600&display=swap" rel="stylesheet">
 
+<style>
+  @keyframes heartbeat {
+    0% {
+      transform: translateX(-50%) scale(1);
+    }
+    20% {
+      transform: translateX(-50%) scale(1.08);
+    }
+    40% {
+      transform: translateX(-50%) scale(1);
+    }
+    60% {
+      transform: translateX(-50%) scale(1.08);
+    }
+    100% {
+      transform: translateX(-50%) scale(1);
+    }
+  }
+
+  .heartbeat-btn {
+    animation: heartbeat 1.5s infinite ease-in-out;
+  }
+  
+  /* หยุดอนิเมชั่นชั่วคราวตอนที่เอาเมาส์ไปชี้ เพื่อไม่ให้รบกวนการกดของผู้ใช้ */
+  .heartbeat-btn:hover {
+    animation-play-state: paused;
+  }
+</style>
+
 <button
-  class="trip-detail-btn"
+  class="trip-detail-btn heartbeat-btn"
   onclick="confirmTripSelection()"
   style="
     position: absolute;
@@ -1392,34 +1421,32 @@
     width: 150px; 
     height: 40px;
     
-    /* สไตล์ดาร์กกลาสแบบพรีเมียม */
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* สไตล์สีแดงโมเดิร์น (ไล่เฉดสีให้ดูมีมิติ ไม่แข็งกระด้าง) */
+    background: linear-gradient(135deg, #ff2a5f, #ff0040);
+    border: none;
     border-radius: 12px;
     
-    /* ฟอนต์ IBM Plex Sans Thai ตรงตามที่ต้องการ */
+    /* ฟอนต์ IBM Plex Sans Thai */
     font-family: 'IBM Plex Sans Thai', sans-serif;
     color: #ffffff;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 600; /* ปรับให้หนาขึ้นเล็กน้อยเพื่อให้ตัวหนังสือชัดเจนบนพื้นหลังสีแดง */
     
-    /* เงาละมุนแบบมินิมอล */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* เงาเรืองแสงสีแดง (Glow Effect) ช่วยให้ปุ่มดดเด่นออกมาจากพื้นหลัง */
+    box-shadow: 0 4px 15px rgba(255, 0, 64, 0.4);
     
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     z-index: 30;
     
     display: flex;
     align-items: center;
     justify-content: center;
   "
-  onmouseover="this.style.background='rgba(0, 0, 0, 0.7)'; this.style.transform='translateX(-50%) scale(1.03)';"
-  onmouseout="this.style.background='rgba(0, 0, 0, 0.5)'; this.style.transform='translateX(-50%) scale(1)';"
-  onmousedown="this.style.transform='translateX(-50%) scale(0.97)';"
-  onmouseup="this.style.transform='translateX(-50%) scale(1.03)';"
+  onmouseover="this.style.background='linear-gradient(135deg, #ff4775, #ff1a53)'; this.style.boxShadow='0 6px 20px rgba(255, 0, 64, 0.6)';"
+  onmouseout="this.style.background='linear-gradient(135deg, #ff2a5f, #ff0040)'; this.style.boxShadow='0 4px 15px rgba(255, 0, 64, 0.4)';"
+  onmousedown="this.style.transform='translateX(-50%) scale(0.95)';"
+  onmouseup="this.style.transform='translateX(-50%) scale(1)';"
 >
   จองที่นั่ง
 </button>
