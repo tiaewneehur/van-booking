@@ -290,8 +290,8 @@
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
 
-  gap: 10px !important;
-padding: 16px !important;
+  gap: 6px !important;
+padding: 10px !important;
 
   background:
     linear-gradient(
@@ -328,7 +328,7 @@ padding: 16px !important;
 .seat {
   aspect-ratio: 1/1;
 
-  border-radius: 18px;
+  border-radius: 14px;
 
   display: flex;
   flex-direction: column;
@@ -343,8 +343,13 @@ padding: 16px !important;
   transition: 0.2s ease;
 
   overflow: hidden;
-  min-height: 72px;
+  min-height: 56px;
 }
+    
+.seat span:last-child{
+  font-size:14px !important;
+}
+    
 .seat.driver {
   background: #1e293b;
   color: #475569;
