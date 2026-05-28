@@ -1227,33 +1227,45 @@
       <div id="vanGridC" class="van-grid-seats"></div>
     </div>
 
-    <div id="formFieldsBox">
-      <div class="booking-form-header">ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
-      <form id="mainBookingForm">
-        <div class="input-box-group">
-          <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
-          <input id="form_name" class="input-box-field" placeholder="กรุณากรอก ชื่อ-นาสกุล จริง" required>
+    <!-- Modal สำหรับกรอกข้อมูลผู้จอง -->
+<div id="bookingFormModal" class="popup-modal" style="display: none;">
+  <div class="popup-container">
+    <h3 style="font-size: 20px; margin-bottom: 20px; color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px;">
+      👤 กรอกข้อมูลผู้จอง
+    </h3>
+    
+    <!-- ส่วนแสดงที่นั่งที่เลือก -->
+    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 16px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1);">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="background: #38bdf8; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000;">
+          🚐
         </div>
-        <div class="input-box-group">
-          <label class="input-box-label">🏷️ ชื่อเล่น</label>
-          <input id="form_nickname" class="input-box-field" placeholder="บักควย" required>
+        <div>
+          <div style="font-size: 11px; color: #94a3b8;">ที่นั่งที่เลือก</div>
+          <div id="modalSeatLabel" style="font-size: 18px; font-weight: 700; color: #38bdf8;">-</div>
         </div>
-        <div class="input-box-group">
-          <label class="input-box-label">📞 เบอร์โทรศัพท์</label>
-          <input id="form_phone" type="tel" class="input-box-field" placeholder="เบอร์โทรจริงๆ" required>
-        </div>
-        <div class="input-box-group">
-          <label class="input-box-label">💬 ชื่อ LINE</label>
-          <input id="form_line" class="input-box-field" placeholder="เที่ยวนี่เหอะ" required>
-        </div>
-        <input type="hidden" id="hidden_seat">
-        <input type="hidden" id="hidden_date_raw">
-      </form>
+      </div>
+      <button onclick="closeBookingModal()" style="background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+        🔄 เปลี่ยนเบาะ
+      </button>
     </div>
-  </div>
 
-  <div class="sticky-action-bar">
-    <button id="actionTriggerBtn" onclick="openPaymentModal()" class="btn-submit-trigger" disabled>🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
+    <!-- ฟอร์มกรอกข้อมูล (เพิ่มชื่อเล่นกลับมาแล้ว) -->
+    <div class="input-box-group" style="text-align: left;">
+      <label class="input-box-label">ชื่อ-นามสกุล</label>
+      <input id="form_name_modal" class="input-box-field" placeholder="กรุณากรอก ชื่อ-นามสกุล">
+      
+      <label class="input-box-label" style="margin-top: 15px;">ชื่อเล่น</label>
+      <input id="form_nickname_modal" class="input-box-field" placeholder="กรุณากรอกชื่อเล่น">
+      
+      <label class="input-box-label" style="margin-top: 15px;">เบอร์โทรศัพท์</label>
+      <input id="form_phone_modal" class="input-box-field" placeholder="กรุณากรอกเบอร์โทรศัพท์">
+      
+      <label class="input-box-label" style="margin-top: 15px;">LINE ID (ถ้ามี)</label>
+      <input id="form_line_modal" class="input-box-field" placeholder="กรุณากรอก LINE ID">
+    </div>
+
+    <button onclick="transferToPayment()" class="btn-popup-final" style="margin-top: 20px;">ไปชำระเงิน</button>
   </div>
 </div>
 
@@ -2189,6 +2201,19 @@ function appendScriptTag(url) {
   script.src = url;
   document.body.appendChild(script);
 }
+
+function transferToPayment() {
+    // นำค่าจาก Modal ไปใส่ในช่อง Hidden เดิมของระบบคุณ
+    document.getElementById('form_name').value = document.getElementById('form_name_modal').value;
+    document.getElementById('form_nickname').value = document.getElementById('form_nickname_modal').value;
+    document.getElementById('form_phone').value = document.getElementById('form_phone_modal').value;
+    document.getElementById('form_line').value = document.getElementById('form_line_modal').value;
+    
+    // ปิด Modal ข้อมูล แล้วเปิด Modal ชำระเงิน
+    closeBookingModal();
+    openPaymentModal();
+}
+  
 </script>
 </body>
 </html>
