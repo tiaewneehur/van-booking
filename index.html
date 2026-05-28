@@ -2068,9 +2068,6 @@ function chooseTripFromMenu(name, rawDate) {
 
   document.getElementById('hidden_seat').value = "";
 
-  document.getElementById('formFieldsBox')
-    .classList.remove('show-form');
-
   ['A','B','C'].forEach(p => {
     document.getElementById(`vanGrid${p}`).innerHTML =
       '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
