@@ -2219,6 +2219,27 @@ function transferToPayment() {
     closeBookingModal();
     openPaymentModal();
 }
+
+  // ปิด Modal ทุกตัวก่อนเปิดอันใหม่
+function openBookingFormModal() {
+  document.getElementById('tripDetailModal').style.display = 'none'; // ปิดรายละเอียดทริป
+  document.getElementById('bookingFormModal').style.display = 'flex'; // เปิดฟอร์ม
+}
+
+// ฟังก์ชันสำหรับปุ่ม "เปลี่ยนเบาะ" ใน Modal ใหม่
+function closeBookingModal() {
+  document.getElementById('bookingFormModal').style.display = 'none';
+}
+
+// ปรับปรุงฟังก์ชันเลือกที่นั่ง
+function selectSeatHandler(element, seatId) {
+  targetSelectedSeat = seatId;
+  document.getElementById('hidden_seat').value = seatId;
+  document.getElementById('modalSeatLabel').innerText = seatId;
+  
+  // เปิด Modal กรอกข้อมูล
+  document.getElementById('bookingFormModal').style.display = 'flex';
+}
   
 </script>
 </body>
