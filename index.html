@@ -256,12 +256,12 @@
   white-space:nowrap;
 }
 /* ======================================================== */
-/* VAN LAYOUT - SIZE LIKE REFERENCE */
+/* VAN LAYOUT - COMPACT PREMIUM VERSION */
 /* ======================================================== */
 
 .van-block {
 
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 
   width: 100%;
 }
@@ -272,7 +272,7 @@
 
   color: #38bdf8;
 
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 
   font-weight: 700;
 
@@ -285,12 +285,12 @@
       rgba(8,20,35,0.98)
     );
 
-  padding: 14px;
+  padding: 12px;
 
   border-radius: 18px;
 
   box-shadow:
-    0 6px 20px rgba(0,0,0,0.25);
+    0 4px 14px rgba(0,0,0,0.18);
 }
 
 .van-grid-header {
@@ -301,7 +301,7 @@
 
   padding: 0 10px;
 
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 
   font-size: 11px;
 
@@ -309,8 +309,12 @@
 
   color: #38bdf8;
 
-  opacity: 0.9;
+  opacity: 0.88;
 }
+
+/* ======================================================== */
+/* GRID */
+/* ======================================================== */
 
 .van-grid-seats {
 
@@ -318,24 +322,30 @@
 
   grid-template-columns: repeat(4, 1fr) !important;
 
-  gap: 10px;
+  gap: 8px;
 
-  padding: 14px;
+  padding: 10px;
+
+  width: 92%;
+
+  max-width: 390px;
+
+  margin: 0 auto;
 
   background:
     linear-gradient(
       180deg,
-      rgba(5,10,20,0.98),
-      rgba(2,6,12,1)
+      rgba(5,10,20,0.96),
+      rgba(2,6,12,0.98)
     );
 
-  border-radius: 28px;
+  border-radius: 24px;
 
-  border: 1px solid rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.03);
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.03),
-    0 10px 30px rgba(0,0,0,0.35);
+    inset 0 1px 0 rgba(255,255,255,0.025),
+    0 4px 14px rgba(0,0,0,0.22);
 
   position: relative;
 
@@ -348,11 +358,11 @@
 
   position: absolute;
 
-  inset: 8px;
+  inset: 7px;
 
-  border-radius: 22px;
+  border-radius: 18px;
 
-  border: 1px solid rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.02);
 
   pointer-events: none;
 }
@@ -365,7 +375,7 @@
 
   aspect-ratio: 1 / 1;
 
-  border-radius: 20px;
+  border-radius: 18px;
 
   display: flex;
 
@@ -381,14 +391,20 @@
 
   font-weight: 700;
 
-  transition: 0.2s ease;
+  transition: 0.18s ease;
+
+  transform: scale(0.94);
+
+  cursor: pointer;
 }
 
-/* ข้อความบนเบาะ */
+/* ======================================================== */
+/* TEXT */
+/* ======================================================== */
 
 .seat span:first-child {
 
-  font-size: 10px !important;
+  font-size: 9px !important;
 
   margin-bottom: 2px;
 
@@ -397,7 +413,7 @@
 
 .seat span:last-child {
 
-  font-size: 17px !important;
+  font-size: 15px !important;
 
   line-height: 1.1;
 }
@@ -417,14 +433,14 @@
 
   color: #5f718b;
 
-  border: 2px dashed rgba(255,255,255,0.18);
+  border: 2px dashed rgba(255,255,255,0.14);
 
   cursor: default;
 
   pointer-events: none;
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.04);
+    inset 0 1px 0 rgba(255,255,255,0.03);
 }
 
 /* ======================================================== */
@@ -454,8 +470,8 @@
   color: white;
 
   box-shadow:
-    0 7px 0 #0d7f52,
-    0 12px 22px rgba(25,195,125,0.24);
+    0 5px 0 #0d7f52,
+    0 8px 14px rgba(25,195,125,0.14);
 }
 
 /* ======================================================== */
@@ -474,8 +490,8 @@
   color: white;
 
   box-shadow:
-    0 7px 0 #a91320,
-    0 12px 22px rgba(255,71,71,0.24);
+    0 5px 0 #a91320,
+    0 8px 14px rgba(255,71,71,0.14);
 
   cursor: not-allowed;
 }
@@ -495,13 +511,14 @@
 
   color: #000;
 
-  transform: scale(1.03);
+  transform: scale(0.98);
 
   box-shadow:
-    0 7px 0 #b57b00,
-    0 12px 22px rgba(255,216,77,0.28);
+    0 0 12px rgba(255,216,77,0.45),
+    0 0 22px rgba(255,216,77,0.18),
+    0 5px 0 #b57b00;
 
-  animation: heartbeat 0.8s infinite;
+  animation: heartbeat 0.9s infinite;
 }
 
 /* ======================================================== */
@@ -528,16 +545,23 @@
 
   cursor: default;
 }
-    
+
+/* ======================================================== */
+/* HEARTBEAT */
+/* ======================================================== */
+
 @keyframes heartbeat {
+
   0%, 100% {
-    transform: scale(1.05);
+
+    transform: scale(0.98);
   }
+
   50% {
-    transform: scale(1.10);
+
+    transform: scale(1.02);
   }
 }
-
     /* Form Data Block */
     .booking-form-header { font-size: 13px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px; margin-top: 24px; margin-bottom: 16px; font-weight: 500; }
     #formFieldsBox { display: none; }
