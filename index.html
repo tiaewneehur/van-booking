@@ -916,60 +916,6 @@
   text-shadow:
     0 2px 10px rgba(0,0,0,0.45);
 }
-
-    /* ======================================================== */
-/* BOOKING POPUP */
-/* ======================================================== */
-
-.booking-popup{
-
-  position:fixed;
-
-  inset:0;
-
-  background:rgba(0,0,0,0.72);
-
-  backdrop-filter:blur(8px);
-
-  display:none;
-
-  align-items:center;
-
-  justify-content:center;
-
-  z-index:7000;
-
-  padding:20px;
-}
-
-.booking-popup.active{
-
-  display:flex;
-}
-
-.booking-popup-box{
-
-  width:100%;
-
-  max-width:420px;
-
-  border-radius:28px;
-
-  padding:22px;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(15,25,40,0.98),
-      rgba(8,14,24,0.98)
-    );
-
-  border:1px solid rgba(255,255,255,0.06);
-
-  box-shadow:
-    0 20px 60px rgba(0,0,0,0.45);
-}
-    
   </style>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -1281,98 +1227,34 @@
       <div id="vanGridC" class="van-grid-seats"></div>
     </div>
 
-    <div id="bookingPopup" class="booking-popup">
-
-  <div class="booking-popup-box">
-
-    <h3 style="
-      font-size:24px;
-      color:#38bdf8;
-      margin-bottom:18px;
-    ">
-      🚐 ข้อมูลผู้จอง
-    </h3>
-
-    <div class="input-box-group">
-      <label class="input-box-label">
-        👤 ชื่อ-นามสกุลจริง
-      </label>
-
-      <input id="form_name"
-        class="input-box-field"
-        placeholder="ชื่อจริง นามสกุล">
+    <div id="formFieldsBox">
+      <div class="booking-form-header">ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
+      <form id="mainBookingForm">
+        <div class="input-box-group">
+          <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
+          <input id="form_name" class="input-box-field" placeholder="กรุณากรอก ชื่อ-นาสกุล จริง" required>
+        </div>
+        <div class="input-box-group">
+          <label class="input-box-label">🏷️ ชื่อเล่น</label>
+          <input id="form_nickname" class="input-box-field" placeholder="บักควย" required>
+        </div>
+        <div class="input-box-group">
+          <label class="input-box-label">📞 เบอร์โทรศัพท์</label>
+          <input id="form_phone" type="tel" class="input-box-field" placeholder="เบอร์โทรจริงๆ" required>
+        </div>
+        <div class="input-box-group">
+          <label class="input-box-label">💬 ชื่อ LINE</label>
+          <input id="form_line" class="input-box-field" placeholder="เที่ยวนี่เหอะ" required>
+        </div>
+        <input type="hidden" id="hidden_seat">
+        <input type="hidden" id="hidden_date_raw">
+      </form>
     </div>
-
-    <div class="input-box-group">
-      <label class="input-box-label">
-        🏷️ ชื่อเล่น
-      </label>
-
-      <input id="form_nickname"
-        class="input-box-field"
-        placeholder="ชื่อเล่น">
-    </div>
-
-    <div class="input-box-group">
-      <label class="input-box-label">
-        📞 เบอร์โทรศัพท์
-      </label>
-
-      <input id="form_phone"
-        class="input-box-field"
-        placeholder="08xxxxxxxx">
-    </div>
-
-    <div class="input-box-group">
-      <label class="input-box-label">
-        💬 LINE
-      </label>
-
-      <input id="form_line"
-        class="input-box-field"
-        placeholder="LINE ID">
-    </div>
-
-    <div style="
-      display:flex;
-      gap:10px;
-      margin-top:18px;
-    ">
-
-      <button
-        onclick="closeBookingPopup()"
-        style="
-          flex:1;
-          height:48px;
-          border:none;
-          border-radius:14px;
-          background:#1e293b;
-          color:#fff;
-          font-weight:700;
-        "
-      >
-        🔄 เปลี่ยนเบาะ
-      </button>
-
-      <button
-        onclick="openPaymentModal()"
-        style="
-          flex:1;
-          height:48px;
-          border:none;
-          border-radius:14px;
-          background:linear-gradient(135deg,#0284c7,#38bdf8);
-          color:#fff;
-          font-weight:700;
-        "
-      >
-        🚀 ไปชำระเงิน
-      </button>
-
-    </div>
-
   </div>
 
+  <div class="sticky-action-bar">
+    <button id="actionTriggerBtn" onclick="openPaymentModal()" class="btn-submit-trigger" disabled>🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
+  </div>
 </div>
 
 <div id="paymentModal" class="popup-modal">
@@ -1999,6 +1881,9 @@ function chooseTripFromMenu(name, rawDate) {
 
   document.getElementById('hidden_seat').value = "";
 
+  document.getElementById('formFieldsBox')
+    .classList.remove('show-form');
+
   ['A','B','C'].forEach(p => {
     document.getElementById(`vanGrid${p}`).innerHTML =
       '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
@@ -2175,7 +2060,7 @@ function selectSeatHandler(element, seatId) {
   element.classList.add('selected');
   
   document.getElementById('hidden_seat').value = seatId;
-  openBookingPopup();
+  document.getElementById('formFieldsBox').classList.add('show-form');
   
   validateFormInput();
   setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
@@ -2304,23 +2189,6 @@ function appendScriptTag(url) {
   script.src = url;
   document.body.appendChild(script);
 }
-
-function openBookingPopup(){
-
-  document
-    .getElementById('bookingPopup')
-    .classList.add('active');
-
-}
-
-function closeBookingPopup(){
-
-  document
-    .getElementById('bookingPopup')
-    .classList.remove('active');
-
-}
-  
 </script>
 </body>
 </html>
