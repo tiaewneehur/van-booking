@@ -583,16 +583,229 @@
     transform: scale(1.02);
   }
 }
-    /* Form Data Block */
-    .booking-form-header { font-size: 13px; color: #94a3b8; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px; margin-top: 24px; margin-bottom: 16px; font-weight: 500; }
-    #formFieldsBox { display: none; }
-    #formFieldsBox.show-form { display: block; animation: slideUpForm 0.3s ease-out; }
-    @keyframes slideUpForm { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+/* ======================================================== */
+/* BOOKING POPUP */
+/* ======================================================== */
 
-    /* Sticky Bottom Action Bar */
-    .sticky-action-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(6, 11, 19, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 14px 16px 30px; border-top: 1px solid rgba(255,255,255,0.06); z-index: 999; display: flex; justify-content: center; }
-    .btn-submit-trigger { width: 100%; max-width: 440px; height: 50px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; font-family: inherit; transition: all 0.25s; cursor: pointer; background: #131c2a; color: #334155; }
-    .btn-submit-trigger.ready-to-click { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; box-shadow: 0 6px 20px rgba(2, 132, 199, 0.3); }
+.booking-popup {
+
+  position: fixed;
+
+  inset: 0;
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0,0,0,0.72);
+
+  backdrop-filter: blur(10px);
+
+  z-index: 4000;
+}
+
+.booking-popup-box {
+
+  width: 100%;
+
+  max-width: 390px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(12,20,34,0.98),
+      rgba(7,12,22,0.98)
+    );
+
+  border-radius: 28px;
+
+  padding: 22px;
+
+  border: 1px solid rgba(255,255,255,0.06);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.45);
+
+  position: relative;
+}
+
+.booking-popup-title {
+
+  text-align: center;
+
+  font-size: 22px;
+
+  margin-bottom: 18px;
+
+  color: #fff;
+}
+
+.booking-close {
+
+  position: absolute;
+
+  top: 14px;
+
+  right: 14px;
+
+  width: 38px;
+
+  height: 38px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.06);
+
+  color: #fff;
+
+  font-size: 18px;
+
+  cursor: pointer;
+}
+
+.booking-seat-preview {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 14px;
+
+  border-radius: 18px;
+
+  background: rgba(255,255,255,0.04);
+
+  margin-bottom: 18px;
+}
+
+.booking-seat-left {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+.seat-preview-icon {
+
+  font-size: 34px;
+}
+
+.seat-preview-label {
+
+  font-size: 11px;
+
+  color: #94a3b8;
+}
+
+.seat-preview-number {
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  color: #ffd84d;
+}
+
+.change-seat-btn {
+
+  border: none;
+
+  background: rgba(56,189,248,0.12);
+
+  color: #38bdf8;
+
+  height: 40px;
+
+  padding: 0 14px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+}
+
+.popup-input-group {
+
+  margin-bottom: 14px;
+}
+
+.popup-input-group label {
+
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 13px;
+
+  color: #cbd5e1;
+}
+
+.popup-input-group input {
+
+  width: 100%;
+
+  height: 48px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255,255,255,0.06);
+
+  background: rgba(255,255,255,0.03);
+
+  color: white;
+
+  padding: 0 14px;
+
+  outline: none;
+
+  font-size: 14px;
+}
+
+.popup-submit-btn {
+
+  width: 100%;
+
+  height: 54px;
+
+  border: none;
+
+  border-radius: 16px;
+
+  margin-top: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0284c7,
+      #38bdf8
+    );
+
+  color: #fff;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.popup-submit-btn:disabled {
+
+  opacity: 0.5;
+}
 
     /* ======================================================== */
     /* PAGE 3: PAYMENT MODAL DIAGRAM (ถอดแบบภาพที่ 2) */
@@ -1227,34 +1440,117 @@
       <div id="vanGridC" class="van-grid-seats"></div>
     </div>
 
-    <div id="formFieldsBox">
-      <div class="booking-form-header">ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
-      <form id="mainBookingForm">
-        <div class="input-box-group">
-          <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
-          <input id="form_name" class="input-box-field" placeholder="กรุณากรอก ชื่อ-นาสกุล จริง" required>
+<!-- BOOKING POPUP -->
+
+<div id="bookingPopup" class="booking-popup">
+
+  <div class="booking-popup-box">
+
+    <button
+      class="booking-close"
+      onclick="closeBookingPopup()"
+    >
+      ✕
+    </button>
+
+    <h3 class="booking-popup-title">
+      👤 กรอกข้อมูลผู้จอง
+    </h3>
+
+    <div class="booking-seat-preview">
+
+      <div class="booking-seat-left">
+
+        <div class="seat-preview-icon">
+          💺
         </div>
-        <div class="input-box-group">
-          <label class="input-box-label">🏷️ ชื่อเล่น</label>
-          <input id="form_nickname" class="input-box-field" placeholder="บักควย" required>
+
+        <div>
+          <div class="seat-preview-label">
+            ที่นั่งที่เลือก
+          </div>
+
+          <div
+            id="popupSeatNumber"
+            class="seat-preview-number"
+          >
+            A1
+          </div>
         </div>
-        <div class="input-box-group">
-          <label class="input-box-label">📞 เบอร์โทรศัพท์</label>
-          <input id="form_phone" type="tel" class="input-box-field" placeholder="เบอร์โทรจริงๆ" required>
-        </div>
-        <div class="input-box-group">
-          <label class="input-box-label">💬 ชื่อ LINE</label>
-          <input id="form_line" class="input-box-field" placeholder="เที่ยวนี่เหอะ" required>
-        </div>
-        <input type="hidden" id="hidden_seat">
-        <input type="hidden" id="hidden_date_raw">
-      </form>
+
+      </div>
+
+      <button
+        class="change-seat-btn"
+        onclick="closeBookingPopup()"
+      >
+        🔄 เปลี่ยนเบาะ
+      </button>
+
     </div>
+
+    <form id="mainBookingForm">
+
+      <div class="popup-input-group">
+
+        <label>ชื่อ-นามสกุล</label>
+
+        <input
+          id="form_name"
+          placeholder="กรอกชื่อจริง"
+        >
+
+      </div>
+
+      <div class="popup-input-group">
+
+        <label>ชื่อเล่น</label>
+
+        <input
+          id="form_nickname"
+          placeholder="ชื่อเล่น"
+        >
+
+      </div>
+
+      <div class="popup-input-group">
+
+        <label>เบอร์โทรศัพท์</label>
+
+        <input
+          id="form_phone"
+          placeholder="08xxxxxxxx"
+        >
+
+      </div>
+
+      <div class="popup-input-group">
+
+        <label>LINE ID</label>
+
+        <input
+          id="form_line"
+          placeholder="LINE ID"
+        >
+
+      </div>
+
+      <input type="hidden" id="hidden_seat">
+      <input type="hidden" id="hidden_date_raw">
+
+    </form>
+
+    <button
+      id="actionTriggerBtn"
+      class="popup-submit-btn"
+      onclick="openPaymentModal()"
+      disabled
+    >
+      ไปชำระเงิน
+    </button>
+
   </div>
 
-  <div class="sticky-action-bar">
-    <button id="actionTriggerBtn" onclick="openPaymentModal()" class="btn-submit-trigger" disabled>🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
-  </div>
 </div>
 
 <div id="paymentModal" class="popup-modal">
@@ -1881,9 +2177,6 @@ function chooseTripFromMenu(name, rawDate) {
 
   document.getElementById('hidden_seat').value = "";
 
-  document.getElementById('formFieldsBox')
-    .classList.remove('show-form');
-
   ['A','B','C'].forEach(p => {
     document.getElementById(`vanGrid${p}`).innerHTML =
       '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
@@ -2060,7 +2353,6 @@ function selectSeatHandler(element, seatId) {
   element.classList.add('selected');
   
   document.getElementById('hidden_seat').value = seatId;
-  document.getElementById('formFieldsBox').classList.add('show-form');
   
   validateFormInput();
   setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
