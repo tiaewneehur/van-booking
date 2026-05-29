@@ -1348,805 +1348,412 @@
   </div>
 </div>
 
-  <div id="tripDetailModal" class="trip-detail-modal">
+<div id="tripDetailModal" class="trip-detail-modal">
+    <div class="trip-detail-box">
+      <button onclick="document.getElementById('tripDetailModal').style.display='none'" style="
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          width: 42px;
+          height: 42px;
+          border: none;
+          border-radius: 50%;
+          background: rgba(0,0,0,0.6);
+          color: #fff;
+          font-size: 22px;
+          cursor: pointer;
+          z-index: 20;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+        ">✕</button>
 
-  <div class="trip-detail-box">
-<button
-  onclick="document.getElementById('tripDetailModal').style.display='none'"
-  style="
-    position:absolute;
-    top:16px;
-    right:16px;
+      <img id="tripDetailImage" class="trip-detail-image" src="" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
 
-    width:42px;
-    height:42px;
+      <div class="trip-detail-content">
+        <div id="tripDetailTitle" class="trip-detail-title"></div>
+        <div id="tripDetailDate" class="trip-detail-date"></div>
+        <div id="tripDetailPrice" class="trip-price-box"></div>
 
-    border:none;
-    border-radius:50%;
-
-    background:rgba(0,0,0,0.45);
-
-    color:#fff;
-
-    font-size:22px;
-
-    cursor:pointer;
-
-    z-index:20;
-
-    backdrop-filter:blur(10px);
-  "
->
-  ✕
-</button>
-    
-    <img id="tripDetailImage"
-      class="trip-detail-image"
-      src=""
-    >
-
-    <div class="trip-detail-content">
-
-      <div id="tripDetailTitle"
-        class="trip-detail-title">
-      </div>
-
-      <div id="tripDetailDate"
-        class="trip-detail-date">
-      </div>
-
-      <div id="tripDetailPrice"
-        class="trip-price-box">
-      </div>
-
-      <div class="trip-detail-grid">
-
-        <div class="trip-detail-card">
-          <span>⏳ จำนวนวัน</span>
-          <strong id="tripDetailDays">-</strong>
+        <div class="trip-detail-grid">
+          <div class="trip-detail-card">
+            <span>⏳ จำนวนวัน</span>
+            <strong id="tripDetailDays">-</strong>
+          </div>
+          <div class="trip-detail-card">
+            <span>🥾 ระยะเดิน</span>
+            <strong id="tripDetailDistance">-</strong>
+          </div>
+          <div class="trip-detail-card">
+            <span>🔥 ความยาก</span>
+            <strong id="tripDetailLevel">-</strong>
+          </div>
+          <div class="trip-detail-card">
+            <span>🚐 การเดินทาง</span>
+            <strong>รถตู้ VIP</strong>
+          </div>
         </div>
 
-        <div class="trip-detail-card">
-          <span>🥾 ระยะเดิน</span>
-          <strong id="tripDetailDistance">-</strong>
-        </div>
+        <div id="tripDetailHighlight" class="trip-highlight"></div>
 
-        <div class="trip-detail-card">
-          <span>🔥 ความยาก</span>
-          <strong id="tripDetailLevel">-</strong>
-        </div>
-
-        <div class="trip-detail-card">
-          <span>🚐 การเดินทาง</span>
-          <strong>รถตู้ VIP</strong>
-        </div>
-
+        <button class="trip-detail-btn" onclick="confirmTripSelection()" style="
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(135deg, #ff2a5f, #ff0040);
+            border: none;
+            border-radius: 16px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 0, 64, 0.35);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'IBM Plex Sans Thai', sans-serif;
+            margin-top: 10px;
+          " onmouseover="this.style.background='linear-gradient(135deg, #ff4775, #ff1a53)'; this.style.boxShadow='0 6px 20px rgba(255, 0, 64, 0.55)';" onmouseout="this.style.background='linear-gradient(135deg, #ff2a5f, #ff0040)'; this.style.boxShadow='0 4px 15px rgba(255, 0, 64, 0.35)';">
+          🎯 จองที่นั่งทริปนี้
+        </button>
       </div>
-
-      <div id="tripDetailHighlight"
-        class="trip-highlight">
-      </div>
-
-   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@500;600&display=swap" rel="stylesheet">
-
-<style>
-  @keyframes heartbeatButton {
-    0% {
-      transform: translateX(-50%) scale(1);
-    }
-    20% {
-      transform: translateX(-50%) scale(1.08);
-    }
-    40% {
-      transform: translateX(-50%) scale(1);
-    }
-    60% {
-      transform: translateX(-50%) scale(1.08);
-    }
-    100% {
-      transform: translateX(-50%) scale(1);
-    }
-  }
-
-  .heartbeat-btn {
-    animation: heartbeatButton 1.5s infinite ease-in-out;
-  }
-  
-  /* หยุดอนิเมชั่นชั่วคราวตอนที่เอาเมาส์ไปชี้ เพื่อไม่ให้รบกวนการกดของผู้ใช้ */
-  .heartbeat-btn:hover {
-    animation-play-state: paused;
-  }
-</style>
-
-<button
-  class="trip-detail-btn heartbeat-btn"
-  onclick="confirmTripSelection()"
-  style="
-    position: absolute;
-    left: 50%;
-    top: 200px;
-    transform: translateX(-50%);
-    
-    /* ขนาดกระชับ สไตล์ Modern App */
-    width: 150px; 
-    height: 40px;
-    
-    /* สไตล์สีแดงโมเดิร์น (ไล่เฉดสีให้ดูมีมิติ ไม่แข็งกระด้าง) */
-    background: linear-gradient(135deg, #ff2a5f, #ff0040);
-    border: none;
-    border-radius: 12px;
-    
-    /* ฟอนต์ IBM Plex Sans Thai */
-    font-family: 'IBM Plex Sans Thai', sans-serif;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 600; /* ปรับให้หนาขึ้นเล็กน้อยเพื่อให้ตัวหนังสือชัดเจนบนพื้นหลังสีแดง */
-    
-    /* เงาเรืองแสงสีแดง (Glow Effect) ช่วยให้ปุ่มดดเด่นออกมาจากพื้นหลัง */
-    box-shadow: 0 4px 15px rgba(255, 0, 64, 0.4);
-    
-    cursor: pointer;
-    transition: all 0.2s ease;
-    z-index: 30;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  "
-  onmouseover="this.style.background='linear-gradient(135deg, #ff4775, #ff1a53)'; this.style.boxShadow='0 6px 20px rgba(255, 0, 64, 0.6)';"
-  onmouseout="this.style.background='linear-gradient(135deg, #ff2a5f, #ff0040)'; this.style.boxShadow='0 4px 15px rgba(255, 0, 64, 0.4)';"
-  onmousedown="this.style.transform='translateX(-50%) scale(0.95)';"
-  onmouseup="this.style.transform='translateX(-50%) scale(1)';"
->
-  จองที่นั่ง
-</button>
-
     </div>
-
   </div>
 
-</div>
-  
-<script>
-// ตั้งค่าลิงก์ Web App Google Apps Script ของน้าตรงนี้
-const API_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
-const QUERY_URL = API_URL + "?action=read";
+  <script>
+    // ตั้งค่าลิงก์ Web App Google Apps Script ของน้าตรงนี้
+    const API_URL = "https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
+    const QUERY_URL = API_URL + "?action=read";
 
-let cacheTrips = [];
-let targetSelectedSeat = null;
-const CLOSED_TRIPS = [
+    let cacheTrips = [];
+    let targetSelectedSeat = null;
+    const CLOSED_TRIPS = ["ดอยผาเวียง", "ดอยทูเลจอวาเล"];
 
-  "ดอยผาเวียง",
-  "ดอยทูเลจอวาเล"
+    const BUS_GRID_STRUCTURE = [
+      'driver', 3, 6, 9,
+      'spacer', 2, 5, 8,
+      'เบาะซ้าย', 1, 4, 7
+    ];
 
-];
+    window.addEventListener('DOMContentLoaded', () => {
+      fetchCatalogBackend();
+      buildEmptyVanGrid();
+    });
 
-const BUS_GRID_STRUCTURE = [
-  'driver', 3, 6, 9,
-  'spacer', 2, 5, 8,
-  'เบาะซ้าย', 1, 4, 7
-];
+    function navigateToPage(pageId) {
+      document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active-page'));
+      document.getElementById(pageId).classList.add('active-page');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-window.addEventListener('DOMContentLoaded', () => {
-  fetchCatalogBackend();
-  buildEmptyVanGrid();
-});
+    function toggleSideDrawer(open) {
+      document.getElementById('sideMenu').classList.toggle('active', open);
+      document.getElementById('overlay').style.display = open ? 'block' : 'none';
+    }
 
-// ระบบเปลี่ยนหน้าจอจำลอง (Dynamic Router Flow)
-function navigateToPage(pageId) {
-  document.querySelectorAll('.view-page').forEach(page => page.classList.remove('active-page'));
-  document.getElementById(pageId).classList.add('active-page');
-  window.scrollTo({top: 0, behavior: 'smooth'});
-}
+    function fetchCatalogBackend() {
+      const cb = "cb_catalog";
+      window[cb] = (res) => {
+        const groupedTrips = {};
+        window.allBookings = res.bookings;
+        res.bookings.forEach(b => {
+          if (!b.trip || !b.date) return;
+          const key = b.trip + "_" + b.date;
+          if (!groupedTrips[key]) {
+            groupedTrips[key] = { trip: b.trip, date: b.date };
+          }
+        });
+        cacheTrips = Object.values(groupedTrips);
+        renderCatalogCards(cacheTrips);
+        delete window[cb];
+      };
+      appendScriptTag(`${QUERY_URL}&callback=${cb}`);
+    }
 
-function toggleSideDrawer(open) {
-  document.getElementById('sideMenu').classList.toggle('active', open);
-  document.getElementById('overlay').style.display = open ? 'block' : 'none';
-}
+    function renderCatalogCards(data) {
+      const listFrame = document.getElementById('tripCatalogList');
+      if (data.length === 0) {
+        listFrame.innerHTML = '<p style="text-align:center; color:#64748b; padding:20px;">❌ ไม่มีรายการทริปเปิดจองในขณะนี้</p>';
+        return;
+      }
 
-// ฟังก์ชัน JSONP: ดึงข้อมูลรายการทริปหน้าแรก
-function fetchCatalogBackend() {
-
-  const cb = "cb_catalog";
-
-  window[cb] = (res) => {
-
-    const groupedTrips = {};
-
-    window.allBookings = res.bookings;
-
-    res.bookings.forEach(b => {
-
-      if (!b.trip || !b.date) return;
-
-      const key = b.trip + "_" + b.date;
-
-      if (!groupedTrips[key]) {
-
-        groupedTrips[key] = {
-          trip: b.trip,
-          date: b.date
+      listFrame.innerHTML = data.map((item, index) => {
+        const formattedDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+        const tripImages = {
+          "ดอยผาเวียง": "ดอยผาเวียง.jpg", "ดอยห้วยทู่": "ดอยห้วยทู่.jpg", "ดอยทูเลจอวาเล": "ดอยทูเลจอวาเล.jpg",
+          "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg", "โบลาเวน 3 ตู้": "โบลาเวน.jpg", "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
+          "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg", "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "เปรโต๊ะ.jpg", "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
+          "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg", "เขาหลัก 2 ตู้": "เขาหลัก.jpg", "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
+          "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg", "ภูสอยดาว": "ภูสอยดาว.jpg", "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
+          "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg", "เลอกวาเดาะ": "เลอกวาเดาะ.jpg", "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
+          "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
         };
 
-      }
+        const imgSrc = tripImages[item.trip] || "default.jpg";
+        const isLocked = CLOSED_TRIPS.includes(item.trip);
+        const seatStatus = getTripSeatStatus(window.allBookings, item.trip, item.date);
 
-    });
-
-    cacheTrips = Object.values(groupedTrips);
-
-    renderCatalogCards(cacheTrips);
-
-    delete window[cb];
-
-  };
-
-  appendScriptTag(`${QUERY_URL}&callback=${cb}`);
-
-}
-
-function renderCatalogCards(data) {
-  const listFrame = document.getElementById('tripCatalogList');
-  if (data.length === 0) {
-    listFrame.innerHTML = '<p style="text-align:center; color:#64748b; padding:20px;">❌ ไม่มีรายการทริปเปิดจองในขณะนี้</p>';
-    return;
-  }
-  
-  listFrame.innerHTML = data.map((item, index) => {
-    const formattedDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-    const tripImages = {
-  "ดอยผาเวียง": "ดอยผาเวียง.jpg",
-  "ดอยห้วยทู่": "ดอยห้วยทู่.jpg", 
-  "ดอยทูเลจอวาเล": "ดอยทูเลจอวาเล.jpg",
-  "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": "แม่ละเมา.jpg",
-  "โบลาเวน 3 ตู้": "โบลาเวน.jpg",
-  "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
-  "ดอยหลวงตาก 2 ตู้": "ดอยหลวงตาก.jpg",
-  "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": "เปรโต๊ะ.jpg",
-  "น้ำตกสายรุ้งละอองดาว": "สายรุ้งละอองดาว.jpg",
-  "น้ำตกห้วยน้ำเย็น 3 ตู้": "ห้วยน้ำเย็น.jpg",
-  "เขาหลัก 2 ตู้": "เขาหลัก.jpg",
-  "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": "ป่าบงเปียง.jpg",
-  "ทริปมิตติ้งป่าบงเปียง ตู้ 4": "ป่าบงเปียง.jpg",
-  "ภูสอยดาว": "ภูสอยดาว.jpg",
-  "หว่าวาโจ 3 ตู้": "หว่าวาโจ.jpg",
-  "ภูเขาควาย 2 ตู้": "ภูเขาควาย.jpg",
-  "เลอกวาเดาะ": "เลอกวาเดาะ.jpg",
-  "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": "ดอยหมากพริก.jpg",
-  "หว่าวาโจ V.2": "หว่าวาโจ.jpg"
-};
-
-const imgSrc =
-  tripImages[item.trip] || "default.jpg";
-
-const bookedCount =
-  cacheTrips.filter(
-    t => t.trip === item.trip
-  ).length;
-
-const isLocked =
-  CLOSED_TRIPS.includes(item.trip);
-
-const seatStatus =
-  getTripSeatStatus(
-    window.allBookings,
-    item.trip,
-    item.date
-  );
-    
-return `
-  <div class="trip-card ${isLocked ? 'locked-card' : ''}" 
-       data-keyword="${item.trip.toLowerCase()}"
-       onclick="openTripDetailModal('${item.trip}','${item.date}')">
-
-    <img src="${imgSrc}" class="trip-card-bg"
-      onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
-
-    <div class="trip-card-overlay">
-
-      <div class="trip-title-text">
-        ${item.trip}
-      </div>
-
-      <span class="trip-date-badge">
-        📅 จัดทริป: ${formattedDate}
-      </span>
-
-      ${isLocked ? `
-
-        <div class="locked-center">
-
-          <div class="lock-icon">
-            ⚠️
+        return `
+          <div class="trip-card ${isLocked ? 'locked-card' : ''}" data-keyword="${item.trip.toLowerCase()}" onclick="openTripDetailModal('${item.trip}','${item.date}')">
+            <img src="${imgSrc}" class="trip-card-bg" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'">
+            <div class="trip-card-overlay">
+              <div class="trip-title-text">${item.trip}</div>
+              <span class="trip-date-badge">📅 จัดทริป: ${formattedDate}</span>
+              ${isLocked ? `<div class="locked-center"><div class="lock-icon">⚠️</div></div><div class="trip-seat-badge full">ยังไม่เปิดจอง</div>` : seatStatus}
+            </div>
           </div>
-
-        </div>
-
-        <div class="trip-seat-badge full">
-           ยังไม่เปิดจอง
-        </div>
-
-      ` : seatStatus}
-
-    </div>
-
-  </div>
-`;
-}).join('');
-}
-
-function searchTripEngine() {
-  const query = document.getElementById('searchInput').value.toLowerCase();
-  document.querySelectorAll('.trip-card').forEach(card => {
-    const key = card.getAttribute('data-keyword');
-    card.style.display = key.includes(query) ? 'block' : 'none';
-  });
-}
-
-  let pendingTripData = null;
-
-const TRIP_DETAILS = {
-
-  "ดอยผาเวียง": {
-    days: "2 วัน 1 คืน",
-    distance: "13-15 กม.",
-    level: "🟡 ปานกลาง",
-    price: "3400 บาท",
-    highlight: "🌄 ป่าอาจไม่แมส…แต่ธรรมชาติของจริง",
-    image: "ดอยผาเวียง.jpg"
-  },
-
-   "ดอยห้วยทู่": {
-    days: "2 วัน 1 คืน",
-    distance: "6-7 กม.",
-    level: "🟡 ปานกลาง",
-    price: "2510 บาท",
-    highlight: "ได้ พบน้อทากุ เป็นจำนวนมากมายก่ายกอง",
-    image: "ดอยห้วยทู่.jpg"
-  },
-
-    "ดอยทูเลจอวาเล": {
-    days: "3 วัน 2 คืน",
-    distance: "ประมาณ 20+ กม.",
-    level: "🟡 ปานกลาง",
-    price: "2950 บาท",
-    highlight: "ช่วงไฮไลต์คือหลังเที่ยงถึงเย็น แสงจะกระทบทุ่งหญ้าสีทอง ตอนกลางคืนหากฟ้าเปิดจะเห็นดาวเต็มท้องฟ้า ตอนเช้าจะได้เจอ ทะเลหมอกลอยต่ำระหว่างเขา",
-    image: "ดอยทูเลจอวาเล.jpg"
-  },
-  
-    "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": {
-    days: "3 วัน 2 คืน",
-    distance: "ประมาณ 14-15 กม.",
-    level: "🟡 ปานกลาง",
-    price: "2900 บาท",
-    highlight: "ไม่รู้ เดี๋ยวไปดูก่อนเดี๋ยวมาบอก จุ๊ฟๆ",
-    image: "แม่ละเมา.jpg"
-  },
-
-    "โบลาเวน 3 ตู้": {
-    days: "3 วัน 2 คืน",
-    distance: "รวมประมาณ 8-10 กม.",
-    level: "🟡 ปานกลาง",
-    price: "3650 บาท",
-    highlight: "มึงเจอฝนแน่ๆ 50%",
-    image: "โบลาเวน.jpg"
-  },
-
-    "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": {
-    days: "3 วัน 2 คืน",
-    distance: "ประมาณ 15-20 กม.",
-    level: "🟡 ปานกลาง",
-    price: "2900 บาท",
-    highlight: "วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
-    image: "เปรโต๊ะ.jpg"
-  },
-
-    "ดอยหลวงตาก 2 ตู้": {
-    days: "2 วัน 1 คืน",
-    distance: "ไป/กลับ ประมาณ 22 กม.",
-    level: "🟡 ปานกลาง",
-    price: "2900 บาท",
-    highlight: "วิวเขาสวย ต้นสนเดียวดาย อาจจะเจอฝนฟ้าปิด 50%",
-    image: "ดอยหลวงตาก.jpg"
-  },
-
-    "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": {
-    days: "3 วัน 2 คืน",
-    distance: "ประมาณ 15-20 กม.",
-    level: "🟡 ปานกลาง",
-    price: "2900 บาท",
-    highlight: "วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
-    image: "เปรโต๊ะ.jpg"
-  },
-
-    "น้ำตกสายรุ้งละอองดาว": {
-    days: "2 วัน 1 คืน",
-    distance: "ประมาณ 9-10 กม.",
-    level: "🟡 ปานกลาง",
-    price: "2660 บาท",
-    highlight: "น้ำตก ลอยคอตามน้ำ อาจจะเจอฝนฟ้าปิด 50%",
-    image: "สายรุ้งละอองดาว.jpg"
-  },
-
-    "น้ำตกห้วยน้ำเย็น 3 ตู้": {
-    days: "2 วัน 1 คืน",
-    distance: "ประมาณ 8-10 กม.",
-    level: "🟢 ง่าย",
-    price: "2580 บาท",
-    highlight: "น้ำตกที่อยู่ในป่าลึก และธรรมชาติ",
-    image: "ห้วยน้ำเย็น.jpg"
-  },
-
-    "เขาหลัก 2 ตู้": {
-    days: "3 วัน 2 คืน",
-    distance: "ไปกลับประมาณ 30-35 กม.",
-    level: "🔴 ยาก",
-    price: "3600 บาท",
-    highlight: "สัมผัสธรรมชาติป่าใต้ที่จริงใจ",
-    image: "เขาหลัก.jpg"
-  },
-  
-  "ภูสอยดาว": {
-    days: "2 วัน 1 คืน",
-    distance: "ไปกลับประมาณ 13-16 กม.",
-    level: "🟡 ปานกลาง",
-    price: "1800 บาท",
-    highlight: "⛰️ ลานสนสามใบ น้ำตกสายทิพย์ และดาวเต็มฟ้า",
-    image: "ภูสอยดาว.jpg"
-  },
-
-    "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": {
-    days: "2 วัน 1 คืน",
-    distance: "ไม่เดิน.",
-    level: "-",
-    price: "2550 บาท",
-    highlight: "ทุ่งนาขั้นบันไดสีเขียวพร้อมสายหมอกยามเช้า",
-    image: "ป่าบงเปียง.jpg"
-  },
-
-    "ทริปมิตติ้งป่าบงเปียง ตู้ 4": {
-    days: "2 วัน 1 คืน",
-    distance: "ไม่เดิน.",
-    level: "-",
-    price: "2550 บาท",
-    highlight: "ทุ่งนาขั้นบันไดสีเขียวพร้อมสายหมอกยามเช้า",
-    image: "ป่าบงเปียง.jpg"
-  },
-
-   "หว่าวาโจ 3 ตู้": {
-    days: "3 วัน 2 คืน",
-    distance: "9-11 กม.",
-    level: "🟢 ง่าย",
-    price: "2950 บาท",
-    highlight: "☁️ วิวหมอกโคตรปัง และวิสันเขา พายุแน่นอนจ้ารอบนี้",
-    image: "หว่าวาโจ.jpg"
-  },
-     
-   "หว่าวาโจ V.2": {
-    days: "3 วัน 2 คืน",
-    distance: "9-11 กม.",
-    level: "🟢 ง่าย",
-    price: "2950 บาท",
-    highlight: "☁️ วิวหมอกโคตรปัง และวิสันเขา ทุ่งดอกบัวตอง",
-    image: "หว่าวาโจ.jpg"
-  },
-       
-   "ภูเขาควาย 2 ตู้": {
-    days: "4 วัน 3 คืน",
-    distance: "30-35 กม.",
-    level: "🔴 ยาก",
-    price: "4290 บาท",
-    highlight: "☁️ วิวหมอกโคตรปัง และวิวเขา ทุ่งหญ้าสีเขียว",
-    image: "ภูเขาควาย.jpg"
-  },
-  
-    "เลอกวาเดาะ": {
-    days: "2 วัน 1 คืน",
-    distance: "3-4 กม.",
-    level: "🟡 ปานกลาง",
-    price: "2000 บาท",
-    highlight: "☁️ วิวหมอกโคตรปัง",
-    image: "เลอกวาเดาะ.jpg"
-  },
-
-    "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": {
-    days: "3 วัน 2 คืน",
-    distance: "7-8 กม.",
-    level: "🟡 ปานกลาง",
-    price: "3310 บาท",
-    highlight: "☁️ วิวหมอกโคตรปัง แสงเย็นสวยถ้าฟ้าเปิด",
-    image: "ดอยหมากพริก.jpg"
-  },
-
-};
-
-// ========================================================
-// 🚨 [แก้ไขแล้ว] ระบบดัก Error และเปิดป๊อปอัพรายละเอียดทริป
-// ========================================================
-function openTripDetailModal(name, date) {
-  pendingTripData = { name, date };
-
-  // ดักตรวจสอบ: ถ้าไม่มีข้อมูลชื่อทริปนี้ใน TRIP_DETAILS ให้สร้างค่าเริ่มต้นขึ้นมาแทน ไม่ให้สคริปต์ค้าง
-  const info = TRIP_DETAILS[name] || {
-    days: "2 วัน 1 คืน",
-    distance: "ตามความเหมาะสม",
-    level: "🟡 ปานกลาง",
-    price: "สอบถามแอดมิน",
-    highlight: "🌿 ร่วมเดินทางไปสัมผัสธรรมชาติอันสวยงาม และมิตรภาพดีๆ ระหว่างทางด้วยกันครับ",
-    image: "default.jpg"
-  };
-
-  document.getElementById('tripDetailTitle').innerText = name;
-
-  document.getElementById('tripDetailDate').innerText =
-    "📅 " +
-    new Date(date).toLocaleDateString(
-      'th-TH',
-      {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      }
-    );
-
-  const displayPrice = info.price ? info.price : "สอบถามแอดมิน";
-  document.getElementById('tripDetailPrice').innerText = "💸 ค่าใช้จ่ายประมาณ " + displayPrice;
-  document.getElementById('tripDetailDays').innerText = info.days;
-  document.getElementById('tripDetailDistance').innerText = info.distance;
-  document.getElementById('tripDetailLevel').innerText = info.level;
-  document.getElementById('tripDetailHighlight').innerText = info.highlight;
-
-  // ตรวจสอบและแสดงผลรูปภาพ
-  const detailImg = document.getElementById('tripDetailImage');
-  if (detailImg) {
-    detailImg.src = info.image || "default.jpg";
-    detailImg.onerror = function() {
-      this.src = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80";
-    };
-  }
-
-  document.getElementById('tripDetailModal').style.display = 'flex';
-}
-
-function confirmTripSelection() {
-  document.getElementById('tripDetailModal').style.display = 'none';
-  chooseTripFromMenu(pendingTripData.name, pendingTripData.date);
-}
-
-window.addEventListener('click', (e) => {
-  const modal = document.getElementById('tripDetailModal');
-  if (e.target === modal) {
-    modal.style.display = 'none';
-  }
-});
-
-// เมื่อเลือกทริปจากหน้าแรกเข้าสู่ผังเบาะรถตู้
-function chooseTripFromMenu(name, rawDate) {
-  document.getElementById('tripDisplay').value = name;
-
-  const cleanDate = new Date(rawDate);
-  const yyyy = cleanDate.getFullYear();
-  const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
-  const dd = String(cleanDate.getDate()).padStart(2, '0');
-  const formattedRaw = `${yyyy}-${mm}-${dd}`;
-
-  document.getElementById('hidden_date_raw').value = formattedRaw;
-  document.getElementById('dateDisplay').value = cleanDate.toLocaleDateString('th-TH', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
-
-  targetSelectedSeat = null;
-  document.getElementById('hidden_seat').value = "";
-  document.getElementById('formFieldsBox').classList.remove('show-form');
-
-  ['A', 'B', 'C'].forEach(p => {
-    document.getElementById(`vanGrid${p}`).innerHTML =
-      '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
-  });
-
-  navigateToPage('bookingPage');
-  loadSeatStatusBackend(formattedRaw);
-  validateFormInput();
-}
-
-function loadSeatStatusBackend(dateValue) {
-  const cb = "cb_seats_" + Date.now();
-  window[cb] = (res) => {
-    renderVansWithData(res.bookings || []);
-    delete window[cb];
-    document.getElementById(cb)?.remove();
-  };
-  appendScriptTag(`${QUERY_URL}&date=${encodeURIComponent(dateValue)}&callback=${cb}`);
-}
-
-function buildEmptyVanGrid() {
-  ['A', 'B', 'C'].forEach(prefix => {
-    const grid = document.getElementById(`vanGrid${prefix}`);
-    grid.innerHTML = '';
-
-    BUS_GRID_STRUCTURE.forEach(n => {
-      const div = document.createElement('div');
-      if (n === 'driver') {
-        div.className = 'seat driver';
-        div.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
-      } else if (n === 'spacer') {
-        div.className = 'seat spacer';
-      } else {
-        div.className = 'seat empty';
-        const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
-        div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${label}</span>`;
-      }
-      grid.appendChild(div);
-    });
-  });
-}
-
-function renderVansWithData(bookedList) {
-  const mapping = {};
-  bookedList.forEach(b => {
-    if (b.seat) {
-      mapping[String(b.seat)] = b.nickname || 'เต็ม';
+        `;
+      }).join('');
     }
-  });
 
-  ['A', 'B', 'C'].forEach(prefix => {
-    const grid = document.getElementById(`vanGrid${prefix}`);
-    grid.innerHTML = '';
+    function searchTripEngine() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      document.querySelectorAll('.trip-card').forEach(card => {
+        const key = card.getAttribute('data-keyword');
+        card.style.display = key.includes(query) ? 'block' : 'none';
+      });
+    }
 
-    BUS_GRID_STRUCTURE.forEach(n => {
-      const cell = document.createElement('div');
-      if (n === 'driver') {
-        cell.className = 'seat driver';
-        cell.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
-      } else if (n === 'spacer') {
-        cell.className = 'seat spacer';
-      } else {
-        const id = prefix + n;
-        cell.className = 'seat';
+    let pendingTripData = null;
 
-        if (mapping[id]) {
-          if (mapping[id] === 'งดจอง') {
-            cell.classList.add('hidden-seat');
-            cell.innerHTML = '';
-          } else {
-            cell.classList.add('booked');
-            cell.innerHTML = `
-              <span style="font-size:9px;">${id}</span>
-              <div style="font-size:13px;">${mapping[id]}</div>
-            `;
-          }
-        } else {
-          cell.classList.add('empty');
-          if (id === targetSelectedSeat) {
-            cell.classList.add('selected');
-          }
-          const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
-          cell.innerHTML = `
-            <span style="font-size:10px;">เบาะ</span>
-            <span style="font-size:18px;">${label}</span>
-          `;
-          cell.onclick = () => selectSeatHandler(cell, id);
-        }
+    const TRIP_DETAILS = {
+      "ดอยผาเวียง": { days: "2 วัน 1 คืน", distance: "13-15 กม.", level: "🟡 ปานกลาง", price: "3400 บาท", highlight: "🌄 ป่าอาจไม่แมส…แต่ธรรมชาติของจริง", image: "ดอยผาเวียง.jpg" },
+      "ดอยห้วยทู่": { days: "2 วัน 1 คืน", distance: "6-7 กม.", level: "🟡 ปานกลาง", price: "2510 บาท", highlight: "ได้พบน้องทากเป็นจำนวนมากมายก่ายกอง", image: "ดอยห้วยทู่.jpg" },
+      "ดอยทูเลจอวาเล": { days: "3 วัน 2 คืน", distance: "ประมาณ 20+ กม.", level: "🟡 ปานกลาง", price: "2950 บาท", highlight: "ช่วงไฮไลต์หลังเที่ยงแสงจะกระทบทุ่งหญ้าสีทอง ตอนเช้าจะได้เจอทะเลหมอกลอยต่ำ", image: "ดอยทูเลจอวาเล.jpg" },
+      "แม่ละเมา อุ้มเปี้ยม 3 วัน 2 คืน": { days: "3 วัน 2 คืน", distance: "ประมาณ 14-15 กม.", level: "🟡 ปานกลาง", price: "2900 บาท", highlight: "ธรรมชาติสมบูรณ์ ลุยสนุกแน่นอนครับทริปนี้", image: "แม่ละเมา.jpg" },
+      "โบลาเวน 3 ตู้": { days: "3 วัน 2 คืน", distance: "รวมประมาณ 8-10 กม.", level: "🟡 ปานกลาง", price: "3650 บาท", highlight: "สัมผัสความยิ่งใหญ่ของน้ำตกแดนลาวใต้ ลุยละอองน้ำสะใจ", image: "โบลาเวน.jpg" },
+      "เปรโต๊ะ 19 มิ.ย. ตู้ 1-2-3": { days: "3 วัน 2 คืน", distance: "ประมาณ 15-20 กม.", level: "🟡 ปานกลาง", price: "2900 บาท", highlight: "รูปหัวใจในม่านหมอก สัมผัสความกรีนหน้าฝน", image: "เปรโต๊ะ.jpg" },
+      "ดอยหลวงตาก 2 ตู้": { days: "2 วัน 1 คืน", distance: "ไป/กลับ ประมาณ 22 กม.", level: "🟡 ปานกลาง", price: "2900 บาท", highlight: "วิวส้นหมู กูบเขา ลานสนเด่นตระหง่านสวยงาม", image: "ดอยหลวงตาก.jpg" },
+      "เปรโต๊ะ 17 ก.ค. ตู้ 1-2-3": { days: "3 วัน 2 คืน", distance: "ประมาณ 15-20 กม.", level: "🟡 ปานกลาง", price: "2900 บาท", highlight: "น้ำตกรูปหัวใจ ผจญภัยลุยป่าหน้าฝนสุดฉ่ำ", image: "เปรโต๊ะ.jpg" },
+      "น้ำตกสายรุ้งละอองดาว": { days: "2 วัน 1 คืน", distance: "ประมาณ 9-10 กม.", level: "🟡 ปานกลาง", price: "2660 บาท", highlight: "ความอลังการของสายน้ำตกที่ซ่อนตัวกลางป่าลึก ลอยคอตามน้ำชิลๆ", image: "สายรุ้งละอองดาว.jpg" },
+      "น้ำตกห้วยน้ำเย็น 3 ตู้": { days: "2 วัน 1 คืน", distance: "ประมาณ 8-10 กม.", level: "🟢 ง่าย", price: "2580 บาท", highlight: "น้ำตกสวยใสกลางป่าลึก เดินง่าย บรรยากาศเงียบสงบ", image: "ห้วยน้ำเย็น.jpg" },
+      "เขาหลัก 2 ตู้": { days: "3 วัน 2 คืน", distance: "ไปกลับประมาณ 30-35 กม.", level: "🔴 ยาก", price: "3600 บาท", highlight: "พิสูจน์ความอึดป่าใต้ เดินสันเขาชมวิว 360 องศา", image: "เขาหลัก.jpg" },
+      "ภูสอยดาว": { days: "2 วัน 1 คืน", distance: "ไปกลับประมาณ 13-16 กม.", level: "🟡 ปานกลาง", price: "1800 บาท", highlight: "⛰️ ลานสนสามใบ ทุ่งดอกหงอนนาค และดาวเต็มฟ้า", image: "ภูสอยดาว.jpg" },
+      "ทริปมิตติ้งป่าบงเปียง ตู้ 1-2-3": { days: "2 วัน 1 คืน", distance: "ไม่ต้องเดินป่า", level: "-", price: "2550 บาท", highlight: "ชมทุ่งนาขั้นบันไดสีเขียวขจีพร้อมสายหมอกยามเช้า", image: "ป่าบงเปียง.jpg" },
+      "ทริปมิตติ้งป่าบงเปียง ตู้ 4": { days: "2 วัน 1 คืน", distance: "ไม่ต้องเดินป่า", level: "-", price: "2550 บาท", highlight: "ชมทุ่งนาขั้นบันไดสีเขียวขจีพร้อมสายหมอกยามเช้า", image: "ป่าบงเปียง.jpg" },
+      "หว่าวาโจ 3 ตู้": { days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2950 บาท", highlight: "☁️ วิวหมอกอลังการ เดินง่ายบนสันเขาที่ทอดยาวท้าลมหนาว", image: "หว่าวาโจ.jpg" },
+      "หว่าวาโจ V.2": { days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2950 บาท", highlight: "☁️ ดื่มด่ำทะเลหมอกและทุ่งดอกบัวตองสีเหลืองอร่ามทั่วดอย", image: "หว่าวาโจ.jpg" },
+      "ภูเขาควาย 2 ตู้": { days: "4 วัน 3 คืน", distance: "30-35 กม.", level: "🔴 ยาก", price: "4290 บาท", highlight: "ทริปต่างแดนสุดเอ็กซ์คลูซีฟ ลุยป่าหน้าต่างมหัศจรรย์สปป.ลาว", image: "ภูเขาควาย.jpg" },
+      "เลอกวาเดาะ": { days: "2 วัน 1 คืน", distance: "3-4 กม.", level: "🟡 ปานกลาง", price: "2000 บาท", highlight: "☁️ ขุนเขาแห่งศรัทธา ยอดเจดีย์บนหน้าผาสูงชันและทะเลหมอก", image: "เลอกวาเดาะ.jpg" },
+      "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้": { days: "3 วัน 2 คืน", distance: "7-8 กม.", level: "🟡 ปานกลาง", price: "3310 บาท", highlight: "☁️ จุดชมวิวทะเลหมอก 360 องศา แสงเย็นสวยพระอาทิตย์ตกดินเด่นชัด", image: "ดอยหมากพริก.jpg" }
+    };
+
+    function openTripDetailModal(name, date) {
+      pendingTripData = { name, date };
+      const info = TRIP_DETAILS[name] || {
+        days: "2 วัน 1 คืน", distance: "ตามความเหมาะสม", level: "🟡 ปานกลาง", price: "สอบถามแอดมิน",
+        highlight: "🌿 ร่วมเดินทางไปสัมผัสธรรมชาติอันสวยงาม และมิตรภาพดีๆ ระหว่างทางด้วยกันครับ", image: "default.jpg"
+      };
+
+      document.getElementById('tripDetailTitle').innerText = name;
+      document.getElementById('tripDetailDate').innerText = "📅 " + new Date(date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('tripDetailPrice').innerText = "💸 ค่าใช้จ่ายประมาณ " + (info.price || "สอบถามแอดมิน");
+      document.getElementById('tripDetailDays').innerText = info.days;
+      document.getElementById('tripDetailDistance').innerText = info.distance;
+      document.getElementById('tripDetailLevel').innerText = info.level;
+      document.getElementById('tripDetailHighlight').innerText = info.highlight;
+
+      const detailImg = document.getElementById('tripDetailImage');
+      if (detailImg) {
+        detailImg.src = info.image || "default.jpg";
+        detailImg.onerror = function () {
+          this.src = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80";
+        };
       }
-      grid.appendChild(cell);
+      document.getElementById('tripDetailModal').style.display = 'flex';
+    }
+
+    function confirmTripSelection() {
+      document.getElementById('tripDetailModal').style.display = 'none';
+      chooseTripFromMenu(pendingTripData.name, pendingTripData.date);
+    }
+
+    window.addEventListener('click', (e) => {
+      const modal = document.getElementById('tripDetailModal');
+      if (e.target === modal) { modal.style.display = 'none'; }
     });
-  });
-}
 
-// 🎯 [คลีนแล้ว] ยุบรวมฟังก์ชันเลือกที่นั่ง เหลือเพียงอันเดียวไม่มีซ้ำซ้อน
-function selectSeatHandler(element, seatId) {
-  fetch(API_URL, {
-    method: 'POST',
-    body: new URLSearchParams({ action: 'lockSeat', seat: seatId, date: document.getElementById('hidden_date_raw').value })
-  });
+    function chooseTripFromMenu(name, rawDate) {
+      document.getElementById('tripDisplay').value = name;
+      const cleanDate = new Date(rawDate);
+      const yyyy = cleanDate.getFullYear();
+      const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(cleanDate.getDate()).padStart(2, '0');
+      const formattedRaw = `${yyyy}-${mm}-${dd}`;
 
-  targetSelectedSeat = seatId;
-  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-  element.classList.add('selected');
-  
-  document.getElementById('hidden_seat').value = seatId;
-  document.getElementById('formSeatBadgeDisplay').innerText = seatId;
-  document.getElementById('formFieldsBox').classList.add('show-form');
-  
-  validateFormInput();
-  setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
-}
+      document.getElementById('hidden_date_raw').value = formattedRaw;
+      document.getElementById('dateDisplay').value = cleanDate.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-function validateFormInput() {
-  const list = ['form_name', 'form_nickname', 'form_phone', 'form_line', 'hidden_seat'];
-  const pass = list.every(id => document.getElementById(id).value.trim() !== "");
-  const btn = document.getElementById('actionTriggerBtn');
-  
-  btn.disabled = !pass;
-  if (pass) {
-    btn.classList.add('ready-to-click');
-    btn.innerHTML = "👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨";
-  } else {
-    btn.classList.remove('ready-to-click');
-    btn.innerHTML = "🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง";
-  }
-}
+      targetSelectedSeat = null;
+      document.getElementById('hidden_seat').value = "";
+      document.getElementById('formFieldsBox').classList.remove('show-form');
 
-function openPaymentModal() {
-  document.getElementById('paymentModal').style.display = 'flex';
-}
-function closePaymentModal() {
-  document.getElementById('paymentModal').style.display = 'none';
-}
-function toggleFinalSubmitBtn() {
-  document.getElementById('finalSubmitBtn').disabled = !document.getElementById('slipCheckbox').checked;
-}
+      ['A', 'B', 'C'].forEach(p => {
+        document.getElementById(`vanGrid${p}`).innerHTML = '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
+      });
 
-function getTripSeatStatus(bookings, tripName, tripDate) {
-  const bookedSeats = bookings.filter(b => {
-    return (b.trip === tripName && b.date === tripDate && b.seat);
-  }).length;
+      navigateToPage('bookingPage');
+      loadSeatStatusBackend(formattedRaw);
+      validateFormInput();
+    }
 
-  const TOTAL_SEATS = 30;
-  const emptySeats = TOTAL_SEATS - bookedSeats;
+    function loadSeatStatusBackend(dateValue) {
+      const cb = "cb_seats_" + Date.now();
+      window[cb] = (res) => {
+        renderVansWithData(res.bookings || []);
+        delete window[cb];
+        document.getElementById(cb)?.remove();
+      };
+      appendScriptTag(`${QUERY_URL}&date=${encodeURIComponent(dateValue)}&callback=${cb}`);
+    }
 
-  if (emptySeats <= 0) {
-    return `<div class="trip-seat-badge full">🔴 เต็ม</div>`;
-  }
-  return `<div class="trip-seat-badge available">🟢 ว่าง ${emptySeats} ที่</div>`;
-}
+    function buildEmptyVanGrid() {
+      ['A', 'B', 'C'].forEach(prefix => {
+        const grid = document.getElementById(`vanGrid${prefix}`);
+        grid.innerHTML = '';
+        BUS_GRID_STRUCTURE.forEach(n => {
+          const div = document.createElement('div');
+          if (n === 'driver') {
+            div.className = 'seat driver';
+            div.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
+          } else if (n === 'spacer') {
+            div.className = 'seat spacer';
+          } else {
+            div.className = 'seat empty';
+            const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
+            div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${label}</span>`;
+          }
+          grid.appendChild(div);
+        });
+      });
+    }
 
-function processDataToSheets() {
-  const btn = document.getElementById('finalSubmitBtn');
-  btn.innerHTML = "⌛ กำลังส่งข้อมูลเข้าระบบ...";
-  btn.disabled = true;
+    function renderVansWithData(bookedList) {
+      const mapping = {};
+      bookedList.forEach(b => { if (b.seat) { mapping[String(b.seat)] = b.nickname || 'เต็ม'; } });
 
-  const payload = {
-    date: document.getElementById('hidden_date_raw').value,
-    trip: document.getElementById('tripDisplay').value,
-    seat: document.getElementById('hidden_seat').value,
-    name: document.getElementById('form_name').value,
-    nickname: document.getElementById('form_nickname').value,
-    phone: document.getElementById('form_phone').value,
-    line: document.getElementById('form_line').value,
-    confirm: 'true'
-  };
+      ['A', 'B', 'C'].forEach(prefix => {
+        const grid = document.getElementById(`vanGrid${prefix}`);
+        grid.innerHTML = '';
+        BUS_GRID_STRUCTURE.forEach(n => {
+          const cell = document.createElement('div');
+          if (n === 'driver') {
+            cell.className = 'seat driver';
+            cell.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
+          } else if (n === 'spacer') {
+            cell.className = 'seat spacer';
+          } else {
+            const id = prefix + n;
+            cell.className = 'seat';
+            if (mapping[id]) {
+              if (mapping[id] === 'งดจอง') {
+                cell.classList.add('hidden-seat');
+                cell.innerHTML = '';
+              } else {
+                cell.classList.add('booked');
+                cell.innerHTML = `<span style="font-size:9px;">${id}</span><div style="font-size:13px;">${mapping[id]}</div>`;
+              }
+            } else {
+              cell.classList.add('empty');
+              if (id === targetSelectedSeat) { cell.classList.add('selected'); }
+              const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
+              cell.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${label}</span>`;
+              cell.onclick = () => selectSeatHandler(cell, id);
+            }
+          }
+          grid.appendChild(cell);
+        });
+      });
+    }
 
-  const mockForm = document.createElement('form');
-  mockForm.method = 'POST'; mockForm.action = API_URL; mockForm.style.display = 'none';
-  
-  for (const k in payload) {
-    const input = document.createElement('input');
-    input.name = k; input.value = payload[k];
-    mockForm.appendChild(input);
-  }
-  
-  document.body.appendChild(mockForm);
-  const iframe = document.createElement('iframe');
-  iframe.name = 'iframe_post_target'; iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-  
-  mockForm.target = 'iframe_post_target';
-  mockForm.submit();
+    function selectSeatHandler(element, seatId) {
+      fetch(API_URL, {
+        method: 'POST',
+        body: new URLSearchParams({ action: 'lockSeat', seat: seatId, date: document.getElementById('hidden_date_raw').value })
+      });
+      targetSelectedSeat = seatId;
+      document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+      element.classList.add('selected');
+      document.getElementById('hidden_seat').value = seatId;
+      document.getElementById('formSeatBadgeDisplay').innerText = seatId;
+      document.getElementById('formFieldsBox').classList.add('show-form');
+      validateFormInput();
+      setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+    }
 
-  setTimeout(() => {
-    document.getElementById('paymentModal').style.display = 'none';
-    document.getElementById('rec_name').innerText = payload.name;
-    document.getElementById('rec_trip').innerText = payload.trip;
-    
-    const d = new Date(payload.date);
-    document.getElementById('rec_date').innerText = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-    document.getElementById('rec_seat').innerText = payload.seat;
-    
-    navigateToPage('successPage');
-  }, 1800);
-}
+    function validateFormInput() {
+      const list = ['form_name', 'form_nickname', 'form_phone', 'form_line', 'hidden_seat'];
+      const pass = list.every(id => document.getElementById(id).value.trim() !== "");
+      const btn = document.getElementById('actionTriggerBtn');
+      btn.disabled = !pass;
+      if (pass) {
+        btn.classList.add('ready-to-click');
+        btn.innerHTML = "👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨";
+      } else {
+        btn.classList.remove('ready-to-click');
+        btn.innerHTML = "🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง";
+      }
+    }
 
-function reloadToCatalogHome() {
-  location.reload();
-}
+    function openPaymentModal() { document.getElementById('paymentModal').style.display = 'flex'; }
+    function closePaymentModal() { document.getElementById('paymentModal').style.display = 'none'; }
+    function toggleFinalSubmitBtn() { document.getElementById('finalSubmitBtn').disabled = !document.getElementById('slipCheckbox').checked; }
 
-function appendScriptTag(url) {
-  const script = document.createElement('script');
-  script.src = url;
-  document.body.appendChild(script);
-}
+    function getTripSeatStatus(bookings, tripName, tripDate) {
+      const bookedSeats = bookings.filter(b => b.trip === tripName && b.date === tripDate && b.seat).length;
+      const TOTAL_SEATS = 30;
+      const emptySeats = TOTAL_SEATS - bookedSeats;
+      if (emptySeats <= 0) { return `<div class="trip-seat-badge full">🔴 เต็ม</div>`; }
+      return `<div class="trip-seat-badge available">🟢 ว่าง ${emptySeats} ที่</div>`;
+    }
+
+    function processDataToSheets() {
+      const btn = document.getElementById('finalSubmitBtn');
+      btn.innerHTML = "⌛ กำลังส่งข้อมูลเข้าระบบ...";
+      btn.disabled = true;
+
+      const payload = {
+        date: document.getElementById('hidden_date_raw').value, trip: document.getElementById('tripDisplay').value,
+        seat: document.getElementById('hidden_seat').value, name: document.getElementById('form_name').value,
+        nickname: document.getElementById('form_nickname').value, phone: document.getElementById('form_phone').value,
+        line: document.getElementById('form_line').value, confirm: 'true'
+      };
+
+      const mockForm = document.createElement('form');
+      mockForm.method = 'POST'; mockForm.action = API_URL; mockForm.style.display = 'none';
+      for (const k in payload) {
+        const input = document.createElement('input');
+        input.name = k; input.value = payload[k];
+        mockForm.appendChild(input);
+      }
+      document.body.appendChild(mockForm);
+
+      const iframe = document.createElement('iframe');
+      iframe.name = 'iframe_post_target'; iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+
+      mockForm.target = 'iframe_post_target';
+      mockForm.submit();
+
+      setTimeout(() => {
+        document.getElementById('paymentModal').style.display = 'none';
+        document.getElementById('rec_name').innerText = payload.name;
+        document.getElementById('rec_trip').innerText = payload.trip;
+        const d = new Date(payload.date);
+        document.getElementById('rec_date').innerText = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+        document.getElementById('rec_seat').innerText = payload.seat;
+        navigateToPage('successPage');
+      }, 1800);
+    }
+
+    function reloadToCatalogHome() { location.reload(); }
+    function appendScriptTag(url) {
+      const script = document.createElement('script');
+      script.src = url;
+      document.body.appendChild(script);
+    }
+  </script>
+</body>
+</html>
 </script>
 </body>
 </html>
