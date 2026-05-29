@@ -1227,30 +1227,80 @@
       <div id="vanGridC" class="van-grid-seats"></div>
     </div>
 
-    <div id="formFieldsBox">
-      <div class="booking-form-header">ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
-      <form id="mainBookingForm">
-        <div class="input-box-group">
-          <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
-          <input id="form_name" class="input-box-field" placeholder="กรุณากรอก ชื่อ-นาสกุล จริง" required>
+   <div id="formFieldsBox">
+      <div class="booking-form-header">✍️ ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
+      
+      <div style="
+        background: linear-gradient(145deg, #0c1626, #070d18);
+        border: 1px solid rgba(56, 189, 248, 0.15);
+        border-radius: 24px;
+        padding: 22px 18px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03);
+        position: relative;
+        overflow: hidden;
+      ">
+        <div style="
+          position: absolute;
+          top: 62px;
+          left: -10px;
+          right: -10px;
+          border-top: 2px dashed rgba(255, 255, 255, 0.08);
+          z-index: 1;
+        "></div>
+        <div style="position: absolute; top: 54px; left: -8px; width: 16px; height: 16px; background: #060b13; border-radius: 50%; z-index: 2;"></div>
+        <div style="position: absolute; top: 54px; right: -8px; width: 16px; height: 16px; background: #060b13; border-radius: 50%; z-index: 2;"></div>
+
+        <div style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 28px;
+          padding-bottom: 4px;
+        ">
+          <div>
+            <h4 style="font-size: 16px; color: #fff; font-weight: 700;">กำลังดำเนินการจอง</h4>
+            <p style="font-size: 11px; color: #64748b; margin-top: 2px;">โปรดกรอกข้อมูลจริงเพื่อรักษาสิทธิ์ของท่าน</p>
+          </div>
+          
+          <div style="text-align: right;">
+            <span style="font-size: 10px; color: #94a3b8; display: block; margin-bottom: 3px; font-weight: 600;">เบาะที่เลือก</span>
+            <span id="formSeatBadgeDisplay" style="
+              background: linear-gradient(135deg, #ffd84d, #f7b500);
+              color: #000;
+              font-size: 18px;
+              font-weight: 800;
+              padding: 6px 14px;
+              border-radius: 10px;
+              display: inline-block;
+              box-shadow: 0 4px 12px rgba(247, 181, 0, 0.35);
+              min-width: 60px;
+              text-align: center;
+            ">-</span>
+          </div>
         </div>
-        <div class="input-box-group">
-          <label class="input-box-label">🏷️ ชื่อเล่น</label>
-          <input id="form_nickname" class="input-box-field" placeholder="บักควย" required>
-        </div>
-        <div class="input-box-group">
-          <label class="input-box-label">📞 เบอร์โทรศัพท์</label>
-          <input id="form_phone" type="tel" class="input-box-field" placeholder="เบอร์โทรจริงๆ" required>
-        </div>
-        <div class="input-box-group">
-          <label class="input-box-label">💬 ชื่อ LINE</label>
-          <input id="form_line" class="input-box-field" placeholder="เที่ยวนี่เหอะ" required>
-        </div>
-        <input type="hidden" id="hidden_seat">
-        <input type="hidden" id="hidden_date_raw">
-      </form>
+
+        <form id="mainBookingForm" style="position: relative; z-index: 3;">
+          <div class="input-box-group">
+            <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
+            <input id="form_name" class="input-box-field" placeholder="กรุณากรอก ชื่อ-นามสกุล จริง" required style="border-color: rgba(255,255,255,0.15);">
+          </div>
+          <div class="input-box-group">
+            <label class="input-box-label">🏷️ ชื่อเล่น</label>
+            <input id="form_nickname" class="input-box-field" placeholder="กรอกชื่อเล่นของคุณ" required style="border-color: rgba(255,255,255,0.15);">
+          </div>
+          <div class="input-box-group">
+            <label class="input-box-label">📞 เบอร์โทรศัพท์</label>
+            <input id="form_phone" type="tel" class="input-box-field" placeholder="เบอร์โทรศัพท์ที่ติดต่อได้จริง" required style="border-color: rgba(255,255,255,0.15);">
+          </div>
+          <div class="input-box-group">
+            <label class="input-box-label">💬 ชื่อ LINE</label>
+            <input id="form_line" class="input-box-field" placeholder="ไอดีไลน์ หรือชื่อที่ใช้ในไลน์" required style="border-color: rgba(255,255,255,0.15);">
+          </div>
+          <input type="hidden" id="hidden_seat">
+          <input type="hidden" id="hidden_date_raw">
+        </form>
+      </div>
     </div>
-  </div>
 
   <div class="sticky-action-bar">
     <button id="actionTriggerBtn" onclick="openPaymentModal()" class="btn-submit-trigger" disabled>🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
@@ -2087,6 +2137,27 @@ function selectSeatHandler(element, seatId) {
   element.classList.add('selected');
   
   document.getElementById('hidden_seat').value = seatId;
+  document.getElementById('formFieldsBox').classList.add('show-form');
+  
+  validateFormInput();
+  setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
+}
+  // หาฟังก์ชัน selectSeatHandler เดิม แล้วเพิ่มโค้ดนี้ลงไปในฟังก์ชัน
+function selectSeatHandler(element, seatId) {
+  fetch(API_URL, {
+    method: 'POST',
+    body: new URLSearchParams({ action: 'lockSeat', seat: seatId, date: document.getElementById('hidden_date_raw').value })
+  });
+
+  targetSelectedSeat = seatId;
+  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
+  element.classList.add('selected');
+  
+  document.getElementById('hidden_seat').value = seatId;
+
+  // ⭐️ บรรทัดที่เพิ่มใหม่: สั่งให้เอาเลขเบาะไปโชว์ในกล่องครอบตัวใหม่
+  document.getElementById('formSeatBadgeDisplay').innerText = seatId;
+
   document.getElementById('formFieldsBox').classList.add('show-form');
   
   validateFormInput();
