@@ -1859,120 +1859,97 @@ const TRIP_DETAILS = {
 
 };
 
-function openTripDetailModal(name,date){
+// ========================================================
+// 🚨 [แก้ไขแล้ว] ระบบดัก Error และเปิดป๊อปอัพรายละเอียดทริป
+// ========================================================
+function openTripDetailModal(name, date) {
+  pendingTripData = { name, date };
 
-  pendingTripData = {name,date};
+  // ดักตรวจสอบ: ถ้าไม่มีข้อมูลชื่อทริปนี้ใน TRIP_DETAILS ให้สร้างค่าเริ่มต้นขึ้นมาแทน ไม่ให้สคริปต์ค้าง
+  const info = TRIP_DETAILS[name] || {
+    days: "2 วัน 1 คืน",
+    distance: "ตามความเหมาะสม",
+    level: "🟡 ปานกลาง",
+    price: "สอบถามแอดมิน",
+    highlight: "🌿 ร่วมเดินทางไปสัมผัสธรรมชาติอันสวยงาม และมิตรภาพดีๆ ระหว่างทางด้วยกันครับ",
+    image: "default.jpg"
+  };
 
-  const info =
-    TRIP_DETAILS[name] || {
+  document.getElementById('tripDetailTitle').innerText = name;
 
-      days:"2 วัน 1 คืน",
-      distance:"5 กม.",
-      level:"ปานกลาง",
-      highlight:"🌿 ธรรมชาติสวย บรรยากาศดี และมิตรภาพระหว่างทาง",
-      image:"default.jpg"
+  document.getElementById('tripDetailDate').innerText =
+    "📅 " +
+    new Date(date).toLocaleDateString(
+      'th-TH',
+      {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }
+    );
+
+  const displayPrice = info.price ? info.price : "สอบถามแอดมิน";
+  document.getElementById('tripDetailPrice').innerText = "💸 ค่าใช้จ่ายประมาณ " + displayPrice;
+  document.getElementById('tripDetailDays').innerText = info.days;
+  document.getElementById('tripDetailDistance').innerText = info.distance;
+  document.getElementById('tripDetailLevel').innerText = info.level;
+  document.getElementById('tripDetailHighlight').innerText = info.highlight;
+
+  // ตรวจสอบและแสดงผลรูปภาพ
+  const detailImg = document.getElementById('tripDetailImage');
+  if (detailImg) {
+    detailImg.src = info.image || "default.jpg";
+    detailImg.onerror = function() {
+      this.src = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80";
     };
-
-  document.getElementById('tripDetailTitle')
-    .innerText = name;
-
-  document.getElementById('tripDetailDate')
-    .innerText =
-      "📅 " +
-      new Date(date).toLocaleDateString(
-        'th-TH',
-        {
-          day:'numeric',
-          month:'long',
-          year:'numeric'
-        }
-      );
-
-  document.getElementById('tripDetailPrice')
-    .innerText = "💸 ค่าใช้จ่ายประมาณ " + info.price;
-
-  document.getElementById('tripDetailDays')
-    .innerText = info.days;
-
-  document.getElementById('tripDetailDistance')
-    .innerText = info.distance;
-
-  document.getElementById('tripDetailLevel')
-    .innerText = info.level;
-
-  document.getElementById('tripDetailHighlight')
-    .innerText = info.highlight;
-
-  document.getElementById('tripDetailImage')
-    .src = info.image;
-
-  document.getElementById('tripDetailModal')
-    .style.display = 'flex';
-}
-
-function confirmTripSelection(){
-
-  document.getElementById('tripDetailModal')
-    .style.display = 'none';
-
-  chooseTripFromMenu(
-    pendingTripData.name,
-    pendingTripData.date
-  );
-}
-
-window.addEventListener('click',(e)=>{
-
-  const modal =
-    document.getElementById('tripDetailModal');
-
-  if(e.target === modal){
-
-    modal.style.display = 'none';
   }
 
-});
-// เมื่อเลือกทริปจากหน้าแรก
-function chooseTripFromMenu(name, rawDate) {
+  document.getElementById('tripDetailModal').style.display = 'flex';
+}
 
+function confirmTripSelection() {
+  document.getElementById('tripDetailModal').style.display = 'none';
+  chooseTripFromMenu(pendingTripData.name, pendingTripData.date);
+}
+
+window.addEventListener('click', (e) => {
+  const modal = document.getElementById('tripDetailModal');
+  if (e.target === modal) {
+    modal.style.display = 'none';
+  }
+});
+
+// เมื่อเลือกทริปจากหน้าแรกเข้าสู่ผังเบาะรถตู้
+function chooseTripFromMenu(name, rawDate) {
   document.getElementById('tripDisplay').value = name;
 
   const cleanDate = new Date(rawDate);
-
   const yyyy = cleanDate.getFullYear();
   const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
   const dd = String(cleanDate.getDate()).padStart(2, '0');
-
   const formattedRaw = `${yyyy}-${mm}-${dd}`;
 
   document.getElementById('hidden_date_raw').value = formattedRaw;
-
-  document.getElementById('dateDisplay').value =
-    cleanDate.toLocaleDateString('th-TH', {
-      day:'2-digit',
-      month:'2-digit',
-      year:'numeric'
-    });
+  document.getElementById('dateDisplay').value = cleanDate.toLocaleDateString('th-TH', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
 
   targetSelectedSeat = null;
-
   document.getElementById('hidden_seat').value = "";
+  document.getElementById('formFieldsBox').classList.remove('show-form');
 
-  document.getElementById('formFieldsBox')
-    .classList.remove('show-form');
-
-  ['A','B','C'].forEach(p => {
+  ['A', 'B', 'C'].forEach(p => {
     document.getElementById(`vanGrid${p}`).innerHTML =
       '<p style="grid-column:span 4; text-align:center; color:var(--primary); font-size:11px; padding:10px 0;">⌛ อัปเดตผังที่นั่งว่าง...</p>';
   });
 
   navigateToPage('bookingPage');
-
   loadSeatStatusBackend(formattedRaw);
-
   validateFormInput();
 }
-// ฟังก์ชัน JSONP: ดึงสถานะที่นั่งของวันที่เลือก
+
 function loadSeatStatusBackend(dateValue) {
   const cb = "cb_seats_" + Date.now();
   window[cb] = (res) => {
@@ -1984,165 +1961,80 @@ function loadSeatStatusBackend(dateValue) {
 }
 
 function buildEmptyVanGrid() {
-
   ['A', 'B', 'C'].forEach(prefix => {
-
     const grid = document.getElementById(`vanGrid${prefix}`);
-
     grid.innerHTML = '';
 
     BUS_GRID_STRUCTURE.forEach(n => {
-
       const div = document.createElement('div');
-
       if (n === 'driver') {
-
         div.className = 'seat driver';
-
-        div.innerHTML = `
-          <span>👨‍✈️</span>
-          <span style="font-size:9px;">คนขับ</span>
-        `;
-
+        div.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
       } else if (n === 'spacer') {
-
         div.className = 'seat spacer';
-
       } else {
-
         div.className = 'seat empty';
-
-        const label = n === 'เบาะซ้าย'
-          ? prefix + 'ซ้าย'
-          : prefix + n;
-
-        div.innerHTML = `
-          <span style="font-size:10px;">เบาะ</span>
-          <span style="font-size:18px;">${label}</span>
-        `;
+        const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
+        div.innerHTML = `<span style="font-size:10px;">เบาะ</span><span style="font-size:18px;">${label}</span>`;
       }
-
       grid.appendChild(div);
-
     });
-
   });
-
 }
 
 function renderVansWithData(bookedList) {
-
   const mapping = {};
-
   bookedList.forEach(b => {
-
     if (b.seat) {
       mapping[String(b.seat)] = b.nickname || 'เต็ม';
     }
-
   });
 
   ['A', 'B', 'C'].forEach(prefix => {
-
     const grid = document.getElementById(`vanGrid${prefix}`);
-
     grid.innerHTML = '';
 
     BUS_GRID_STRUCTURE.forEach(n => {
-
       const cell = document.createElement('div');
-
       if (n === 'driver') {
-
         cell.className = 'seat driver';
-
-        cell.innerHTML = `
-          <span>👨‍✈️</span>
-          <span style="font-size:9px;">คนขับ</span>
-        `;
-
+        cell.innerHTML = `<span>👨‍✈️</span><span style="font-size:9px;">คนขับ</span>`;
       } else if (n === 'spacer') {
-
         cell.className = 'seat spacer';
-
       } else {
-
         const id = prefix + n;
-
         cell.className = 'seat';
 
         if (mapping[id]) {
-
-  // ถ้าเป็นเบาะงดจอง
-  if (mapping[id] === 'งดจอง') {
-
-    cell.classList.add('hidden-seat');
-
-    cell.innerHTML = '';
-
-  } else {
-
-    // จองปกติ = สีแดงเหมือนเดิม
-    cell.classList.add('booked');
-
-    cell.innerHTML = `
-      <span style="font-size:9px;">${id}</span>
-      <div style="font-size:13px;">
-        ${mapping[id]}
-      </div>
-    `;
-
-  }
-
-} else {
-
+          if (mapping[id] === 'งดจอง') {
+            cell.classList.add('hidden-seat');
+            cell.innerHTML = '';
+          } else {
+            cell.classList.add('booked');
+            cell.innerHTML = `
+              <span style="font-size:9px;">${id}</span>
+              <div style="font-size:13px;">${mapping[id]}</div>
+            `;
+          }
+        } else {
           cell.classList.add('empty');
-
           if (id === targetSelectedSeat) {
             cell.classList.add('selected');
           }
-
-          const label = n === 'เบาะซ้าย'
-            ? prefix + 'ซ้าย'
-            : prefix + n;
-
+          const label = n === 'เบาะซ้าย' ? prefix + 'ซ้าย' : prefix + n;
           cell.innerHTML = `
             <span style="font-size:10px;">เบาะ</span>
             <span style="font-size:18px;">${label}</span>
           `;
-
           cell.onclick = () => selectSeatHandler(cell, id);
-
         }
-
       }
-
       grid.appendChild(cell);
-
     });
-
   });
-
 }
-// ฟังก์ชันจองล็อกเบาะที่นั่ง
-function selectSeatHandler(element, seatId) {
-  // ยิงส่ง API ไปสั่ง Lock เบาะหลังบ้านไว้ชั่วคราวทันที
-  fetch(API_URL, {
-    method: 'POST',
-    body: new URLSearchParams({ action: 'lockSeat', seat: seatId, date: document.getElementById('hidden_date_raw').value })
-  });
 
-  targetSelectedSeat = seatId;
-  document.querySelectorAll('.seat').forEach(s => s.classList.remove('selected'));
-  element.classList.add('selected');
-  
-  document.getElementById('hidden_seat').value = seatId;
-  document.getElementById('formFieldsBox').classList.add('show-form');
-  
-  validateFormInput();
-  setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
-}
-  // หาฟังก์ชัน selectSeatHandler เดิม แล้วเพิ่มโค้ดนี้ลงไปในฟังก์ชัน
+// 🎯 [คลีนแล้ว] ยุบรวมฟังก์ชันเลือกที่นั่ง เหลือเพียงอันเดียวไม่มีซ้ำซ้อน
 function selectSeatHandler(element, seatId) {
   fetch(API_URL, {
     method: 'POST',
@@ -2154,17 +2046,13 @@ function selectSeatHandler(element, seatId) {
   element.classList.add('selected');
   
   document.getElementById('hidden_seat').value = seatId;
-
-  // ⭐️ บรรทัดที่เพิ่มใหม่: สั่งให้เอาเลขเบาะไปโชว์ในกล่องครอบตัวใหม่
   document.getElementById('formSeatBadgeDisplay').innerText = seatId;
-
   document.getElementById('formFieldsBox').classList.add('show-form');
   
   validateFormInput();
   setTimeout(() => document.getElementById('formFieldsBox').scrollIntoView({behavior:'smooth', block:'center'}), 200);
 }
 
-// ตรวจสอบการกรอกข้อมูลในฟอร์มทั้งหมดแบบ Real-time
 function validateFormInput() {
   const list = ['form_name', 'form_nickname', 'form_phone', 'form_line', 'hidden_seat'];
   const pass = list.every(id => document.getElementById(id).value.trim() !== "");
@@ -2180,7 +2068,6 @@ function validateFormInput() {
   }
 }
 
-// คอนโทรลหน้าต่างป๊อปอัพชำระเงิน
 function openPaymentModal() {
   document.getElementById('paymentModal').style.display = 'flex';
 }
@@ -2191,43 +2078,21 @@ function toggleFinalSubmitBtn() {
   document.getElementById('finalSubmitBtn').disabled = !document.getElementById('slipCheckbox').checked;
 }
 
-// ส่งข้อมูลชุดสุดท้ายไปบันทึกบน Google Sheets
 function getTripSeatStatus(bookings, tripName, tripDate) {
-
-  // นับเฉพาะเบาะที่ "จองจริง"
   const bookedSeats = bookings.filter(b => {
+    return (b.trip === tripName && b.date === tripDate && b.seat);
+  }).length;
 
-  return (
-    b.trip === tripName &&
-    b.date === tripDate &&
-    b.seat
-  );
-
-}).length;
-
-  // จำนวนเบาะจริง
   const TOTAL_SEATS = 30;
-
-  // ว่าง = ทั้งหมด - จองจริง
   const emptySeats = TOTAL_SEATS - bookedSeats;
 
   if (emptySeats <= 0) {
-
-   return `
-  <div class="trip-seat-badge full">
-    🔴 เต็ม
-  </div>
-`;
-
+    return `<div class="trip-seat-badge full">🔴 เต็ม</div>`;
   }
-
-  return `
-  <div class="trip-seat-badge available">
-    🟢 ว่าง ${emptySeats} ที่
-  </div>
-`;
+  return `<div class="trip-seat-badge available">🟢 ว่าง ${emptySeats} ที่</div>`;
 }
-  function processDataToSheets() {
+
+function processDataToSheets() {
   const btn = document.getElementById('finalSubmitBtn');
   btn.innerHTML = "⌛ กำลังส่งข้อมูลเข้าระบบ...";
   btn.disabled = true;
@@ -2243,7 +2108,6 @@ function getTripSeatStatus(bookings, tripName, tripDate) {
     confirm: 'true'
   };
 
-  // สร้างฟอร์มซ่อนเพื่อยิง POST ข้ามโดเมน
   const mockForm = document.createElement('form');
   mockForm.method = 'POST'; mockForm.action = API_URL; mockForm.style.display = 'none';
   
@@ -2261,11 +2125,8 @@ function getTripSeatStatus(bookings, tripName, tripDate) {
   mockForm.target = 'iframe_post_target';
   mockForm.submit();
 
-  // ปิดป๊อปอัพเซ็ตข้อมูลเข้าสลิปจองสำเร็จ (หน้า 4)
   setTimeout(() => {
     document.getElementById('paymentModal').style.display = 'none';
-    
-    // ผูกค่าเข้ากล่องข้อความบิลจองสำเร็จตามแบบภาพที่ 2
     document.getElementById('rec_name').innerText = payload.name;
     document.getElementById('rec_trip').innerText = payload.trip;
     
@@ -2273,7 +2134,6 @@ function getTripSeatStatus(bookings, tripName, tripDate) {
     document.getElementById('rec_date').innerText = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
     document.getElementById('rec_seat').innerText = payload.seat;
     
-    // เปลี่ยนหน้าไปหน้าระบบจองสำเร็จ (หน้า 4)
     navigateToPage('successPage');
   }, 1800);
 }
