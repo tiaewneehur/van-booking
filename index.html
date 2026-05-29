@@ -589,67 +589,6 @@
     #formFieldsBox.show-form { display: block; animation: slideUpForm 0.3s ease-out; }
     @keyframes slideUpForm { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    .booking-form-hero{
-
-  display:flex;
-  align-items:center;
-  gap:16px;
-
-  padding:20px;
-
-  margin-top:24px;
-  margin-bottom:20px;
-
-  border-radius:24px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(56,189,248,.15),
-      rgba(16,185,129,.08)
-    );
-
-  border:1px solid rgba(255,255,255,.06);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.25);
-}
-
-.hero-icon{
-
-  width:58px;
-  height:58px;
-
-  border-radius:18px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:28px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #38bdf8,
-      #0284c7
-    );
-}
-
-.booking-form-hero h3{
-
-  color:#fff;
-  font-size:18px;
-  margin-bottom:4px;
-}
-
-.booking-form-hero p{
-
-  color:#cbd5e1;
-  font-size:12px;
-  line-height:1.5;
-}
-    
     /* Sticky Bottom Action Bar */
     .sticky-action-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(6, 11, 19, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 14px 16px 30px; border-top: 1px solid rgba(255,255,255,0.06); z-index: 999; display: flex; justify-content: center; }
     .btn-submit-trigger { width: 100%; max-width: 440px; height: 50px; border-radius: 12px; border: none; font-size: 15px; font-weight: 700; font-family: inherit; transition: all 0.25s; cursor: pointer; background: #131c2a; color: #334155; }
@@ -1289,21 +1228,7 @@
     </div>
 
     <div id="formFieldsBox">
-    <div class="booking-form-hero">
-
-  <div class="hero-icon">
-    👤
-  </div>
-
-  <div>
-    <h3>ข้อมูลผู้จอง</h3>
-
-    <p>
-      กรุณากรอกข้อมูลให้ครบถ้วน
-      เพื่อยืนยันสิทธิ์การเดินทาง
-    </p>
-  </div>
-</div>
+      <div class="booking-form-header">ข้อมูลผู้จอง (กรุณากรอกให้ครบถ้วน)</div>
       <form id="mainBookingForm">
         <div class="input-box-group">
           <label class="input-box-label">👤 ชื่อ-นามสกุลจริง</label>
