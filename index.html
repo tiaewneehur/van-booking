@@ -633,6 +633,10 @@ function fetchData(){
       if(!seen[k]){seen[k]=1;cacheTrips.push({trip:b.trip,date:b.date});}
     });
     renderHome();renderTripList(cacheTrips);renderMyTrips();renderNotif();
+    const _today=new Date(new Date().setHours(0,0,0,0));
+    const _el=document.getElementById('upcomingList');
+    if(_el)_el.innerHTML=cacheTrips.filter(t=>new Date(t.date)>=_today).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
+
     delete window[cb];
   };
   appendScript(QUERY_URL+'&callback='+cb);
@@ -656,7 +660,7 @@ function renderHome(){
       <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
     </div>
     <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
-    <div class="trip-list">${cacheTrips.filter(t=>new Date(t.date)>=new Date(new Date().setHours(0,0,0,0))).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>'}</div>
+    <div class="trip-list" id="upcomingList"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3></div>
     <div class="trip-list" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
