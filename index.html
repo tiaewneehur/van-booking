@@ -720,15 +720,31 @@ function searchTrips(){const q=document.getElementById('searchInput').value.toLo
 
 /* ── MY TRIPS ── */
 function renderMyTrips() {
-  // ตัดช่องว่างและแปลงเป็น String ทั้ง 2 ฝั่งก่อนเทียบ
+  // --- ส่วน Debug (สำคัญมาก) ---
+  console.log("--- เริ่มตรวจสอบข้อมูล ---");
+  console.log("currentUser ของคุณคือ:", currentUser);
+  console.log("เบอร์ที่ล็อกอิน (targetPhone):", String(currentUser.phone || '').trim());
+  console.log("ข้อมูลชุดแรกใน allBookings (ถ้ามี):", allBookings[0]);
+  
+  if (!allBookings || allBookings.length === 0) {
+    console.warn("แจ้งเตือน: allBookings ว่างเปล่า ไม่มีข้อมูลในระบบ!");
+  } else {
+    // ลองเอาเบอร์คนแรกใน allBookings มาให้ดูว่ามันเขียนว่ายังไง
+    console.log("ตัวอย่างเบอร์ใน allBookings[0]:", allBookings[0].phone);
+  }
+  // --------------------------
+
   const targetPhone = String(currentUser.phone || '').trim();
   const my = allBookings.filter(b => String(b.phone || '').trim() === targetPhone);
 
-  console.log("กำลังหาข้อมูลเบอร์:", targetPhone);
-  console.log("จำนวนที่พบ:", my.length); // เช็กใน Console ว่าเลขนี้เป็น 0 หรือเปล่า
+  console.log("จำนวนที่พบหลังจาก Filter:", my.length);
 
   const seen = {}; const dd = [];
-  my.forEach(b => { const k = b.trip + '_' + b.date + '_' + b.seat; if (!seen[k]) { seen[k] = 1; dd.push(b); } });
+  my.forEach(b => { 
+      const k = b.trip + '_' + b.date + '_' + b.seat; 
+      if (!seen[k]) { seen[k] = 1; dd.push(b); } 
+  });
+  
   const prov = [...new Set(dd.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
 
   document.getElementById('myContent').innerHTML = `
@@ -765,12 +781,11 @@ function renderMyTrips() {
     <div style="height:1px;background:var(--border);margin:20px 0"></div>
     <button class="btn-logout" onclick="logOut()">🚪 ออกจากระบบ</button>`;
     
-    // โหลดรูปที่บันทึกไว้ทันทีหลังจาก render เสร็จ
+    // โหลดรูปที่บันทึกไว้
     const savedAvatar = localStorage.getItem('userAvatar');
     const imgElement = document.getElementById('userAvatar');
-    if (savedAvatar && imgElement) {
-        imgElement.src = savedAvatar;
-    }
+    if (savedAvatar && imgElement) imgElement.src = savedAvatar;
+}
 }
 
 /* ── NOTIF ── */
