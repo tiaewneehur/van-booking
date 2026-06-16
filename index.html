@@ -310,9 +310,12 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
       <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/44?text=🏕'" alt="Logo">
       <div><h1>เที่ยวนี่เหอะ</h1><span>ออกไปเที่ยวให้โลกจำ 🏔️</span></div>
     </div>
-    <button class="hdr-btn" onclick="openDrawer()">📋 สาระแนจังนะ</button>
-    <button class="hdr-btn" style="margin-left:auto" onclick="document.getElementById('adminPopup').style.display='flex'">👤 ติดต่อแอดมิน</button>
-  </div>
+    
+    <div style="display: flex; gap: 8px; margin-left: auto;">
+        <button class="hdr-btn" onclick="openDrawer()">📋 สาระแนจังนะ</button>
+        <button class="hdr-btn" onclick="document.getElementById('adminPopup').style.display='flex'">👤 ติดต่อแอดมิน</button>
+    </div>
+</div>
 
   <div id="tab-home" class="view-page active-page"><div class="main" id="homeContent"></div></div>
   <div id="tab-trips" class="view-page">
