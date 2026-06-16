@@ -705,7 +705,18 @@ function cardHTML(item){
 }
 
 /* ── TRIPS TAB ── */
-function renderTripList(list){document.getElementById('tripListFull').innerHTML=list.length?list.map(t=>cardHTML(t)).join(''):'<p style="text-align:center;color:var(--muted);padding:30px">ไม่พบทริป</p>';}
+function renderTripList(list){
+  const today = new Date(new Date().setHours(0,0,0,0));
+  const upcoming = list.filter(t=>new Date(t.date)>=today);
+  const past = list.filter(t=>new Date(t.date)<today);
+  document.getElementById('tripListFull').innerHTML=`
+    <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
+    <div class="trip-list">${upcoming.map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>'}</div>
+    <div class="divider"></div>
+    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3></div>
+    <div class="trip-list" style="opacity:.7">${past.map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
+  `;
+}
 function searchTrips(){const q=document.getElementById('searchInput').value.toLowerCase();renderTripList(cacheTrips.filter(t=>t.trip.toLowerCase().includes(q)));}
 
 /* ── MY TRIPS ── */
