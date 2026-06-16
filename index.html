@@ -645,7 +645,7 @@ function loadSeats(d){
 function renderHome(){
   const h=new Date().getHours();
   const gr=h<12?'🌅 อรุณสวัสดิ์':h<17?'☀️ สวัสดีตอนบ่าย':'🌙 สวัสดีตอนเย็น';
-  const mc=allBookings.filter(b=>b.phone===currentUser.phone||b.nickname===currentUser.nick).length;
+  const mc = allBookings.filter(b => b.phone === currentUser.phone).length;
   
   // ดึงรูปที่เก็บไว้มาใช้
   const savedAvatar = localStorage.getItem('userAvatar') || 'https://via.placeholder.com/150?text=👤';
