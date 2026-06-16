@@ -8,41 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-/* ล็อกหน้าจอให้สูงเท่าหน้าจอมือถือเป๊ะๆ */
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-}
-
-body {
-  /* ล็อกภาพไว้ที่ตัว body */
-  background-image: url('bg.jpg'); 
-  background-size: cover;          /* ใช้ cover เพื่อให้ภาพ 9:16 เต็มหน้าจอพอดี */
-  background-position: center;     
-  background-attachment: fixed;    /* ล็อกภาพไม่ให้ขยับเวลาเลื่อนเนื้อหา */
-  background-repeat: no-repeat;
-  
-  /* ตัวนี้สำคัญ: ให้เนื้อหาเลื่อนได้ข้างใน แต่ background อยู่กับที่ */
-  min-height: 100vh;
-}
-
-/* ตัวสร้างเงามืด ต้องล็อกให้อยู่ที่หน้าจอเสมอ */
-body::before {
-  content: "";
-  position: fixed; /* ใช้ fixed แทน absolute */
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(6, 11, 19, 0.85);
-  z-index: -1;
-  pointer-events: none;
-}
-/* ความโปร่งแสงของกล่องเนื้อหา */
-.login-card, .card, .my-profile, .h-item {
-  background: rgba(12, 21, 36, 0.85) !important;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --bg:#060b13;--bg2:#0c1524;--bg3:#111d2e;
