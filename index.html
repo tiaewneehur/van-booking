@@ -8,33 +8,34 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-/* 1. ตั้งค่า Background หลักของทั้งหน้าเว็บ */
+/* ตั้งค่าพื้นหลังใหม่และสีหลัก */
 body {
-  background-image: url('พื้นหลัง.jpg'); /* ชื่อไฟล์รูปภาพของคุณ */
-  background-size: cover;          /* ยืดภาพให้เต็มจอ */
-  background-position: center;     /* จัดภาพให้อยู่ตรงกลาง */
-  background-attachment: fixed;    /* ตรึงภาพไว้ไม่ให้เลื่อนตามหน้าจอ */
-  background-repeat: no-repeat;
-  position: relative;
+  font-family: 'IBM Plex Sans Thai', sans-serif;
   min-height: 100vh;
+  overflow-x: hidden;
+  background-color: var(--bg); /* สีสำรอง */
+  
+  /* ให้ใช้ตัวนี้ตัวเดียว */
+  background-image: url('bg.jpg') !important; 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
-/* 2. เพิ่มเลเยอร์มืดทับภาพ เพื่อให้อ่านตัวหนังสือและดูเนื้อหาได้ง่ายขึ้น */
+/* เลเยอร์มืดทับพื้นหลัง */
 body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(6, 11, 19, 0.85); /* ปรับค่า 0.85 ถ้าอยากให้มืดขึ้นให้เพิ่มเป็น 0.9 */
+  background: rgba(6, 11, 19, 0.85); 
   z-index: -1;
 }
 
-/* 3. ปรับกล่องเนื้อหาด้านในให้โปร่งแสงเล็กน้อย เพื่อให้เห็น Background จางๆ */
-.login-card, 
-.card, 
-.my-profile, 
-.h-item {
-  background: rgba(12, 21, 36, 0.85) !important; /* ปรับสีพื้นหลังกล่องให้โปร่งแสง */
-  backdrop-filter: blur(5px); /* เพิ่มเอฟเฟกต์เบลอหลังกล่อง */
+/* ความโปร่งแสงของกล่องเนื้อหา */
+.login-card, .card, .my-profile, .h-item {
+  background: rgba(12, 21, 36, 0.85) !important;
+  backdrop-filter: blur(5px);
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
