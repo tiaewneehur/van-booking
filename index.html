@@ -13,25 +13,26 @@ body {
   font-family: 'IBM Plex Sans Thai', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: var(--bg); /* สีสำรอง */
   
-  /* ให้ใช้ตัวนี้ตัวเดียว */
-  background-image: url('bg.jpg') !important; 
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  /* ส่วนที่ล็อกภาพให้ติดหนึบกับหน้าจอ */
+  background-image: url('image.png'); /* เปลี่ยนชื่อไฟล์ให้ตรงกับที่อัปโหลดจริง */
+  background-size: cover;          /* ยืดภาพให้เต็มจอพอดี */
+  background-position: center;     /* จัดกึ่งกลาง */
+  background-attachment: fixed;    /* ตัวนี้คือหัวใจสำคัญ: ล็อกภาพไว้ไม่ให้เลื่อน */
   background-repeat: no-repeat;
+  
+  /* แก้สีพื้นหลังเผื่อไว้ */
+  background-color: #060b13; 
 }
 
-/* เลเยอร์มืดทับพื้นหลัง */
+/* เลเยอร์มืดทับภาพ (ล็อกให้ติดจอเช่นกัน) */
 body::before {
   content: "";
-  position: fixed;
+  position: fixed; /* ใช้ fixed เพื่อให้เลเยอร์มืดล็อกอยู่กับที่เช่นกัน */
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(6, 11, 19, 0.85); 
+  background: rgba(6, 11, 19, 0.85);
   z-index: -1;
 }
-
 /* ความโปร่งแสงของกล่องเนื้อหา */
 .login-card, .card, .my-profile, .h-item {
   background: rgba(12, 21, 36, 0.85) !important;
