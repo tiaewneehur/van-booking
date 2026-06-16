@@ -245,6 +245,21 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .mem-grid img{width:100%;border-radius:12px;border:1px solid var(--border)}
 .btn-logout{width:100%;height:46px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:8px}
 .btn-logout:hover{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
+
+/* สีส้มสำหรับทริปที่ใกล้เต็ม */
+.badge-orange {
+    background-color: #f59e0b; /* สีส้ม */
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.seats-orange {
+    color: #f59e0b;
+    font-weight: 600;
+}
 </style>
 </head>
 <body>
@@ -631,10 +646,16 @@ function renderHome(){
   const h=new Date().getHours();
   const gr=h<12?'🌅 อรุณสวัสดิ์':h<17?'☀️ สวัสดีตอนบ่าย':'🌙 สวัสดีตอนเย็น';
   const mc=allBookings.filter(b=>b.phone===currentUser.phone||b.nickname===currentUser.nick).length;
+  
+  // ดึงรูปที่เก็บไว้มาใช้
+  const savedAvatar = localStorage.getItem('userAvatar') || 'https://via.placeholder.com/150?text=👤';
+
   document.getElementById('homeContent').innerHTML=`
     <div class="greet-bar">
       <div class="left"><h2>${gr}, ${currentUser.nick}! 👋</h2><p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${mc} ทริป</strong></p></div>
-      <div class="ava">🏕️</div>
+      <div class="ava" style="padding:0; overflow:hidden;">
+        <img src="${savedAvatar}" style="width:100%; height:100%; object-fit:cover;">
+      </div>
     </div>
     <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
     <div class="trip-list">${cacheTrips.length?cacheTrips.map(t=>cardHTML(t)).join(''):'<p style="text-align:center;color:var(--muted);padding:20px">⌛ กำลังโหลด...</p>'}</div>
@@ -664,9 +685,33 @@ function cardHTML(item){
   const locked=CLOSED_TRIPS.includes(item.trip);
   const booked=allBookings.filter(b=>b.seat&&b.trip===item.trip&&b.date===item.date).length;
   const avail=30-booked;
-  const badge=locked?'<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>':avail<=0?'<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>':avail<=5?'<span class="thc-badge badge-hot">ใกล้เต็ม!</span>':'<span class="thc-badge badge-open">เปิดจอง</span>';
-  const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':avail<=5?`<span class="seats-low">🟡 เหลือ ${avail} ที่</span>`:`<span class="seats-ok">🟢 เหลือ ${avail} ที่</span>`;
-  return `<div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')"><div class="thc-img"><img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">${badge}${locked?'<div class="locked-ov">🔒</div>':''}</div><div class="thc-info"><h4>${item.trip}</h4><div class="loc">📍 ${info.loc||'ประเทศไทย'}</div><div class="thc-meta">${seats}<span class="price-txt">฿${info.price||'-'}</span></div><span class="date-chip">📅 ${fmt}</span></div><div class="thc-arr">›</div></div>`;
+  
+  // ปรับ Badge สีส้ม
+  const badge=locked?'<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>':
+              avail<=0?'<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>':
+              avail<=5?'<span class="thc-badge badge-orange">🔥 ใกล้เต็ม!</span>':
+              '<span class="thc-badge badge-open">🟢 เปิดจอง</span>';
+              
+  // ปรับตัวเลขจำนวนที่นั่งสีส้ม
+  const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':
+              avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':
+              avail<=5?`<span class="seats-orange">🟡 เหลือ ${avail} ที่</span>`:
+              `<span class="seats-ok">🟢 เหลือ ${avail} ที่</span>`;
+
+  return `<div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')">
+            <div class="thc-img">
+              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">
+              ${badge}
+              ${locked?'<div class="locked-ov">🔒</div>':''}
+            </div>
+            <div class="thc-info">
+              <h4>${item.trip}</h4>
+              <div class="loc">📍 ${info.loc||'ประเทศไทย'}</div>
+              <div class="thc-meta">${seats}<span class="price-txt">฿${info.price||'-'}</span></div>
+              <span class="date-chip">📅 ${fmt}</span>
+            </div>
+            <div class="thc-arr">›</div>
+          </div>`;
 }
 
 /* ── TRIPS TAB ── */
@@ -674,18 +719,53 @@ function renderTripList(list){document.getElementById('tripListFull').innerHTML=
 function searchTrips(){const q=document.getElementById('searchInput').value.toLowerCase();renderTripList(cacheTrips.filter(t=>t.trip.toLowerCase().includes(q)));}
 
 /* ── MY TRIPS ── */
-function renderMyTrips(){
-  const my=allBookings.filter(b=>b.phone===currentUser.phone||b.nickname===currentUser.nick);
-  const seen={};const dd=[];my.forEach(b=>{const k=b.trip+'_'+b.date+'_'+b.seat;if(!seen[k]){seen[k]=1;dd.push(b);}});
-  const prov=[...new Set(dd.map(b=>(TRIP_DETAILS[b.trip]||{}).loc).filter(Boolean))].length;
-  document.getElementById('myContent').innerHTML=`
-    <div class="my-profile"><div class="my-ava">🏕️</div><div class="my-info" style="flex:1"><h3>${currentUser.nick}</h3><p>📞 ${currentUser.phone}</p><div class="my-stats"><div class="my-stat"><h4>${dd.length}</h4><p>ทริปทั้งหมด</p></div><div class="my-stat"><h4>${prov}</h4><p>จังหวัด</p></div><div class="my-stat"><h4>⭐</h4><p>สายลุย</p></div></div></div></div>
+function renderMyTrips() {
+  const my = allBookings.filter(b => b.phone === currentUser.phone || b.nickname === currentUser.nick);
+  const seen = {}; const dd = [];
+  my.forEach(b => { const k = b.trip + '_' + b.date + '_' + b.seat; if (!seen[k]) { seen[k] = 1; dd.push(b); } });
+  const prov = [...new Set(dd.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
+
+  document.getElementById('myContent').innerHTML = `
+    <div class="my-profile">
+      <div class="my-ava" onclick="document.getElementById('fileInput').click()" style="cursor:pointer; overflow:hidden; border-radius:50%; width:58px; height:58px; flex-shrink:0;">
+        <img id="userAvatar" src="https://via.placeholder.com/150?text=👤" style="width:100%;height:100%;object-fit:cover">
+        <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAvatar(this)">
+      </div>
+      <div class="my-info" style="flex:1">
+        <h3>${currentUser.nick}</h3>
+        <p>📞 ${currentUser.phone}</p>
+        <div class="my-stats">
+          <div class="my-stat"><h4>${dd.length}</h4><p>ทริปทั้งหมด</p></div>
+          <div class="my-stat"><h4>${prov}</h4><p>จังหวัด</p></div>
+          <div class="my-stat"><h4>⭐</h4><p>สายลุย</p></div>
+        </div>
+      </div>
+    </div>
     <div class="sec-hdr"><h3>📋 ประวัติการจอง</h3></div>
-    ${dd.length===0?'<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>':dd.map(b=>{const img=TRIP_IMAGES[b.trip]||'default.jpg';const fmt=new Date(b.date).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});const past=new Date(b.date)<new Date();return `<div class="h-item"><img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}"><div class="hi"><h4>${b.trip}</h4><p>📅 ${fmt}</p><p style="margin-top:4px">${past?'<span class="chip chip-green">✅ ไปแล้ว</span>':'<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p></div><div class="h-seat"><div class="snum">${b.seat||'-'}</div><p>ที่นั่ง</p></div></div>`;}).join('')}
+    ${dd.length === 0 ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>' : dd.map(b => {
+      const img = TRIP_IMAGES[b.trip] || 'default.jpg';
+      const fmt = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+      const past = new Date(b.date) < new Date();
+      return `<div class="h-item">
+        <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
+        <div class="hi">
+          <h4>${b.trip}</h4>
+          <p>📅 ${fmt}</p>
+          <p style="margin-top:4px">${past ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
+        </div>
+        <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
+      </div>`;
+    }).join('')}
     <div style="height:1px;background:var(--border);margin:20px 0"></div>
     <button class="btn-logout" onclick="logOut()">🚪 ออกจากระบบ</button>`;
+    
+    // โหลดรูปที่บันทึกไว้ทันทีหลังจาก render เสร็จ
+    const savedAvatar = localStorage.getItem('userAvatar');
+    const imgElement = document.getElementById('userAvatar');
+    if (savedAvatar && imgElement) {
+        imgElement.src = savedAvatar;
+    }
 }
-
 /* ── NOTIF ── */
 function renderNotif(){
   const list=[{t:"🎉 ทริปใหม่เปิดจองแล้ว!",m:"เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้ เปิดรับสมัครแล้ว",tm:"2 ชม.ที่แล้ว",r:false},{t:"⚠️ เตือนความจำ",m:"อย่าลืมเตรียมอุปกรณ์ให้พร้อมก่อนวันเดินทาง",tm:"1 วันที่แล้ว",r:false},{t:"📸 แชร์ภาพความทรงจำ",m:"ทริปผ่านไปแล้ว อย่าลืมแชร์รูปสวยๆ ในกลุ่มไลน์",tm:"3 วันที่แล้ว",r:true},{t:"💙 ขอบคุณที่ร่วมเดินทาง",m:"ขอบคุณทุกคนที่ไว้วางใจเที่ยวนี่เหอะเสมอมา ❤️",tm:"1 สัปดาห์ที่แล้ว",r:true}];
