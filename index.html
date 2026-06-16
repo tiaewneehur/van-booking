@@ -720,9 +720,7 @@ function searchTrips(){const q=document.getElementById('searchInput').value.toLo
 
 /* ── MY TRIPS ── */
 function renderMyTrips() {
-  const my = allBookings.filter(b => 
-    String(b.phone || '').trim() === String(currentUser.phone || '').trim()
-  );
+  const my = allBookings.filter(b => b.phone === currentUser.phone || b.nickname === currentUser.nick);
   const seen = {}; const dd = [];
   my.forEach(b => { const k = b.trip + '_' + b.date + '_' + b.seat; if (!seen[k]) { seen[k] = 1; dd.push(b); } });
   const prov = [...new Set(dd.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
