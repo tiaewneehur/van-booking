@@ -408,7 +408,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
       <h2 style="font-size:20px;font-weight:700;color:#fff">จองที่นั่งรถตู้ 🚐✨</h2>
       <p style="font-size:12px;color:var(--yellow);margin-top:4px">เลือกทำเลดีๆ ก่อนตกรถนะจ๊ะ ⚡</p>
     </div>
-    <div class="ig"><label>⛺ ชื่อทริปสุดคูล</label><input id="b-trip" disabled></div>
+    <div class="ig"><label>⛺ ชื่อทริปขนตูดลุก</label><input id="b-trip" disabled></div>
     <div class="ig"><label>📅 วันที่จัดทริป</label><input id="b-date" disabled></div>
     <label style="font-size:13px;color:var(--sub);font-weight:500;display:block;margin-bottom:8px">🚌 เลือกที่นั่งที่คุณต้องการ</label>
     <img src="IMG_0444.jpeg" class="seat-map-img" onerror="this.style.display='none'">
@@ -422,10 +422,10 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <div class="van-block"><div class="van-block-title">🚐 คันที่ 2 (ตู้ B)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridB" class="van-grid-seats"></div></div>
     <div class="van-block"><div class="van-block-title">🚐 คันที่ 3 (ตู้ C)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridC" class="van-grid-seats"></div></div>
     <div id="formFieldsBox2">
-  <div class="form-sec">📝 ข้อมูลผู้จอง</div>
+  <div class="form-sec">📝 กรอกข้อมูลคนไข้</div>
   
   <div class="ig">
-    <label>👤 ชื่อ-นามสกุลจริง</label>
+    <label>🤦 ชื่อ-นามสกุลจริง</label>
     <input id="f-name" placeholder="ระบุชื่อ-นามสกุลจริง..." oninput="checkBook()">
   </div>
   
@@ -462,7 +462,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
     <div class="chk-row">
       <input type="checkbox" id="slipCb" onchange="document.getElementById('payOkBtn').disabled=!this.checked">
-      <label for="slipCb">ฉันจะนำสลิปการโอนเงินนี้ไปอัปโหลดลงในอัลบั้มค่ามัดจำของกลุ่มไลน์แน่นอน</label>
+      <label for="slipCb">แคปภาพ QR แล้วไปโอนด้วยเดี๋ยวก็ถามกรูส์อีก</label>
     </div>
     <button id="payOkBtn" class="btn-pay-ok" disabled onclick="submitBook()">✔️ ยืนยันข้อมูลและจองที่นั่ง!</button>
     <p onclick="closePay()" style="font-size:13px;color:var(--muted);margin-top:14px;cursor:pointer">ย้อนกลับไปแก้ไข</p>
