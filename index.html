@@ -311,6 +311,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
       <div><h1>เที่ยวนี่เหอะ</h1><span>ออกไปเที่ยวให้โลกจำ 🏔️</span></div>
     </div>
     <button class="hdr-btn" onclick="openDrawer()">📋 สาระแนจังนะ</button>
+    <button class="hdr-btn" onclick="document.getElementById('adminPopup').style.display='flex'">👤 ติดต่อแอดมิน</button>
   </div>
 
   <div id="tab-home" class="view-page active-page"><div class="main" id="homeContent"></div></div>
@@ -438,6 +439,22 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   <img src="IMG_4778.jpeg" style="width:100%;border-radius:16px;border:1px solid var(--border)" onerror="this.style.display='none'">
   <h3 style="color:var(--blue);font-size:14px;margin-top:20px;margin-bottom:10px;font-weight:700">✨ ภาพความทรงจำตลอด 17 ป่า</h3>
   <div class="mem-grid"><img src="1.jpg" onerror="this.style.display='none'"><img src="2.jpg" onerror="this.style.display='none'"><img src="3.jpg" onerror="this.style.display='none'"><img src="4.jpg" onerror="this.style.display='none'"><img src="5.jpg" onerror="this.style.display='none'"><img src="6.jpg" onerror="this.style.display='none'"><img src="7.jpg" onerror="this.style.display='none'"><img src="8.jpg" onerror="this.style.display='none'"><img src="9.jpg" onerror="this.style.display='none'"><img src="10.jpg" onerror="this.style.display='none'"><img src="11.jpg" onerror="this.style.display='none'"><img src="12.jpg" onerror="this.style.display='none'"><img src="13.jpg" onerror="this.style.display='none'"><img src="14.jpg" onerror="this.style.display='none'"><img src="15.jpg" onerror="this.style.display='none'"><img src="16.jpg" onerror="this.style.display='none'"><img src="17.jpg" onerror="this.style.display='none'"><img src="18.jpg" onerror="this.style.display='none'"></div>
+</div>
+  
+<!-- ADMIN POPUP -->
+<div id="adminPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:2000;align-items:flex-end;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+  <div style="width:100%;max-width:480px;background:#0c1524;border-radius:28px 28px 0 0;padding:28px 20px 40px;border:1px solid rgba(255,255,255,.07)">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+      <img src="admin.jpg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #38bdf8" onerror="this.src='https://via.placeholder.com/64?text=👤'">
+      <div><h3 style="font-size:17px;color:#fff">แอดมินไอซ์</h3><p style="font-size:12px;color:#38bdf8;font-weight:600">เจ้าของเพจ "เที่ยวนี่เหอะ"</p></div>
+    </div>
+    <p style="font-size:13px;line-height:1.8;color:#cbd5e1;margin-bottom:20px">จากคนธรรมดาที่เริ่มต้นจากการชอบเดินป่า วนนี้ผมแค่อยากชวนทกคนออกไปเห็นโลกอีกมุม เหนหมอกตอนเช้า เห็นดาวตอนกลางคืน และได้เจอมิตรภาพดีๆ ระหว่างทาง 🌿</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <a href="https://line.me/ti/p/~tiaewneehur" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#06C755;color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:18px;height:18px"> LINE</a>
+      <a href="https://www.facebook.com/tiaewneehur" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:#1877F2;color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" style="width:18px;height:18px"> Facebook</a>
+      <a href="https://www.instagram.com/tiaewneehur" target="_blank" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" style="width:18px;height:18px"> Instagram</a>
+    </div>
+  </div>
 </div>
 
 <script>
