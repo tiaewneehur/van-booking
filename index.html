@@ -8,29 +8,28 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-/* ตั้งค่าพื้นหลังใหม่และสีหลัก */
 body {
   font-family: 'IBM Plex Sans Thai', sans-serif;
   min-height: 100vh;
-  overflow-x: hidden;
+  margin: 0;
   
-  /* ตั้งค่าการแสดงผลรูป */
+  /* หัวใจสำคัญอยู่ที่ตรงนี้ */
   background-image: url('bg.jpg') !important; 
-  background-size: contain;        /* คำสั่งนี้: ไม่ขยายภาพจนเต็ม แต่โชว์รูปให้ครบทั้งรูปพอดีจอ */
-  background-position: center;     /* ให้อยู่ตรงกลางจอ */
-  background-attachment: fixed;    /* ล็อกรูปไม่ให้เลื่อนตามการสกอร์ */
-  background-repeat: no-repeat;    /* ไม่ทำภาพซ้ำ */
+  background-size: contain;        /* แสดงรูปเท่าที่รูปจริงมี ไม่ขยายให้ล้นจอ */
+  background-position: center;     /* ให้อยู่ตรงกลางจอพอดี */
+  background-attachment: fixed;    /* ล็อกรูปให้นิ่งสนิท ไม่เลื่อนตามการสกอร์ */
+  background-repeat: no-repeat;    /* ไม่ให้รูปซ้ำ */
   
-  /* สีพื้นหลังรอบๆ รูปภาพ (กรณีที่รูปไม่เต็มจอ) */
+  /* สีพื้นหลังในส่วนที่รูปไปไม่ถึง */
   background-color: #060b13; 
 }
 
-/* เลเยอร์มืดทับภาพ (ล็อกอยู่กับที่เช่นกัน) */
+/* เลเยอร์มืดทับพื้นหลัง (ล็อกอยู่กับที่เหมือนกัน) */
 body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(6, 11, 19, 0.85);
+  background: rgba(6, 11, 19, 0.85); /* ความมืด */
   z-index: -1;
 }
 /* ความโปร่งแสงของกล่องเนื้อหา */
