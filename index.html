@@ -518,13 +518,7 @@ function fetchData(){
 function loadSeats(d){
   ['A','B','C'].forEach(p=>{document.getElementById('vanGrid'+p).innerHTML='<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';});
   const cb='cbs_'+Date.now();
-  window[cb]=(res)=>{
-    console.log('RAW API response keys:', res.bookings && res.bookings[0] ? Object.keys(res.bookings[0]) : 'empty');
-    console.log('First booking:', JSON.stringify(res.bookings && res.bookings[0]));
-    console.log('Total bookings:', res.bookings ? res.bookings.length : 0);
-    renderVansWithData(res.bookings||[]);
-    delete window[cb];
-  };
+  window[cb]=(res)=>{renderVansWithData(res.bookings||[]);delete window[cb];};
   appendScript(QUERY_URL+'&date='+encodeURIComponent(d)+'&callback='+cb);
 }
 
@@ -630,9 +624,15 @@ function closeModal(){document.getElementById('modalBg').classList.remove('show'
 /* ── BOOKING ── */
 function goToBook(){
   closeModal();
+  // Format date เป็น YYYY-MM-DD เหมือนโค้ดเดิม
+  const cleanDate=new Date(pendingTrip.raw);
+  const yyyy=cleanDate.getFullYear();
+  const mm=String(cleanDate.getMonth()+1).padStart(2,'0');
+  const dd=String(cleanDate.getDate()).padStart(2,'0');
+  const formattedDate=`${yyyy}-${mm}-${dd}`;
   document.getElementById('b-trip').value=pendingTrip.name;
   document.getElementById('b-date').value=pendingTrip.date;
-  document.getElementById('f-dateraw').value=pendingTrip.raw;
+  document.getElementById('f-dateraw').value=formattedDate;
   document.getElementById('f-phone').value=currentUser.phone;
   document.getElementById('f-nick').value=currentUser.nick;
   selectedSeat=null;document.getElementById('f-seat').value='';
