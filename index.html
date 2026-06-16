@@ -693,8 +693,6 @@ function renderHome(){
     <div class="past-grid">${PAST_TRIPS.map(p=>`<div class="past-card"><img src="${p.img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}"><div class="past-card-rating">⭐ ${p.rating}</div><div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div></div>`).join('')}</div>
     <div class="stat-bar"><div class="ico">👥</div><div class="txt"><h4>ยอดรวมผู้เดินทางกว่า 300+ คน</h4><p>ขอบคุณทุกความไว้วางใจจากเที่ยวนี่เหอะ 💙</p></div></div>
     <div style="background:linear-gradient(180deg,rgba(12,21,36,.95),rgba(7,12,20,.98));border:1px solid var(--border);border-radius:22px;padding:18px;margin-top:18px">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
-        <img src="admin.jpg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid var(--blue);box-shadow:0 0 20px rgba(56,189,248,.35)" onerror="this.src='https://via.placeholder.com/64?text=👤'">
     </div>
 </div>
     </div>`;
