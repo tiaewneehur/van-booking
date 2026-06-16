@@ -631,10 +631,16 @@ function renderHome(){
   const h=new Date().getHours();
   const gr=h<12?'🌅 อรุณสวัสดิ์':h<17?'☀️ สวัสดีตอนบ่าย':'🌙 สวัสดีตอนเย็น';
   const mc=allBookings.filter(b=>b.phone===currentUser.phone||b.nickname===currentUser.nick).length;
+  
+  // ดึงรูปที่เก็บไว้มาใช้
+  const savedAvatar = localStorage.getItem('userAvatar') || 'https://via.placeholder.com/150?text=👤';
+
   document.getElementById('homeContent').innerHTML=`
     <div class="greet-bar">
       <div class="left"><h2>${gr}, ${currentUser.nick}! 👋</h2><p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${mc} ทริป</strong></p></div>
-      <div class="ava">🏕️</div>
+      <div class="ava" style="padding:0; overflow:hidden;">
+        <img src="${savedAvatar}" style="width:100%; height:100%; object-fit:cover;">
+      </div>
     </div>
     <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
     <div class="trip-list">${cacheTrips.length?cacheTrips.map(t=>cardHTML(t)).join(''):'<p style="text-align:center;color:var(--muted);padding:20px">⌛ กำลังโหลด...</p>'}</div>
