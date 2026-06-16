@@ -252,7 +252,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 <!-- LOGIN PAGE -->
 <div id="loginPage">
   <div class="login-logo">
-    <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/90?text=🏕'" alt="Logo">
+    <img src="เที่ยวนี่เหอะ.png" onerror="this.src='https://via.placeholder.com/90?text=🏕'" alt="Logo">
     <h1>เที่ยวนี่เหอะ</h1>
     <p>ออกไปเที่ยวให้โลกจำ 🏔️</p>
   </div>
@@ -276,7 +276,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 <div id="appShell">
   <div class="hdr">
     <div class="hdr-brand" onclick="switchTab('home')">
-      <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/44?text=🏕'" alt="Logo">
+      <img src="เที่ยวนี่เหอะ.png" onerror="this.src='https://via.placeholder.com/44?text=🏕'" alt="Logo">
       <div><h1>เที่ยวนี่เหอะ</h1><span>ออกไปเที่ยวให้โลกจำ 🏔️</span></div>
     </div>
     <button class="hdr-btn" onclick="openDrawer()">📋 สาระแนะนำ</button>
@@ -532,7 +532,7 @@ function renderHome(){
   document.getElementById('homeContent').innerHTML=`
     <div class="greet-bar">
       <div class="left"><h2>${gr}, ${currentUser.nick}! 👋</h2><p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${mc} ทริป</strong></p></div>
-      <div class="ava">🏕️</div>
+      <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
     </div>
     <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
     <div class="trip-list">${cacheTrips.length?cacheTrips.map(t=>cardHTML(t)).join(''):'<p style="text-align:center;color:var(--muted);padding:20px">⌛ กำลังโหลด...</p>'}</div>
@@ -551,6 +551,10 @@ function renderHome(){
       <img src="team.jpg" onerror="this.src='https://via.placeholder.com/480x280?text=TEAM'" style="width:100%;display:block">
       <div style="padding:16px"><h3 style="color:#fff;font-size:18px;margin-bottom:8px">🔥 ทีมงานเที่ยวนี่เหอะ</h3><p style="color:#cbd5e1;font-size:13px;line-height:1.7;margin-bottom:14px">ทีมงานสายลุยที่พร้อมพาทุกคนออกเดินทาง ตั้งแต่ขึ้นรถ ยันถึงยอดเขา ⛰️</p><div style="display:flex;flex-wrap:wrap;gap:8px"><span class="chip chip-blue">🏕️ สายเดินป่า</span><span class="chip chip-green">🚐 สายเดินทาง</span><span class="chip chip-yellow">🌿 สายธรรมชาติ</span></div></div>
     </div>`;
+  // อัปเดต avatar ในหน้าหลัก
+  const _av=localStorage.getItem('userAvatar');
+  const _el=document.getElementById('homeAva');
+  if(_av&&_el){_el.style.background='none';_el.innerHTML=`<img src="${_av}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;}
 }
 
 /* ── CARD HTML ── */
