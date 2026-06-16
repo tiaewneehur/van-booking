@@ -258,7 +258,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <p>ออกไปเที่ยวให้โลกจำ 🏔️</p>
   </div>
   <div class="login-card">
-    <h2>👋 ยินดีต้อนรับ!</h2>
+    <h2>👋 ยินดีต้อนรับโว้ยย!</h2>
     <p>ใส่เบอร์มือถือของคุณเพื่อเข้าระบบ<br>จดจำอัตโนมัติ ไม่ต้องล็อกอินซ้ำ</p>
     <div class="inp-wrap">
       <span class="inp-pre">🇹🇭</span>
@@ -666,7 +666,7 @@ function cardHTML(item){
   
   const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':
               avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':
-              avail<=5?`<span style="color:#f59e0b;font-size:11px;font-weight:600">🟠 เหลือ ${avail} ที่</span>`: // เปลี่ยนสีเป็นสีส้ม (#f59e0b)
+              avail<=5?`<span style="color:#f59e0b;font-size:11px;font-weight:600">🔥 เหลือ ${avail} ที่</span>`: // เปลี่ยนสีเป็นสีส้ม (#f59e0b)
               `<span class="seats-ok">🟢 เหลือ ${avail} ที่</span>`;
   return `<div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')"><div class="thc-img"><img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">${badge}${locked?'<div class="locked-ov">🔒</div>':''}</div><div class="thc-info"><h4>${item.trip}</h4><div class="loc">📍 ${info.loc||'ประเทศไทย'}</div><div class="thc-meta">${seats}<span class="price-txt">฿${info.price||'-'}</span></div><span class="date-chip">📅 ${fmt}</span></div><div class="thc-arr">›</div></div>`;
 }
