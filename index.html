@@ -82,6 +82,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .thc-img{width:110px;flex-shrink:0;position:relative}
 .thc-img img{width:100%;height:100%;object-fit:cover}
 .thc-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:700}
+.badge-almost {background:rgba(245,158,11,.85);color:#fff} /* สีส้ม */
 .badge-open{background:rgba(16,185,129,.85);color:#fff}
 .badge-hot{background:rgba(239,68,68,.85);color:#fff}
 .badge-soon{background:rgba(245,158,11,.85);color:#000}
@@ -656,8 +657,17 @@ function cardHTML(item){
   const locked=CLOSED_TRIPS.includes(item.trip);
   const booked=allBookings.filter(b=>b.seat&&b.trip===item.trip&&b.date===item.date).length;
   const avail=30-booked;
-  const badge=locked?'<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>':avail<=0?'<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>':avail<=5?'<span class="thc-badge badge-hot">ใกล้เต็ม!</span>':'<span class="thc-badge badge-open">เปิดจอง</span>';
-  const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':avail<=5?`<span class="seats-low">🟡 เหลือ ${avail} ที่</span>`:`<span class="seats-ok">🟢 เหลือ ${avail} ที่</span>`;
+  
+  // แก้ไขตรงนี้: เปลี่ยน badge และสีของที่นั่ง
+  const badge=locked?'<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>':
+              avail<=0?'<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>':
+              avail<=5?'<span class="thc-badge badge-almost">🟠 ใกล้เต็ม!</span>': // เปลี่ยนจาก badge-hot เป็น badge-almost
+              '<span class="thc-badge badge-open">เปิดจอง</span>';
+  
+  const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':
+              avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':
+              avail<=5?`<span style="color:#f59e0b;font-size:11px;font-weight:600">🟠 เหลือ ${avail} ที่</span>`: // เปลี่ยนสีเป็นสีส้ม (#f59e0b)
+              `<span class="seats-ok">🟢 เหลือ ${avail} ที่</span>`;
   return `<div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')"><div class="thc-img"><img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">${badge}${locked?'<div class="locked-ov">🔒</div>':''}</div><div class="thc-info"><h4>${item.trip}</h4><div class="loc">📍 ${info.loc||'ประเทศไทย'}</div><div class="thc-meta">${seats}<span class="price-txt">฿${info.price||'-'}</span></div><span class="date-chip">📅 ${fmt}</span></div><div class="thc-arr">›</div></div>`;
 }
 
