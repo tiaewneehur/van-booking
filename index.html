@@ -720,7 +720,13 @@ function searchTrips(){const q=document.getElementById('searchInput').value.toLo
 
 /* ── MY TRIPS ── */
 function renderMyTrips() {
-  const my = allBookings.filter(b => b.phone === currentUser.phone);
+  // ตัดช่องว่างและแปลงเป็น String ทั้ง 2 ฝั่งก่อนเทียบ
+  const targetPhone = String(currentUser.phone || '').trim();
+  const my = allBookings.filter(b => String(b.phone || '').trim() === targetPhone);
+
+  console.log("กำลังหาข้อมูลเบอร์:", targetPhone);
+  console.log("จำนวนที่พบ:", my.length); // เช็กใน Console ว่าเลขนี้เป็น 0 หรือเปล่า
+
   const seen = {}; const dd = [];
   my.forEach(b => { const k = b.trip + '_' + b.date + '_' + b.seat; if (!seen[k]) { seen[k] = 1; dd.push(b); } });
   const prov = [...new Set(dd.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
