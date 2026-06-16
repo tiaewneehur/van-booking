@@ -9,21 +9,20 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 /* ตั้งค่าพื้นหลังใหม่และสีหลัก */
-/* ลบโค้ดเก่าเกี่ยวกับ body ที่มีหลายอันออก แล้ววางอันนี้แทน */
 body {
   font-family: 'IBM Plex Sans Thai', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   
-  /* ล็อกรูปภาพไว้ไม่ให้เลื่อน */
-  background-image: url('bg.jpg') !important;
-  background-size: cover;          /* เต็มจอ */
-  background-position: center;     /* อยู่ตรงกลาง */
+  /* ตั้งค่าการแสดงผลรูป */
+  background-image: url('bg.jpg') !important; 
+  background-size: contain;        /* คำสั่งนี้: ไม่ขยายภาพจนเต็ม แต่โชว์รูปให้ครบทั้งรูปพอดีจอ */
+  background-position: center;     /* ให้อยู่ตรงกลางจอ */
   background-attachment: fixed;    /* ล็อกรูปไม่ให้เลื่อนตามการสกอร์ */
-  background-repeat: no-repeat;
+  background-repeat: no-repeat;    /* ไม่ทำภาพซ้ำ */
   
-  /* สีพื้นหลังสำรอง */
-  background-color: #060b13;
+  /* สีพื้นหลังรอบๆ รูปภาพ (กรณีที่รูปไม่เต็มจอ) */
+  background-color: #060b13; 
 }
 
 /* เลเยอร์มืดทับภาพ (ล็อกอยู่กับที่เช่นกัน) */
@@ -31,7 +30,7 @@ body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(6, 11, 19, 0.85); /* ความมืด */
+  background: rgba(6, 11, 19, 0.85);
   z-index: -1;
 }
 /* ความโปร่งแสงของกล่องเนื้อหา */
