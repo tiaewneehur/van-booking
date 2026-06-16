@@ -717,7 +717,8 @@ function renderMyTrips(){
         <img id="userAvatar" src="https://via.placeholder.com/150?text=👤" style="width:100%;height:100%;object-fit:cover">
         <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAvatar(this)">
       </div>
-      <div class="my-info" style="flex:1"><h3>${currentUser.nick}</h3><p>📞 ${currentUser.phone}</p><div class="my-stats"><div class="my-stat"><h4>${dd.length}</h4><p>ทริปทั้งหมด</p></div><div class="my-stat"><h4>${prov}</h4><p>จังหวัด</p></div><div class="my-stat"><h4>${"⭐".repeat(Math.min(dd.length,5))}</h4><p>สายลุย</p></div>
+      <div class="my-info" style="flex:1"><h3>${currentUser.nick}</h3><p>📞 ${currentUser.phone}</p><div class="my-stats"><div class="my-stat"><h4>${dd.length}</h4><p>ทริปทั้งหมด</p></div><div class="my-stat"><h4>${prov}</h4><p>จังหวัด</p></div><div class="my-stat"><h4>⭐</h4><p>สายลุย</p></div>
+
 
     </div>
     <div class="sec-hdr"><h3>📋 ประวัติการจอง</h3></div>
