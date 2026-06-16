@@ -10,27 +10,31 @@
 <style>
 body {
   font-family: 'IBM Plex Sans Thai', sans-serif;
-  min-height: 100vh;
   margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
   
-  /* หัวใจสำคัญอยู่ที่ตรงนี้ */
-  background-image: url('bg.jpg') !important; 
-  background-size: contain;        /* แสดงรูปเท่าที่รูปจริงมี ไม่ขยายให้ล้นจอ */
-  background-position: center;     /* ให้อยู่ตรงกลางจอพอดี */
-  background-attachment: fixed;    /* ล็อกรูปให้นิ่งสนิท ไม่เลื่อนตามการสกอร์ */
-  background-repeat: no-repeat;    /* ไม่ให้รูปซ้ำ */
+  /* ตั้งค่าให้แสดงรูป 9:16 ของคุณพอดีเป๊ะ */
+  background-image: url('bg.jpg'); /* หรือชื่อไฟล์ที่คุณอัปโหลดจริง */
+  background-size: 100% 100%;      /* บังคับให้รูปแนบสนิทขอบจอมือถือทุกด้าน */
+  background-position: center;     /* จัดให้อยู่กลางจอ */
+  background-attachment: fixed;    /* ล็อกรูปให้นิ่ง ไม่เลื่อนตามการปัดนิ้ว */
+  background-repeat: no-repeat;
   
-  /* สีพื้นหลังในส่วนที่รูปไปไม่ถึง */
-  background-color: #060b13; 
+  /* ป้องกันการเด้งหรือยืดผิดปกติ */
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* เลเยอร์มืดทับพื้นหลัง (ล็อกอยู่กับที่เหมือนกัน) */
+/* เลเยอร์มืดทับภาพ (ล็อกนิ่งเช่นกัน) */
 body::before {
   content: "";
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(6, 11, 19, 0.85); /* ความมืด */
+  background: rgba(6, 11, 19, 0.85);
   z-index: -1;
+  pointer-events: none; /* ให้คลิกทะลุผ่านเลเยอร์มืดไปกดปุ่มในแอปได้ */
 }
 /* ความโปร่งแสงของกล่องเนื้อหา */
 .login-card, .card, .my-profile, .h-item {
