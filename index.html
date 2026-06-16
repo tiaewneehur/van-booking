@@ -9,28 +9,29 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 /* ตั้งค่าพื้นหลังใหม่และสีหลัก */
+/* ลบโค้ดเก่าเกี่ยวกับ body ที่มีหลายอันออก แล้ววางอันนี้แทน */
 body {
   font-family: 'IBM Plex Sans Thai', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   
-  /* ส่วนที่ล็อกภาพให้ติดหนึบกับหน้าจอ */
-  background-image: url('bg.jpg'); /* เปลี่ยนชื่อไฟล์ให้ตรงกับที่อัปโหลดจริง */
-  background-size: cover;          /* ยืดภาพให้เต็มจอพอดี */
-  background-position: center;     /* จัดกึ่งกลาง */
-  background-attachment: fixed;    /* ตัวนี้คือหัวใจสำคัญ: ล็อกภาพไว้ไม่ให้เลื่อน */
+  /* ล็อกรูปภาพไว้ไม่ให้เลื่อน */
+  background-image: url('bg.jpg') !important;
+  background-size: cover;          /* เต็มจอ */
+  background-position: center;     /* อยู่ตรงกลาง */
+  background-attachment: fixed;    /* ล็อกรูปไม่ให้เลื่อนตามการสกอร์ */
   background-repeat: no-repeat;
   
-  /* แก้สีพื้นหลังเผื่อไว้ */
-  background-color: #060b13; 
+  /* สีพื้นหลังสำรอง */
+  background-color: #060b13;
 }
 
-/* เลเยอร์มืดทับภาพ (ล็อกให้ติดจอเช่นกัน) */
+/* เลเยอร์มืดทับภาพ (ล็อกอยู่กับที่เช่นกัน) */
 body::before {
   content: "";
-  position: fixed; /* ใช้ fixed เพื่อให้เลเยอร์มืดล็อกอยู่กับที่เช่นกัน */
+  position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(6, 11, 19, 0.85);
+  background: rgba(6, 11, 19, 0.85); /* ความมืด */
   z-index: -1;
 }
 /* ความโปร่งแสงของกล่องเนื้อหา */
