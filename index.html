@@ -656,7 +656,10 @@ function renderHome(){
       <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
     </div>
     <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
-    <div class="trip-list">${cacheTrips.length?cacheTrips.map(t=>cardHTML(t)).join(''):'<p style="text-align:center;color:var(--muted);padding:20px">⌛ กำลังโหลด...</p>'}</div>
+    <div class="trip-list">${cacheTrips.filter(t=>new Date(t.date)>=new Date(new Date().setHours(0,0,0,0))).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>'}</div>
+    <div class="divider"></div>
+    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3></div>
+    <div class="trip-list" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>🗺️ ทริปที่จัดมาแล้ว</h3></div>
     <div class="past-grid">${PAST_TRIPS.map(p=>`<div class="past-card"><img src="${p.img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}"><div class="past-card-rating">⭐ ${p.rating}</div><div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div></div>`).join('')}</div>
