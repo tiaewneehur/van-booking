@@ -8,33 +8,34 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-body {
-  font-family: 'IBM Plex Sans Thai', sans-serif;
+/* ล็อกหน้าจอให้สูงเท่าหน้าจอมือถือเป๊ะๆ */
+html, body {
+  height: 100%;
   margin: 0;
   padding: 0;
-  width: 100%;
-  min-height: 100vh;
-  
-  /* ตั้งค่าให้แสดงรูป 9:16 ของคุณพอดีเป๊ะ */
-  background-image: url('bg.jpg'); /* หรือชื่อไฟล์ที่คุณอัปโหลดจริง */
-  background-size: 100% 100%;      /* บังคับให้รูปแนบสนิทขอบจอมือถือทุกด้าน */
-  background-position: center;     /* จัดให้อยู่กลางจอ */
-  background-attachment: fixed;    /* ล็อกรูปให้นิ่ง ไม่เลื่อนตามการปัดนิ้ว */
-  background-repeat: no-repeat;
-  
-  /* ป้องกันการเด้งหรือยืดผิดปกติ */
   overflow-x: hidden;
-  position: relative;
 }
 
-/* เลเยอร์มืดทับภาพ (ล็อกนิ่งเช่นกัน) */
+body {
+  /* ล็อกภาพไว้ที่ตัว body */
+  background-image: url('bg.jpg'); 
+  background-size: cover;          /* ใช้ cover เพื่อให้ภาพ 9:16 เต็มหน้าจอพอดี */
+  background-position: center;     
+  background-attachment: fixed;    /* ล็อกภาพไม่ให้ขยับเวลาเลื่อนเนื้อหา */
+  background-repeat: no-repeat;
+  
+  /* ตัวนี้สำคัญ: ให้เนื้อหาเลื่อนได้ข้างใน แต่ background อยู่กับที่ */
+  min-height: 100vh;
+}
+
+/* ตัวสร้างเงามืด ต้องล็อกให้อยู่ที่หน้าจอเสมอ */
 body::before {
   content: "";
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  position: fixed; /* ใช้ fixed แทน absolute */
+  top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(6, 11, 19, 0.85);
   z-index: -1;
-  pointer-events: none; /* ให้คลิกทะลุผ่านเลเยอร์มืดไปกดปุ่มในแอปได้ */
+  pointer-events: none;
 }
 /* ความโปร่งแสงของกล่องเนื้อหา */
 .login-card, .card, .my-profile, .h-item {
