@@ -518,7 +518,13 @@ function fetchData(){
 function loadSeats(d){
   ['A','B','C'].forEach(p=>{document.getElementById('vanGrid'+p).innerHTML='<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';});
   const cb='cbs_'+Date.now();
-  window[cb]=(res)=>{renderVansWithData(res.bookings||[]);delete window[cb];};
+  window[cb]=(res)=>{
+    console.log('RAW API response keys:', res.bookings && res.bookings[0] ? Object.keys(res.bookings[0]) : 'empty');
+    console.log('First booking:', JSON.stringify(res.bookings && res.bookings[0]));
+    console.log('Total bookings:', res.bookings ? res.bookings.length : 0);
+    renderVansWithData(res.bookings||[]);
+    delete window[cb];
+  };
   appendScript(QUERY_URL+'&date='+encodeURIComponent(d)+'&callback='+cb);
 }
 
@@ -649,7 +655,7 @@ function renderVansWithData(bookedList){
       if(n==='driver'){cell.className='seat driver';cell.innerHTML='<span>👨‍✈️</span><span style="font-size:9px">คนขับ</span>';}
       else if(n==='spacer'){cell.className='seat spacer';}
       else{
-        const id=prefix+(n==='เบาะซ้าย'?'ซ้าย':n);cell.className='seat';
+        const id=prefix+n;cell.className='seat';
         if(mapping[id]){
           if(mapping[id]==='งดจอง'){cell.classList.add('hidden-seat');}
           else{cell.classList.add('booked');cell.innerHTML=`<span style="font-size:9px">${id}</span><div style="font-size:13px">${mapping[id]}</div>`;}
