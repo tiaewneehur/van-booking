@@ -514,12 +514,18 @@ const TRIP_IMAGES = {
 };
 
 const PAST_TRIPS = [
-  {name:"ดอยผาเวียง",rounds:3,people:78,rating:4.9,img:"ดอยผาเวียง.jpg"},
-  {name:"หว่าวาโจ",rounds:2,people:56,rating:4.8,img:"หว่าวาโจ.jpg"},
-  {name:"ภูเขาควาย",rounds:2,people:62,rating:4.9,img:"ภูเขาควาย.jpg"},
-  {name:"ดอยหลวงตาก",rounds:4,people:101,rating:4.9,img:"ดอยหลวงตาก.jpg"},
-  {name:"เปรโต๊ะ",rounds:3,people:85,rating:4.8,img:"เปรโต๊ะ.jpg"},
-  {name:"ภูสอยดาว",rounds:2,people:68,rating:4.9,img:"ภูสอยดาว.jpg"},
+  {name:"ดอยผาเวียง",   rounds:3, people:78,  rating:4.9, img:"ดอยผาเวียง.jpg"},
+  {name:"หว่าวาโจ",     rounds:2, people:56,  rating:4.8, img:"หว่าวาโจ.jpg"},
+  {name:"ภูเขาควาย",   rounds:2, people:62,  rating:4.9, img:"ภูเขาควาย.jpg"},
+  {name:"ดอยหลวงตาก",  rounds:4, people:101, rating:4.9, img:"ดอยหลวงตาก.jpg"},
+  {name:"เปรโต๊ะ",     rounds:3, people:85,  rating:4.8, img:"เปรโต๊ะ.jpg"},
+  {name:"ภูสอยดาว",    rounds:2, people:68,  rating:4.9, img:"ภูสอยดาว.jpg"},
+  {name:"ดอยห้วยทู่",  rounds:1, people:24,  rating:4.8, img:"ดอยห้วยทู่.jpg"},
+  {name:"เขาหลัก",     rounds:2, people:45,  rating:4.9, img:"เขาหลัก.jpg"},
+  {name:"น้ำตกห้วยน้ำเย็น", rounds:1, people:36, rating:4.8, img:"ห้วยน้ำเย็น.jpg"},
+  {name:"ป่าบงเปียง",  rounds:1, people:42,  rating:4.8, img:"ป่าบงเปียง.jpg"},
+  {name:"เลอกวาเดาะ",  rounds:1, people:29,  rating:4.8, img:"เลอกวาเดาะ.jpg"},
+  {name:"ดอยหมากพริก", rounds:1, people:33,  rating:4.9, img:"ดอยหมากพริก.jpg"},
 ];
 
 /* ═══════════════════════════════════════
@@ -585,6 +591,7 @@ function fetchCatalogBackend(){
   window[cb] = (res) => {
     const grouped = {};
     allBookings = res.bookings || [];
+
     allBookings.forEach(b => {
       if(!b.trip || !b.date) return;
       const k = b.trip + "_" + b.date;
@@ -647,7 +654,9 @@ function renderHome(){
     <div class="past-grid">
       ${PAST_TRIPS.map(p=>`
         <div class="past-card">
-          <img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'">
+          <img src="${p.img}"
+            onerror="if(!this.dataset.tried){this.dataset.tried=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}"
+            style="background:#0c1524">
           <div class="past-card-rating">⭐ ${p.rating}</div>
           <div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div>
         </div>`).join('')}
@@ -694,10 +703,7 @@ function tripHCardHTML(item){
   const d       = new Date(item.date);
   const fmt     = d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
   const locked  = CLOSED_TRIPS.includes(item.trip);
-  const booked  = allBookings.filter(b => {
-    const s = b.seat || b.Seat || b['ที่นั่ง'] || b['เบาะ'] || '';
-    return b.trip===item.trip && b.date===item.date && s;
-  }).length;
+  const booked  = allBookings.filter(b => b.seat && b.trip===item.trip && b.date===item.date).length;
   const avail   = 30 - booked;
 
   const badgeHTML = locked
@@ -836,10 +842,7 @@ function openTripDetail(name, dateStr){
   const d      = new Date(dateStr);
   const fmt    = d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
   const locked = CLOSED_TRIPS.includes(name);
-  const booked = allBookings.filter(b => {
-    const s = b.seat || b.Seat || b['ที่นั่ง'] || b['เบาะ'] || '';
-    return b.trip===name && b.date===dateStr && s;
-  }).length;
+  const booked = allBookings.filter(b => b.seat && b.trip===name && b.date===dateStr).length;
   const avail  = 30 - booked;
 
   document.getElementById('td-img').src = imgSrc;
@@ -912,55 +915,36 @@ function closeBooking(){
 /* ═══════════════════════════════════════
    SEAT GRID — เหมือนโค้ดเดิม
 ═══════════════════════════════════════ */
-function getNickname(b){
-  // รองรับทุก field name ที่อาจมาจาก Google Sheets
-  return (
-    b.nickname   ||   // field: nickname
-    b.Nickname   ||
-    b['ชื่อเล่น']  ||   // field: ชื่อเล่น
-    b['ชื่อเล่น '] ||   // มี space ท้าย
-    b.nick       ||
-    b.Nick       ||
-    b.name       ||   // ถ้าไม่มีชื่อเล่นใช้ชื่อจริงแทน
-    b.Name       ||
-    b['ชื่อ']    ||
-    b['ชื่อ-นามสกุล'] ||
-    'จอง'              // fallback
-  ).toString().trim().split(' ')[0]; // เอาแค่คำแรก ไม่ให้ยาวเกิน
-}
-
-function renderVansWithData(bookedList){
+function renderVansWithData(bookedList) {
   const mapping = {};
   bookedList.forEach(b => {
-    // รองรับ field ชื่อที่นั่งทุกแบบ
-    const seatVal = b.seat || b.Seat || b['ที่นั่ง'] || b['เบาะ'] || '';
-    if(seatVal) mapping[String(seatVal).trim()] = getNickname(b);
+    if (b.seat) mapping[String(b.seat)] = b.nickname || 'เต็ม';
   });
 
-  ['A','B','C'].forEach(prefix => {
-    const grid = document.getElementById('v'+prefix);
+  ['A', 'B', 'C'].forEach(prefix => {
+    const grid = document.getElementById('v' + prefix);
     grid.innerHTML = '';
     BUS_GRID_STRUCTURE.forEach(n => {
       const cell = document.createElement('div');
-      if(n === 'driver'){
+      if (n === 'driver') {
         cell.className = 'seat driver';
         cell.innerHTML = '<span>👨‍✈️</span><span style="font-size:9px">คนขับ</span>';
-      } else if(n === 'spacer'){
+      } else if (n === 'spacer') {
         cell.className = 'seat spacer';
       } else {
         const id = prefix + (n === 'เบาะซ้าย' ? 'ซ้าย' : n);
         cell.className = 'seat';
-        if(mapping[id]){
-          if(mapping[id] === 'งดจอง'){
+        if (mapping[id]) {
+          if (mapping[id] === 'งดจอง') {
             cell.classList.add('hidden-seat');
           } else {
             cell.classList.add('booked');
-            cell.innerHTML = `<span style="font-size:9px">${id}</span><div style="font-size:11px">${mapping[id]}</div>`;
+            cell.innerHTML = \`<span style="font-size:9px">\${id}</span><div style="font-size:11px">\${mapping[id]}</div>\`;
           }
         } else {
           cell.classList.add('empty');
-          if(id === selectedSeat) cell.classList.add('selected');
-          cell.innerHTML = `<span style="font-size:10px">เบาะ</span><span style="font-size:14px">${id}</span>`;
+          if (id === selectedSeat) cell.classList.add('selected');
+          cell.innerHTML = \`<span style="font-size:10px">เบาะ</span><span style="font-size:14px">\${id}</span>\`;
           cell.onclick = () => pickSeat(cell, id);
         }
       }
