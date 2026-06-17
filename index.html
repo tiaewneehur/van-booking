@@ -794,7 +794,7 @@ function fetchData(){
         const cardW=_el.children[0].offsetWidth+12;
         const maxScroll=_el.scrollWidth-_el.clientWidth;
         _el.scrollLeft=_el.scrollLeft>=maxScroll-5?0:_el.scrollLeft+cardW;
-      },3000);
+      },2000);
     }
     delete window[cb];
   };
