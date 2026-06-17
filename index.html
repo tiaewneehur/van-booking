@@ -333,9 +333,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
 }
   #upcomingList::-webkit-scrollbar{display:none}
-  #upcomingList .trip-hcard{flex:0 0 85%;scroll-snap-align:start;flex-direction:column;min-height:auto}
-  #upcomingList .thc-img{width:100%;height:140px}
-
+  #upcomingList .trip-hcard{flex:0 0 92%;min-height:auto}
 </style>
 </head>
 <body>
@@ -787,22 +785,22 @@ function fetchData(){
     });
     renderHome();renderTripList(cacheTrips);renderMyTrips();renderNotif();
     const _today=new Date(new Date().setHours(0,0,0,0));
-    const _el=document.getElementById('upcomingList');
-    if(_el){_el.innerHTML=cacheTrips.filter(t=>new Date(t.date)>=_today).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
-  clearInterval(window._autoScrollInt);
-  window._autoScrollInt=setInterval(()=>{
-    if(!_el.children.length)return;
-    const cardW=_el.children[0].offsetWidth+12;
-    const maxScroll=_el.scrollWidth-_el.clientWidth;
-    _el.scrollLeft=_el.scrollLeft>=maxScroll-5?0:_el.scrollLeft+cardW;
-  },3000);
-}
-
-
+        const _el=document.getElementById('upcomingList');
+    if(_el){
+      _el.innerHTML=cacheTrips.filter(t=>new Date(t.date)>=_today).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
+      clearInterval(window._autoScrollInt);
+      window._autoScrollInt=setInterval(()=>{
+        if(_el.children.length<2)return;
+        const cardW=_el.children[0].offsetWidth+12;
+        const maxScroll=_el.scrollWidth-_el.clientWidth;
+        _el.scrollLeft=_el.scrollLeft>=maxScroll-5?0:_el.scrollLeft+cardW;
+      },3000);
+    }
     delete window[cb];
   };
   appendScript(QUERY_URL+'&callback='+cb);
 }
+
 function loadSeats(d){
   ['A','B','C'].forEach(p=>{document.getElementById('vanGrid'+p).innerHTML='<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';});
   const cb='cbs_'+Date.now();
@@ -822,7 +820,7 @@ function renderHome(){
       <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
     </div>
     <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
-    <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;-ms-overflow-style:none;scrollbar-width:none"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
+    <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทงหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
     <div class="trip-list" id="pastList" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map((t,i)=>`<div class="${i>=2?'past-extra':''}" style="${i>=2?'display:none':''}">${cardHTML(t)}</div>`).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
