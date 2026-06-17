@@ -269,23 +269,30 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .btn-logout:hover{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
 .btn-book {
   display: block;
-  width: 90%;
-  max-width: 440px;
-  height: 52px;
-  /* margin-top -30px ทำให้ปุ่มลอยขึ้นไปทับขอบรูป */
-  margin: -30px auto 20px auto; 
+  /* ปรับความกว้างให้เล็กลง เช่น 85% หรือระบุเป็นพิกเซล */
+  width: 85%;
+  max-width: 320px; 
+  height: 48px; /* ลดความสูงลงเล็กน้อย */
+  
+  /* ปรับ Margin: ขยับขึ้นไปทับรูปภาพน้อยลง และลดระยะห่างด้านล่าง */
+  margin: -24px auto 16px auto; 
+  
   border: none;
-  border-radius: 16px;
+  border-radius: 12px; /* ลดความมนลงให้เข้ากับทรงกล่อง */
   background: linear-gradient(145deg, #ff4747, #d91f2f);
   color: #fff;
-  font-size: 16px;
+  font-size: 14px; /* ลดขนาดตัวอักษรลงนิดนึง */
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, 0.3);
+  
+  /* ใส่เงาให้ดูนุ่มนวลขึ้น */
+  box-shadow: 0 4px 12px rgba(255, 71, 71, 0.25);
   animation: hb 0.9s infinite;
+  
   position: relative;
   z-index: 10;
 }
+
 /* ส่วนหัวของฟอร์ม */
 .form-sec {
   font-size: 14px;
