@@ -819,7 +819,7 @@ function renderHome(){
       <div class="left"><h2>${gr}, ${currentUser.nick}! 👋</h2><p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${mc} ทริป</strong></p></div>
       <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
     </div>
-    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
+    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3><span onclick="switchTab('trips')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
     <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทงหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
