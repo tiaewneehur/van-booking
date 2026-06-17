@@ -191,7 +191,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .modal-seat-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:16px}
 .avail{font-size:13px;font-weight:700}
 .avail.ok{color:var(--green)}.avail.low{color:var(--yellow)}.avail.full{color:var(--red)}
-.btn-book{width:100%;height:52px;border:none;border-radius:16px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 6px 20px rgba(2,132,199,.35)}
+.btn-book {width: 90%;height: 52px;border: none;border-radius: 16px;background: linear-gradient(145deg, #ff4747, #d91f2f);color: #fff;font-size: 16px;font-weight: 700;cursor: pointer;box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, 0.3);animation: hb 0.9s infinite; /* ทำให้ปุ่มเต้นแบบหัวใจ */margin: -30px auto 16px auto; /* ขยับปุ่มขึ้นไปทับขอบรูปภาพ */display: block;position: relative;z-index: 10;}
 .btn-book:disabled{background:#1e293b;color:#475569;box-shadow:none;cursor:not-allowed}
 
 /* BOOKING PAGE */
@@ -267,7 +267,25 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .mem-grid img{width:100%;border-radius:12px;border:1px solid var(--border)}
 .btn-logout{width:100%;height:46px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:8px}
 .btn-logout:hover{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
-
+.btn-book {
+  display: block;
+  width: 90%;
+  max-width: 440px;
+  height: 52px;
+  /* margin-top -30px ทำให้ปุ่มลอยขึ้นไปทับขอบรูป */
+  margin: -30px auto 20px auto; 
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ff4747, #d91f2f);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, 0.3);
+  animation: hb 0.9s infinite;
+  position: relative;
+  z-index: 10;
+}
 /* ส่วนหัวของฟอร์ม */
 .form-sec {
   font-size: 14px;
@@ -366,8 +384,10 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 <div id="modalBg" class="modal-bg" onclick="if(event.target===this)closeModal()">
   <div class="modal-sheet">
     <button class="modal-x" onclick="closeModal()">✕</button>
-    <span class="close-pill"></span>
     <img id="md-img" class="modal-img" src="" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80'">
+    
+    <button id="md-bookBtn" class="btn-book" onclick="goToBook()">จองที่นั่ง ❤️</button>
+
     <div class="modal-body">
       <h2 id="md-name"></h2>
       <div id="md-date" class="modal-date"></div>
@@ -383,7 +403,6 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
         <div><p style="font-size:11px;color:var(--sub);margin-bottom:4px">ที่นั่งคงเหลือ</p><div id="md-avail" class="avail ok">-</div></div>
         <div id="md-status" class="chip chip-green">เปิดจอง</div>
       </div>
-      <button id="md-bookBtn" class="btn-book" onclick="goToBook()">จองที่นั่ง 🚐</button>
     </div>
   </div>
 </div>
