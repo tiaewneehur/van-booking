@@ -875,8 +875,9 @@ function openModal(name,dateStr){
   const info=TRIP_DETAILS[name]||{days:'-',distance:'-',level:'-',price:'-',highlight:'-',image:'default.jpg'};
   const img=TRIP_IMAGES[name]||info.image||'default.jpg';
   const locked=CLOSED_TRIPS.includes(name);
-  const booked=allBookings.filter(b=>b.seat&&b.trip===name&&b.date===dateStr).length;
-  const avail=30-booked;
+  const totalSeats=BUS_GRID_STRUCTURE.filter(n=>n!=='driver'&&n!=='spacer').length*3;
+  const notAvail=allBookings.filter(b=>b.seat&&b.trip===item.trip&&b.date===item.date).length;
+  const avail=totalSeats-notAvail;
   const d=new Date(dateStr);
   const fmt=d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
   document.getElementById('md-img').src=img;
