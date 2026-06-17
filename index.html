@@ -905,33 +905,60 @@ const TABS=['home','trips','mytrips','notif'];
 function switchTab(id){TABS.forEach(t=>{document.getElementById('tab-'+t).classList.toggle('active-page',t===id);document.getElementById('nav-'+t).classList.toggle('active',t===id);});window.scrollTo({top:0,behavior:'smooth'});}
 
 /* ── MODAL ── */
-function openModal(name,dateStr){
-  const info=TRIP_DETAILS[name]||{days:'-',distance:'-',level:'-',price:'-',highlight:'-',image:'default.jpg'};
-  const img=TRIP_IMAGES[name]||info.image||'default.jpg';
-  const locked=CLOSED_TRIPS.includes(name);
-  const seatIds=['A','B','C'].flatMap(p=>BUS_GRID_STRUCTURE.filter(n=>n!=='driver'&&n!=='spacer').map(n=>p+n));
-  const takenSeats=allBookings.filter(b=>b.seat&&b.trip===name&&b.date===dateStr).map(b=>String(b.seat));
-  const emptySeats=seatIds.filter(id=>!takenSeats.includes(id));
-  const avail=emptySeats.length;
-  const d=new Date(dateStr);
-  const fmt=d.toLocaleDateString('th-TH',{day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('md-img').src=img;
-  document.getElementById('md-name').innerText=name;
-  document.getElementById('md-date').innerText='📅 '+fmt;
-  document.getElementById('md-price').innerText='💸 ค่าใช้จ่ายประมาณ '+info.price;
-  document.getElementById('md-days').innerText=info.days;
-  document.getElementById('md-dist').innerText=info.distance;
-  document.getElementById('md-level').innerText=info.level;
-  document.getElementById('md-hl').innerText=info.highlight;
-  const av=document.getElementById('md-avail');
-  const st=document.getElementById('md-status');
-  const btn=document.getElementById('md-bookBtn');
-  if(locked){av.innerText='ยังไม่เปิดจอง';av.className='avail full';st.innerText='เร็วๆ นี้';st.className='chip chip-yellow';btn.disabled=true;btn.innerText='⚠️ ยังไม่เปิดจองครับ';}
-  else if(avail<=0){av.innerText='เต็มแล้ว';av.className='avail full';st.innerText='เต็มแล้ว';st.className='chip';st.style.cssText='background:rgba(239,68,68,.2);color:var(--red)';btn.disabled=true;btn.innerText='🔴 ที่นั่งเต็มแล้วครับ';}
-  else{av.innerText=`เหลือ ${avail} ที่ — ${emptySeats.slice(0,5).join(', ')}${emptySeats.length>5?'...':''}`;av.className='avail '+(avail<=5?'low':'ok');st.innerText='เปิดจอง';st.className='chip chip-green';btn.disabled=false;btn.innerText='จองที่นั่ง 🚐';}
-  pendingTrip={name,date:fmt,raw:dateStr};
+function openModal(name, dateStr) {
+  const info = TRIP_DETAILS[name] || { days: '-', distance: '-', level: '-', price: '-', highlight: '-', image: 'default.jpg' };
+  const img = TRIP_IMAGES[name] || info.image || 'default.jpg';
+  const locked = CLOSED_TRIPS.includes(name);
+  const seatIds = ['A', 'B', 'C'].flatMap(p => BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').map(n => p + n));
+  const takenSeats = allBookings.filter(b => b.seat && b.trip === name && b.date === dateStr).map(b => String(b.seat));
+  const emptySeats = seatIds.filter(id => !takenSeats.includes(id));
+  const avail = emptySeats.length;
+  const d = new Date(dateStr);
+  const fmt = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  document.getElementById('md-img').src = img;
+  document.getElementById('md-name').innerText = name;
+  document.getElementById('md-date').innerText = '📅 ' + fmt;
+  document.getElementById('md-price').innerText = '💸 ค่าใช้จ่ายประมาณ ' + info.price;
+  document.getElementById('md-days').innerText = info.days;
+  document.getElementById('md-dist').innerText = info.distance;
+  document.getElementById('md-level').innerText = info.level;
+  document.getElementById('md-hl').innerText = info.highlight;
+
+  const av = document.getElementById('md-avail');
+  const st = document.getElementById('md-status');
+  const btn = document.getElementById('md-bookBtn');
+
+  // คืนค่าปุ่มให้กดได้ปกติก่อนเสมอ
+  btn.disabled = false;
+  btn.onclick = () => goToBook();
+
+  if (locked) {
+    av.innerText = 'ยังไม่เปิดจอง';
+    av.className = 'avail full';
+    st.innerText = 'เร็วๆ นี้';
+    st.className = 'chip chip-yellow';
+    btn.disabled = true;
+    btn.innerText = '⚠️ ยังไม่เปิดจองครับ';
+  } else if (avail <= 0) {
+    av.innerText = 'เต็มแล้ว';
+    av.className = 'avail full';
+    st.innerText = 'เต็มแล้ว';
+    st.className = 'chip';
+    st.style.cssText = 'background:rgba(239,68,68,.2);color:var(--red)';
+    // --- เปลี่ยนแค่ตรงนี้: ทำให้กดได้ แต่ยังคงข้อความเต็มไว้ ---
+    btn.innerText = '🔴 ที่นั่งเต็มแล้ว (กดเพื่อดูผัง)'; 
+  } else {
+    av.innerText = `เหลือ ${avail} ที่ — ${emptySeats.slice(0, 5).join(', ')}${emptySeats.length > 5 ? '...' : ''}`;
+    av.className = 'avail ' + (avail <= 5 ? 'low' : 'ok');
+    st.innerText = 'เปิดจอง';
+    st.className = 'chip chip-green';
+    btn.innerText = 'จองที่นั่ง 🚐';
+  }
+
+  pendingTrip = { name, date: fmt, raw: dateStr };
   document.getElementById('modalBg').classList.add('show');
-  document.body.style.overflow='hidden';
+  document.body.style.overflow = 'hidden';
 }
 function closeModal(){document.getElementById('modalBg').classList.remove('show');document.body.style.overflow='';}
 
