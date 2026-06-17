@@ -800,8 +800,10 @@ function cardHTML(item){
   const d=new Date(item.date);
   const fmt=d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
   const locked=CLOSED_TRIPS.includes(item.trip);
-  const booked=allBookings.filter(b=>b.seat&&b.trip===item.trip&&b.date===item.date).length;
-  const avail=30-booked;
+  const totalSeats=BUS_GRID_STRUCTURE.filter(n=>n!=='driver'&&n!=='spacer').length*3;
+  const notAvail=allBookings.filter(b=>b.seat&&b.trip===item.trip&&b.date===item.date).length;
+  const avail=totalSeats-notAvail;
+
   
   // แก้ไขตรงนี้: เปลี่ยน badge และสีของที่นั่ง
   const isPast=new Date(item.date)<new Date(new Date().setHours(0,0,0,0));
