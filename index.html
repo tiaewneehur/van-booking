@@ -929,9 +929,10 @@ function openModal(name, dateStr) {
   const st = document.getElementById('md-status');
   const btn = document.getElementById('md-bookBtn');
 
-  // คืนค่าปุ่มให้กดได้ปกติก่อนเสมอ
+  // ตั้งค่าเริ่มต้นปุ่ม
   btn.disabled = false;
   btn.onclick = () => goToBook();
+  btn.style.background = 'linear-gradient(145deg, #ff4747, #d91f2f)'; // สีแดงปกติ
 
   if (locked) {
     av.innerText = 'ยังไม่เปิดจอง';
@@ -941,14 +942,20 @@ function openModal(name, dateStr) {
     btn.disabled = true;
     btn.innerText = '⚠️ ยังไม่เปิดจองครับ';
   } else if (avail <= 0) {
-    av.innerText = 'เต็มแล้ว';
-    av.className = 'avail full';
+    // กล่องสถานะทริปเต็ม (สีทึบ)
+    av.innerHTML = `
+      <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); padding:12px; border-radius:12px; text-align:center;">
+        <div style="color:#ef4444; font-weight:800; font-size:14px;">🔴 ที่นั่งเต็มแล้วครับ</div>
+        <div style="color:#94a3b8; font-size:11px; margin-top:2px;">กดปุ่มด้านล่างเพื่อดูผังเบาะได้ครับ</div>
+      </div>
+    `;
     st.innerText = 'เต็มแล้ว';
     st.className = 'chip';
     st.style.cssText = 'background:rgba(239,68,68,.2);color:var(--red)';
-    // --- เปลี่ยนแค่ตรงนี้: ทำให้กดได้ แต่ยังคงข้อความเต็มไว้ ---
-    btn.innerText = '🔴 ที่นั่งเต็มแล้ว (กดเพื่อดูผัง)'; 
+    btn.innerText = '👀 ดูผังเบาะ (โหมดตรวจสอบ)';
+    btn.style.background = '#475569'; // ปุ่มสีเทาเข้ม
   } else {
+    // สถานะปกติ (ที่นั่งยังว่าง)
     av.innerText = `เหลือ ${avail} ที่ — ${emptySeats.slice(0, 5).join(', ')}${emptySeats.length > 5 ? '...' : ''}`;
     av.className = 'avail ' + (avail <= 5 ? 'low' : 'ok');
     st.innerText = 'เปิดจอง';
