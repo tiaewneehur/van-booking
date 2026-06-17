@@ -893,7 +893,7 @@ function openModal(name,dateStr){
   const btn=document.getElementById('md-bookBtn');
   if(locked){av.innerText='ยังไม่เปิดจอง';av.className='avail full';st.innerText='เร็วๆ นี้';st.className='chip chip-yellow';btn.disabled=true;btn.innerText='⚠️ ยังไม่เปิดจองครับ';}
   else if(avail<=0){av.innerText='เต็มแล้ว';av.className='avail full';st.innerText='เต็มแล้ว';st.className='chip';st.style.cssText='background:rgba(239,68,68,.2);color:var(--red)';btn.disabled=true;btn.innerText='🔴 ที่นั่งเต็มแล้วครับ';}
-  else{av.innerText=`เหลือ ${avail} ที่จาก 30`;av.className='avail '+(avail<=5?'low':'ok');st.innerText='เปิดจอง';st.className='chip chip-green';btn.disabled=false;btn.innerText='จองที่นั่ง 🚐';}
+  else{av.innerText=`เหลือ ${avail} ที่ (กดดูตอนเลือกที่นั่ง)`;av.className='avail '+(avail<=5?'low':'ok');st.innerText='เปิดจอง';st.className='chip chip-green';btn.disabled=false;btn.innerText='จองที่นง 🚐';}
   pendingTrip={name,date:fmt,raw:dateStr};
   document.getElementById('modalBg').classList.add('show');
   document.body.style.overflow='hidden';
