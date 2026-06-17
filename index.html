@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
+#pastList.expanded .past-extra{display:block!important}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --bg:#060b13;--bg2:#0c1524;--bg3:#111d2e;
@@ -776,8 +777,8 @@ function renderHome(){
     <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
     <div class="trip-list" id="upcomingList"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
     <div class="divider"></div>
-    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="switchTab('trips')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
-    <div class="trip-list" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map(t=>cardHTML(t)).slice(0,2).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
+    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทงหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
+    <div class="trip-list" id="pastList" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map((t,i)=>`<div class="${i>=2?'past-extra':''}" style="${i>=2?'display:none':''}">${cardHTML(t)}</div>`).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>🗺️ ทริปที่จัดมาแล้ว</h3></div>
     <div class="past-grid">${PAST_TRIPS.map(p=>`<div class="past-card"><img src="${p.img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}"><div class="past-card-rating">⭐ ${p.rating}</div><div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div></div>`).join('')}</div>
