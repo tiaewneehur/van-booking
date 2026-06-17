@@ -774,13 +774,13 @@ function renderHome(){
       <div class="left"><h2>${gr}, ${currentUser.nick}! 👋</h2><p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${mc} ทริป</strong></p></div>
       <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
     </div>
-    <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
+    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
     <div class="trip-list" id="upcomingList"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทงหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
     <div class="trip-list" id="pastList" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map((t,i)=>`<div class="${i>=2?'past-extra':''}" style="${i>=2?'display:none':''}">${cardHTML(t)}</div>`).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
     <div class="divider"></div>
-    <div class="sec-hdr"><h3>🗺️ ทริปที่จัดมาแล้ว</h3></div>
+    <div class="sec-hdr"><h3>(star) ให้ระดับความยาก</h3></div>
     <div class="past-grid">${PAST_TRIPS.map(p=>`<div class="past-card"><img src="${p.img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}"><div class="past-card-rating">⭐ ${p.rating}</div><div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div></div>`).join('')}</div>
     <div class="stat-bar"><div class="ico">👥</div><div class="txt"><h4>ยอดรวมผู้เดินทางกว่า 300+ คน</h4><p>ขอบคุณทุกความไว้วางใจจากเที่ยวนี่เหอะ 💙</p></div></div>
     <div style="background:linear-gradient(180deg,rgba(12,21,36,.95),rgba(7,12,20,.98));border:1px solid var(--border);border-radius:22px;padding:18px;margin-top:18px">
@@ -804,15 +804,18 @@ function cardHTML(item){
   const avail=30-booked;
   
   // แก้ไขตรงนี้: เปลี่ยน badge และสีของที่นั่ง
-  const badge=locked?'<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>':
-              avail<=0?'<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>':
-              avail<=5?'<span class="thc-badge badge-almost">🔥 ใกล้เต็ม!</span>': // เปลี่ยนจาก badge-hot เป็น badge-almost
-              '<span class="thc-badge badge-open">เปิดจอง</span>';
-  
-  const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':
-              avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':
-              avail<=5?`<span style="color:#f59e0b;font-size:11px;font-weight:600">🔥 เหลือ ${avail} ที่</span>`: // เปลี่ยนสีเป็นสีส้ม (#f59e0b)
-              `<span class="seats-ok">🟢 เหลือ ${avail} ที่</span>`;
+  const isPast=new Date(item.date)<new Date(new Date().setHours(0,0,0,0));
+const badge=locked?'<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>':
+            isPast?'<span class="thc-badge" style="background:rgba(100,116,139,.85);color:#fff">✅ ไปมาแล้วเว้ย!!</span>':
+            avail<=0?'<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>':
+            avail<=5?'<span class="thc-badge badge-almost">🔥 ใกล้เต็ม!</span>':
+            '<span class="thc-badge badge-open">เปิดจอง</span>';
+
+const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':
+            isPast?'<span style="color:var(--muted);font-size:11px;font-weight:600">✅ ไปมาแล้วเว้ย!!</span>':
+            avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':
+            avail<=5?`<span style="color:#f59e0b;font-size:11px;font-weight:600">🔥 ว่าง ${avail} ที่</span>`:
+            `<span class="seats-ok">🟢 ว่าง ${avail} ที่</span>`;
   return `<div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')"><div class="thc-img"><img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">${badge}${locked?'<div class="locked-ov">🔒</div>':''}</div><div class="thc-info"><h4>${item.trip}</h4><div class="loc">📍 ${info.loc||'ประเทศไทย'}</div><div class="thc-meta">${seats}<span class="price-txt">฿${info.price||'-'}</span></div><span class="date-chip">📅 ${fmt}</span></div><div class="thc-arr">›</div></div>`;
 }
 
@@ -822,7 +825,7 @@ function renderTripList(list){
   const upcoming = list.filter(t=>new Date(t.date)>=today);
   const past = list.filter(t=>new Date(t.date)<today);
   document.getElementById('tripListFull').innerHTML=`
-    <div class="sec-hdr"><h3>🏕️ ทริปเปิดจอง</h3></div>
+    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
     <div class="trip-list">${upcoming.map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>'}</div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3></div>
