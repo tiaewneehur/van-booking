@@ -549,7 +549,9 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 <script>
 const API_URL="https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const QUERY_URL=API_URL+"?action=read";
-const CLOSED_TRIPS=["ดอยทูเลจอวาเล"];
+const CLOSED_TRIPS=
+  ["ดอยทูเลจอวาเล"];
+  ["ดอยลังกาหลวง - ลังกาน้อย"];  
 const BUS_GRID_STRUCTURE=['driver',3,6,9,'spacer',2,5,8,'เบาะซ้าย',1,4,7];
 
 const TRIP_DETAILS={
@@ -704,6 +706,14 @@ price:"3,310 บาท",
 highlight:"☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
 image:"ดอยหมากพริก.jpg",
 loc:"จ.แม่ฮ่องสอน"},
+  "ดอยลังกาหลวง - ลังกาน้อย":{
+days:"3 วัน 2 คืน",
+distance:"25 กม.",
+level:"🔴 ยาก",
+price:"2000-3000 บาท",
+highlight:"☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
+image:"ดอยลังกาหลวง.jpg",
+loc:"จ.เชียงใหม่"},
 };
 
 const TRIP_IMAGES={
@@ -726,6 +736,7 @@ const TRIP_IMAGES={
   "ภูเขาควาย 2 ตู้":"ภูเขาควาย.jpg",
   "เลอกวาเดาะ":"เลอกวาเดาะ.jpg",
   "เส่ซูโจ๊ะ-ดอยหมากพริก 2 ตู้":"ดอยหมากพริก.jpg",
+  "ดอยลังกาหลวง - ลังกาน้อย":"ดอยลังกาหลวง.jpg",
 };
 
 const PAST_TRIPS=[
