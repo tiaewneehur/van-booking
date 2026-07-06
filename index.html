@@ -1018,11 +1018,11 @@ function openModal(name, dateStr) {
   document.getElementById('md-name').innerText = name;
   document.getElementById('md-date').innerText = '📅 ' + fmt;
   document.getElementById('md-price').innerText = '💸 ค่าใช้จ่ายประมาณ ' + info.price;
+  document.getElementById('md-payment').innerText = info.paymentNote ? '💰 ' + info.paymentNote : '';
   document.getElementById('md-days').innerText = info.days;
   document.getElementById('md-dist').innerText = info.distance;
   document.getElementById('md-level').innerText = info.level;
   document.getElementById('md-hl').innerText = info.highlight;
-  document.getElementById('md-payment').innerText = info.paymentNote ? '💰 ' + info.paymentNote : '';
 
   const av = document.getElementById('md-avail');
   const st = document.getElementById('md-status');
