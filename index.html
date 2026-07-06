@@ -192,6 +192,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .modal-card span{display:block;font-size:11px;color:var(--sub);margin-bottom:6px}
 .modal-card strong{font-size:14px;color:#fff}
 .modal-hl{background:linear-gradient(180deg,rgba(56,189,248,.08),rgba(56,189,248,.03));border:1px solid rgba(56,189,248,.12);border-radius:16px;padding:14px;font-size:13px;line-height:1.7;color:#e2e8f0;margin-bottom:16px}
+.modal-payment{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:10px 14px;font-size:12px;color:#fbbf24;margin-bottom:16px;}
 .modal-seat-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:16px}
 .avail{font-size:13px;font-weight:700}
 .avail.ok{color:var(--green)}.avail.low{color:var(--yellow)}.avail.full{color:var(--red)}
@@ -413,6 +414,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
         <div class="modal-card"><span>🚐 การเดินทาง</span><strong>รถตู้ VIP</strong></div>
       </div>
       <div id="md-hl" class="modal-hl"></div>
+      <div id="md-payment" class="modal-payment"></div>
       <div class="modal-seat-row">
         <div><p style="font-size:11px;color:var(--sub);margin-bottom:4px">ที่นั่งคงเหลือ</p><div id="md-avail" class="avail ok">-</div></div>
         <div id="md-status" class="chip chip-green">เปิดจอง</div>
@@ -1020,6 +1022,7 @@ function openModal(name, dateStr) {
   document.getElementById('md-dist').innerText = info.distance;
   document.getElementById('md-level').innerText = info.level;
   document.getElementById('md-hl').innerText = info.highlight;
+  document.getElementById('md-payment').innerText = info.paymentNote ? '💰 ' + info.paymentNote : '';
 
   const av = document.getElementById('md-avail');
   const st = document.getElementById('md-status');
