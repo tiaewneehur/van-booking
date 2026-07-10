@@ -552,7 +552,9 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 const API_URL="https://script.google.com/macros/s/AKfycbw7OvKq9CZ2bgRI61UpGVTCqYYSm4xSz4DcDwkwEaTXG0yfhldX34Bmnqi5m7y6cnS-/exec";
 const QUERY_URL=API_URL+"?action=read";
 const CLOSED_TRIPS=
-  ["ดอยลังกาหลวง - ลังกาน้อย 5-7 ธ.ค.69"]; 
+  ["ดอยลังกาหลวง - ลังกาน้อย 5-7 ธ.ค.69",
+   "เขาหลวงสุโขทัย 12-13 ก.ย.69"
+  ]; 
 const BUS_GRID_STRUCTURE=['driver',3,6,9,'spacer',2,5,8,'เบาะซ้าย',1,4,7];
 
 const TRIP_DETAILS={
@@ -735,6 +737,15 @@ paymentNote: "ชำระส่วนที่เหลือก่อนเด
 highlight:"☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
 image:"ดอยลังกาหลวง.jpg",
 loc:"จ.เชียงใหม่"},
+  "เขาหลวงสุโขทัย 12-13 ก.ย.69":{
+days:"2 วัน 1 คืน",
+distance:" 3- 4 กม.",
+level:"🔴 ยาก",
+price:"1500 บาท",
+paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
+highlight:"☁️ วิวสวย ทดสอบควมถึก",
+image:"เขาหลวงสุโขทัย.jpg",
+loc:"จ.สุโขทัย"},
 };
 
 const TRIP_IMAGES={
@@ -758,6 +769,7 @@ const TRIP_IMAGES={
   "เลอกวาเดาะ 17-18 ต.ค.69":"เลอกวาเดาะ.jpg",
   "เส่ซูโจ๊ะ-ดอยหมากพริก 23-25 ต.ค.69":"ดอยหมากพริก.jpg",
   "ดอยลังกาหลวง - ลังกาน้อย 5-7 ธ.ค.69":"ดอยลังกาหลวง.jpg",
+  "เขาหลวงสุโขทัย 12-13 ก.ย.69":"เขาหลวงสุโขทัย.jpg",
 };
 
 const PAST_TRIPS=[
