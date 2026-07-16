@@ -488,7 +488,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
     <div class="chk-row">
       <input type="checkbox" id="slipCb" onchange="document.getElementById('payOkBtn').disabled=!this.checked">
-      <label for="slipCb">แคปภาพ QR แล้วไปโอนด้วยเดี๋ยวก็ถามกรูส์อีก</label>
+      <label for="slipCb">แคปภาพ QR แล้วไปโอนหลังทำการจองเสร็จ</label>
     </div>
     <button id="payOkBtn" class="btn-pay-ok" disabled onclick="submitBook()">✔️ ยืนยันข้อมูลและจองที่นั่ง!</button>
     <p onclick="closePay()" style="font-size:13px;color:var(--muted);margin-top:14px;cursor:pointer">ย้อนกลับไปแก้ไข</p>
@@ -499,7 +499,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 <div id="successPage2">
   <div class="succ-body">
     <div class="succ-ico">✓</div>
-    <h2 style="font-size:24px;font-weight:700;color:#fff">จองสำเร็จ! 🎉</h2>
+    <h2 style="font-size:26px;font-weight:700;color:#fff">จองสำเร็จ! 🎉</h2>
     <div class="receipt">
       <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="r-name">-</strong></div>
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="r-trip">-</strong></div>
