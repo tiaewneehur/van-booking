@@ -1808,16 +1808,10 @@ function renderVansWithData(
 }
 async function pickSeat(el,id){
   const trip =
-    document
-      .getElementById('b-trip')
-      .value
-      .trim();
+    document.getElementById('b-trip').value.trim();
 
   const date =
-    document
-      .getElementById('f-dateraw')
-      .value
-      .trim();
+    document.getElementById('f-dateraw').value.trim();
 
   if(!trip || !date){
     Swal.fire({
@@ -1828,38 +1822,94 @@ async function pickSeat(el,id){
       color:'#f1f5f9',
       confirmButtonColor:'#0284c7'
     });
-
     return;
   }
 
-  el.style.pointerEvents = 'none';
-  el.style.opacity = '.7';
+  /*
+   * จำเบาะเดิมไว้ เผื่อล็อกไม่สำเร็จ
+   */
+  const previousSeat = selectedSeat;
 
-  try{
-    const response =
-      await fetch(API_URL,{
-        method:'POST',
+/* แสดงผลทันที */
+selectedSeat = id;
 
-        body:new URLSearchParams({
-          action:'lockSeat',
-          date:date,
-          trip:trip,
-          seat:id,
-          session_id:MY_SESSION_ID
-        })
-      });
+document
+  .querySelectorAll('.seat.selected')
+  .forEach(seat=>{
+    seat.classList.remove('selected');
+  });
 
-    const result =
-      await response.json();
+el.classList.add('selected');
+
+document.getElementById('f-seat').value = id;
+
+document
+  .getElementById('formFieldsBox2')
+  .classList
+  .add('show');
+
+checkBook();
+
+setTimeout(()=>{
+  document
+    .getElementById('formFieldsBox2')
+    .scrollIntoView({
+      behavior:'smooth',
+      block:'start'
+    });
+},50);
+
+/* ค่อยส่งไปล็อกหลังบ้าน */
+const response = await fetch(API_URL,{
+  method:'POST',
+  body:new URLSearchParams({
+    action:'lockSeat',
+    date:date,
+    trip:trip,
+    seat:id,
+    session_id:MY_SESSION_ID
+  })
+});
+
+    const result = await response.json();
 
     if(!result.ok){
+      /*
+       * ล็อกไม่ผ่าน ย้อนสถานะกลับ
+       */
+      selectedSeat = previousSeat;
+
+      el.classList.remove('selected');
+
+      document.getElementById('f-seat').value =
+        previousSeat || '';
+
+      if(previousSeat){
+        const previousEl =
+          [...document.querySelectorAll('.seat')]
+            .find(seat=>{
+              return seat.textContent.includes(previousSeat);
+            });
+
+        if(previousEl){
+          previousEl.classList.add('selected');
+        }
+      }else{
+        document
+          .getElementById('formFieldsBox2')
+          .classList
+          .remove('show');
+      }
+
+      checkBook();
+
       Swal.fire({
         icon:'warning',
         title:'เบาะนี้ไม่ว่างแล้ว',
         text:
           result.error === 'seat_booked'
-            ? 'เบาะนี้ถูกจองไปแล้วครับ'
-            : 'มีคนอื่นกำลังเลือกเบาะนี้ครับ',
+            ? 'เบาะนี้ถูกจองไปแล้ว กรุณาเลือกเบาะอื่น'
+            : 'มีคนอื่นกำลังเลือกเบาะนี้ กรุณาเลือกเบาะอื่น',
         background:'#0c1524',
         color:'#f1f5f9',
         confirmButtonColor:'#0284c7'
@@ -1869,55 +1919,41 @@ async function pickSeat(el,id){
       return;
     }
 
-    selectedSeat = id;
-
-    document
-      .querySelectorAll('.seat.selected')
-      .forEach(seat=>{
-        seat.classList.remove(
-          'selected'
-        );
-      });
-
-    el.classList.add('selected');
-
-    document
-      .getElementById('f-seat')
-      .value = id;
-
-    document
-      .getElementById('formFieldsBox2')
-      .classList
-      .add('show');
-
+    /*
+     * ล็อกสำเร็จแล้วจึงเริ่มนับ 5 นาที
+     */
     startSeatCountdown();
+
+  }catch(error){
+    selectedSeat = previousSeat;
+
+    el.classList.remove('selected');
+
+    document.getElementById('f-seat').value =
+      previousSeat || '';
+
+    if(!previousSeat){
+      document
+        .getElementById('formFieldsBox2')
+        .classList
+        .remove('show');
+    }
 
     checkBook();
 
-    loadSeats(date);
-
-    setTimeout(()=>{
-      document
-        .getElementById('formFieldsBox2')
-        .scrollIntoView({
-          behavior:'smooth',
-          block:'center'
-        });
-    },200);
-
-  }catch(error){
     Swal.fire({
       icon:'error',
       title:'ล็อกเบาะไม่สำเร็จ',
-      text:'กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',
+      text:'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
       background:'#0c1524',
       color:'#f1f5f9',
       confirmButtonColor:'#0284c7'
     });
 
+    loadSeats(date);
+
   }finally{
     el.style.pointerEvents = '';
-    el.style.opacity = '';
   }
 }
 function checkBook(){
