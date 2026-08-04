@@ -335,6 +335,108 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 }
   #upcomingList::-webkit-scrollbar{display:none}
   #upcomingList .trip-hcard{flex:0 0 92%;min-height:auto}
+
+  /* ================================
+   SLIP UPLOAD
+================================ */
+.slip-upload{
+  margin:14px 0 16px;
+  text-align:left;
+}
+
+.slip-title{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.slip-title .req{
+  color:var(--red);
+}
+
+.slip-drop{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:13px;
+  background:var(--bg3);
+  border:1.5px dashed rgba(255,255,255,.14);
+  border-radius:14px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.slip-drop.has-file{
+  border-style:solid;
+  border-color:rgba(16,185,129,.5);
+  background:rgba(16,185,129,.07);
+}
+
+.slip-drop input[type=file]{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  opacity:0;
+  cursor:pointer;
+}
+
+.slip-ico{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  background:rgba(56,189,248,.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+  flex-shrink:0;
+}
+
+.slip-drop.has-file .slip-ico{
+  background:rgba(16,185,129,.15);
+}
+
+.slip-txt{
+  flex:1;
+  min-width:0;
+}
+
+.slip-name{
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.slip-sub{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:3px;
+}
+
+.slip-preview{
+  display:none;
+  width:100%;
+  max-height:200px;
+  object-fit:contain;
+  margin-top:10px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#05080e;
+}
+
+.slip-preview.show{
+  display:block;
+}
 </style>
 </head>
 <body>
@@ -486,11 +588,48 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <h3>💰 ชำระเงินค่ามัดจำทริป 💰</h3>
     <p class="sub">(สแกน QR หรือบันทึกภาพเพื่อชำระเงิน)</p>
     <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
-    <div class="chk-row">
-      <input type="checkbox" id="slipCb" onchange="document.getElementById('payOkBtn').disabled=!this.checked">
-      <label for="slipCb">แคปภาพ QR แล้วไปโอนหลังทำการจองเสร็จ</label>
+    <div class="slip-upload">
+  <div class="slip-title">
+    🧾 แนบสลิปการโอนเงิน
+    <span class="req">*</span>
+  </div>
+
+  <div class="slip-drop" id="slipDrop">
+    <div class="slip-ico">🧾</div>
+
+    <div class="slip-txt">
+      <div class="slip-name" id="slipName">
+        แตะเพื่อเลือกรูปสลิป
+      </div>
+
+      <div class="slip-sub">
+        JPG, PNG หรือ WEBP ไม่เกิน 5MB
+      </div>
     </div>
-    <button id="payOkBtn" class="btn-pay-ok" disabled onclick="submitBook()">✔️ ยืนยันข้อมูลและจองที่นั่ง!</button>
+
+    <input
+      type="file"
+      id="slipFile"
+      accept="image/jpeg,image/png,image/webp"
+      onchange="handleSlipFile(this)"
+    >
+  </div>
+
+  <img
+    id="slipPreview"
+    class="slip-preview"
+    alt="ตัวอย่างสลิป"
+  >
+</div>
+
+<button
+  id="payOkBtn"
+  class="btn-pay-ok"
+  disabled
+  onclick="submitBook()"
+>
+  🧾 กรุณาแนบสลิปก่อน
+</button>
     <p onclick="closePay()" style="font-size:13px;color:var(--muted);margin-top:14px;cursor:pointer">ย้อนกลับไปแก้ไข</p>
   </div>
 </div>
@@ -1217,26 +1356,334 @@ function checkBook(){
   btn.innerText=ok?'👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨':'🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง';
 }
 
+let selectedSlipFile = null;
+
+function handleSlipFile(input){
+  const drop = document.getElementById('slipDrop');
+  const nameEl = document.getElementById('slipName');
+  const preview = document.getElementById('slipPreview');
+  const button = document.getElementById('payOkBtn');
+
+  if(!input.files || !input.files[0]){
+    resetSlipUpload();
+    return;
+  }
+
+  const file = input.files[0];
+
+  const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ];
+
+  if(!allowedTypes.includes(file.type)){
+    input.value = '';
+
+    Swal.fire({
+      icon:'warning',
+      title:'ไฟล์ไม่ถูกต้อง',
+      text:'กรุณาแนบสลิปชนิด JPG, PNG หรือ WEBP',
+      background:'#0c1524',
+      color:'#f1f5f9',
+      confirmButtonColor:'#0284c7'
+    });
+
+    resetSlipUpload();
+    return;
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+
+  if(file.size > maxSize){
+    input.value = '';
+
+    Swal.fire({
+      icon:'warning',
+      title:'ไฟล์ใหญ่เกินไป',
+      text:'กรุณาใช้รูปสลิปขนาดไม่เกิน 5MB',
+      background:'#0c1524',
+      color:'#f1f5f9',
+      confirmButtonColor:'#0284c7'
+    });
+
+    resetSlipUpload();
+    return;
+  }
+
+  selectedSlipFile = file;
+
+  drop.classList.add('has-file');
+  nameEl.textContent = '✅ ' + file.name;
+
+  const reader = new FileReader();
+
+  reader.onload = function(event){
+    preview.src = event.target.result;
+    preview.classList.add('show');
+  };
+
+  reader.readAsDataURL(file);
+
+  button.disabled = false;
+  button.textContent = '✔️ ส่งสลิปและยืนยันการจอง';
+}
+
+
+function resetSlipUpload(){
+  selectedSlipFile = null;
+
+  const input = document.getElementById('slipFile');
+  const drop = document.getElementById('slipDrop');
+  const nameEl = document.getElementById('slipName');
+  const preview = document.getElementById('slipPreview');
+  const button = document.getElementById('payOkBtn');
+
+  if(input){
+    input.value = '';
+  }
+
+  if(drop){
+    drop.classList.remove('has-file');
+  }
+
+  if(nameEl){
+    nameEl.textContent = 'แตะเพื่อเลือกรูปสลิป';
+  }
+
+  if(preview){
+    preview.src = '';
+    preview.classList.remove('show');
+  }
+
+  if(button){
+    button.disabled = true;
+    button.textContent = '🧾 กรุณาแนบสลิปก่อน';
+  }
+}
+
+
+function slipFileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+
+    reader.onload = function(){
+      const result = String(reader.result || '');
+      const commaIndex = result.indexOf(',');
+
+      resolve({
+        name:file.name,
+        mimeType:file.type || 'image/jpeg',
+        data:commaIndex >= 0
+          ? result.substring(commaIndex + 1)
+          : result
+      });
+    };
+
+    reader.onerror = function(){
+      reject(
+        new Error('ไม่สามารถอ่านรูปสลิปได้')
+      );
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+  
 /* ── PAYMENT ── */
-function openPay(){document.getElementById('slipCb').checked=false;document.getElementById('payOkBtn').disabled=true;document.getElementById('payModal').classList.add('show');}
-function closePay(){document.getElementById('payModal').classList.remove('show');}
-function submitBook(){
-  const btn=document.getElementById('payOkBtn');btn.innerHTML='⌛ กำลังส่งข้อมูล...';btn.disabled=true;
-  const payload={date:document.getElementById('f-dateraw').value,trip:document.getElementById('b-trip').value,seat:document.getElementById('f-seat').value,name:document.getElementById('f-name').value,nickname:document.getElementById('f-nick').value,phone:document.getElementById('f-phone').value,line:document.getElementById('f-line').value,confirm:'true'};
-  const form=document.createElement('form');form.method='POST';form.action=API_URL;form.style.display='none';
-  for(const k in payload){const i=document.createElement('input');i.name=k;i.value=payload[k];form.appendChild(i);}
-  document.body.appendChild(form);
-  const ifr=document.createElement('iframe');ifr.name='_ifr';ifr.style.display='none';document.body.appendChild(ifr);
-  form.target='_ifr';form.submit();
-  setTimeout(()=>{
-    closePay();
-    document.getElementById('r-name').innerText=payload.name;
-    document.getElementById('r-trip').innerText=payload.trip;
-    document.getElementById('r-date').innerText=new Date(payload.date).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
-    document.getElementById('r-seat').innerText=payload.seat;
-    document.getElementById('successPage2').classList.add('show');
-    allBookings.push(payload);renderMyTrips();
-  },1800);
+
+function openPay(){
+  resetSlipUpload();
+
+  document
+    .getElementById('payModal')
+    .classList
+    .add('show');
+}
+
+
+function closePay(){
+  document
+    .getElementById('payModal')
+    .classList
+    .remove('show');
+}
+
+
+async function submitBook(){
+  const btn = document.getElementById('payOkBtn');
+
+  if(!selectedSlipFile){
+    Swal.fire({
+      icon:'warning',
+      title:'ยังไม่ได้แนบสลิป',
+      text:'กรุณาแนบรูปสลิปก่อนยืนยันการจอง',
+      background:'#0c1524',
+      color:'#f1f5f9',
+      confirmButtonColor:'#0284c7'
+    });
+
+    return;
+  }
+
+  btn.innerHTML = '⌛ กำลังส่งข้อมูลและสลิป...';
+  btn.disabled = true;
+
+  try{
+    const slipData = await slipFileToBase64(
+      selectedSlipFile
+    );
+
+    const bookingId =
+      'BOOK-' +
+      Date.now() +
+      '-' +
+      Math.random()
+        .toString(36)
+        .substring(2,7)
+        .toUpperCase();
+
+    /*
+     * เก็บข้อมูลเดิมทุกตัวไว้
+     * แล้วเพิ่มข้อมูลสลิปต่อท้าย
+     */
+    const payload = {
+      date:
+        document.getElementById('f-dateraw').value,
+
+      trip:
+        document.getElementById('b-trip').value,
+
+      seat:
+        document.getElementById('f-seat').value,
+
+      name:
+        document.getElementById('f-name').value.trim(),
+
+      nickname:
+        document.getElementById('f-nick').value.trim(),
+
+      phone:
+        document.getElementById('f-phone').value.trim(),
+
+      line:
+        document.getElementById('f-line').value.trim(),
+
+      confirm:'true',
+
+      bookingId:bookingId,
+
+      slipBase64:slipData.data,
+      slipName:slipData.name,
+      slipMime:slipData.mimeType
+    };
+
+    const form = document.createElement('form');
+
+    form.method = 'POST';
+    form.action = API_URL;
+    form.target = '_ifr_booking';
+    form.acceptCharset = 'UTF-8';
+    form.style.display = 'none';
+
+    Object.entries(payload).forEach(
+      ([key,value])=>{
+        /*
+         * ใช้ textarea เพราะ Base64 ยาวมาก
+         * เหมือนระบบสมัคร Staff
+         */
+        const field =
+          document.createElement('textarea');
+
+        field.name = key;
+        field.value =
+          value == null ? '' : String(value);
+
+        field.style.display = 'none';
+
+        form.appendChild(field);
+      }
+    );
+
+    let iframe =
+      document.getElementById('_ifr_booking');
+
+    if(!iframe){
+      iframe =
+        document.createElement('iframe');
+
+      iframe.name = '_ifr_booking';
+      iframe.id = '_ifr_booking';
+      iframe.style.display = 'none';
+
+      document.body.appendChild(iframe);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+
+    /*
+     * รอหลังบ้านบันทึกรูปและข้อมูล
+     */
+    setTimeout(()=>{
+      closePay();
+
+      document.getElementById('r-name').innerText =
+        payload.name;
+
+      document.getElementById('r-trip').innerText =
+        payload.trip;
+
+      document.getElementById('r-date').innerText =
+        new Date(payload.date)
+          .toLocaleDateString(
+            'th-TH',
+            {
+              day:'numeric',
+              month:'short',
+              year:'2-digit'
+            }
+          );
+
+      document.getElementById('r-seat').innerText =
+        payload.seat;
+
+      document
+        .getElementById('successPage2')
+        .classList
+        .add('show');
+
+      allBookings.push({
+        ...payload,
+        paymentStatus:'รอตรวจสอบสลิป'
+      });
+
+      renderMyTrips();
+
+      if(form.parentNode){
+        form.remove();
+      }
+
+      selectedSlipFile = null;
+
+    },5000);
+
+  }catch(error){
+    btn.disabled = false;
+    btn.textContent =
+      '✔️ ส่งสลิปและยืนยันการจอง';
+
+    Swal.fire({
+      icon:'error',
+      title:'ส่งสลิปไม่สำเร็จ',
+      text:
+        error.message ||
+        'กรุณาลองใหม่อีกครั้ง',
+      background:'#0c1524',
+      color:'#f1f5f9',
+      confirmButtonColor:'#0284c7'
+    });
+  }
 }
 function backHome(){document.getElementById('successPage2').classList.remove('show');document.getElementById('bookingPage2').classList.remove('show');switchTab('home');renderHome();}
 
