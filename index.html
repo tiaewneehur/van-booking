@@ -1278,16 +1278,18 @@ function loadSeats(date, showLoading = false){
 
     if(grid){
       grid.innerHTML = `
-        <div style="
-          grid-column:1 / -1;
-          text-align:center;
-          color:var(--blue);
-          font-size:12px;
-          padding:24px 10px;
-        ">
-          ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
-        </div>
-      `;
+  <div style="
+    grid-column:1 / -1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:70px;
+    color:var(--blue);
+    font-size:12px;
+  ">
+    ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
+  </div>
+`;
     }
   });
 }
