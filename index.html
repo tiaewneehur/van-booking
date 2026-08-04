@@ -443,7 +443,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 ================================ */
 
 .seat-lock-timer{
-  display:none;
+  display:flex;
   align-items:center;
   justify-content:space-between;
   gap:12px;
@@ -452,10 +452,6 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   border-radius:15px;
   background:rgba(245,158,11,.08);
   border:1px solid rgba(245,158,11,.28);
-}
-
-.seat-lock-timer.show{
-  display:flex;
 }
 
 .seat-lock-timer strong{
@@ -622,16 +618,6 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <div class="ig"><label>📅 วันที่จัดทริป</label><input id="b-date" disabled></div>
     <label style="font-size:13px;color:var(--sub);font-weight:500;display:block;margin-bottom:8px">🚌 เลือกที่นั่งที่คุณต้องการ</label>
     <img src="IMG_0444.jpeg" class="seat-map-img" onerror="this.style.display='none'">
-    <div id="seatLockTimerBox" class="seat-lock-timer">
-  <div>
-    <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
-    <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
-  </div>
-
-  <div id="seatLockTimer" class="seat-lock-time">
-    05:00
-  </div>
-</div>
     <div class="seat-legend" style="flex-wrap:wrap">
   <div class="leg-item">🟢 ว่าง</div>
   <div class="leg-item">🟠 กำลังเลือก</div>
@@ -681,6 +667,16 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <h3>💰 ชำระเงินค่ามัดจำทริป 💰</h3>
     <p class="sub">(สแกน QR หรือบันทึกภาพเพื่อชำระเงิน)</p>
     <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
+    <div id="seatLockTimerBox" class="seat-lock-timer">
+  <div>
+    <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
+    <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
+  </div>
+
+  <div id="seatLockTimer" class="seat-lock-time">
+    05:00
+  </div>
+</div>
     <div class="slip-upload">
   <div class="slip-title">
     🧾 แนบสลิปการโอนเงิน
@@ -1053,19 +1049,34 @@ sessionStorage.setItem(
   MY_SESSION_ID
 );
 
-function startSeatCountdown(){
+function startSeatCountdown(resetTime = false){
   clearInterval(seatCountdownTimer);
 
-  seatLockExpiresAt =
-    Date.now() + SEAT_LOCK_DURATION;
+  if(
+    resetTime ||
+    !seatLockExpiresAt ||
+    seatLockExpiresAt <= Date.now()
+  ){
+    seatLockExpiresAt =
+      Date.now() + SEAT_LOCK_DURATION;
+  }
 
   const box =
     document.getElementById(
       'seatLockTimerBox'
     );
 
+  const timer =
+    document.getElementById(
+      'seatLockTimer'
+    );
+
   if(box){
-    box.classList.add('show');
+    box.style.display = 'flex';
+  }
+
+  if(timer){
+    timer.classList.remove('warning');
   }
 
   updateSeatCountdown();
@@ -1076,7 +1087,6 @@ function startSeatCountdown(){
       1000
     );
 }
-
 
 function updateSeatCountdown(){
   const timer =
@@ -1133,7 +1143,6 @@ function stopSeatCountdown(){
   );
 
   seatCountdownTimer = null;
-  seatLockExpiresAt = 0;
 
   const box =
     document.getElementById(
@@ -1157,6 +1166,7 @@ function stopSeatCountdown(){
 
 
 function handleSeatLockExpired(){
+  seatLockExpiresAt = 0;
   selectedSeat = null;
 
   document
@@ -1874,58 +1884,56 @@ const response = await fetch(API_URL,{
 
     const result = await response.json();
 
-    if(!result.ok){
-      /*
-       * ล็อกไม่ผ่าน ย้อนสถานะกลับ
-       */
-      selectedSeat = previousSeat;
+if(!result.ok){
+  /*
+   * ล็อกไม่ผ่าน ย้อนสถานะกลับ
+   */
+  selectedSeat = previousSeat;
 
-      el.classList.remove('selected');
+  el.classList.remove('selected');
 
-      document.getElementById('f-seat').value =
-        previousSeat || '';
+  document.getElementById('f-seat').value =
+    previousSeat || '';
 
-      if(previousSeat){
-        const previousEl =
-          [...document.querySelectorAll('.seat')]
-            .find(seat=>{
-              return seat.textContent.includes(previousSeat);
-            });
+  if(previousSeat){
+    const previousEl =
+      [...document.querySelectorAll('.seat')]
+        .find(seat=>{
+          return seat.textContent.includes(previousSeat);
+        });
 
-        if(previousEl){
-          previousEl.classList.add('selected');
-        }
-      }else{
-        document
-          .getElementById('formFieldsBox2')
-          .classList
-          .remove('show');
-      }
-
-      checkBook();
-
-      Swal.fire({
-        icon:'warning',
-        title:'เบาะนี้ไม่ว่างแล้ว',
-        text:
-          result.error === 'seat_booked'
-            ? 'เบาะนี้ถูกจองไปแล้ว กรุณาเลือกเบาะอื่น'
-            : 'มีคนอื่นกำลังเลือกเบาะนี้ กรุณาเลือกเบาะอื่น',
-        background:'#0c1524',
-        color:'#f1f5f9',
-        confirmButtonColor:'#0284c7'
-      });
-
-      loadSeats(date);
-      return;
+    if(previousEl){
+      previousEl.classList.add('selected');
     }
+  }else{
+    document
+      .getElementById('formFieldsBox2')
+      .classList
+      .remove('show');
+  }
 
-    /*
-     * ล็อกสำเร็จแล้วจึงเริ่มนับ 5 นาที
-     */
-    startSeatCountdown();
+  checkBook();
 
-  }catch(error){
+  Swal.fire({
+    icon:'warning',
+    title:'เบาะนี้ไม่ว่างแล้ว',
+    text:
+      result.error === 'seat_booked'
+        ? 'เบาะนี้ถูกจองไปแล้ว กรุณาเลือกเบาะอื่น'
+        : 'มีคนอื่นกำลังเลือกเบาะนี้ กรุณาเลือกเบาะอื่น',
+    background:'#0c1524',
+    color:'#f1f5f9',
+    confirmButtonColor:'#0284c7'
+  });
+
+  loadSeats(date);
+  return;
+}
+
+/* ล็อกเบาะสำเร็จ เริ่มเวลาใหม่ 5 นาที */
+startSeatCountdown(true);
+
+}catch(error){
     selectedSeat = previousSeat;
 
     el.classList.remove('selected');
@@ -2101,7 +2109,25 @@ function slipFileToBase64(file){
 /* ── PAYMENT ── */
 
 function openPay(){
+  if(!selectedSeat){
+    Swal.fire({
+      icon:'warning',
+      title:'ยังไม่ได้เลือกที่นั่ง',
+      text:'กรุณาเลือกที่นั่งก่อนชำระเงิน',
+      background:'#0c1524',
+      color:'#f1f5f9',
+      confirmButtonColor:'#0284c7'
+    });
+
+    return;
+  }
+
   resetSlipUpload();
+
+  /*
+   * เริ่มนับ 5 นาทีตอนเปิดหน้าชำระเงิน
+   */
+  startSeatCountdown();
 
   document
     .getElementById('payModal')
@@ -2109,14 +2135,17 @@ function openPay(){
     .add('show');
 }
 
-
 function closePay(){
   document
     .getElementById('payModal')
     .classList
     .remove('show');
-}
 
+  clearInterval(seatCountdownTimer);
+  seatCountdownTimer = null;
+
+  // ถ้ายังไม่หมดเวลา ให้กลับมานับต่อเมื่อเปิดใหม่
+}
 
 async function submitBook(){
   const btn = document.getElementById('payOkBtn');
