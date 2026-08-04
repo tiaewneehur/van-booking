@@ -1273,19 +1273,22 @@ function loadSeats(date){
   }
 
   ['A','B','C'].forEach(prefix=>{
-    const grid =
-      document.getElementById(
-        'vanGrid' + prefix
-      );
+  const grid = document.getElementById('vanGrid' + prefix);
 
-    if(
-      grid &&
-      grid.children.length === 0
-    ){
-      grid.innerHTML =
-        '<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';
-    }
-  });
+  if(grid){
+    grid.innerHTML = `
+      <div style="
+        grid-column:1 / -1;
+        text-align:center;
+        color:var(--blue);
+        font-size:12px;
+        padding:24px 10px;
+      ">
+        ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
+      </div>
+    `;
+  }
+});
 
   const callback =
     'cbs_' +
@@ -1716,69 +1719,36 @@ function renderVansWithData(
   ['A','B','C'].forEach(prefix=>{
   const grid = document.getElementById('vanGrid' + prefix);
 
-  if(grid){
-    grid.innerHTML = `
-      <div style="
-        grid-column:1 / -1;
-        text-align:center;
-        color:var(--blue);
-        font-size:12px;
-        padding:24px 10px;
-      ">
-        ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
-      </div>
-    `;
-    BUS_GRID_STRUCTURE.forEach(n=>{
-      const cell =
-        document.createElement('div');
+  if(!grid){
+    return;
+  }
 
-      if(n === 'driver'){
-        cell.className = 'seat driver';
+  grid.innerHTML = '';
 
-        cell.innerHTML =
-          '<span>👨‍✈️</span>' +
-          '<span style="font-size:9px">คนขับ</span>';
+  BUS_GRID_STRUCTURE.forEach(n=>{
+    const cell = document.createElement('div');
 
-      }else if(n === 'spacer'){
-        cell.className = 'seat spacer';
+    if(n === 'driver'){
+      cell.className = 'seat driver';
 
-      }else{
-        const id = prefix + n;
+      cell.innerHTML =
+        '<span>👨‍✈️</span>' +
+        '<span style="font-size:9px">คนขับ</span>';
 
-        cell.className = 'seat';
+    }else if(n === 'spacer'){
+      cell.className = 'seat spacer';
 
-        if(bookedMapping[id]){
-          if(
-            bookedMapping[id] ===
-            'งดจอง'
-          ){
-            cell.classList.add(
-              'hidden-seat'
-            );
+    }else{
+      const id = prefix + n;
 
-          }else{
-            cell.classList.add(
-              'booked'
-            );
+      cell.className = 'seat';
 
-            cell.innerHTML = `
-              <span style="font-size:9px">
-                ${id}
-              </span>
+      if(bookedMapping[id]){
+        if(bookedMapping[id] === 'งดจอง'){
+          cell.classList.add('hidden-seat');
 
-              <div style="
-                font-size:12px;
-                text-align:center
-              ">
-                ${bookedMapping[id]}
-              </div>
-            `;
-          }
-
-        }else if(lockedMapping[id]){
-          cell.classList.add(
-            'locking'
-          );
+        }else{
+          cell.classList.add('booked');
 
           cell.innerHTML = `
             <span style="font-size:9px">
@@ -1786,41 +1756,56 @@ function renderVansWithData(
             </span>
 
             <div style="
-              font-size:10px;
+              font-size:12px;
               text-align:center
             ">
-              ⏳ กำลังเลือก
+              ${bookedMapping[id]}
             </div>
           `;
-
-        }else{
-          cell.classList.add('empty');
-
-          if(id === selectedSeat){
-            cell.classList.add(
-              'selected'
-            );
-          }
-
-          cell.innerHTML = `
-            <span style="font-size:10px">
-              เบาะ
-            </span>
-
-            <span style="font-size:15px">
-              ${id}
-            </span>
-          `;
-
-          cell.onclick = function(){
-            pickSeat(cell,id);
-          };
         }
-      }
 
-      grid.appendChild(cell);
-    });
+      }else if(lockedMapping[id]){
+        cell.classList.add('locking');
+
+        cell.innerHTML = `
+          <span style="font-size:9px">
+            ${id}
+          </span>
+
+          <div style="
+            font-size:10px;
+            text-align:center
+          ">
+            ⏳ กำลังเลือก
+          </div>
+        `;
+
+      }else{
+        cell.classList.add('empty');
+
+        if(id === selectedSeat){
+          cell.classList.add('selected');
+        }
+
+        cell.innerHTML = `
+          <span style="font-size:10px">
+            เบาะ
+          </span>
+
+          <span style="font-size:15px">
+            ${id}
+          </span>
+        `;
+
+        cell.onclick = function(){
+          pickSeat(cell,id);
+        };
+      }
+    }
+
+    grid.appendChild(cell);
   });
+});
 }
 async function pickSeat(el,id){
   const trip =
