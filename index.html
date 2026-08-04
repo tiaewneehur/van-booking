@@ -1285,6 +1285,8 @@ function fetchData(){
 }
 
 function loadSeats(date){
+  const requestId = ++latestSeatRequestId;
+
   if(!date){
     return;
   }
@@ -1299,20 +1301,25 @@ function loadSeats(date){
     return;
   }
 
-  ['A','B','C'].forEach(prefix=>{
-    const grid =
-      document.getElementById(
-        'vanGrid' + prefix
-      );
+  ['A','B','C'].forEach(prefix => {
+  const grid = document.getElementById(
+    'vanGrid' + prefix
+  );
 
-    if(
-      grid &&
-      grid.children.length === 0
-    ){
-      grid.innerHTML =
-        '<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';
-    }
-  });
+  if(grid){
+    grid.innerHTML = `
+      <p style="
+        grid-column:1 / -1;
+        text-align:center;
+        color:var(--blue);
+        font-size:12px;
+        padding:24px 10px
+      ">
+        ⌛ กำลังดึงข้อมูลเบาะจากหลังบ้าน...
+      </p>
+    `;
+  }
+});
 
   const callback =
     'cbs_' +
@@ -1323,13 +1330,22 @@ function loadSeats(date){
       .substring(2,7);
 
   window[callback] = function(res){
-    renderVansWithData(
-      res.bookings || [],
-      res.locks || []
-    );
-
+  /*
+   * ถ้ามีการเปลี่ยนทริปไปแล้ว
+   * ไม่ให้นำข้อมูลจากคำขอเก่ามาแสดง
+   */
+  if(requestId !== latestSeatRequestId){
     delete window[callback];
-  };
+    return;
+  }
+
+  renderVansWithData(
+    res.bookings || [],
+    res.locks || []
+  );
+
+  delete window[callback];
+};
 
   appendScript(
     QUERY_URL +
