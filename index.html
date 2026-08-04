@@ -1275,7 +1275,7 @@ function loadSeats(date){
   ['A','B','C'].forEach(prefix=>{
   const grid = document.getElementById('vanGrid' + prefix);
 
-  if(grid){
+  if(grid && grid.children.length === 0){
     grid.innerHTML = `
       <div style="
         grid-column:1 / -1;
