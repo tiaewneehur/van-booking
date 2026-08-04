@@ -1255,7 +1255,7 @@ function fetchData(){
   appendScript(QUERY_URL+'&callback='+cb);
 }
 
-function loadSeats(date){
+function loadSeats(date, showLoading = false){
   const requestId = ++latestSeatRequestId;
 
   if(!date){
@@ -1272,24 +1272,25 @@ function loadSeats(date){
     return;
   }
 
+  if(showLoading){
   ['A','B','C'].forEach(prefix=>{
-  const grid = document.getElementById('vanGrid' + prefix);
+    const grid = document.getElementById('vanGrid' + prefix);
 
-  if(grid && grid.children.length === 0){
-    grid.innerHTML = `
-      <div style="
-        grid-column:1 / -1;
-        text-align:center;
-        color:var(--blue);
-        font-size:12px;
-        padding:24px 10px;
-      ">
-        ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
-      </div>
-    `;
-  }
-});
-
+    if(grid){
+      grid.innerHTML = `
+        <div style="
+          grid-column:1 / -1;
+          text-align:center;
+          color:var(--blue);
+          font-size:12px;
+          padding:24px 10px;
+        ">
+          ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
+        </div>
+      `;
+    }
+  });
+}
   const callback =
     'cbs_' +
     Date.now() +
@@ -1630,7 +1631,7 @@ function goToBook(){
   document.getElementById('formFieldsBox2').classList.remove('show');
   document.getElementById('bookingPage2').classList.add('show');
   window.scrollTo({top:0,behavior:'instant'});
-  loadSeats(formattedDate);
+  loadSeats(formattedDate, true);
 
 clearInterval(
   seatRefreshTimer
