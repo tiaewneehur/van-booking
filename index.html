@@ -26,8 +26,8 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   z-index: 9999;
   display: flex;
   flex-direction: column;
-  align-items: center;      /* จัดแนวนอนให้อยู่กึ่งกลาง */
-  justify-content: center;  /* จัดแนวตั้งให้อยู่กึ่งกลาง */
+  align-items: center;
+  justify-content: center;
   padding: 24px;
   background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,.12), transparent 65%), var(--bg);
 }
@@ -44,12 +44,8 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   border-radius: 24px;
   padding: 28px 22px;
   box-shadow: 0 20px 50px rgba(0,0,0,.45);
-  
-  /* การจัดกึ่งกลาง */
-  display: flex;flex-direction: column;align-items: center;/* ทำให้ทุกอย่างภายในกล่องอยู่กึ่งกลางแนวนอน */text-align: center;/* ให้ข้อความอยู่ตรงกลาง */}
-/* ทำให้ช่องกรอกข้อมูลกางเต็มความกว้างและอยู่ตรงกลาง */
-.login-card .inp-wrap {width: 100%;max-width: 100%;/* บังคับไม่ให้เกินกล่อง */}
-/* ถ้าอยากให้ปุ่มอยู่ตรงกลางด้วย */
+  display: flex;flex-direction: column;align-items: center;text-align: center;}
+.login-card .inp-wrap {width: 100%;max-width: 100%;}
 .login-card .btn-login {width: 100%;}
 .login-card h2{font-size:18px;font-weight:700;color:#fff;margin-bottom:6px}
 .login-card>p{font-size:13px;color:var(--sub);margin-bottom:22px;line-height:1.6}
@@ -103,9 +99,8 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .thc-img img{width:100%;height:100%;object-fit:cover}
 .thc-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:700}
 .badge-almost {background: rgba(245, 158, 11, 0.85);color: #fff;animation: hb 0.9s infinite;
-  /* เพิ่มเงาสีส้มเรืองๆ ให้ดูพุ่งออกมา */
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
-  border-radius: 8px; /* ปรับความมนถ้าต้องการ */
+  border-radius: 8px;
 }
 .badge-open{background:rgba(16,185,129,.85);color:#fff}
 .badge-hot{background:rgba(239,68,68,.85);color:#fff}
@@ -175,10 +170,9 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .chip-yellow{background:rgba(245,158,11,.12);color:var(--yellow)}
 
 /* TRIP DETAIL MODAL */
-/* แก้ไขเป็น Popup กึ่งกลางจอ */
-.modal-bg {position: fixed;inset: 0;background: rgba(0, 0, 0, 0.78);backdrop-filter: blur(8px);z-index: 800;display: none;align-items: center; /* เปลี่ยนจาก flex-end เป็น center */justify-content: center;}
+.modal-bg {position: fixed;inset: 0;background: rgba(0, 0, 0, 0.78);backdrop-filter: blur(8px);z-index: 800;display: none;align-items: center;justify-content: center;}
 .modal-bg.show{display:flex}
-.modal-sheet {width: 90%; /* ให้มีช่องว่างด้านข้างเล็กน้อย */max-width: 480px;max-height: 90vh;background: var(--bg2);border-radius: 28px; /* เปลี่ยนจาก 28px 28px 0 0 เป็นมนทุกมุม */overflow-y: auto;padding-bottom: 32px;animation: fadeIn .3s ease; /* เปลี่ยน animation */position: relative;}
+.modal-sheet {width: 90%;max-width: 480px;max-height: 90vh;background: var(--bg2);border-radius: 28px;overflow-y: auto;padding-bottom: 32px;animation: fadeIn .3s ease;position: relative;}
 @keyframes fadeIn {from { opacity: 0; transform: scale(0.95); }to { opacity: 1; transform: scale(1); }}
 .modal-x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.5);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(8px)}
 .close-pill{display:block;width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;margin:14px auto 0}
@@ -196,7 +190,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .modal-seat-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:16px}
 .avail{font-size:13px;font-weight:700}
 .avail.ok{color:var(--green)}.avail.low{color:var(--yellow)}.avail.full{color:var(--red)}
-.btn-book {width: 90%;height: 52px;border: none;border-radius: 16px;background: linear-gradient(145deg, #ff4747, #d91f2f);color: #fff;font-size: 16px;font-weight: 700;cursor: pointer;box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, 0.3);animation: hb 0.9s infinite; /* ทำให้ปุ่มเต้นแบบหัวใจ */margin: -30px auto 16px auto; /* ขยับปุ่มขึ้นไปทับขอบรูปภาพ */display: block;position: relative;z-index: 10;}
+.btn-book {width: 90%;height: 52px;border: none;border-radius: 16px;background: linear-gradient(145deg, #ff4747, #d91f2f);color: #fff;font-size: 16px;font-weight: 700;cursor: pointer;box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, 0.3);animation: hb 0.9s infinite;margin: -30px auto 16px auto;display: block;position: relative;z-index: 10;}
 .btn-book:disabled{background:#1e293b;color:#475569;box-shadow:none;cursor:not-allowed}
 
 /* BOOKING PAGE */
@@ -246,22 +240,17 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   background:rgba(4,7,12,.88);
   backdrop-filter:blur(8px);
   -webkit-backdrop-filter:blur(8px);
-
   padding:16px;
   padding-bottom:calc(40px + env(safe-area-inset-bottom));
-
   align-items:flex-start;
   justify-content:center;
-
   overflow-y:auto;
   overflow-x:hidden;
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
 }
 .pay-modal.show{display:flex}
-.pay-box{background:var(--bg2);width:100%;max-width:360px;border-radius:20px;padding:24px 20px;text-align:center;border:1px solid var(--border);box-shadow:0 20px 40px rgba(0,0,0,.5);position:relative;margin:auto;
-height:auto;
-max-height:none;}
+.pay-box{background:var(--bg2);width:100%;max-width:360px;border-radius:20px;padding:24px 20px;text-align:center;border:1px solid var(--border);box-shadow:0 20px 40px rgba(0,0,0,.5);position:relative;margin:auto;height:auto;max-height:none;}
 .pay-x{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .pay-box h3{font-size:22px;color:var(--yellow);margin-bottom:4px}
 .pay-box .sub{font-size:13px;color:var(--red)}
@@ -295,31 +284,23 @@ max-height:none;}
 .btn-logout:hover{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
 .btn-book {
   display: block;
-  /* ปรับความกว้างให้เล็กลง เช่น 85% หรือระบุเป็นพิกเซล */
   width: 85%;
   max-width: 320px;  
-  height: 48px; /* ลดความสูงลงเล็กน้อย */
-  
-  /* ปรับ Margin: ขยับขึ้นไปทับรูปภาพน้อยลง และลดระยะห่างด้านล่าง */
+  height: 48px;
   margin: -24px auto 16px auto; 
-  
   border: none;
-  border-radius: 12px; /* ลดความมนลงให้เข้ากับทรงกล่อง */
+  border-radius: 12px;
   background: linear-gradient(145deg, #ff4747, #d91f2f);
   color: #fff;
-  font-size: 14px; /* ลดขนาดตัวอักษรลงนิดนึง */
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  
-  /* ใส่เงาให้ดูนุ่มนวลขึ้น */
   box-shadow: 0 4px 12px rgba(255, 71, 71, 0.25);
   animation: hb 0.9s infinite;
-  
   position: relative;
   z-index: 10;
 }
 
-/* ส่วนหัวของฟอร์ม */
 .form-sec {
   font-size: 14px;
   color: var(--blue);
@@ -330,7 +311,6 @@ max-height:none;}
   gap: 8px;
 }
 
-/* กล่องครอบฟอร์มที่ทันสมัย */
 #formFieldsBox2 {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -340,7 +320,6 @@ max-height:none;}
   margin-top: 10px;
 }
 
-/* ปรับ Input ให้ดูพรีเมียมขึ้น */
 .ig input {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -357,9 +336,6 @@ max-height:none;}
   #upcomingList::-webkit-scrollbar{display:none}
   #upcomingList .trip-hcard{flex:0 0 92%;min-height:auto}
 
-  /* ================================
-   SLIP UPLOAD
-================================ */
 .slip-upload{
   margin:14px 0 16px;
   text-align:left;
@@ -459,10 +435,6 @@ max-height:none;}
   display:block;
 }
 
-/* ================================
-   SEAT LOCK TIMER
-================================ */
-
 .seat-lock-timer{
   display:flex;
   align-items:center;
@@ -508,9 +480,6 @@ max-height:none;}
   0%,100%{transform:scale(1)}
   50%{transform:scale(1.05)}
 }
-
-
-/* เบาะที่คนอื่นกำลังเลือก */
 
 .seat.locking{
   background:linear-gradient(145deg,#fb923c,#ea580c);
@@ -650,7 +619,7 @@ max-height:none;}
     <div class="van-block"><div class="van-block-title">🚐 คันที่ 2 (ตู้ B)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridB" class="van-grid-seats"></div></div>
     <div class="van-block"><div class="van-block-title">🚐 คันที่ 3 (ตู้ C)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridC" class="van-grid-seats"></div></div>
     <div id="formFieldsBox2">
-  <div class="form-sec">📝 กรอกข้อมูลคนไข้</div>
+  <div class="form-sec">📝 กรอกข้อมูลผู้จอง</div>
   
   <div class="ig">
     <label>🤦 ชื่อ-นามสกุลจริง</label>
@@ -1049,6 +1018,7 @@ let selectedSeat = null;
 let seatRefreshTimer = null;
 let seatCountdownTimer = null;
 let seatLockExpiresAt = 0;
+let latestSeatRequestId = 0;
 
 const SEAT_LOCK_MINUTES = 5;
 const SEAT_LOCK_DURATION =
@@ -1164,6 +1134,7 @@ function stopSeatCountdown(){
   );
 
   seatCountdownTimer = null;
+  seatLockExpiresAt = 0;
 
   const box =
     document.getElementById(
@@ -1176,7 +1147,7 @@ function stopSeatCountdown(){
     );
 
   if(box){
-    box.classList.remove('show');
+    box.style.display = 'none';
   }
 
   if(timer){
@@ -1301,25 +1272,20 @@ function loadSeats(date){
     return;
   }
 
-  ['A','B','C'].forEach(prefix => {
-  const grid = document.getElementById(
-    'vanGrid' + prefix
-  );
+  ['A','B','C'].forEach(prefix=>{
+    const grid =
+      document.getElementById(
+        'vanGrid' + prefix
+      );
 
-  if(grid){
-    grid.innerHTML = `
-      <p style="
-        grid-column:1 / -1;
-        text-align:center;
-        color:var(--blue);
-        font-size:12px;
-        padding:24px 10px
-      ">
-        ⌛ กำลังดึงข้อมูลเบาะจากหลังบ้าน...
-      </p>
-    `;
-  }
-});
+    if(
+      grid &&
+      grid.children.length === 0
+    ){
+      grid.innerHTML =
+        '<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';
+    }
+  });
 
   const callback =
     'cbs_' +
@@ -1330,22 +1296,22 @@ function loadSeats(date){
       .substring(2,7);
 
   window[callback] = function(res){
-  /*
-   * ถ้ามีการเปลี่ยนทริปไปแล้ว
-   * ไม่ให้นำข้อมูลจากคำขอเก่ามาแสดง
-   */
-  if(requestId !== latestSeatRequestId){
+    /*
+     * ถ้ามีการเปลี่ยนทริป/วันที่ไปแล้วระหว่างรอข้อมูล
+     * ไม่ให้นำข้อมูลจากคำขอเก่ามาทับข้อมูลปัจจุบัน
+     */
+    if(requestId !== latestSeatRequestId){
+      delete window[callback];
+      return;
+    }
+
+    renderVansWithData(
+      res.bookings || [],
+      res.locks || []
+    );
+
     delete window[callback];
-    return;
-  }
-
-  renderVansWithData(
-    res.bookings || [],
-    res.locks || []
-  );
-
-  delete window[callback];
-};
+  };
 
   appendScript(
     QUERY_URL +
@@ -1372,10 +1338,10 @@ function renderHome(){
    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3><span onclick="switchTab('trips')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
     <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
     <div class="divider"></div>
-    <div class="sec-hdr"><h3>⚠️ จะเปิดจองเร็วๆ นี้</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทงหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
+    <div class="sec-hdr"><h3>⚠️ จะเปิดจองเร็วๆ นี้</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทั้งหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
     <div class="trip-list" id="closedList">${cacheTrips.filter(t=>CLOSED_TRIPS.includes(t.trip)).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
     <div class="divider"></div>
-    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทงหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
+    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทั้งหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
     <div class="trip-list" id="pastList" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map((t,i)=>`<div class="${i>=2?'past-extra':''}" style="${i>=2?'display:none':''}">${cardHTML(t)}</div>`).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
     <div class="divider"></div>
     <div class="sec-hdr"><h3>🌟 ให้ระดับความยาก</h3></div>
@@ -2162,7 +2128,7 @@ function openPay(){
   resetSlipUpload();
 
   /*
-   * เริ่มนับ 5 นาทีตอนเปิดหน้าชำระเงิน
+   * เริ่มนับ 5 นาทีตอนเปิดหน้าชำระเงิน (ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ)
    */
   startSeatCountdown();
 
@@ -2178,10 +2144,12 @@ function closePay(){
     .classList
     .remove('show');
 
+  /*
+   * หยุดแค่ตัวนับเวลาที่แสดงผลชั่วคราว
+   * แต่ไม่รีเซ็ตเวลาหมดอายุของการล็อกเบาะ (ยังนับต่อเนื่องอยู่หลังบ้าน)
+   */
   clearInterval(seatCountdownTimer);
   seatCountdownTimer = null;
-
-  // ถ้ายังไม่หมดเวลา ให้กลับมานับต่อเมื่อเปิดใหม่
 }
 
 async function submitBook(){
