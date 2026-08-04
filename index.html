@@ -1714,17 +1714,22 @@ function renderVansWithData(
   });
 
   ['A','B','C'].forEach(prefix=>{
-    const grid =
-      document.getElementById(
-        'vanGrid' + prefix
-      );
+  const grid = document.getElementById('vanGrid' + prefix);
 
-    if(!grid){
-      return;
-    }
-
-    grid.innerHTML = '';
-
+  if(grid){
+    grid.innerHTML = `
+      <div style="
+        grid-column:1 / -1;
+        text-align:center;
+        color:var(--blue);
+        font-size:12px;
+        padding:24px 10px;
+      ">
+        ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
+      </div>
+    `;
+  }
+});
     BUS_GRID_STRUCTURE.forEach(n=>{
       const cell =
         document.createElement('div');
