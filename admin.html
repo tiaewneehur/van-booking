@@ -1,133 +1,1054 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>หลังบ้าน - รายการจองรถตู้</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<title>Admin ตรวจสลิป — เที่ยวนี่เหอะ</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <style>
-    body { font-family: sans-serif; padding: 10px; }
-    h1 { text-align: center; }
-    table { border-collapse: collapse; width: 100%; max-width: 900px; margin: 15px auto; font-size: 14px; }
-    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: center; }
-    th { background: #f0f0f0; }
-    .btn-box { text-align: center; margin-top: 10px; }
-    button {
-      padding: 8px 16px;
-      margin: 0 5px;
-      border: none;
-      border-radius: 6px;
-      background: #1976d2;
-      color: #fff;
-      cursor: pointer;
-    }
-  </style>
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  -webkit-tap-highlight-color:transparent
+}
+
+:root{
+  --bg:#060b13;
+  --bg2:#0c1524;
+  --bg3:#111d2e;
+  --blue:#38bdf8;
+  --blue2:#0284c7;
+  --green:#10b981;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+  --text:#f1f5f9;
+  --sub:#94a3b8;
+  --muted:#64748b;
+  --border:rgba(255,255,255,.08);
+}
+
+body{
+  font-family:'IBM Plex Sans Thai',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh
+}
+
+button,input,select{
+  font-family:inherit
+}
+
+/* LOGIN */
+#loginPage{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(56,189,248,.16),
+      transparent 60%
+    ),
+    var(--bg)
+}
+
+.login-box{
+  width:100%;
+  max-width:380px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:26px;
+  padding:28px 22px;
+  text-align:center;
+  box-shadow:0 22px 60px rgba(0,0,0,.5)
+}
+
+.login-icon{
+  width:72px;
+  height:72px;
+  border-radius:22px;
+  margin:0 auto 16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  box-shadow:0 0 24px rgba(56,189,248,.35)
+}
+
+.login-box h1{
+  font-size:22px;
+  font-weight:800
+}
+
+.login-box p{
+  margin-top:6px;
+  color:var(--sub);
+  font-size:13px
+}
+
+.login-input{
+  width:100%;
+  height:50px;
+  margin-top:22px;
+  padding:0 16px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--bg3);
+  color:#fff;
+  outline:none;
+  font-size:15px
+}
+
+.login-input:focus{
+  border-color:var(--blue)
+}
+
+.login-btn{
+  width:100%;
+  height:50px;
+  border:0;
+  border-radius:14px;
+  margin-top:12px;
+  background:linear-gradient(135deg,var(--blue2),var(--blue));
+  color:#fff;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer
+}
+
+/* APP */
+#adminApp{
+  display:none
+}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  padding:14px 16px;
+  background:rgba(6,11,19,.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border)
+}
+
+.header-inner{
+  max-width:760px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px
+}
+
+.header h1{
+  font-size:17px;
+  color:var(--blue)
+}
+
+.header p{
+  font-size:10px;
+  color:var(--sub);
+  margin-top:2px
+}
+
+.refresh-btn{
+  border:1px solid rgba(56,189,248,.25);
+  background:rgba(56,189,248,.1);
+  color:var(--blue);
+  border-radius:12px;
+  padding:8px 12px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.main{
+  max-width:760px;
+  margin:0 auto;
+  padding:16px 16px 80px
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px;
+  margin-bottom:16px
+}
+
+.stat{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px 8px;
+  text-align:center
+}
+
+.stat strong{
+  display:block;
+  font-size:22px;
+  color:var(--blue)
+}
+
+.stat span{
+  font-size:10px;
+  color:var(--sub)
+}
+
+/* FILTER */
+.filters{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:12px;
+  margin-bottom:16px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px
+}
+
+.search-input,
+.status-select{
+  width:100%;
+  height:44px;
+  padding:0 13px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--bg3);
+  color:#fff;
+  outline:none
+}
+
+.search-input:focus,
+.status-select:focus{
+  border-color:var(--blue)
+}
+
+/* CARDS */
+.card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:16px;
+  margin-bottom:12px
+}
+
+.card-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px
+}
+
+.card h3{
+  font-size:15px;
+  line-height:1.45
+}
+
+.card-sub{
+  font-size:11px;
+  color:var(--sub);
+  margin-top:4px
+}
+
+.status{
+  flex-shrink:0;
+  font-size:10px;
+  font-weight:700;
+  border-radius:999px;
+  padding:5px 9px
+}
+
+.status-pending{
+  color:#fbbf24;
+  background:rgba(245,158,11,.13)
+}
+
+.status-approved{
+  color:#34d399;
+  background:rgba(16,185,129,.13)
+}
+
+.status-rejected{
+  color:#f87171;
+  background:rgba(239,68,68,.13)
+}
+
+.status-other{
+  color:var(--sub);
+  background:rgba(148,163,184,.1)
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:12px
+}
+
+.info{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.04);
+  border-radius:12px;
+  padding:9px
+}
+
+.info span{
+  display:block;
+  font-size:9px;
+  color:var(--muted);
+  margin-bottom:3px
+}
+
+.info strong{
+  display:block;
+  color:#e2e8f0;
+  font-size:12px;
+  word-break:break-word
+}
+
+.slip-btn{
+  width:100%;
+  height:44px;
+  border:1px solid rgba(56,189,248,.25);
+  border-radius:12px;
+  background:rgba(56,189,248,.1);
+  color:var(--blue);
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  margin-bottom:9px
+}
+
+.slip-btn.no-slip{
+  color:var(--muted);
+  background:rgba(148,163,184,.06);
+  border-color:var(--border);
+  cursor:not-allowed
+}
+
+.action-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px
+}
+
+.action-btn{
+  height:43px;
+  border:0;
+  border-radius:12px;
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer
+}
+
+.approve-btn{
+  background:var(--green)
+}
+
+.reject-btn{
+  background:var(--red)
+}
+
+.pending-btn{
+  grid-column:1/-1;
+  background:#475569
+}
+
+.empty{
+  text-align:center;
+  padding:60px 20px;
+  color:var(--muted)
+}
+
+.loading{
+  text-align:center;
+  padding:50px 20px;
+  color:var(--blue)
+}
+
+.logout{
+  width:100%;
+  height:46px;
+  border-radius:13px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--muted);
+  margin-top:18px;
+  cursor:pointer
+}
+
+@media(min-width:600px){
+  .filters{
+    grid-template-columns:2fr 1fr
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <h1>หลังบ้าน - รายการจองรถตู้ (เครื่องนี้)</h1>
-  <p style="text-align:center; font-size:13px; color:#555;">
-    ข้อมูลนี้มาจาก <b>localStorage</b> ของเบราว์เซอร์เครื่องนี้เท่านั้น<br>
-    ถ้าลูกค้าจองจากเครื่องอื่น ข้อมูลจะไม่โผล่ที่นี่
-  </p>
+<div id="loginPage">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <h1>Admin เที่ยวนี่เหอะ</h1>
+    <p>ตรวจสอบสลิปและสถานะการชำระเงิน</p>
 
-  <table>
-    <thead>
-      <tr>
-        <th>วันที่เดินทาง</th>
-        <th>ที่นั่ง</th>
-        <th>ชื่อ</th>
-        <th>เบอร์โทร</th>
-        <th>ไลน์ไอดี</th>
-        <th>เวลาที่จอง</th>
-      </tr>
-    </thead>
-    <tbody id="rows"></tbody>
-  </table>
+    <input
+      id="adminToken"
+      class="login-input"
+      type="password"
+      placeholder="กรอกรหัส Admin"
+      onkeydown="if(event.key==='Enter')adminLogin()"
+    >
 
-  <div class="btn-box">
-    <button onclick="exportCSV()">Export CSV</button>
-    <button onclick="clearAll()">ลบข้อมูลทั้งหมดในเครื่องนี้</button>
+    <button class="login-btn" onclick="adminLogin()">
+      เข้าสู่ระบบ Admin →
+    </button>
   </div>
+</div>
 
-  <script>
-    const STORAGE_KEY = 'vanBookingsByDate';
+<div id="adminApp">
+  <header class="header">
+    <div class="header-inner">
+      <div>
+        <h1>📥 ตรวจสลิปการจอง</h1>
+        <p>ระบบหลังบ้านเที่ยวนี่เหอะ</p>
+      </div>
 
-    function getAllBookings() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      } catch (e) {
-        return {};
+      <button class="refresh-btn" onclick="loadBookings()">
+        🔄 อัปเดต
+      </button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="stats">
+      <div class="stat">
+        <strong id="statAll">0</strong>
+        <span>ทั้งหมด</span>
+      </div>
+
+      <div class="stat">
+        <strong id="statPending">0</strong>
+        <span>รอตรวจ</span>
+      </div>
+
+      <div class="stat">
+        <strong id="statApproved">0</strong>
+        <span>ชำระแล้ว</span>
+      </div>
+    </div>
+
+    <div class="filters">
+      <input
+        id="searchInput"
+        class="search-input"
+        placeholder="🔍 ค้นหาชื่อ เบอร์ ทริป หรือที่นั่ง"
+        oninput="renderBookings()"
+      >
+
+      <select
+        id="statusFilter"
+        class="status-select"
+        onchange="renderBookings()"
+      >
+        <option value="">ทุกสถานะ</option>
+        <option value="รอตรวจสอบสลิป">รอตรวจสอบ</option>
+        <option value="ชำระเงินแล้ว">ชำระเงินแล้ว</option>
+        <option value="สลิปไม่ถูกต้อง">สลิปไม่ถูกต้อง</option>
+        <option value="รอชำระเงิน">รอชำระเงิน</option>
+      </select>
+    </div>
+
+    <div id="bookingList" class="loading">
+      กรุณาเข้าสู่ระบบ
+    </div>
+
+    <button class="logout" onclick="adminLogout()">
+      🚪 ออกจากระบบ Admin
+    </button>
+  </main>
+</div>
+
+<iframe
+  id="adminPostFrame"
+  name="adminPostFrame"
+  style="display:none"
+></iframe>
+
+<script>
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbyFa3pB1dRaHu3ibu4l7DmrGWianorR7FVrWsQyF8qFtJn7UTBE7mSUHAcVq0_UxELM/exec";
+
+let adminToken = "";
+let allBookings = [];
+
+
+/* ============================================================
+   LOGIN
+============================================================ */
+
+function adminLogin() {
+  const tokenInput =
+    document.getElementById("adminToken");
+
+  const token =
+    tokenInput.value.trim();
+
+  if (!token) {
+    Swal.fire({
+      icon: "warning",
+      title: "กรอกรหัสก่อนครับ",
+      background: "#0c1524",
+      color: "#f1f5f9",
+      confirmButtonColor: "#0284c7"
+    });
+
+    return;
+  }
+
+  adminToken = token;
+
+  document.getElementById("bookingList").innerHTML =
+    '<div class="loading">⌛ กำลังตรวจสอบรหัส...</div>';
+
+  loadBookings(true);
+}
+
+
+function adminLogout() {
+  adminToken = "";
+  allBookings = [];
+
+  document.getElementById("adminToken").value = "";
+  document.getElementById("adminApp").style.display = "none";
+  document.getElementById("loginPage").style.display = "flex";
+}
+
+
+/* ============================================================
+   LOAD JSONP
+============================================================ */
+
+function loadBookings(firstLogin) {
+  if (!adminToken) {
+    return;
+  }
+
+  const list =
+    document.getElementById("bookingList");
+
+  list.innerHTML =
+    '<div class="loading">⌛ กำลังโหลดรายการจอง...</div>';
+
+  const callbackName =
+    "adminCb_" + Date.now();
+
+  const script =
+    document.createElement("script");
+
+  let finished = false;
+
+  window[callbackName] = function (response) {
+    finished = true;
+
+    try {
+      if (!response || !response.ok) {
+        throw new Error(
+          response?.message ||
+          "ไม่สามารถโหลดข้อมูลได้"
+        );
       }
-    }
 
-    function drawTable() {
-      const tbody = document.getElementById('rows');
-      tbody.innerHTML = '';
+      allBookings =
+        Array.isArray(response.bookings)
+          ? response.bookings
+          : [];
 
-      const all = getAllBookings();
-      const dates = Object.keys(all);
+      if (firstLogin) {
+        document.getElementById("loginPage").style.display =
+          "none";
 
-      if (dates.length === 0) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 6;
-        td.textContent = 'ยังไม่มีข้อมูลการจองในเครื่องนี้';
-        tr.appendChild(td);
-        tbody.appendChild(tr);
-        return;
+        document.getElementById("adminApp").style.display =
+          "block";
       }
 
-      dates.forEach(date => {
-        all[date].forEach(b => {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${date}</td>
-            <td>${b.seat}</td>
-            <td>${b.name}</td>
-            <td>${b.phone}</td>
-            <td>${b.line}</td>
-            <td>${b.time}</td>
-          `;
-          tbody.appendChild(tr);
-        });
+      updateStats();
+      renderBookings();
+
+    } catch (error) {
+      if (firstLogin) {
+        adminToken = "";
+      }
+
+      Swal.fire({
+        icon: "error",
+        title: "เข้าระบบไม่สำเร็จ",
+        text: error.message,
+        background: "#0c1524",
+        color: "#f1f5f9",
+        confirmButtonColor: "#0284c7"
       });
+
+      list.innerHTML =
+        '<div class="empty">ไม่สามารถโหลดข้อมูลได้</div>';
+
+    } finally {
+      cleanupJsonp(
+        callbackName,
+        script
+      );
+    }
+  };
+
+  script.onerror = function () {
+    if (finished) {
+      return;
     }
 
-    function exportCSV() {
-      const all = getAllBookings();
-      const dates = Object.keys(all);
-      if (dates.length === 0) {
-        alert('ยังไม่มีข้อมูลให้ Export');
-        return;
-      }
+    Swal.fire({
+      icon: "error",
+      title: "เชื่อมต่อหลังบ้านไม่ได้",
+      text: "ตรวจสอบ URL และการ Deploy Apps Script",
+      background: "#0c1524",
+      color: "#f1f5f9",
+      confirmButtonColor: "#0284c7"
+    });
 
-      const rows = [['Date', 'Seat', 'Name', 'Phone', 'Line', 'Time']];
-      dates.forEach(date => {
-        all[date].forEach(b => {
-          rows.push([date, b.seat, b.name, b.phone, b.line, b.time]);
-        });
-      });
+    cleanupJsonp(
+      callbackName,
+      script
+    );
+  };
 
-      const csv = rows.map(r => r.join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'bookings.csv';
-      a.click();
-      URL.revokeObjectURL(url);
+  script.src =
+    API_URL +
+    "?action=adminBookings" +
+    "&adminToken=" +
+    encodeURIComponent(adminToken) +
+    "&callback=" +
+    encodeURIComponent(callbackName) +
+    "&_=" +
+    Date.now();
+
+  document.body.appendChild(script);
+}
+
+
+function cleanupJsonp(
+  callbackName,
+  script
+) {
+  try {
+    delete window[callbackName];
+  } catch (error) {
+    window[callbackName] = undefined;
+  }
+
+  if (script && script.parentNode) {
+    script.remove();
+  }
+}
+
+
+/* ============================================================
+   FILTER / RENDER
+============================================================ */
+
+function updateStats() {
+  const pending =
+    allBookings.filter(
+      item =>
+        item.status === "รอตรวจสอบสลิป"
+    ).length;
+
+  const approved =
+    allBookings.filter(
+      item =>
+        item.status === "ชำระเงินแล้ว"
+    ).length;
+
+  document.getElementById("statAll").textContent =
+    allBookings.length;
+
+  document.getElementById("statPending").textContent =
+    pending;
+
+  document.getElementById("statApproved").textContent =
+    approved;
+}
+
+
+function renderBookings() {
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const statusFilter =
+    document
+      .getElementById("statusFilter")
+      .value;
+
+  const filtered =
+    allBookings.filter(function (item) {
+      const searchable = [
+        item.trip,
+        item.name,
+        item.nickname,
+        item.phone,
+        item.line,
+        item.seat,
+        item.date,
+        item.bookingKey
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      const matchSearch =
+        !search ||
+        searchable.includes(search);
+
+      const matchStatus =
+        !statusFilter ||
+        item.status === statusFilter;
+
+      return matchSearch && matchStatus;
+    });
+
+  const list =
+    document.getElementById("bookingList");
+
+  if (!filtered.length) {
+    list.innerHTML =
+      '<div class="empty">📭 ไม่พบรายการที่ค้นหา</div>';
+
+    return;
+  }
+
+  list.className = "";
+
+  list.innerHTML =
+    filtered
+      .map(cardHtml)
+      .join("");
+}
+
+
+function cardHtml(item) {
+  const statusClass =
+    getStatusClass(item.status);
+
+  const slipButton =
+    item.slipUrl
+      ? `
+        <button
+          class="slip-btn"
+          onclick="openSlip('${encodeURIComponent(item.slipUrl)}')"
+        >
+          🧾 เปิดดูรูปสลิป
+        </button>
+      `
+      : `
+        <button
+          class="slip-btn no-slip"
+          disabled
+        >
+          ⚠️ ไม่มีรูปสลิป
+        </button>
+      `;
+
+  return `
+    <article class="card">
+      <div class="card-top">
+        <div>
+          <h3>${escapeHtml(item.trip || "-")}</h3>
+
+          <div class="card-sub">
+            📅 ${escapeHtml(item.date || "-")}
+            · เบาะ ${escapeHtml(item.seat || "-")}
+          </div>
+        </div>
+
+        <span class="status ${statusClass}">
+          ${escapeHtml(item.status || "ไม่ระบุสถานะ")}
+        </span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info">
+          <span>ชื่อผู้จอง</span>
+          <strong>${escapeHtml(item.name || "-")}</strong>
+        </div>
+
+        <div class="info">
+          <span>ชื่อเล่น</span>
+          <strong>${escapeHtml(item.nickname || "-")}</strong>
+        </div>
+
+        <div class="info">
+          <span>เบอร์โทร</span>
+          <strong>${escapeHtml(item.phone || "-")}</strong>
+        </div>
+
+        <div class="info">
+          <span>LINE</span>
+          <strong>${escapeHtml(item.line || "-")}</strong>
+        </div>
+
+        <div class="info">
+          <span>เวลาจอง</span>
+          <strong>${escapeHtml(item.timestamp || "-")}</strong>
+        </div>
+
+        <div class="info">
+          <span>เวลาส่งสลิป</span>
+          <strong>${escapeHtml(item.slipSubmittedAt || "-")}</strong>
+        </div>
+      </div>
+
+      ${slipButton}
+
+      <div class="action-row">
+        <button
+          class="action-btn approve-btn"
+          onclick="confirmUpdate(
+            '${escapeJs(item.bookingKey)}',
+            'approve'
+          )"
+        >
+          ✅ อนุมัติ
+        </button>
+
+        <button
+          class="action-btn reject-btn"
+          onclick="confirmUpdate(
+            '${escapeJs(item.bookingKey)}',
+            'reject'
+          )"
+        >
+          ❌ ไม่ผ่าน
+        </button>
+
+        <button
+          class="action-btn pending-btn"
+          onclick="confirmUpdate(
+            '${escapeJs(item.bookingKey)}',
+            'pending'
+          )"
+        >
+          ↩️ กลับเป็นรอตรวจ
+        </button>
+      </div>
+    </article>
+  `;
+}
+
+
+function getStatusClass(status) {
+  if (status === "ชำระเงินแล้ว") {
+    return "status-approved";
+  }
+
+  if (status === "สลิปไม่ถูกต้อง") {
+    return "status-rejected";
+  }
+
+  if (status === "รอตรวจสอบสลิป") {
+    return "status-pending";
+  }
+
+  return "status-other";
+}
+
+
+/* ============================================================
+   OPEN SLIP
+============================================================ */
+
+function openSlip(encodedUrl) {
+  const url =
+    decodeURIComponent(encodedUrl);
+
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
+}
+
+
+/* ============================================================
+   UPDATE STATUS
+============================================================ */
+
+function confirmUpdate(
+  bookingKey,
+  adminAction
+) {
+  if (!bookingKey) {
+    Swal.fire({
+      icon: "error",
+      title: "รายการนี้ไม่มี Booking Key",
+      text: "เป็นข้อมูลเก่าที่ยังไม่มีรหัสรายการจอง",
+      background: "#0c1524",
+      color: "#f1f5f9"
+    });
+
+    return;
+  }
+
+  const config = {
+    approve: {
+      title: "อนุมัติสลิปนี้?",
+      text: "สถานะจะเปลี่ยนเป็น ชำระเงินแล้ว",
+      icon: "question",
+      confirm: "✅ อนุมัติ",
+      color: "#10b981"
+    },
+
+    reject: {
+      title: "ระบุว่าสลิปไม่ผ่าน?",
+      text: "สถานะจะเปลี่ยนเป็น สลิปไม่ถูกต้อง",
+      icon: "warning",
+      confirm: "❌ ไม่ผ่าน",
+      color: "#ef4444"
+    },
+
+    pending: {
+      title: "กลับเป็นรอตรวจ?",
+      text: "สถานะจะกลับเป็น รอตรวจสอบสลิป",
+      icon: "question",
+      confirm: "↩️ ยืนยัน",
+      color: "#64748b"
     }
+  }[adminAction];
 
-    function clearAll() {
-      if (!confirm('ลบข้อมูลทั้งหมดในเครื่องนี้?')) return;
-      localStorage.removeItem(STORAGE_KEY);
-      drawTable();
+  Swal.fire({
+    title: config.title,
+    text: config.text,
+    icon: config.icon,
+    showCancelButton: true,
+    confirmButtonText: config.confirm,
+    cancelButtonText: "ยกเลิก",
+    confirmButtonColor: config.color,
+    cancelButtonColor: "#475569",
+    background: "#0c1524",
+    color: "#f1f5f9"
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      updateStatus(
+        bookingKey,
+        adminAction
+      );
     }
+  });
+}
 
-    document.addEventListener('DOMContentLoaded', drawTable);
-  </script>
+
+function updateStatus(
+  bookingKey,
+  adminAction
+) {
+  Swal.fire({
+    title: "กำลังอัปเดต...",
+    text: "กรุณารอสักครู่",
+    allowOutsideClick: false,
+    showConfirmButton: false,
+    background: "#0c1524",
+    color: "#f1f5f9",
+    didOpen: function () {
+      Swal.showLoading();
+    }
+  });
+
+  const form =
+    document.createElement("form");
+
+  form.method = "POST";
+  form.action = API_URL;
+  form.target = "adminPostFrame";
+  form.style.display = "none";
+
+  const fields = {
+    action: "adminUpdate",
+    adminToken: adminToken,
+    bookingKey: bookingKey,
+    adminAction: adminAction
+  };
+
+  Object.entries(fields)
+    .forEach(function ([name, value]) {
+      const input =
+        document.createElement("input");
+
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+
+      form.appendChild(input);
+    });
+
+  document.body.appendChild(form);
+  form.submit();
+
+  /*
+   * Apps Script อยู่คนละโดเมน
+   * รอหลังบ้านอัปเดตแล้วโหลดรายการใหม่
+   */
+  setTimeout(function () {
+    form.remove();
+
+    Swal.fire({
+      icon: "success",
+      title: "อัปเดตสถานะแล้ว",
+      timer: 1000,
+      showConfirmButton: false,
+      background: "#0c1524",
+      color: "#f1f5f9"
+    });
+
+    setTimeout(function () {
+      loadBookings(false);
+    }, 600);
+
+  }, 1600);
+}
+
+
+/* ============================================================
+   ESCAPE
+============================================================ */
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function escapeJs(value) {
+  return String(value ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/'/g, "\\'");
+}
+</script>
 
 </body>
 </html>
