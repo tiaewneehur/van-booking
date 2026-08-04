@@ -1860,6 +1860,7 @@ setTimeout(()=>{
 },50);
 
 /* ค่อยส่งไปล็อกหลังบ้าน */
+try{
 const response = await fetch(API_URL,{
   method:'POST',
   body:new URLSearchParams({
