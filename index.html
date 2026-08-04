@@ -437,6 +437,88 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .slip-preview.show{
   display:block;
 }
+
+/* ================================
+   SEAT LOCK TIMER
+================================ */
+
+.seat-lock-timer{
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:12px 0 16px;
+  padding:13px 15px;
+  border-radius:15px;
+  background:rgba(245,158,11,.08);
+  border:1px solid rgba(245,158,11,.28);
+}
+
+.seat-lock-timer.show{
+  display:flex;
+}
+
+.seat-lock-timer strong{
+  display:block;
+  color:#fbbf24;
+  font-size:13px;
+}
+
+.seat-lock-timer p{
+  color:var(--sub);
+  font-size:10px;
+  margin-top:3px;
+}
+
+.seat-lock-time{
+  min-width:68px;
+  padding:7px 9px;
+  border-radius:10px;
+  background:rgba(245,158,11,.14);
+  color:#fbbf24;
+  font-size:20px;
+  font-weight:800;
+  text-align:center;
+}
+
+.seat-lock-time.warning{
+  color:#fff;
+  background:rgba(239,68,68,.8);
+  animation:lockWarning .8s infinite;
+}
+
+@keyframes lockWarning{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+
+
+/* เบาะที่คนอื่นกำลังเลือก */
+
+.seat.locking{
+  background:linear-gradient(145deg,#fb923c,#ea580c);
+  color:#fff;
+  box-shadow:
+    0 5px 0 #9a3412,
+    0 8px 14px rgba(249,115,22,.22);
+  cursor:not-allowed;
+  pointer-events:none;
+  animation:lockingPulse 1.2s infinite;
+}
+
+@keyframes lockingPulse{
+  0%,100%{
+    transform:scale(.94);
+  }
+
+  50%{
+    transform:scale(.98);
+    box-shadow:
+      0 5px 0 #9a3412,
+      0 0 17px rgba(249,115,22,.5);
+  }
+}
+  
 </style>
 </head>
 <body>
@@ -540,12 +622,23 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     <div class="ig"><label>📅 วันที่จัดทริป</label><input id="b-date" disabled></div>
     <label style="font-size:13px;color:var(--sub);font-weight:500;display:block;margin-bottom:8px">🚌 เลือกที่นั่งที่คุณต้องการ</label>
     <img src="IMG_0444.jpeg" class="seat-map-img" onerror="this.style.display='none'">
-    <div class="seat-legend">
-      <div class="leg-item">🟢 ว่าง</div>
-      <div class="leg-item">🔴 ถูกจอง</div>
-      <div class="leg-item">🟡 ของคุณ</div>
-      <div class="leg-item">⚫ งดจอง</div>
-    </div>
+    <div id="seatLockTimerBox" class="seat-lock-timer">
+  <div>
+    <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
+    <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
+  </div>
+
+  <div id="seatLockTimer" class="seat-lock-time">
+    05:00
+  </div>
+</div>
+    <div class="seat-legend" style="flex-wrap:wrap">
+  <div class="leg-item">🟢 ว่าง</div>
+  <div class="leg-item">🟠 กำลังเลือก</div>
+  <div class="leg-item">🔴 ถูกจอง</div>
+  <div class="leg-item">🟡 ของคุณ</div>
+  <div class="leg-item">⚫ งดจอง</div>
+</div>
     <div class="van-block"><div class="van-block-title">🚐 คันที่ 1 (ตู้ A)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridA" class="van-grid-seats"></div></div>
     <div class="van-block"><div class="van-block-title">🚐 คันที่ 2 (ตู้ B)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridB" class="van-grid-seats"></div></div>
     <div class="van-block"><div class="van-block-title">🚐 คันที่ 3 (ตู้ C)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridC" class="van-grid-seats"></div></div>
@@ -930,8 +1023,170 @@ const PAST_TRIPS=[
   {name:"เปรโต๊ะ 19-21 มิ.ย.69",rounds:2,people:30,rating:4,img:"เปรโต๊ะ.jpg"},
 ];
 
-let currentUser=null,allBookings=[],cacheTrips=[],pendingTrip=null,selectedSeat=null;
+let currentUser = null;
+let allBookings = [];
+let cacheTrips = [];
+let pendingTrip = null;
+let selectedSeat = null;
 
+let seatRefreshTimer = null;
+let seatCountdownTimer = null;
+let seatLockExpiresAt = 0;
+
+const SEAT_LOCK_MINUTES = 5;
+const SEAT_LOCK_DURATION =
+  SEAT_LOCK_MINUTES * 60 * 1000;
+
+const MY_SESSION_ID =
+  sessionStorage.getItem('tnh_session_id') ||
+  (
+    'SESSION-' +
+    Date.now() +
+    '-' +
+    Math.random()
+      .toString(36)
+      .substring(2,10)
+  );
+
+sessionStorage.setItem(
+  'tnh_session_id',
+  MY_SESSION_ID
+);
+
+function startSeatCountdown(){
+  clearInterval(seatCountdownTimer);
+
+  seatLockExpiresAt =
+    Date.now() + SEAT_LOCK_DURATION;
+
+  const box =
+    document.getElementById(
+      'seatLockTimerBox'
+    );
+
+  if(box){
+    box.classList.add('show');
+  }
+
+  updateSeatCountdown();
+
+  seatCountdownTimer =
+    setInterval(
+      updateSeatCountdown,
+      1000
+    );
+}
+
+
+function updateSeatCountdown(){
+  const timer =
+    document.getElementById(
+      'seatLockTimer'
+    );
+
+  if(!timer){
+    return;
+  }
+
+  const remaining =
+    seatLockExpiresAt - Date.now();
+
+  if(remaining <= 0){
+    clearInterval(
+      seatCountdownTimer
+    );
+
+    seatCountdownTimer = null;
+
+    timer.textContent = '00:00';
+    timer.classList.add('warning');
+
+    handleSeatLockExpired();
+
+    return;
+  }
+
+  const totalSeconds =
+    Math.ceil(remaining / 1000);
+
+  const minutes =
+    Math.floor(totalSeconds / 60);
+
+  const seconds =
+    totalSeconds % 60;
+
+  timer.textContent =
+    String(minutes).padStart(2,'0') +
+    ':' +
+    String(seconds).padStart(2,'0');
+
+  timer.classList.toggle(
+    'warning',
+    remaining <= 60 * 1000
+  );
+}
+
+
+function stopSeatCountdown(){
+  clearInterval(
+    seatCountdownTimer
+  );
+
+  seatCountdownTimer = null;
+  seatLockExpiresAt = 0;
+
+  const box =
+    document.getElementById(
+      'seatLockTimerBox'
+    );
+
+  const timer =
+    document.getElementById(
+      'seatLockTimer'
+    );
+
+  if(box){
+    box.classList.remove('show');
+  }
+
+  if(timer){
+    timer.textContent = '05:00';
+    timer.classList.remove('warning');
+  }
+}
+
+
+function handleSeatLockExpired(){
+  selectedSeat = null;
+
+  document
+    .getElementById('f-seat')
+    .value = '';
+
+  document
+    .getElementById('formFieldsBox2')
+    .classList
+    .remove('show');
+
+  checkBook();
+
+  const date =
+    document
+      .getElementById('f-dateraw')
+      .value;
+
+  loadSeats(date);
+
+  Swal.fire({
+    icon:'warning',
+    title:'หมดเวลาล็อกเบาะแล้ว',
+    text:'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
+    background:'#0c1524',
+    color:'#f1f5f9',
+    confirmButtonColor:'#0284c7'
+  });
+}
+  
 /* ── LOGIN ── */
 function checkReady(){
   const p=document.getElementById('loginPhone').value.trim();
@@ -998,11 +1253,62 @@ function fetchData(){
   appendScript(QUERY_URL+'&callback='+cb);
 }
 
-function loadSeats(d){
-  ['A','B','C'].forEach(p=>{document.getElementById('vanGrid'+p).innerHTML='<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';});
-  const cb='cbs_'+Date.now();
-  window[cb]=(res)=>{renderVansWithData(res.bookings||[]);delete window[cb];};
-  appendScript(QUERY_URL+'&date='+encodeURIComponent(d)+'&callback='+cb);
+function loadSeats(date){
+  if(!date){
+    return;
+  }
+
+  const trip =
+    document
+      .getElementById('b-trip')
+      .value
+      .trim();
+
+  if(!trip){
+    return;
+  }
+
+  ['A','B','C'].forEach(prefix=>{
+    const grid =
+      document.getElementById(
+        'vanGrid' + prefix
+      );
+
+    if(
+      grid &&
+      grid.children.length === 0
+    ){
+      grid.innerHTML =
+        '<p style="grid-column:span 4;text-align:center;color:var(--blue);font-size:11px;padding:10px">⌛ อัปเดต...</p>';
+    }
+  });
+
+  const callback =
+    'cbs_' +
+    Date.now() +
+    '_' +
+    Math.random()
+      .toString(36)
+      .substring(2,7);
+
+  window[callback] = function(res){
+    renderVansWithData(
+      res.bookings || [],
+      res.locks || []
+    );
+
+    delete window[callback];
+  };
+
+  appendScript(
+    QUERY_URL +
+    '&date=' +
+    encodeURIComponent(date) +
+    '&trip=' +
+    encodeURIComponent(trip) +
+    '&callback=' +
+    callback
+  );
 }
 
 /* ── HOME ── */
@@ -1309,45 +1615,310 @@ function goToBook(){
   document.getElementById('bookingPage2').classList.add('show');
   window.scrollTo({top:0,behavior:'instant'});
   loadSeats(formattedDate);
-  checkBook();
+
+clearInterval(
+  seatRefreshTimer
+);
+
+seatRefreshTimer =
+  setInterval(()=>{
+    const page =
+      document.getElementById(
+        'bookingPage2'
+      );
+
+    if(
+      page &&
+      page.classList.contains('show')
+    ){
+      loadSeats(
+        document
+          .getElementById('f-dateraw')
+          .value
+      );
+    }
+  },5000);
+
+checkBook();
 }
-function closeBook(){document.getElementById('bookingPage2').classList.remove('show');}
+function closeBook(){
+  document
+    .getElementById('bookingPage2')
+    .classList
+    .remove('show');
+
+  clearInterval(
+    seatRefreshTimer
+  );
+
+  seatRefreshTimer = null;
+
+  stopSeatCountdown();
+}
 
 /* ── SEAT GRID (โค้ดเดิมไอซ์) ── */
-function renderVansWithData(bookedList){
-  const mapping={};
-  bookedList.forEach(b=>{if(b.seat)mapping[String(b.seat)]=b.nickname||'เต็ม';});
+function renderVansWithData(
+  bookedList,
+  lockList = []
+){
+  const bookedMapping = {};
+  const lockedMapping = {};
+
+  bookedList.forEach(booking=>{
+    const seat =
+      String(
+        booking.seat || ''
+      ).trim();
+
+    if(seat){
+      bookedMapping[seat] =
+        booking.nickname || 'เต็ม';
+    }
+  });
+
+  lockList.forEach(lock=>{
+    const seat =
+      String(
+        lock.seat || ''
+      ).trim();
+
+    const lockSession =
+      String(
+        lock.session_id || ''
+      );
+
+    const isMine =
+      lockSession ===
+      String(MY_SESSION_ID);
+
+    if(
+      seat &&
+      !isMine &&
+      !bookedMapping[seat]
+    ){
+      lockedMapping[seat] = true;
+    }
+  });
+
   ['A','B','C'].forEach(prefix=>{
-    const grid=document.getElementById('vanGrid'+prefix);grid.innerHTML='';
+    const grid =
+      document.getElementById(
+        'vanGrid' + prefix
+      );
+
+    if(!grid){
+      return;
+    }
+
+    grid.innerHTML = '';
+
     BUS_GRID_STRUCTURE.forEach(n=>{
-      const cell=document.createElement('div');
-      if(n==='driver'){cell.className='seat driver';cell.innerHTML='<span>👨‍✈️</span><span style="font-size:9px">คนขับ</span>';}
-      else if(n==='spacer'){cell.className='seat spacer';}
-      else{
-        const id=prefix+n;cell.className='seat';
-        if(mapping[id]){
-          if(mapping[id]==='งดจอง'){cell.classList.add('hidden-seat');}
-          else{cell.classList.add('booked');cell.innerHTML=`<span style="font-size:9px">${id}</span><div style="font-size:13px">${mapping[id]}</div>`;}
+      const cell =
+        document.createElement('div');
+
+      if(n === 'driver'){
+        cell.className = 'seat driver';
+
+        cell.innerHTML =
+          '<span>👨‍✈️</span>' +
+          '<span style="font-size:9px">คนขับ</span>';
+
+      }else if(n === 'spacer'){
+        cell.className = 'seat spacer';
+
+      }else{
+        const id = prefix + n;
+
+        cell.className = 'seat';
+
+        if(bookedMapping[id]){
+          if(
+            bookedMapping[id] ===
+            'งดจอง'
+          ){
+            cell.classList.add(
+              'hidden-seat'
+            );
+
+          }else{
+            cell.classList.add(
+              'booked'
+            );
+
+            cell.innerHTML = `
+              <span style="font-size:9px">
+                ${id}
+              </span>
+
+              <div style="
+                font-size:12px;
+                text-align:center
+              ">
+                ${bookedMapping[id]}
+              </div>
+            `;
+          }
+
+        }else if(lockedMapping[id]){
+          cell.classList.add(
+            'locking'
+          );
+
+          cell.innerHTML = `
+            <span style="font-size:9px">
+              ${id}
+            </span>
+
+            <div style="
+              font-size:10px;
+              text-align:center
+            ">
+              ⏳ กำลังเลือก
+            </div>
+          `;
+
         }else{
           cell.classList.add('empty');
-          if(id===selectedSeat)cell.classList.add('selected');
-          cell.innerHTML=`<span style="font-size:10px">เบาะ</span><span style="font-size:15px">${id}</span>`;
-          cell.onclick=()=>pickSeat(cell,id);
+
+          if(id === selectedSeat){
+            cell.classList.add(
+              'selected'
+            );
+          }
+
+          cell.innerHTML = `
+            <span style="font-size:10px">
+              เบาะ
+            </span>
+
+            <span style="font-size:15px">
+              ${id}
+            </span>
+          `;
+
+          cell.onclick = function(){
+            pickSeat(cell,id);
+          };
         }
       }
+
       grid.appendChild(cell);
     });
   });
 }
-function pickSeat(el,id){
-  fetch(API_URL,{method:'POST',body:new URLSearchParams({action:'lockSeat',seat:id,date:document.getElementById('f-dateraw').value})});
-  selectedSeat=id;
-  document.querySelectorAll('.seat.empty,.seat.selected').forEach(s=>s.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('f-seat').value=id;
-  document.getElementById('formFieldsBox2').classList.add('show');
-  checkBook();
-  setTimeout(()=>document.getElementById('formFieldsBox2').scrollIntoView({behavior:'smooth',block:'center'}),200);
+async function pickSeat(el,id){
+  const trip =
+    document
+      .getElementById('b-trip')
+      .value
+      .trim();
+
+  const date =
+    document
+      .getElementById('f-dateraw')
+      .value
+      .trim();
+
+  if(!trip || !date){
+    Swal.fire({
+      icon:'error',
+      title:'ข้อมูลทริปไม่ครบ',
+      text:'กรุณากลับไปเลือกทริปใหม่',
+      background:'#0c1524',
+      color:'#f1f5f9',
+      confirmButtonColor:'#0284c7'
+    });
+
+    return;
+  }
+
+  el.style.pointerEvents = 'none';
+  el.style.opacity = '.7';
+
+  try{
+    const response =
+      await fetch(API_URL,{
+        method:'POST',
+
+        body:new URLSearchParams({
+          action:'lockSeat',
+          date:date,
+          trip:trip,
+          seat:id,
+          session_id:MY_SESSION_ID
+        })
+      });
+
+    const result =
+      await response.json();
+
+    if(!result.ok){
+      Swal.fire({
+        icon:'warning',
+        title:'เบาะนี้ไม่ว่างแล้ว',
+        text:
+          result.error === 'seat_booked'
+            ? 'เบาะนี้ถูกจองไปแล้วครับ'
+            : 'มีคนอื่นกำลังเลือกเบาะนี้ครับ',
+        background:'#0c1524',
+        color:'#f1f5f9',
+        confirmButtonColor:'#0284c7'
+      });
+
+      loadSeats(date);
+      return;
+    }
+
+    selectedSeat = id;
+
+    document
+      .querySelectorAll('.seat.selected')
+      .forEach(seat=>{
+        seat.classList.remove(
+          'selected'
+        );
+      });
+
+    el.classList.add('selected');
+
+    document
+      .getElementById('f-seat')
+      .value = id;
+
+    document
+      .getElementById('formFieldsBox2')
+      .classList
+      .add('show');
+
+    startSeatCountdown();
+
+    checkBook();
+
+    loadSeats(date);
+
+    setTimeout(()=>{
+      document
+        .getElementById('formFieldsBox2')
+        .scrollIntoView({
+          behavior:'smooth',
+          block:'center'
+        });
+    },200);
+
+  }catch(error){
+    Swal.fire({
+      icon:'error',
+      title:'ล็อกเบาะไม่สำเร็จ',
+      text:'กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่',
+      background:'#0c1524',
+      color:'#f1f5f9',
+      confirmButtonColor:'#0284c7'
+    });
+
+  }finally{
+    el.style.pointerEvents = '';
+    el.style.opacity = '';
+  }
 }
 function checkBook(){
   const ok=['f-name','f-nick','f-phone','f-line','f-seat'].every(id=>document.getElementById(id).value.trim()!=='');
@@ -1571,11 +2142,13 @@ async function submitBook(){
 
       confirm:'true',
 
-      bookingId:bookingId,
+bookingId:bookingId,
 
-      slipBase64:slipData.data,
-      slipName:slipData.name,
-      slipMime:slipData.mimeType
+session_id:MY_SESSION_ID,
+
+slipBase64:slipData.data,
+slipName:slipData.name,
+slipMime:slipData.mimeType
     };
 
     const form = document.createElement('form');
@@ -1626,6 +2199,13 @@ async function submitBook(){
      * รอหลังบ้านบันทึกรูปและข้อมูล
      */
     setTimeout(()=>{
+      clearInterval(
+  seatRefreshTimer
+);
+
+seatRefreshTimer = null;
+
+stopSeatCountdown();
       closePay();
 
       document.getElementById('r-name').innerText =
