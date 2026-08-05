@@ -232,7 +232,6 @@ body {
 .sec-hdr h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
 
 #upcomingList::-webkit-scrollbar { display: none; }
-#upcomingList .trip-hcard { flex: 0 0 92%; min-height: auto; }
 
 .stat-bar {
   display: flex;
@@ -249,45 +248,77 @@ body {
 .stat-bar .txt p { font-size: 11px; color: var(--sub); margin-top: 2px; }
 
 /* ============================================================
-   TRIP CARD (horizontal list card)
+   TRIP CARD — "Expedition Ticket" premium design
    ============================================================ */
-.trip-list { display: flex; flex-direction: column; gap: 12px; }
+.trip-list { display: flex; flex-direction: column; gap: 16px; }
+
 .trip-hcard {
-  display: flex;
-  align-items: stretch;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 18px;
+  position: relative;
+  display: block;
+  background: linear-gradient(165deg, #18140d, #0e0c08);
+  border: 1px solid rgba(212, 175, 55, .22);
+  border-radius: 22px;
   overflow: hidden;
   cursor: pointer;
-  transition: .2s;
-  min-height: 100px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .04);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.trip-hcard:hover { border-color: var(--blue); transform: translateY(-1px); }
-.thc-img { width: 110px; flex-shrink: 0; position: relative; }
-.thc-img img { width: 100%; height: 100%; object-fit: cover; }
-.thc-badge { position: absolute; top: 8px; left: 8px; padding: 3px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; }
-.badge-almost {
-  background: rgba(245, 158, 11, 0.85);
-  color: #fff;
-  animation: hb 0.9s infinite;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
-  border-radius: 8px;
+.trip-hcard:hover { transform: translateY(-3px); border-color: rgba(212, 175, 55, .55); box-shadow: 0 16px 36px rgba(0, 0, 0, .55); }
+.trip-hcard:active { transform: scale(.985); }
+
+.lux-photo { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #0e0c08; }
+.lux-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.trip-hcard:hover .lux-photo img { transform: scale(1.05); }
+.lux-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14, 12, 8, 0) 42%, rgba(14, 12, 8, .95) 100%); }
+
+.lux-status {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  padding: 5px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 800; letter-spacing: .2px;
+  border: 1px solid rgba(255, 255, 255, .25);
+  backdrop-filter: blur(6px);
+  white-space: nowrap;
 }
-.badge-open { background: rgba(16, 185, 129, .85); color: #fff; }
-.badge-hot { background: rgba(239, 68, 68, .85); color: #fff; }
-.badge-soon { background: rgba(245, 158, 11, .85); color: #000; }
-.thc-info { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-.thc-info h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; line-height: 1.3; }
-.thc-info .loc { font-size: 11px; color: var(--sub); margin-bottom: 6px; }
-.thc-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
-.seats-ok { font-size: 11px; color: var(--green); font-weight: 600; }
-.seats-low { font-size: 11px; color: var(--yellow); font-weight: 600; }
-.seats-full { font-size: 11px; color: var(--red); font-weight: 600; }
-.price-txt { font-size: 13px; font-weight: 700; color: var(--blue); }
-.date-chip { font-size: 10px; color: #fff; background: rgba(255, 255, 255, .08); padding: 3px 8px; border-radius: 6px; margin-top: 4px; display: inline-block; }
-.thc-arr { display: flex; align-items: center; padding-right: 12px; color: var(--blue); font-size: 18px; flex-shrink: 0; }
-.locked-ov { position: absolute; inset: 0; background: rgba(0, 0, 0, .5); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.lux-status.open { background: rgba(16, 185, 129, .88); color: #04150e; }
+.lux-status.almost { background: linear-gradient(135deg, #f4d160, #c9971f); color: #241800; animation: hb .9s infinite; }
+.lux-status.full { background: rgba(239, 68, 68, .9); color: #fff; }
+.lux-status.soon { background: rgba(255, 255, 255, .14); color: #f1d488; border-color: rgba(241, 212, 136, .5); }
+.lux-status.done { background: rgba(255, 255, 255, .12); color: #d8cdae; }
+
+.lux-price {
+  position: absolute; right: 12px; bottom: 12px; z-index: 2;
+  background: linear-gradient(135deg, #f6e2a0, #c9971f);
+  color: #241800; font-weight: 800; font-size: 14px;
+  padding: 6px 13px; border-radius: 13px 13px 13px 4px;
+  box-shadow: 0 5px 12px rgba(201, 151, 31, .4);
+}
+
+.lux-locked-ov {
+  position: absolute; inset: 0; z-index: 3;
+  background: rgba(10, 8, 5, .62); backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center; font-size: 30px;
+}
+
+/* เส้นปรุตั๋ว — องค์ประกอบซิกเนเจอร์ของการ์ด ให้ความรู้สึกเหมือนตั๋วเดินทางใบพรีเมียม */
+.lux-stub { position: relative; border-top: 1.5px dashed rgba(212, 175, 55, .35); }
+.lux-stub::before, .lux-stub::after {
+  content: ''; position: absolute; top: -8px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg);
+}
+.lux-stub::before { left: -8px; }
+.lux-stub::after { right: -8px; }
+
+.lux-body { padding: 16px 16px 14px; }
+.lux-title { font-size: 16px; font-weight: 800; color: #f6efe0; line-height: 1.35; letter-spacing: .2px; margin-bottom: 6px; }
+.lux-loc { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #b8ab8c; margin-bottom: 12px; }
+.lux-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 12px; border-top: 1px solid rgba(212, 175, 55, .14); flex-wrap: wrap; }
+.lux-date { font-size: 11px; color: #cbbf9e; display: flex; align-items: center; gap: 5px; }
+.lux-seats { font-size: 11.5px; font-weight: 700; }
+.lux-seats.ok { color: #5fd1a0; }
+.lux-seats.low { color: #f1c14a; }
+.lux-seats.full { color: #ef6a6a; }
+.lux-cta { margin-top: 12px; display: flex; align-items: center; justify-content: flex-end; gap: 3px; font-size: 12px; font-weight: 700; color: #f1d488; }
+
+#upcomingList .trip-hcard { flex: 0 0 86%; min-height: auto; }
 
 /* ============================================================
    PAST TRIPS GRID
@@ -1718,40 +1749,49 @@ function cardHTML(item) {
   const bookedCount = allBookings.filter(b => b.seat && b.trip === item.trip && b.date === item.date).length;
   const avail = totalSeats - bookedCount;
 
-  const badge = locked
-    ? '<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>'
-    : isPast
-      ? '<span class="thc-badge" style="background:rgba(100,116,139,.85);color:#fff">✅ ไปมาแล้วเว้ย!!</span>'
-      : avail <= 0
-        ? '<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>'
-        : avail <= 5
-          ? '<span class="thc-badge badge-almost">🔥 ใกล้เต็ม!</span>'
-          : '<span class="thc-badge badge-open">เปิดจอง</span>';
+  // ป้ายสถานะมุมภาพ (ข้อความ/เงื่อนไขเดิมทุกอย่าง เปลี่ยนแค่การจัดสไตล์)
+  let statusClass = 'open';
+  let statusText = 'เปิดจอง';
+  if (locked) {
+    statusClass = 'soon'; statusText = '⚠️ เร็วๆนี้';
+  } else if (isPast) {
+    statusClass = 'done'; statusText = '✅ ไปมาแล้วเว้ย!!';
+  } else if (avail <= 0) {
+    statusClass = 'full'; statusText = '🔴 เต็มแล้ว';
+  } else if (avail <= 5) {
+    statusClass = 'almost'; statusText = '🔥 ใกล้เต็ม!';
+  }
 
-  const seatsLabel = locked
-    ? '<span class="seats-full">⚠️ ยังไม่เปิด</span>'
-    : isPast
-      ? '<span style="color:var(--muted);font-size:11px;font-weight:600">✅ ไปมาแล้วเว้ย!!</span>'
-      : avail <= 0
-        ? '<span class="seats-full">🔴 เต็มแล้ว</span>'
-        : avail <= 5
-          ? `<span style="color:#f59e0b;font-size:11px;font-weight:600">🔥 ว่าง ${avail} ที่</span>`
-          : `<span class="seats-ok">🟢 ว่าง ${avail} ที่</span>`;
+  let seatsClass = 'ok';
+  let seatsText = `🟢 ว่าง ${avail} ที่`;
+  if (locked) {
+    seatsClass = 'full'; seatsText = '⚠️ ยังไม่เปิด';
+  } else if (isPast) {
+    seatsText = '✅ ไปมาแล้วเว้ย!!';
+  } else if (avail <= 0) {
+    seatsClass = 'full'; seatsText = '🔴 เต็มแล้ว';
+  } else if (avail <= 5) {
+    seatsClass = 'low'; seatsText = `🔥 ว่าง ${avail} ที่`;
+  }
 
   return `
     <div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')">
-      <div class="thc-img">
-        <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">
-        ${badge}
-        ${locked ? '<div class="locked-ov">🔒</div>' : ''}
+      <div class="lux-photo">
+        <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&q=70'}">
+        <span class="lux-status ${statusClass}">${statusText}</span>
+        <span class="lux-price">฿${info.price || '-'}</span>
+        ${locked ? '<div class="lux-locked-ov">🔒</div>' : ''}
       </div>
-      <div class="thc-info">
-        <h4>${item.trip}</h4>
-        <div class="loc">📍 ${info.loc || 'ประเทศไทย'}</div>
-        <div class="thc-meta">${seatsLabel}<span class="price-txt">฿${info.price || '-'}</span></div>
-        <span class="date-chip">📅 ${fmtDate}</span>
+      <div class="lux-stub"></div>
+      <div class="lux-body">
+        <h4 class="lux-title">${item.trip}</h4>
+        <div class="lux-loc">📍 ${info.loc || 'ประเทศไทย'}</div>
+        <div class="lux-meta-row">
+          <span class="lux-date">🗓️ ${fmtDate}</span>
+          <span class="lux-seats ${seatsClass}">${seatsText}</span>
+        </div>
+        <div class="lux-cta">ดูรายละเอียด <span>›</span></div>
       </div>
-      <div class="thc-arr">›</div>
     </div>
   `;
 }
