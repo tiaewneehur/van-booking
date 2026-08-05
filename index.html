@@ -768,6 +768,104 @@ body {
 .info-block { background: rgba(255, 255, 255, .02); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--yellow); font-size: 12px; line-height: 1.5; }
 .mem-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
 .mem-grid img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+
+.bank-open-section{
+  margin:16px 0;
+  text-align:left;
+}
+
+.bank-open-title{
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.bank-open-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+
+.bank-open-btn{
+  min-width:0;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:13px;
+  padding:9px 3px 8px;
+  color:#fff;
+  font-family:inherit;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  box-shadow:0 4px 10px rgba(0,0,0,.18);
+}
+
+.bank-open-btn:active{
+  transform:scale(.96);
+}
+
+.bank-open-btn .bank-logo{
+  width:34px;
+  height:34px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.92);
+  color:#111827;
+  font-size:10px;
+  font-weight:800;
+}
+
+.bank-open-btn > span:last-child{
+  width:100%;
+  font-size:9px;
+  font-weight:600;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.bank-open-btn.kbank{
+  background:#138f53;
+}
+
+.bank-open-btn.scb{
+  background:#4e2a84;
+}
+
+.bank-open-btn.ktb{
+  background:#158bc5;
+}
+
+.bank-open-btn.bbl{
+  background:#183b8f;
+}
+
+.bank-open-btn.bay{
+  background:#e5a900;
+  color:#111827;
+}
+
+.bank-open-btn.ttb{
+  background:#0b6cb8;
+}
+
+.bank-open-btn.gsb{
+  background:#e6007e;
+}
+
+.bank-open-note{
+  color:var(--muted);
+  font-size:10px;
+  text-align:center;
+  margin-top:9px;
+}
+   
 </style>
 </head>
 <body>
@@ -966,6 +1064,60 @@ body {
       <div id="seatLockTimer" class="seat-lock-time">05:00</div>
     </div>
 
+     <div class="bank-open-section">
+  <div class="bank-open-title">🏦 เปิดแอปธนาคาร</div>
+
+  <div class="bank-open-grid">
+    <button type="button" class="bank-open-btn kbank"
+      onclick="openBankApp('kbank')">
+      <span class="bank-logo">K+</span>
+      <span>K PLUS</span>
+    </button>
+
+    <button type="button" class="bank-open-btn scb"
+      onclick="openBankApp('scb')">
+      <span class="bank-logo">SCB</span>
+      <span>SCB EASY</span>
+    </button>
+
+    <button type="button" class="bank-open-btn ktb"
+      onclick="openBankApp('ktb')">
+      <span class="bank-logo">NEXT</span>
+      <span>กรุงไทย</span>
+    </button>
+
+    <button type="button" class="bank-open-btn bbl"
+      onclick="openBankApp('bbl')">
+      <span class="bank-logo">B</span>
+      <span>กรุงเทพ</span>
+    </button>
+
+    <button type="button" class="bank-open-btn bay"
+      onclick="openBankApp('bay')">
+      <span class="bank-logo">KMA</span>
+      <span>กรุงศรี</span>
+    </button>
+
+     <button type="button"
+        class="bank-open-btn ttb"
+        onclick="openBankApp('ttb')">
+    <span class="bank-logo">ttb</span>
+    <span>ttb touch</span>
+</button>
+
+<button type="button"
+        class="bank-open-btn gsb"
+        onclick="openBankApp('gsb')">
+    <span class="bank-logo">M</span>
+    <span>MyMo</span>
+</button>
+  </div>
+
+  <p class="bank-open-note">
+    เปิดแอปแล้วเลือกสแกน QR หรือกรอกยอดเงินด้วยตัวเอง
+  </p>
+</div>
+     
     <div class="slip-upload">
       <div class="slip-title">🧾 แนบสลิปการโอนเงิน <span class="req">*</span></div>
       <div class="slip-drop" id="slipDrop">
@@ -2289,6 +2441,60 @@ function uploadAvatar(input) {
   };
   reader.readAsDataURL(input.files[0]);
 }
+
+function openBankApp(bank){
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
+  const banks = {
+    kbank:{
+      scheme:'kplus://',
+      android:'intent://#Intent;scheme=kplus;package=com.kasikorn.retail.mbanking.wap;end'
+    },
+
+    scb:{
+      scheme:'scbeasy://',
+      android:'intent://#Intent;scheme=scbeasy;package=com.scb.phone;end'
+    },
+
+    ktb:{
+      scheme:'krungthainext://',
+      android:'intent://#Intent;scheme=krungthainext;package=ktbcs.netbank;end'
+    },
+
+    bbl:{
+      scheme:'bualuangmbanking://',
+      android:'intent://#Intent;scheme=bualuangmbanking;package=com.bbl.mobilebanking;end'
+    },
+
+    bay:{
+      scheme:'krungsri://',
+      android:'intent://#Intent;scheme=krungsri;package=com.krungsri.kma;end'
+    },
+
+     ttb:{
+    scheme:'ttbtouch://',
+    android:'intent://#Intent;scheme=ttbtouch;package=com.tmbtouch.mbanking;end'
+    },
+
+    gsb:{
+    scheme:'mymo://',
+    android:'intent://#Intent;scheme=mymo;package=com.gsb.mymo;end'
+   }    
+  };
+
+  const target = banks[bank];
+
+  if(!target){
+    return;
+  }
+
+  if(isAndroid){
+    window.location.href = target.android;
+  }else{
+    window.location.href = target.scheme;
+  }
+}
+   
 </script>
 </body>
 </html>
