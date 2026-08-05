@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 /* ============================================================
    RESET & THEME TOKENS
@@ -737,6 +738,24 @@ body {
 #successPage2.show { display: block; animation: fadeUp .3s ease; }
 .succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px; text-align: center; }
 .succ-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 20px; box-shadow: 0 0 24px rgba(16, 185, 129, .45); }
+.btn-save-receipt {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  border: 1.5px solid var(--blue);
+  background: rgba(56, 189, 248, .08);
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-save-receipt:disabled { opacity: .6; cursor: wait; }
 .receipt { background: #fff; color: #1e293b; border-radius: 18px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0, 0, 0, .3); margin: 20px 0; }
 .r-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 500; }
 .r-row span { color: #64748b; font-weight: 400; }
@@ -1086,7 +1105,7 @@ body {
   <div class="succ-body">
     <div class="succ-ico">✓</div>
     <h2 style="font-size:26px;font-weight:700;color:#fff">จองสำเร็จ! 🎉</h2>
-    <div class="receipt">
+    <div class="receipt" id="r-receipt-card">
       <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="r-name">-</strong></div>
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="r-trip">-</strong></div>
       <div class="r-row">📅 <span>วันที่:</span> <strong id="r-date">-</strong></div>
@@ -1095,6 +1114,7 @@ body {
         <h4 id="r-seat">-</h4>
       </div>
     </div>
+    <button class="btn-save-receipt" onclick="saveReceiptImage(this, 'r-receipt-card', 'ใบจองทริป.png')">📸 บันทึกภาพใบเสร็จ</button>
     <p style="font-size:16px;color:var(--red);line-height:1.5;margin-bottom:20px">
       กรุณาติดต่อแอดมินที่ช่องทางติดต่อในหน้าหลัก
       <br><span style="font-size:16px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
@@ -1208,9 +1228,9 @@ body {
 <!-- EQUIPMENT RENTAL RECEIPT -->
 <div id="equipReceiptPage">
   <div class="succ-body">
-    <div class="succ-ico">🧾</div>
+    <div class="succ-ico">✓</div>
     <h2 style="font-size:24px;font-weight:700;color:#fff">ใบเสร็จค่าเช่าอุปกรณ์</h2>
-    <div class="receipt">
+    <div class="receipt" id="eqr-receipt-card">
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="eqr-trip">-</strong></div>
       <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="eqr-name">-</strong></div>
       <div class="r-row">🪑 <span>เบาะ:</span> <strong id="eqr-seat">-</strong></div>
@@ -1218,6 +1238,7 @@ body {
       <div id="eqr-items"></div>
       <div class="r-total-row"><span>ยอดรวม</span><span id="eqr-total">0 บาท</span></div>
     </div>
+    <button class="btn-save-receipt" onclick="saveReceiptImage(this, 'eqr-receipt-card', 'ใบเสร็จเช่าอุปกรณ์.png')">📸 บันทึกภาพใบเสร็จ</button>
     <p style="font-size:15px;color:var(--red);line-height:1.6;margin-bottom:20px">
       ⚠️ ทางแอดมินจะเรียกเก็บเงินค่าเช่าอุปกรณ์นี้ในกลุ่มอีกครั้งครับ ไม่ต้องโอนตอนนี้
       <br><span style="font-size:13px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
@@ -2633,6 +2654,45 @@ function closeEquipReceipt() {
   document.getElementById('equipReceiptPage').classList.remove('show');
   document.getElementById('equipPage').classList.remove('show');
   switchTab('home');
+}
+
+/* ================================================================
+   SAVE RECEIPT AS IMAGE (ใช้ร่วมกันทั้งใบเสร็จจองทริป และใบเสร็จเช่าอุปกรณ์)
+   ================================================================ */
+async function saveReceiptImage(btn, elementId, filename) {
+  const el = document.getElementById(elementId);
+
+  if (!el || typeof html2canvas === 'undefined') {
+    Swal.fire({
+      icon: 'error',
+      title: 'บันทึกภาพไม่สำเร็จ',
+      text: 'ระบบโหลดตัวช่วยบันทึกภาพไม่สำเร็จ กรุณาลองใหม่ หรือแคปหน้าจอไว้แทนครับ',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+    return;
+  }
+
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '⌛ กำลังบันทึกภาพ...';
+
+  try {
+    const canvas = await html2canvas(el, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+    const link = document.createElement('a');
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'บันทึกภาพไม่สำเร็จ',
+      text: 'กรุณาลองใหม่ หรือแคปหน้าจอไว้แทนครับ',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
 }
 </script>
 </body>
