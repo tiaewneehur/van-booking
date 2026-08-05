@@ -2505,57 +2505,144 @@ function uploadAvatar(input) {
   reader.readAsDataURL(input.files[0]);
 }
 
-function openBankApp(bank){
+function openBankApp(bank) {
   const isAndroid = /Android/i.test(navigator.userAgent);
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
   const banks = {
-    kbank:{
-      scheme:'kplus://',
-      android:'intent://#Intent;scheme=kplus;package=com.kasikorn.retail.mbanking.wap;end'
+    kbank: {
+      scheme: 'kplus://',
+      packageName: 'com.kasikorn.retail.mbanking.wap',
+      storeSearch: 'K PLUS'
     },
 
-    scb:{
-      scheme:'scbeasy://',
-      android:'intent://#Intent;scheme=scbeasy;package=com.scb.phone;end'
+    scb: {
+      scheme: 'scbeasy://',
+      packageName: 'com.scb.phone',
+      storeSearch: 'SCB EASY'
     },
 
-    ktb:{
-      scheme:'krungthainext://',
-      android:'intent://#Intent;scheme=krungthainext;package=ktbcs.netbank;end'
+    ktb: {
+      scheme: 'krungthainext://',
+      packageName: 'ktbcs.netbank',
+      storeSearch: 'Krungthai NEXT'
     },
 
-    bbl:{
-      scheme:'bualuangmbanking://',
-      android:'intent://#Intent;scheme=bualuangmbanking;package=com.bbl.mobilebanking;end'
+    bbl: {
+      scheme: 'bualuangmbanking://',
+      packageName: 'com.bbl.mobilebanking',
+      storeSearch: 'Bangkok Bank Mobile Banking'
     },
 
-    bay:{
-      scheme:'krungsri://',
-      android:'intent://#Intent;scheme=krungsri;package=com.krungsri.kma;end'
+    bay: {
+      scheme: 'krungsri://',
+      packageName: 'com.krungsri.kma',
+      storeSearch: 'Krungsri Mobile App'
     },
 
-     ttb:{
-    scheme:'ttbtouch://',
-    android:'intent://#Intent;scheme=ttbtouch;package=com.tmbtouch.mbanking;end'
+    ttb: {
+      scheme: 'ttbtouch://',
+      packageName: 'com.tmbtouch.mbanking',
+      storeSearch: 'ttb touch'
     },
 
-    gsb:{
-    scheme:'mymo://',
-    android:'intent://#Intent;scheme=mymo;package=com.gsb.mymo;end'
-   }    
+    gsb: {
+      scheme: 'mymo://',
+      packageName: 'com.gsb.mymo',
+      storeSearch: 'MyMo by GSB'
+    }
   };
 
   const target = banks[bank];
 
-  if(!target){
+  if (!target) {
+    Swal.fire({
+      icon: 'error',
+      title: 'ไม่พบข้อมูลธนาคาร',
+      text: 'กรุณาลองเลือกธนาคารใหม่อีกครั้ง',
+      background: '#0c1524',
+      color: '#f1f5f9',
+      confirmButtonColor: '#0284c7'
+    });
+
     return;
   }
 
-  if(isAndroid){
-    window.location.href = target.android;
-  }else{
-    window.location.href = target.scheme;
+  const playStoreUrl =
+    'https://play.google.com/store/apps/details?id=' +
+    encodeURIComponent(target.packageName);
+
+  const appStoreUrl =
+    'https://apps.apple.com/th/search?term=' +
+    encodeURIComponent(target.storeSearch);
+
+  /*
+   * Android
+   * ทดลองเปิดแอปก่อน
+   * ถ้าเปิดไม่ได้ให้ Intent พาไป Play Store
+   */
+  if (isAndroid) {
+    const fallbackUrl = encodeURIComponent(playStoreUrl);
+
+    const intentUrl =
+      'intent://open#Intent;' +
+      'scheme=' + target.scheme.replace('://', '') + ';' +
+      'package=' + target.packageName + ';' +
+      'S.browser_fallback_url=' + fallbackUrl + ';' +
+      'end';
+
+    window.location.href = intentUrl;
+    return;
   }
+
+  /*
+   * iPhone / iPad
+   * ทดลองเปิดแอปก่อนประมาณ 1.5 วินาที
+   * หากหน้าเว็บยังเปิดอยู่ แสดงว่าเปิดแอปไม่ได้
+   * จึงพาไปค้นหาใน App Store
+   */
+  if (isIOS) {
+    let appWasOpened = false;
+
+    const detectAppOpen = () => {
+      if (document.hidden) {
+        appWasOpened = true;
+      }
+    };
+
+    document.addEventListener(
+      'visibilitychange',
+      detectAppOpen,
+      { once: true }
+    );
+
+    window.location.href = target.scheme;
+
+    setTimeout(() => {
+      document.removeEventListener(
+        'visibilitychange',
+        detectAppOpen
+      );
+
+      if (!appWasOpened && !document.hidden) {
+        window.location.href = appStoreUrl;
+      }
+    }, 1600);
+
+    return;
+  }
+
+  /*
+   * คอมพิวเตอร์หรืออุปกรณ์อื่น
+   */
+  Swal.fire({
+    icon: 'info',
+    title: 'กรุณาเปิดผ่านโทรศัพท์',
+    text: 'ปุ่มนี้ใช้สำหรับเปิดแอปธนาคารบนมือถือครับ',
+    background: '#0c1524',
+    color: '#f1f5f9',
+    confirmButtonColor: '#0284c7'
+  });
 }
    
 </script>
