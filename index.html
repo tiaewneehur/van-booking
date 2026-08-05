@@ -808,16 +808,23 @@ body {
 }
 
 .bank-open-btn .bank-logo{
-  width:34px;
-  height:34px;
-  border-radius:10px;
+  width:42px;
+  height:42px;
+  border-radius:12px;
   display:flex;
   align-items:center;
   justify-content:center;
-  background:rgba(255,255,255,.92);
-  color:#111827;
-  font-size:10px;
-  font-weight:800;
+  background:#fff;
+  padding:5px;
+  overflow:hidden;
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+}
+
+.bank-open-btn .bank-logo img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
 }
 
 .bank-open-btn > span:last-child{
@@ -1068,50 +1075,106 @@ body {
   <div class="bank-open-title">🏦 เปิดแอปธนาคาร</div>
 
   <div class="bank-open-grid">
-    <button type="button" class="bank-open-btn kbank"
-      onclick="openBankApp('kbank')">
-      <span class="bank-logo">K+</span>
-      <span>K PLUS</span>
-    </button>
 
-    <button type="button" class="bank-open-btn scb"
-      onclick="openBankApp('scb')">
-      <span class="bank-logo">SCB</span>
-      <span>SCB EASY</span>
-    </button>
+  <button
+    type="button"
+    class="bank-open-btn kbank"
+    onclick="openBankApp('kbank')"
+  >
+    <span class="bank-logo">
+      <img
+        src="bank-kplus.png"
+        alt="K PLUS"
+      >
+    </span>
+    <span>K PLUS</span>
+  </button>
 
-    <button type="button" class="bank-open-btn ktb"
-      onclick="openBankApp('ktb')">
-      <span class="bank-logo">NEXT</span>
-      <span>กรุงไทย</span>
-    </button>
+  <button
+    type="button"
+    class="bank-open-btn scb"
+    onclick="openBankApp('scb')"
+  >
+    <span class="bank-logo">
+      <img
+        src="bank-scb.png"
+        alt="SCB EASY"
+      >
+    </span>
+    <span>SCB EASY</span>
+  </button>
 
-    <button type="button" class="bank-open-btn bbl"
-      onclick="openBankApp('bbl')">
-      <span class="bank-logo">B</span>
-      <span>กรุงเทพ</span>
-    </button>
+  <button
+    type="button"
+    class="bank-open-btn ktb"
+    onclick="openBankApp('ktb')"
+  >
+    <span class="bank-logo">
+      <img
+        src="bank-ktb.png"
+        alt="Krungthai NEXT"
+      >
+    </span>
+    <span>กรุงไทย</span>
+  </button>
 
-    <button type="button" class="bank-open-btn bay"
-      onclick="openBankApp('bay')">
-      <span class="bank-logo">KMA</span>
-      <span>กรุงศรี</span>
-    </button>
+  <button
+    type="button"
+    class="bank-open-btn bbl"
+    onclick="openBankApp('bbl')"
+  >
+    <span class="bank-logo">
+      <img
+        src="bank-bbl.png"
+        alt="Bangkok Bank"
+      >
+    </span>
+    <span>กรุงเทพ</span>
+  </button>
 
-     <button type="button"
-        class="bank-open-btn ttb"
-        onclick="openBankApp('ttb')">
-    <span class="bank-logo">ttb</span>
+  <button
+    type="button"
+    class="bank-open-btn bay"
+    onclick="openBankApp('bay')"
+  >
+    <span class="bank-logo">
+      <img
+        src="bank-bay.png"
+        alt="Krungsri"
+      >
+    </span>
+    <span>กรุงศรี</span>
+  </button>
+
+  <button
+    type="button"
+    class="bank-open-btn ttb"
+    onclick="openBankApp('ttb')"
+  >
+    <span class="bank-logo">
+      <img
+        src="bank-ttb.png"
+        alt="ttb touch"
+      >
+    </span>
     <span>ttb touch</span>
-</button>
+  </button>
 
-<button type="button"
-        class="bank-open-btn gsb"
-        onclick="openBankApp('gsb')">
-    <span class="bank-logo">M</span>
+  <button
+    type="button"
+    class="bank-open-btn gsb"
+    onclick="openBankApp('gsb')"
+  >
+    <span class="bank-logo">
+      <img
+        src="bank-mymo.png"
+        alt="MyMo"
+      >
+    </span>
     <span>MyMo</span>
-</button>
-  </div>
+  </button>
+
+</div>
 
   <p class="bank-open-note">
     เปิดแอปแล้วเลือกสแกน QR หรือกรอกยอดเงินด้วยตัวเอง
