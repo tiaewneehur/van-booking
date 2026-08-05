@@ -2,24 +2,51 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8"/>
+<meta charset="utf-8" />
 <title>เที่ยวนี่เหอะ 🚐✨</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-#pastList.expanded .past-extra{display:block!important}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#060b13;--bg2:#0c1524;--bg3:#111d2e;
-  --blue:#38bdf8;--blue2:#0284c7;
-  --green:#10b981;--red:#ef4444;--yellow:#f59e0b;
-  --text:#f1f5f9;--muted:#64748b;--sub:#94a3b8;
-  --border:rgba(255,255,255,0.07);--card:rgba(255,255,255,0.03);
+/* ============================================================
+   RESET & THEME TOKENS
+   ============================================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
-body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 
-/* LOGIN */
+:root {
+  --bg: #060b13;
+  --bg2: #0c1524;
+  --bg3: #111d2e;
+  --blue: #38bdf8;
+  --blue2: #0284c7;
+  --green: #10b981;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --text: #f1f5f9;
+  --muted: #64748b;
+  --sub: #94a3b8;
+  --border: rgba(255, 255, 255, 0.07);
+  --card: rgba(255, 255, 255, 0.03);
+}
+
+body {
+  font-family: 'IBM Plex Sans Thai', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#pastList.expanded .past-extra { display: block !important; }
+
+/* ============================================================
+   LOGIN PAGE
+   ============================================================ */
 #loginPage {
   position: fixed;
   inset: 0;
@@ -29,13 +56,24 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,.12), transparent 65%), var(--bg);
+  background: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, .12), transparent 65%), var(--bg);
 }
-#loginPage.hidden{display:none}
-.login-logo{text-align:center;margin-bottom:28px}
-.login-logo img{width:90px;height:90px;border-radius:50%;border:3px solid var(--blue);box-shadow:0 0 28px rgba(56,189,248,.35);object-fit:cover;display:block;margin:0 auto 14px}
-.login-logo h1{font-size:30px;font-weight:800;color:var(--blue)}
-.login-logo p{font-size:13px;color:var(--sub);margin-top:4px}
+#loginPage.hidden { display: none; }
+
+.login-logo { text-align: center; margin-bottom: 28px; }
+.login-logo img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid var(--blue);
+  box-shadow: 0 0 28px rgba(56, 189, 248, .35);
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 14px;
+}
+.login-logo h1 { font-size: 30px; font-weight: 800; color: var(--blue); }
+.login-logo p { font-size: 13px; color: var(--sub); margin-top: 4px; }
+
 .login-card {
   width: 100%;
   max-width: 360px;
@@ -43,251 +81,410 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   border: 1px solid var(--border);
   border-radius: 24px;
   padding: 28px 22px;
-  box-shadow: 0 20px 50px rgba(0,0,0,.45);
-  display: flex;flex-direction: column;align-items: center;text-align: center;}
-.login-card .inp-wrap {width: 100%;max-width: 100%;}
-.login-card .btn-login {width: 100%;}
-.login-card h2{font-size:18px;font-weight:700;color:#fff;margin-bottom:6px}
-.login-card>p{font-size:13px;color:var(--sub);margin-bottom:22px;line-height:1.6}
-.inp-wrap{position:relative;margin-bottom:14px}
-.inp-pre{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none}
-.inp{width:100%;height:50px;background:var(--bg3);border:1.5px solid var(--border);border-radius:14px;color:#fff;font-size:15px;font-family:inherit;outline:none;transition:.2s;padding:0 14px 0 46px}
-.inp:focus{border-color:var(--blue)}
-.inp::placeholder{color:var(--muted)}
-.btn-login{width:100%;height:50px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 6px 20px rgba(2,132,199,.3);margin-top:4px}
-.btn-login:disabled{background:#1e293b;color:#475569;box-shadow:none;cursor:not-allowed}
-.login-note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px}
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.login-card .inp-wrap { width: 100%; max-width: 100%; }
+.login-card .btn-login { width: 100%; }
+.login-card h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+.login-card > p { font-size: 13px; color: var(--sub); margin-bottom: 22px; line-height: 1.6; }
 
-/* APP SHELL */
-#appShell{display:block}
+.inp-wrap { position: relative; margin-bottom: 14px; }
+.inp-pre { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
+.inp {
+  width: 100%;
+  height: 50px;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: .2s;
+  padding: 0 14px 0 46px;
+}
+.inp:focus { border-color: var(--blue); }
+.inp::placeholder { color: var(--muted); }
 
-/* HEADER */
-.hdr{position:sticky;top:0;z-index:500;background:rgba(6,11,19,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.hdr-brand{display:flex;align-items:center;gap:10px;cursor:pointer}
-.hdr-brand img{width:60px;height:60px;border-radius:50%;border:2px solid var(--blue);object-fit:cover}
-.hdr-brand h1{font-size:16px;font-weight:800;color:var(--blue)}
-.hdr-brand span{font-size:8px;color:#fff;opacity:.7;display:block}
-.hdr-btn{background:var(--card);border:1px solid var(--border);color:#fff;padding:8px 12px;border-radius:12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-login {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, .3);
+  margin-top: 4px;
+}
+.btn-login:disabled { background: #1e293b; color: #475569; box-shadow: none; cursor: not-allowed; }
+.login-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; }
 
-/* BOTTOM NAV */
-.bnav{position:fixed;bottom:0;left:0;width:100%;background:rgba(6,11,19,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;z-index:500;padding-bottom:env(safe-area-inset-bottom,0)}
-.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 0 12px;cursor:pointer;gap:4px}
-.bnav-item .ico{font-size:22px}
-.bnav-item .lbl{font-size:10px;font-weight:600;color:var(--muted)}
-.bnav-item.active .lbl{color:var(--blue)}
-.bnav-item.active .ico{filter:drop-shadow(0 0 6px rgba(56,189,248,.6))}
+/* ============================================================
+   APP SHELL / HEADER / BOTTOM NAV
+   ============================================================ */
+#appShell { display: block; }
 
-/* PAGES */
-.view-page{display:none}
-.view-page.active-page{display:block;animation:fadeUp .3s ease}
-@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.main{max-width:480px;margin:0 auto;padding:16px 16px 100px}
+.hdr {
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba(6, 11, 19, .92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; }
+.hdr-brand h1 { font-size: 16px; font-weight: 800; color: var(--blue); }
+.hdr-brand span { font-size: 8px; color: #fff; opacity: .7; display: block; }
+.hdr-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
 
-/* HOME */
-.greet-bar{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,rgba(2,132,199,.15),rgba(56,189,248,.08));border:1px solid rgba(56,189,248,.15);border-radius:18px;padding:14px 16px;margin-bottom:20px}
-.greet-bar .left h2{font-size:15px;font-weight:700;color:#fff}
-.greet-bar .left p{font-size:12px;color:var(--sub);margin-top:2px}
-.greet-bar .ava{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 0 16px rgba(56,189,248,.3)}
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.sec-hdr h3{font-size:16px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.bnav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(6, 11, 19, .94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 500;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0 12px; cursor: pointer; gap: 4px; }
+.bnav-item .ico { font-size: 22px; }
+.bnav-item .lbl { font-size: 10px; font-weight: 600; color: var(--muted); }
+.bnav-item.active .lbl { color: var(--blue); }
+.bnav-item.active .ico { filter: drop-shadow(0 0 6px rgba(56, 189, 248, .6)); }
 
-/* TRIP H-CARD */
-.trip-list{display:flex;flex-direction:column;gap:12px}
-.trip-hcard{display:flex;align-items:stretch;background:var(--bg2);border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer;transition:.2s;min-height:100px}
-.trip-hcard:hover{border-color:var(--blue);transform:translateY(-1px)}
-.thc-img{width:110px;flex-shrink:0;position:relative}
-.thc-img img{width:100%;height:100%;object-fit:cover}
-.thc-badge{position:absolute;top:8px;left:8px;padding:3px 8px;border-radius:8px;font-size:10px;font-weight:700}
-.badge-almost {background: rgba(245, 158, 11, 0.85);color: #fff;animation: hb 0.9s infinite;
+/* ============================================================
+   PAGE / LAYOUT UTILITIES
+   ============================================================ */
+.view-page { display: none; }
+.view-page.active-page { display: block; animation: fadeUp .3s ease; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.main { max-width: 480px; margin: 0 auto; padding: 16px 16px 100px; }
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ============================================================
+   HOME TAB
+   ============================================================ */
+.greet-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, rgba(2, 132, 199, .15), rgba(56, 189, 248, .08));
+  border: 1px solid rgba(56, 189, 248, .15);
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; }
+.greet-bar .left p { font-size: 12px; color: var(--sub); margin-top: 2px; }
+.greet-bar .ava {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(56, 189, 248, .3);
+}
+.sec-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.sec-hdr h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
+
+#upcomingList::-webkit-scrollbar { display: none; }
+#upcomingList .trip-hcard { flex: 0 0 92%; min-height: auto; }
+
+.stat-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, rgba(56, 189, 248, .08), rgba(16, 185, 129, .05));
+  border: 1px solid rgba(56, 189, 248, .12);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-top: 20px;
+}
+.stat-bar .ico { font-size: 24px; }
+.stat-bar .txt h4 { font-size: 13px; color: #fff; font-weight: 700; }
+.stat-bar .txt p { font-size: 11px; color: var(--sub); margin-top: 2px; }
+
+/* ============================================================
+   TRIP CARD (horizontal list card)
+   ============================================================ */
+.trip-list { display: flex; flex-direction: column; gap: 12px; }
+.trip-hcard {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: .2s;
+  min-height: 100px;
+}
+.trip-hcard:hover { border-color: var(--blue); transform: translateY(-1px); }
+.thc-img { width: 110px; flex-shrink: 0; position: relative; }
+.thc-img img { width: 100%; height: 100%; object-fit: cover; }
+.thc-badge { position: absolute; top: 8px; left: 8px; padding: 3px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+.badge-almost {
+  background: rgba(245, 158, 11, 0.85);
+  color: #fff;
+  animation: hb 0.9s infinite;
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.6);
   border-radius: 8px;
 }
-.badge-open{background:rgba(16,185,129,.85);color:#fff}
-.badge-hot{background:rgba(239,68,68,.85);color:#fff}
-.badge-soon{background:rgba(245,158,11,.85);color:#000}
-.thc-info{padding:12px;flex:1;display:flex;flex-direction:column;justify-content:space-between}
-.thc-info h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px;line-height:1.3}
-.thc-info .loc{font-size:11px;color:var(--sub);margin-bottom:6px}
-.thc-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}
-.seats-ok{font-size:11px;color:var(--green);font-weight:600}
-.seats-low{font-size:11px;color:var(--yellow);font-weight:600}
-.seats-full{font-size:11px;color:var(--red);font-weight:600}
-.price-txt{font-size:13px;font-weight:700;color:var(--blue)}
-.date-chip{font-size:10px;color:#fff;background:rgba(255,255,255,.08);padding:3px 8px;border-radius:6px;margin-top:4px;display:inline-block}
-.thc-arr{display:flex;align-items:center;padding-right:12px;color:var(--blue);font-size:18px;flex-shrink:0}
-.locked-ov{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;font-size:28px}
+.badge-open { background: rgba(16, 185, 129, .85); color: #fff; }
+.badge-hot { background: rgba(239, 68, 68, .85); color: #fff; }
+.badge-soon { background: rgba(245, 158, 11, .85); color: #000; }
+.thc-info { padding: 12px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.thc-info h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; line-height: 1.3; }
+.thc-info .loc { font-size: 11px; color: var(--sub); margin-bottom: 6px; }
+.thc-meta { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
+.seats-ok { font-size: 11px; color: var(--green); font-weight: 600; }
+.seats-low { font-size: 11px; color: var(--yellow); font-weight: 600; }
+.seats-full { font-size: 11px; color: var(--red); font-weight: 600; }
+.price-txt { font-size: 13px; font-weight: 700; color: var(--blue); }
+.date-chip { font-size: 10px; color: #fff; background: rgba(255, 255, 255, .08); padding: 3px 8px; border-radius: 6px; margin-top: 4px; display: inline-block; }
+.thc-arr { display: flex; align-items: center; padding-right: 12px; color: var(--blue); font-size: 18px; flex-shrink: 0; }
+.locked-ov { position: absolute; inset: 0; background: rgba(0, 0, 0, .5); display: flex; align-items: center; justify-content: center; font-size: 28px; }
 
-/* PAST GRID */
-.past-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.past-card{border-radius:14px;overflow:hidden;position:relative;cursor:pointer;aspect-ratio:3/4}
-.past-card img{width:100%;height:100%;object-fit:cover;filter:brightness(.65)}
-.past-card-info{position:absolute;bottom:0;left:0;right:0;padding:8px;background:linear-gradient(to top,rgba(0,0,0,.85),transparent)}
-.past-card-info h5{font-size:10px;font-weight:700;color:#fff;line-height:1.3}
-.past-card-info p{font-size:9px;color:var(--sub)}
-.past-card-rating{position:absolute;top:6px;right:6px;font-size:9px;background:rgba(0,0,0,.6);color:#fbbf24;padding:2px 5px;border-radius:5px;font-weight:700}
+/* ============================================================
+   PAST TRIPS GRID
+   ============================================================ */
+.past-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.past-card { border-radius: 14px; overflow: hidden; position: relative; cursor: pointer; aspect-ratio: 3 / 4; }
+.past-card img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.65); }
+.past-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: linear-gradient(to top, rgba(0, 0, 0, .85), transparent); }
+.past-card-info h5 { font-size: 10px; font-weight: 700; color: #fff; line-height: 1.3; }
+.past-card-info p { font-size: 9px; color: var(--sub); }
+.past-card-rating { position: absolute; top: 6px; right: 6px; font-size: 9px; background: rgba(0, 0, 0, .6); color: #fbbf24; padding: 2px 5px; border-radius: 5px; font-weight: 700; }
 
-.stat-bar{display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(56,189,248,.08),rgba(16,185,129,.05));border:1px solid rgba(56,189,248,.12);border-radius:16px;padding:14px 16px;margin-top:20px}
-.stat-bar .ico{font-size:24px}
-.stat-bar .txt h4{font-size:13px;color:#fff;font-weight:700}
-.stat-bar .txt p{font-size:11px;color:var(--sub);margin-top:2px}
-.divider{height:1px;background:var(--border);margin:20px 0}
-
-/* SEARCH */
-.search-wrap{position:relative;margin-bottom:18px}
-.search-wrap input{width:100%;height:46px;padding:0 16px 0 44px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;color:#fff;font-size:14px;font-family:inherit;outline:none;transition:.2s}
-.search-wrap input:focus{border-color:var(--blue)}
-.s-ico{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--muted)}
-
-/* MY TRIPS */
-.my-profile{background:linear-gradient(135deg,rgba(2,132,199,.18),rgba(16,185,129,.1));border:1px solid rgba(56,189,248,.18);border-radius:22px;padding:20px;margin-bottom:22px;display:flex;align-items:center;gap:16px}
-.my-ava{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;box-shadow:0 0 20px rgba(56,189,248,.35)}
-.my-info h3{font-size:17px;font-weight:700;color:#fff}
-.my-info p{font-size:12px;color:var(--sub);margin-top:3px}
-.my-stats{display:flex;gap:18px;margin-top:10px}
-.my-stat h4{font-size:20px;font-weight:800;color:var(--blue)}
-.my-stat p{font-size:10px;color:var(--sub)}
-.h-item{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
-.h-item img{width:56px;height:56px;border-radius:12px;object-fit:cover;flex-shrink:0}
-.h-item .hi{flex:1}
-.h-item .hi h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
-.h-item .hi p{font-size:11px;color:var(--sub)}
-.h-seat{text-align:right;flex-shrink:0}
-.h-seat .snum{font-size:18px;font-weight:800;color:var(--blue)}
-.h-seat p{font-size:10px;color:var(--muted)}
-.empty-st{text-align:center;padding:50px 20px;color:var(--muted)}
-.empty-st .ico{font-size:48px;margin-bottom:12px}
-
-/* NOTIF */
-.notif-item{display:flex;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:10px}
-.notif-dot{width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:4px}
-.notif-dot.read{background:var(--muted)}
-.notif-info h4{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
-.notif-info p{font-size:12px;color:var(--sub);line-height:1.5}
-.notif-info .time{font-size:10px;color:var(--muted);margin-top:6px}
-.chip{display:inline-block;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:600}
-.chip-blue{background:rgba(56,189,248,.12);color:var(--blue)}
-.chip-green{background:rgba(16,185,129,.12);color:var(--green)}
-.chip-yellow{background:rgba(245,158,11,.12);color:var(--yellow)}
-
-/* TRIP DETAIL MODAL */
-.modal-bg {position: fixed;inset: 0;background: rgba(0, 0, 0, 0.78);backdrop-filter: blur(8px);z-index: 800;display: none;align-items: center;justify-content: center;}
-.modal-bg.show{display:flex}
-.modal-sheet {width: 90%;max-width: 480px;max-height: 90vh;background: var(--bg2);border-radius: 28px;overflow-y: auto;padding-bottom: 32px;animation: fadeIn .3s ease;position: relative;}
-@keyframes fadeIn {from { opacity: 0; transform: scale(0.95); }to { opacity: 1; transform: scale(1); }}
-.modal-x{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.5);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:10;backdrop-filter:blur(8px)}
-.close-pill{display:block;width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;margin:14px auto 0}
-.modal-img{width:100%;height:220px;object-fit:cover}
-.modal-body{padding:18px}
-.modal-body h2{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px}
-.modal-date{font-size:13px;color:var(--blue);margin-bottom:14px}
-.modal-price{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,rgba(16,185,129,.15),rgba(56,189,248,.1));border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 16px;font-size:14px;font-weight:700;color:#fff;margin-bottom:16px}
-.modal-payment{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:14px;padding:10px 14px;font-size:12px;color:#fbbf24;margin-bottom:16px;}
-.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.modal-card{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:14px;padding:12px}
-.modal-card span{display:block;font-size:11px;color:var(--sub);margin-bottom:6px}
-.modal-card strong{font-size:14px;color:#fff}
-.modal-hl{background:linear-gradient(180deg,rgba(56,189,248,.08),rgba(56,189,248,.03));border:1px solid rgba(56,189,248,.12);border-radius:16px;padding:14px;font-size:13px;line-height:1.7;color:#e2e8f0;margin-bottom:16px}
-.modal-seat-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:14px;padding:12px 16px;margin-bottom:16px}
-.avail{font-size:13px;font-weight:700}
-.avail.ok{color:var(--green)}.avail.low{color:var(--yellow)}.avail.full{color:var(--red)}
-.btn-book {width: 90%;height: 52px;border: none;border-radius: 16px;background: linear-gradient(145deg, #ff4747, #d91f2f);color: #fff;font-size: 16px;font-weight: 700;cursor: pointer;box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, 0.3);animation: hb 0.9s infinite;margin: -30px auto 16px auto;display: block;position: relative;z-index: 10;}
-.btn-book:disabled{background:#1e293b;color:#475569;box-shadow:none;cursor:not-allowed}
-
-/* BOOKING PAGE */
-#bookingPage2{position:fixed;inset:0;z-index:900;background:var(--bg);overflow-y:auto;display:none}
-#bookingPage2.show{display:block;animation:fadeUp .25s ease}
-.bk-hdr{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(6,11,19,.92);backdrop-filter:blur(14px);z-index:10}
-.btn-back{background:none;border:none;color:var(--blue);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px}
-.bk-body{max-width:480px;margin:0 auto;padding:16px 16px 120px}
-.ig{margin-bottom:16px}
-.ig label{display:block;font-size:13px;color:var(--sub);font-weight:500;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.ig input{width:100%;height:48px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:14px;font-family:inherit;padding:0 14px;outline:none;transition:.2s}
-.ig input:disabled{color:var(--muted);cursor:not-allowed}
-.ig input:focus{border-color:var(--blue)}
-
-/* SEAT GRID (โค้ดเดิมไอซ์) */
-.van-block{margin-bottom:20px}
-.van-block-title{font-size:14px;color:var(--blue);margin-bottom:8px;font-weight:700;text-align:center;background:linear-gradient(180deg,rgba(10,30,50,.95),rgba(8,20,35,.98));padding:12px;border-radius:18px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
-.van-grid-header{display:flex;justify-content:space-between;padding:0 10px;margin-bottom:6px;font-size:11px;font-weight:700;color:var(--blue);opacity:.88}
-.van-grid-seats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:10px;background:linear-gradient(180deg,rgba(16,28,45,.98),rgba(10,18,32,.98));border-radius:24px;border:1px solid rgba(255,255,255,.03);box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 6px 18px rgba(0,0,0,.22);position:relative;overflow:hidden}
-.van-grid-seats::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at top,rgba(56,189,248,.06),transparent 60%);pointer-events:none}
-.seat{aspect-ratio:1/1;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;transition:.18s;transform:scale(.94);cursor:pointer;overflow:hidden}
-.seat span:first-child{font-size:9px;margin-bottom:2px;opacity:.95}
-.seat span:last-child{font-size:15px;line-height:1.1}
-.seat.driver{background:linear-gradient(145deg,#243247,#1a2435);color:#5f718b;border:2px dashed rgba(255,255,255,.14);cursor:default;pointer-events:none}
-.seat.spacer{visibility:hidden;pointer-events:none}
-.seat.empty{background:linear-gradient(145deg,#19c37d,#13a86c);color:#fff;box-shadow:0 5px 0 #0d7f52,0 8px 14px rgba(25,195,125,.14)}
-.seat.booked{background:linear-gradient(145deg,#ff4747,#d91f2f);color:#fff;box-shadow:0 5px 0 #a91320,0 8px 14px rgba(255,71,71,.14);cursor:not-allowed}
-.seat.selected{background:linear-gradient(145deg,#ffd84d,#f7b500);color:#000;transform:scale(.98);box-shadow:0 0 12px rgba(255,216,77,.45),0 5px 0 #b57b00;animation:hb .9s infinite}
-.seat.hidden-seat{background:linear-gradient(145deg,rgba(18,28,40,.96),rgba(8,12,20,.98));color:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.03);pointer-events:none}
-@keyframes hb{0%,100%{transform:scale(.98)}50%{transform:scale(1.02)}}
-.seat-legend{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0 20px;padding:10px;border-radius:16px;background:linear-gradient(180deg,rgba(12,21,36,.95),rgba(6,11,19,.98));border:1px solid var(--border)}
-.leg-item{font-size:12px;font-weight:600;color:#e2e8f0}
-.seat-map-img{width:100%;border-radius:12px;margin-bottom:8px;border:1px solid var(--border)}
-.form-sec{font-size:13px;color:var(--sub);font-weight:500;border-bottom:1px solid var(--border);padding-bottom:6px;margin:22px 0 16px}
-#formFieldsBox2{display:none}
-#formFieldsBox2.show{display:block;animation:fadeUp .3s ease}
-.sticky-bar{position:fixed;bottom:0;left:0;width:100%;background:rgba(6,11,19,.88);backdrop-filter:blur(16px);padding:14px 16px 28px;border-top:1px solid var(--border);z-index:20;display:flex;justify-content:center}
-.btn-confirm{width:100%;max-width:440px;height:50px;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;background:#131c2a;color:#334155;transition:.25s}
-.btn-confirm.ready{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;box-shadow:0 6px 20px rgba(2,132,199,.3)}
-
-/* PAYMENT MODAL */
-.pay-modal{
-  display:none;
-  position:fixed;
-  z-index:3000;
-  inset:0;
-  background:rgba(4,7,12,.88);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  padding:16px;
-  padding-bottom:calc(40px + env(safe-area-inset-bottom));
-  align-items:flex-start;
-  justify-content:center;
-  overflow-y:auto;
-  overflow-x:hidden;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;
+/* ============================================================
+   SEARCH
+   ============================================================ */
+.search-wrap { position: relative; margin-bottom: 18px; }
+.search-wrap input {
+  width: 100%;
+  height: 46px;
+  padding: 0 16px 0 44px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: .2s;
 }
-.pay-modal.show{display:flex}
-.pay-box{background:var(--bg2);width:100%;max-width:360px;border-radius:20px;padding:24px 20px;text-align:center;border:1px solid var(--border);box-shadow:0 20px 40px rgba(0,0,0,.5);position:relative;margin:auto;height:auto;max-height:none;}
-.pay-x{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.pay-box h3{font-size:22px;color:var(--yellow);margin-bottom:4px}
-.pay-box .sub{font-size:13px;color:var(--red)}
-.qr-img{width:180px;border-radius:12px;border:4px solid #fff;margin:16px auto;display:block;box-shadow:0 6px 15px rgba(0,0,0,.3)}
-.chk-row{display:flex;align-items:flex-start;gap:10px;text-align:left;color:#cbd5e1;font-size:12px;margin:16px 0;background:rgba(255,255,255,.02);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.04)}
-.chk-row input{width:16px;height:16px;margin-top:2px;flex-shrink:0;cursor:pointer}
-.btn-pay-ok{width:100%;height:48px;border-radius:10px;border:none;background:var(--green);color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
-.btn-pay-ok:disabled{background:#1e293b;color:#475569;cursor:not-allowed}
+.search-wrap input:focus { border-color: var(--blue); }
+.s-ico { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 15px; color: var(--muted); }
 
-/* SUCCESS */
-#successPage2{position:fixed;inset:0;z-index:1100;background:var(--bg);display:none;overflow-y:auto}
-#successPage2.show{display:block;animation:fadeUp .3s ease}
-.succ-body{max-width:440px;margin:0 auto;padding:40px 20px;text-align:center}
-.succ-ico{width:72px;height:72px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;margin:0 auto 20px;box-shadow:0 0 24px rgba(16,185,129,.45)}
-.receipt{background:#fff;color:#1e293b;border-radius:18px;padding:20px;text-align:left;box-shadow:0 10px 25px rgba(0,0,0,.3);margin:20px 0}
-.r-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;font-weight:500}
-.r-row span{color:#64748b;font-weight:400}
-.r-seat-box{background:#f0fdf4;border:1px dashed #bbf7d0;padding:12px;border-radius:12px;text-align:center;margin-top:14px}
-.r-seat-box p{font-size:11px;color:#16a34a;font-weight:600}
-.r-seat-box h4{font-size:38px;color:#15803d;font-weight:800}
-.btn-home{width:100%;height:50px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px}
+/* ============================================================
+   MY TRIPS TAB
+   ============================================================ */
+.my-profile {
+  background: linear-gradient(135deg, rgba(2, 132, 199, .18), rgba(16, 185, 129, .1));
+  border: 1px solid rgba(56, 189, 248, .18);
+  border-radius: 22px;
+  padding: 20px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.my-ava {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(56, 189, 248, .35);
+}
+.my-info h3 { font-size: 17px; font-weight: 700; color: #fff; }
+.my-info p { font-size: 12px; color: var(--sub); margin-top: 3px; }
+.my-stats { display: flex; gap: 18px; margin-top: 10px; }
+.my-stat h4 { font-size: 20px; font-weight: 800; color: var(--blue); }
+.my-stat p { font-size: 10px; color: var(--sub); }
 
-/* DRAWER */
-.drawer{position:fixed;top:0;right:-100%;width:85%;max-width:340px;height:100%;background:#090f1a;z-index:600;transition:.4s cubic-bezier(.4,0,.2,1);padding:24px 16px;overflow-y:auto;box-shadow:-10px 0 30px rgba(0,0,0,.5);border-left:1px solid var(--border)}
-.drawer.open{right:0}
-.ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:599;display:none;backdrop-filter:blur(5px)}
-.info-block{background:rgba(255,255,255,.02);padding:12px;border-radius:10px;margin-bottom:8px;border-left:3px solid var(--yellow);font-size:12px;line-height:1.5}
-.mem-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
-.mem-grid img{width:100%;border-radius:12px;border:1px solid var(--border)}
-.btn-logout{width:100%;height:46px;border-radius:12px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:8px}
-.btn-logout:hover{background:rgba(239,68,68,.1);color:var(--red);border-color:rgba(239,68,68,.3)}
+.h-item { display: flex; align-items: center; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 10px; }
+.h-item img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+.h-item .hi { flex: 1; }
+.h-item .hi h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.h-item .hi p { font-size: 11px; color: var(--sub); }
+.h-seat { text-align: right; flex-shrink: 0; }
+.h-seat .snum { font-size: 18px; font-weight: 800; color: var(--blue); }
+.h-seat p { font-size: 10px; color: var(--muted); }
+
+.empty-st { text-align: center; padding: 50px 20px; color: var(--muted); }
+.empty-st .ico { font-size: 48px; margin-bottom: 12px; }
+
+.btn-logout {
+  width: 100%;
+  height: 46px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.btn-logout:hover { background: rgba(239, 68, 68, .1); color: var(--red); border-color: rgba(239, 68, 68, .3); }
+
+/* ============================================================
+   NOTIF / INFO TAB
+   ============================================================ */
+.notif-item { display: flex; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 10px; }
+.notif-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 4px; }
+.notif-dot.read { background: var(--muted); }
+.notif-info h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.notif-info p { font-size: 12px; color: var(--sub); line-height: 1.5; }
+.notif-info .time { font-size: 10px; color: var(--muted); margin-top: 6px; }
+
+.chip { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.chip-blue { background: rgba(56, 189, 248, .12); color: var(--blue); }
+.chip-green { background: rgba(16, 185, 129, .12); color: var(--green); }
+.chip-yellow { background: rgba(245, 158, 11, .12); color: var(--yellow); }
+
+/* ============================================================
+   TRIP DETAIL MODAL (bottom sheet)
+   ============================================================ */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  z-index: 800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.modal-bg.show { display: flex; }
+.modal-sheet {
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  background: var(--bg2);
+  border-radius: 28px;
+  overflow-y: auto;
+  padding-bottom: 32px;
+  animation: fadeIn .3s ease;
+  position: relative;
+}
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.modal-x {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, .5);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+.close-pill { display: block; width: 40px; height: 4px; background: rgba(255, 255, 255, .2); border-radius: 4px; margin: 14px auto 0; }
+.modal-img { width: 100%; height: 220px; object-fit: cover; }
+.modal-body { padding: 18px; }
+.modal-body h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+.modal-date { font-size: 13px; color: var(--blue); margin-bottom: 14px; }
+.modal-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, .15), rgba(56, 189, 248, .1));
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.modal-payment { background: rgba(245, 158, 11, .08); border: 1px solid rgba(245, 158, 11, .2); border-radius: 14px; padding: 10px 14px; font-size: 12px; color: #fbbf24; margin-bottom: 16px; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.modal-card { background: rgba(255, 255, 255, .04); border: 1px solid var(--border); border-radius: 14px; padding: 12px; }
+.modal-card span { display: block; font-size: 11px; color: var(--sub); margin-bottom: 6px; }
+.modal-card strong { font-size: 14px; color: #fff; }
+.modal-hl {
+  background: linear-gradient(180deg, rgba(56, 189, 248, .08), rgba(56, 189, 248, .03));
+  border: 1px solid rgba(56, 189, 248, .12);
+  border-radius: 16px;
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #e2e8f0;
+  margin-bottom: 16px;
+}
+.modal-seat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.avail { font-size: 13px; font-weight: 700; }
+.avail.ok { color: var(--green); }
+.avail.low { color: var(--yellow); }
+.avail.full { color: var(--red); }
+
+/* "จองที่นั่ง" CTA button — shared by the trip-detail modal (this is the
+   effective/final style; it originally existed twice in the source and the
+   later rule always won in the cascade, so it's merged into one here). */
 .btn-book {
   display: block;
   width: 85%;
-  max-width: 320px;  
+  max-width: 320px;
   height: 48px;
-  margin: -24px auto 16px auto; 
+  margin: -24px auto 16px auto;
   border: none;
   border-radius: 12px;
   background: linear-gradient(145deg, #ff4747, #d91f2f);
@@ -300,18 +497,49 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   position: relative;
   z-index: 10;
 }
+.btn-book:disabled { background: #1e293b; color: #475569; box-shadow: none; cursor: not-allowed; animation: none; }
 
-.form-sec {
-  font-size: 14px;
-  color: var(--blue);
-  font-weight: 700;
-  margin: 24px 0 16px;
+/* ============================================================
+   BOOKING PAGE
+   ============================================================ */
+#bookingPage2 { position: fixed; inset: 0; z-index: 900; background: var(--bg); overflow-y: auto; display: none; }
+#bookingPage2.show { display: block; animation: fadeUp .25s ease; }
+.bk-hdr {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: rgba(6, 11, 19, .92);
+  backdrop-filter: blur(14px);
+  z-index: 10;
 }
+.btn-back { background: none; border: none; color: var(--blue); font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; }
+.bk-body { max-width: 480px; margin: 0 auto; padding: 16px 16px 120px; }
 
+.ig { margin-bottom: 16px; }
+.ig label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--sub); font-weight: 500; margin-bottom: 8px; }
+.ig input {
+  width: 100%;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 0 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.ig input:disabled { color: var(--muted); cursor: not-allowed; }
+.ig input:focus { border-color: var(--blue); background: rgba(56, 189, 248, 0.05); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1); }
+
+.form-sec { font-size: 14px; color: var(--blue); font-weight: 700; margin: 24px 0 16px; display: flex; align-items: center; gap: 8px; }
 #formFieldsBox2 {
+  display: none;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
@@ -319,197 +547,234 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   backdrop-filter: blur(10px);
   margin-top: 10px;
 }
+#formFieldsBox2.show { display: block; animation: fadeUp .3s ease; }
 
-.ig input {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(6, 11, 19, .88);
+  backdrop-filter: blur(16px);
+  padding: 14px 16px 28px;
+  border-top: 1px solid var(--border);
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+}
+.btn-confirm {
+  width: 100%;
+  max-width: 440px;
+  height: 50px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  background: #131c2a;
+  color: #334155;
+  transition: .25s;
+}
+.btn-confirm.ready { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 6px 20px rgba(2, 132, 199, .3); }
+
+/* ============================================================
+   SEAT MAP / VAN GRID
+   ============================================================ */
+.van-block { margin-bottom: 20px; }
+.van-block-title {
+  font-size: 14px;
+  color: var(--blue);
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(10, 30, 50, .95), rgba(8, 20, 35, .98));
+  padding: 12px;
+  border-radius: 18px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+}
+.van-grid-header { display: flex; justify-content: space-between; padding: 0 10px; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: var(--blue); opacity: .88; }
+.van-grid-seats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(16, 28, 45, .98), rgba(10, 18, 32, .98));
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, .03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 6px 18px rgba(0, 0, 0, .22);
+  position: relative;
+  overflow: hidden;
+}
+.van-grid-seats::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at top, rgba(56, 189, 248, .06), transparent 60%); pointer-events: none; }
+
+.seat { aspect-ratio: 1 / 1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; transition: .18s; transform: scale(.94); cursor: pointer; overflow: hidden; }
+.seat span:first-child { font-size: 9px; margin-bottom: 2px; opacity: .95; }
+.seat span:last-child { font-size: 15px; line-height: 1.1; }
+
+.seat.driver { background: linear-gradient(145deg, #243247, #1a2435); color: #5f718b; border: 2px dashed rgba(255, 255, 255, .14); cursor: default; pointer-events: none; }
+.seat.spacer { visibility: hidden; pointer-events: none; }
+.seat.empty { background: linear-gradient(145deg, #19c37d, #13a86c); color: #fff; box-shadow: 0 5px 0 #0d7f52, 0 8px 14px rgba(25, 195, 125, .14); }
+.seat.booked { background: linear-gradient(145deg, #ff4747, #d91f2f); color: #fff; box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, .14); cursor: not-allowed; }
+.seat.selected { background: linear-gradient(145deg, #ffd84d, #f7b500); color: #000; transform: scale(.98); box-shadow: 0 0 12px rgba(255, 216, 77, .45), 0 5px 0 #b57b00; animation: hb .9s infinite; }
+.seat.hidden-seat { background: linear-gradient(145deg, rgba(18, 28, 40, .96), rgba(8, 12, 20, .98)); color: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .03); pointer-events: none; }
+
+/* เบาะที่ "มีคนอื่นกำลังเลือกอยู่" (locked ชั่วคราวโดยยังไม่จองจริง) — สีส้ม */
+.seat.locking {
+  background: linear-gradient(145deg, #fb923c, #ea580c);
+  color: #fff;
+  box-shadow: 0 5px 0 #9a3412, 0 8px 14px rgba(249, 115, 22, .22);
+  cursor: not-allowed;
+  pointer-events: none;
+  animation: lockingPulse 1.2s infinite;
+}
+@keyframes lockingPulse {
+  0%, 100% { transform: scale(.94); }
+  50% { transform: scale(.98); box-shadow: 0 5px 0 #9a3412, 0 0 17px rgba(249, 115, 22, .5); }
+}
+
+@keyframes hb { 0%, 100% { transform: scale(.98); } 50% { transform: scale(1.02); } }
+
+.seat-legend { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0 20px; padding: 10px; border-radius: 16px; background: linear-gradient(180deg, rgba(12, 21, 36, .95), rgba(6, 11, 19, .98)); border: 1px solid var(--border); flex-wrap: wrap; }
+.leg-item { font-size: 12px; font-weight: 600; color: #e2e8f0; }
+.seat-map-img { width: 100%; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
+
+/* ============================================================
+   SEAT LOCK COUNTDOWN (5-นาที ก่อนถูกปลดล็อกอัตโนมัติ)
+   ============================================================ */
+.seat-lock-timer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 12px 0 16px;
+  padding: 13px 15px;
+  border-radius: 15px;
+  background: rgba(245, 158, 11, .08);
+  border: 1px solid rgba(245, 158, 11, .28);
+}
+.seat-lock-timer strong { display: block; color: #fbbf24; font-size: 13px; }
+.seat-lock-timer p { color: var(--sub); font-size: 10px; margin-top: 3px; }
+.seat-lock-time { min-width: 68px; padding: 7px 9px; border-radius: 10px; background: rgba(245, 158, 11, .14); color: #fbbf24; font-size: 20px; font-weight: 800; text-align: center; }
+.seat-lock-time.warning { color: #fff; background: rgba(239, 68, 68, .8); animation: lockWarning .8s infinite; }
+@keyframes lockWarning { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+/* ============================================================
+   PAYMENT MODAL
+   ============================================================ */
+.pay-modal {
+  display: none;
+  position: fixed;
+  z-index: 3000;
+  inset: 0;
+  background: rgba(4, 7, 12, .88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 16px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.pay-modal.show { display: flex; }
+.pay-box {
+  background: var(--bg2);
+  width: 100%;
+  max-width: 360px;
+  border-radius: 20px;
+  padding: 24px 20px;
+  text-align: center;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, .5);
+  position: relative;
+  margin: auto;
+  height: auto;
+  max-height: none;
+}
+.pay-x { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, .08); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.pay-box h3 { font-size: 22px; color: var(--yellow); margin-bottom: 4px; }
+.pay-box .sub { font-size: 13px; color: var(--red); }
+.qr-img { width: 180px; border-radius: 12px; border: 4px solid #fff; margin: 16px auto; display: block; box-shadow: 0 6px 15px rgba(0, 0, 0, .3); }
+.chk-row { display: flex; align-items: flex-start; gap: 10px; text-align: left; color: #cbd5e1; font-size: 12px; margin: 16px 0; background: rgba(255, 255, 255, .02); padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .04); }
+.chk-row input { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+.btn-pay-ok { width: 100%; height: 48px; border-radius: 10px; border: none; background: var(--green); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
+.btn-pay-ok:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
+
+/* Slip upload */
+.slip-upload { margin: 14px 0 16px; text-align: left; }
+.slip-title { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+.slip-title .req { color: var(--red); }
+.slip-drop {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px;
+  background: var(--bg3);
+  border: 1.5px dashed rgba(255, 255, 255, .14);
   border-radius: 14px;
-  padding: 0 16px;
-  transition: all 0.3s ease;
+  cursor: pointer;
+  transition: .2s;
 }
+.slip-drop.has-file { border-style: solid; border-color: rgba(16, 185, 129, .5); background: rgba(16, 185, 129, .07); }
+.slip-drop input[type=file] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.slip-ico { width: 42px; height: 42px; border-radius: 12px; background: rgba(56, 189, 248, .12); display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; }
+.slip-drop.has-file .slip-ico { background: rgba(16, 185, 129, .15); }
+.slip-txt { flex: 1; min-width: 0; }
+.slip-name { color: #fff; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.slip-sub { color: var(--muted); font-size: 10px; margin-top: 3px; }
+.slip-preview { display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 12px; border: 1px solid var(--border); background: #05080e; }
+.slip-preview.show { display: block; }
 
-.ig input:focus {
-  border-color: var(--blue);
-  background: rgba(56, 189, 248, 0.05);
-  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
+/* ============================================================
+   SUCCESS PAGE
+   ============================================================ */
+#successPage2 { position: fixed; inset: 0; z-index: 1100; background: var(--bg); display: none; overflow-y: auto; }
+#successPage2.show { display: block; animation: fadeUp .3s ease; }
+.succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+.succ-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 20px; box-shadow: 0 0 24px rgba(16, 185, 129, .45); }
+.receipt { background: #fff; color: #1e293b; border-radius: 18px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0, 0, 0, .3); margin: 20px 0; }
+.r-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 500; }
+.r-row span { color: #64748b; font-weight: 400; }
+.r-seat-box { background: #f0fdf4; border: 1px dashed #bbf7d0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 14px; }
+.r-seat-box p { font-size: 11px; color: #16a34a; font-weight: 600; }
+.r-seat-box h4 { font-size: 38px; color: #15803d; font-weight: 800; }
+.btn-home { width: 100%; height: 50px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
+
+/* ============================================================
+   DRAWER (สาระแนะนำ)
+   ============================================================ */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 85%;
+  max-width: 340px;
+  height: 100%;
+  background: #090f1a;
+  z-index: 600;
+  transition: .4s cubic-bezier(.4, 0, .2, 1);
+  padding: 24px 16px;
+  overflow-y: auto;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, .5);
+  border-left: 1px solid var(--border);
 }
-  #upcomingList::-webkit-scrollbar{display:none}
-  #upcomingList .trip-hcard{flex:0 0 92%;min-height:auto}
-
-.slip-upload{
-  margin:14px 0 16px;
-  text-align:left;
-}
-
-.slip-title{
-  display:flex;
-  align-items:center;
-  gap:6px;
-  color:#fff;
-  font-size:13px;
-  font-weight:700;
-  margin-bottom:8px;
-}
-
-.slip-title .req{
-  color:var(--red);
-}
-
-.slip-drop{
-  position:relative;
-  display:flex;
-  align-items:center;
-  gap:12px;
-  width:100%;
-  padding:13px;
-  background:var(--bg3);
-  border:1.5px dashed rgba(255,255,255,.14);
-  border-radius:14px;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.slip-drop.has-file{
-  border-style:solid;
-  border-color:rgba(16,185,129,.5);
-  background:rgba(16,185,129,.07);
-}
-
-.slip-drop input[type=file]{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  opacity:0;
-  cursor:pointer;
-}
-
-.slip-ico{
-  width:42px;
-  height:42px;
-  border-radius:12px;
-  background:rgba(56,189,248,.12);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:21px;
-  flex-shrink:0;
-}
-
-.slip-drop.has-file .slip-ico{
-  background:rgba(16,185,129,.15);
-}
-
-.slip-txt{
-  flex:1;
-  min-width:0;
-}
-
-.slip-name{
-  color:#fff;
-  font-size:12px;
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.slip-sub{
-  color:var(--muted);
-  font-size:10px;
-  margin-top:3px;
-}
-
-.slip-preview{
-  display:none;
-  width:100%;
-  max-height:200px;
-  object-fit:contain;
-  margin-top:10px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:#05080e;
-}
-
-.slip-preview.show{
-  display:block;
-}
-
-.seat-lock-timer{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  margin:12px 0 16px;
-  padding:13px 15px;
-  border-radius:15px;
-  background:rgba(245,158,11,.08);
-  border:1px solid rgba(245,158,11,.28);
-}
-
-.seat-lock-timer strong{
-  display:block;
-  color:#fbbf24;
-  font-size:13px;
-}
-
-.seat-lock-timer p{
-  color:var(--sub);
-  font-size:10px;
-  margin-top:3px;
-}
-
-.seat-lock-time{
-  min-width:68px;
-  padding:7px 9px;
-  border-radius:10px;
-  background:rgba(245,158,11,.14);
-  color:#fbbf24;
-  font-size:20px;
-  font-weight:800;
-  text-align:center;
-}
-
-.seat-lock-time.warning{
-  color:#fff;
-  background:rgba(239,68,68,.8);
-  animation:lockWarning .8s infinite;
-}
-
-@keyframes lockWarning{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
-}
-
-.seat.locking{
-  background:linear-gradient(145deg,#fb923c,#ea580c);
-  color:#fff;
-  box-shadow:
-    0 5px 0 #9a3412,
-    0 8px 14px rgba(249,115,22,.22);
-  cursor:not-allowed;
-  pointer-events:none;
-  animation:lockingPulse 1.2s infinite;
-}
-
-@keyframes lockingPulse{
-  0%,100%{
-    transform:scale(.94);
-  }
-
-  50%{
-    transform:scale(.98);
-    box-shadow:
-      0 5px 0 #9a3412,
-      0 0 17px rgba(249,115,22,.5);
-  }
-}
-  
+.drawer.open { right: 0; }
+.ov { position: fixed; inset: 0; background: rgba(0, 0, 0, .65); z-index: 599; display: none; backdrop-filter: blur(5px); }
+.info-block { background: rgba(255, 255, 255, .02); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--yellow); font-size: 12px; line-height: 1.5; }
+.mem-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
+.mem-grid img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
 </style>
 </head>
 <body>
 
-<!-- LOGIN PAGE -->
+<!-- ============================================================
+     LOGIN PAGE
+     ============================================================ -->
 <div id="loginPage">
   <div class="login-logo">
     <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/90?text=🏕'" alt="Logo">
@@ -532,28 +797,38 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
-<!-- APP SHELL -->
+<!-- ============================================================
+     APP SHELL
+     ============================================================ -->
 <div id="appShell">
   <div class="hdr">
     <div class="hdr-brand" onclick="switchTab('home')">
       <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/44?text=🏕'" alt="Logo">
-      <div><h1>เที่ยวนี่เหอะ</h1><span>ออกไปเที่ยวให้โลกจำ 🏔️</span></div>
+      <div>
+        <h1>เที่ยวนี่เหอะ</h1>
+        <span>ออกไปเที่ยวให้โลกจำ 🏔️</span>
+      </div>
     </div>
-    
     <div style="display:flex;gap:8px;margin-left:auto">
-        <button onclick="openDrawer()" style="display:flex;align-items:center;gap:5px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);color:var(--blue);padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">📋 สาระแนะนำ</button>
-        <button onclick="document.getElementById('adminPopup').style.display='flex'" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;color:#fff;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 3px 10px rgba(2,132,199,.3)">👤 ติดต่อ</button>
-    </div>
-</div>
-
-
-  <div id="tab-home" class="view-page active-page"><div class="main" id="homeContent"></div></div>
-  <div id="tab-trips" class="view-page">
-    <div class="main">
-      <div class="search-wrap"><span class="s-ico">🔍</span><input id="searchInput" placeholder="ค้นหาชื่อทริป..." oninput="searchTrips()"></div>
-      <div id="tripListFull" class="trip-list"><p style="text-align:center;color:var(--blue);padding:30px">⌛ กำลังโหลด...</p></div>
+      <button onclick="openDrawer()" style="display:flex;align-items:center;gap:5px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);color:var(--blue);padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">📋 สาระแนะนำ</button>
+      <button onclick="document.getElementById('adminPopup').style.display='flex'" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;color:#fff;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 3px 10px rgba(2,132,199,.3)">👤 ติดต่อ</button>
     </div>
   </div>
+
+  <div id="tab-home" class="view-page active-page"><div class="main" id="homeContent"></div></div>
+
+  <div id="tab-trips" class="view-page">
+    <div class="main">
+      <div class="search-wrap">
+        <span class="s-ico">🔍</span>
+        <input id="searchInput" placeholder="ค้นหาชื่อทริป..." oninput="searchTrips()">
+      </div>
+      <div id="tripListFull" class="trip-list">
+        <p style="text-align:center;color:var(--blue);padding:30px">⌛ กำลังโหลด...</p>
+      </div>
+    </div>
+  </div>
+
   <div id="tab-mytrips" class="view-page"><div class="main" id="myContent"></div></div>
   <div id="tab-notif" class="view-page"><div class="main" id="notifContent"></div></div>
 
@@ -565,12 +840,14 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
-<!-- TRIP DETAIL BOTTOM SHEET -->
-<div id="modalBg" class="modal-bg" onclick="if(event.target===this)closeModal()">
+<!-- ============================================================
+     TRIP DETAIL BOTTOM SHEET
+     ============================================================ -->
+<div id="modalBg" class="modal-bg" onclick="if(event.target===this) closeModal()">
   <div class="modal-sheet">
     <button class="modal-x" onclick="closeModal()">✕</button>
     <img id="md-img" class="modal-img" src="" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80'">
-    
+
     <button id="md-bookBtn" class="btn-book" onclick="goToBook()">จองที่นั่ง ❤️</button>
 
     <div class="modal-body">
@@ -586,134 +863,130 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
       <div id="md-hl" class="modal-hl"></div>
       <div id="md-payment" class="modal-payment"></div>
       <div class="modal-seat-row">
-        <div><p style="font-size:11px;color:var(--sub);margin-bottom:4px">ที่นั่งคงเหลือ</p><div id="md-avail" class="avail ok">-</div></div>
+        <div>
+          <p style="font-size:11px;color:var(--sub);margin-bottom:4px">ที่นั่งคงเหลือ</p>
+          <div id="md-avail" class="avail ok">-</div>
+        </div>
         <div id="md-status" class="chip chip-green">เปิดจอง</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- BOOKING PAGE -->
+<!-- ============================================================
+     BOOKING PAGE
+     ============================================================ -->
 <div id="bookingPage2">
   <div class="bk-hdr">
     <button class="btn-back" onclick="closeBook()">⬅ ย้อนกลับ</button>
     <span class="chip chip-green" style="font-size:11px">ขั้นตอนที่ 2: จองที่นั่ง</span>
   </div>
+
   <div class="bk-body">
     <div style="text-align:center;margin-bottom:20px">
       <h2 style="font-size:20px;font-weight:700;color:#fff">จองที่นั่งรถตู้ 🚐✨</h2>
       <p style="font-size:12px;color:var(--yellow);margin-top:4px">เลือกทำเลดีๆ ก่อนตกรถนะจ๊ะ ⚡</p>
     </div>
+
     <div class="ig"><label>⛺ ชื่อทริปขนตูดลุก</label><input id="b-trip" disabled></div>
     <div class="ig"><label>📅 วันที่จัดทริป</label><input id="b-date" disabled></div>
+
     <label style="font-size:13px;color:var(--sub);font-weight:500;display:block;margin-bottom:8px">🚌 เลือกที่นั่งที่คุณต้องการ</label>
     <img src="IMG_0444.jpeg" class="seat-map-img" onerror="this.style.display='none'">
-    <div class="seat-legend" style="flex-wrap:wrap">
-  <div class="leg-item">🟢 ว่าง</div>
-  <div class="leg-item">🟠 กำลังเลือก</div>
-  <div class="leg-item">🔴 ถูกจอง</div>
-  <div class="leg-item">🟡 ของคุณ</div>
-  <div class="leg-item">⚫ งดจอง</div>
-</div>
-    <div class="van-block"><div class="van-block-title">🚐 คันที่ 1 (ตู้ A)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridA" class="van-grid-seats"></div></div>
-    <div class="van-block"><div class="van-block-title">🚐 คันที่ 2 (ตู้ B)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridB" class="van-grid-seats"></div></div>
-    <div class="van-block"><div class="van-block-title">🚐 คันที่ 3 (ตู้ C)</div><div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div><div id="vanGridC" class="van-grid-seats"></div></div>
+
+    <div class="seat-legend">
+      <div class="leg-item">🟢 ว่าง</div>
+      <div class="leg-item">🟠 กำลังเลือก</div>
+      <div class="leg-item">🔴 ถูกจอง</div>
+      <div class="leg-item">🟡 ของคุณ</div>
+      <div class="leg-item">⚫ งดจอง</div>
+    </div>
+
+    <div class="van-block">
+      <div class="van-block-title">🚐 คันที่ 1 (ตู้ A)</div>
+      <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
+      <div id="vanGridA" class="van-grid-seats"></div>
+    </div>
+    <div class="van-block">
+      <div class="van-block-title">🚐 คันที่ 2 (ตู้ B)</div>
+      <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
+      <div id="vanGridB" class="van-grid-seats"></div>
+    </div>
+    <div class="van-block">
+      <div class="van-block-title">🚐 คันที่ 3 (ตู้ C)</div>
+      <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
+      <div id="vanGridC" class="van-grid-seats"></div>
+    </div>
+
     <div id="formFieldsBox2">
-  <div class="form-sec">📝 กรอกข้อมูลผู้จอง</div>
-  
-  <div class="ig">
-    <label>🤦 ชื่อ-นามสกุลจริง</label>
-    <input id="f-name" placeholder="ระบุชื่อ-นามสกุลจริง..." oninput="checkBook()">
+      <div class="form-sec">📝 กรอกข้อมูลผู้จอง</div>
+
+      <div class="ig">
+        <label>🤦 ชื่อ-นามสกุลจริง</label>
+        <input id="f-name" placeholder="ระบุชื่อ-นามสกุลจริง..." oninput="checkBook()">
+      </div>
+      <div class="ig">
+        <label>🏷️ ชื่อเล่น</label>
+        <input id="f-nick" placeholder="ชื่อเล่น" oninput="checkBook()">
+      </div>
+      <div class="ig">
+        <label>📞 เบอร์โทรศัพท์</label>
+        <input id="f-phone" type="tel" oninput="checkBook()">
+      </div>
+      <div class="ig">
+        <label>💬 ชื่อ LINE</label>
+        <input id="f-line" placeholder="ชื่อไลน์อ่ะ เข้าใจมั้ย!!" oninput="checkBook()">
+      </div>
+
+      <input type="hidden" id="f-seat">
+      <input type="hidden" id="f-dateraw">
+    </div>
   </div>
-  
-  <div class="ig">
-    <label>🏷️ ชื่อเล่น</label>
-    <input id="f-nick" placeholder="ชื่อเล่น" oninput="checkBook()">
-  </div>
-  
-  <div class="ig">
-    <label>📞 เบอร์โทรศัพท์</label>
-    <input id="f-phone" type="tel" oninput="checkBook()">
-  </div>
-  
-  <div class="ig">
-    <label>💬 ชื่อ LINE</label>
-    <input id="f-line" placeholder="ชื่อไลน์อ่ะ เข้าใจมั้ย!!" oninput="checkBook()">
-  </div>
-  
-  <input type="hidden" id="f-seat">
-  <input type="hidden" id="f-dateraw">
-</div>
-</div>
+
   <div class="sticky-bar">
     <button id="confirmBtn" class="btn-confirm" disabled onclick="openPay()">🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
   </div>
 </div>
 
-<!-- PAYMENT MODAL -->
+<!-- ============================================================
+     PAYMENT MODAL
+     ============================================================ -->
 <div id="payModal" class="pay-modal">
   <div class="pay-box">
     <button class="pay-x" onclick="closePay()">✕</button>
     <h3>💰 ชำระเงินค่ามัดจำทริป 💰</h3>
     <p class="sub">(สแกน QR หรือบันทึกภาพเพื่อชำระเงิน)</p>
     <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
+
     <div id="seatLockTimerBox" class="seat-lock-timer">
-  <div>
-    <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
-    <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
-  </div>
-
-  <div id="seatLockTimer" class="seat-lock-time">
-    05:00
-  </div>
-</div>
-    <div class="slip-upload">
-  <div class="slip-title">
-    🧾 แนบสลิปการโอนเงิน
-    <span class="req">*</span>
-  </div>
-
-  <div class="slip-drop" id="slipDrop">
-    <div class="slip-ico">🧾</div>
-
-    <div class="slip-txt">
-      <div class="slip-name" id="slipName">
-        แตะเพื่อเลือกรูปสลิป
+      <div>
+        <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
+        <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
       </div>
-
-      <div class="slip-sub">
-        JPG, PNG หรือ WEBP ไม่เกิน 5MB
-      </div>
+      <div id="seatLockTimer" class="seat-lock-time">05:00</div>
     </div>
 
-    <input
-      type="file"
-      id="slipFile"
-      accept="image/jpeg,image/png,image/webp"
-      onchange="handleSlipFile(this)"
-    >
-  </div>
+    <div class="slip-upload">
+      <div class="slip-title">🧾 แนบสลิปการโอนเงิน <span class="req">*</span></div>
+      <div class="slip-drop" id="slipDrop">
+        <div class="slip-ico">🧾</div>
+        <div class="slip-txt">
+          <div class="slip-name" id="slipName">แตะเพื่อเลือกรูปสลิป</div>
+          <div class="slip-sub">JPG, PNG หรือ WEBP ไม่เกิน 5MB</div>
+        </div>
+        <input type="file" id="slipFile" accept="image/jpeg,image/png,image/webp" onchange="handleSlipFile(this)">
+      </div>
+      <img id="slipPreview" class="slip-preview" alt="ตัวอย่างสลิป">
+    </div>
 
-  <img
-    id="slipPreview"
-    class="slip-preview"
-    alt="ตัวอย่างสลิป"
-  >
-</div>
-
-<button
-  id="payOkBtn"
-  class="btn-pay-ok"
-  disabled
-  onclick="submitBook()"
->
-  🧾 กรุณาแนบสลิปก่อน
-</button>
+    <button id="payOkBtn" class="btn-pay-ok" disabled onclick="submitBook()">🧾 กรุณาแนบสลิปก่อน</button>
     <p onclick="closePay()" style="font-size:13px;color:var(--muted);margin-top:14px;cursor:pointer">ย้อนกลับไปแก้ไข</p>
   </div>
 </div>
 
-<!-- SUCCESS -->
+<!-- ============================================================
+     SUCCESS PAGE
+     ============================================================ -->
 <div id="successPage2">
   <div class="succ-body">
     <div class="succ-ico">✓</div>
@@ -722,41 +995,80 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
       <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="r-name">-</strong></div>
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="r-trip">-</strong></div>
       <div class="r-row">📅 <span>วันที่:</span> <strong id="r-date">-</strong></div>
-      <div class="r-seat-box"><p>หมายเลขที่นั่งของคุณ</p><h4 id="r-seat">-</h4></div>
+      <div class="r-seat-box">
+        <p>หมายเลขที่นั่งของคุณ</p>
+        <h4 id="r-seat">-</h4>
+      </div>
     </div>
-    <p style="font-size:16px;color:var(--red);line-height:1.5;margin-bottom:20px">กรุณาติดต่อแอดมินที่ช่องทางติดต่อในหน้าหลัก <br><span style="font-size:16px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span></p>
+    <p style="font-size:16px;color:var(--red);line-height:1.5;margin-bottom:20px">
+      กรุณาติดต่อแอดมินที่ช่องทางติดต่อในหน้าหลัก
+      <br><span style="font-size:16px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
+    </p>
     <button class="btn-home" onclick="backHome()">กลับสู่หน้าหลัก 🏠</button>
   </div>
 </div>
 
-<!-- DRAWER -->
+<!-- ============================================================
+     DRAWER (สาระความรู้ / ข้อแนะนำ)
+     ============================================================ -->
 <div id="ov" class="ov" onclick="closeDrawer()"></div>
 <div id="drawer" class="drawer">
   <h3 style="color:var(--yellow);font-size:15px;margin-bottom:12px">💡 สาระความรู้ & ข้อแนะนำ</h3>
   <div class="info-block"><strong>🚌 การเลือกที่นั่ง:</strong> แถวหน้าสุดเหมาะสำหรับผู้ที่เมารถง่าย แถวหลังสุดจะได้รับความสะเทือนมากกว่าปกติเล็กน้อย</div>
   <div class="info-block"><strong>🎒 สัมภาระเดินทาง:</strong> แนะนำกระเป๋าขนาดพอดี ของมีค่าและยาประจำตัวควรพกติดตัวไว้ตลอดเวลาครับ</div>
   <div class="info-block"><strong>⏰ การรักษาเวลา:</strong> กรุณามาถึงจุดนัดพบก่อนเวลาออกเดินทางอย่างน้อย 15 นาที อย่าให้ตาม เพราะจะโดนด่า</div>
+
   <h3 style="color:var(--blue);font-size:14px;margin-top:20px;margin-bottom:10px;font-weight:700">🗺️ ข้อมูลดูแลร่างกายเวลาเดินป่า</h3>
   <img src="IMG_4778.jpeg" style="width:100%;border-radius:16px;border:1px solid var(--border)" onerror="this.style.display='none'">
+
   <h3 style="color:var(--blue);font-size:14px;margin-top:20px;margin-bottom:10px;font-weight:700">✨ ภาพความทรงจำตลอด 17 ป่า</h3>
-  <div class="mem-grid"><img src="1.jpg" onerror="this.style.display='none'"><img src="2.jpg" onerror="this.style.display='none'"><img src="3.jpg" onerror="this.style.display='none'"><img src="4.jpg" onerror="this.style.display='none'"><img src="5.jpg" onerror="this.style.display='none'"><img src="6.jpg" onerror="this.style.display='none'"><img src="7.jpg" onerror="this.style.display='none'"><img src="8.jpg" onerror="this.style.display='none'"><img src="9.jpg" onerror="this.style.display='none'"><img src="10.jpg" onerror="this.style.display='none'"><img src="11.jpg" onerror="this.style.display='none'"><img src="12.jpg" onerror="this.style.display='none'"><img src="13.jpg" onerror="this.style.display='none'"><img src="14.jpg" onerror="this.style.display='none'"><img src="15.jpg" onerror="this.style.display='none'"><img src="16.jpg" onerror="this.style.display='none'"><img src="17.jpg" onerror="this.style.display='none'"><img src="18.jpg" onerror="this.style.display='none'"></div>
+  <div class="mem-grid">
+    <img src="1.jpg" onerror="this.style.display='none'">
+    <img src="2.jpg" onerror="this.style.display='none'">
+    <img src="3.jpg" onerror="this.style.display='none'">
+    <img src="4.jpg" onerror="this.style.display='none'">
+    <img src="5.jpg" onerror="this.style.display='none'">
+    <img src="6.jpg" onerror="this.style.display='none'">
+    <img src="7.jpg" onerror="this.style.display='none'">
+    <img src="8.jpg" onerror="this.style.display='none'">
+    <img src="9.jpg" onerror="this.style.display='none'">
+    <img src="10.jpg" onerror="this.style.display='none'">
+    <img src="11.jpg" onerror="this.style.display='none'">
+    <img src="12.jpg" onerror="this.style.display='none'">
+    <img src="13.jpg" onerror="this.style.display='none'">
+    <img src="14.jpg" onerror="this.style.display='none'">
+    <img src="15.jpg" onerror="this.style.display='none'">
+    <img src="16.jpg" onerror="this.style.display='none'">
+    <img src="17.jpg" onerror="this.style.display='none'">
+    <img src="18.jpg" onerror="this.style.display='none'">
+  </div>
 </div>
-  
-<!-- ADMIN POPUP แก้ไขแล้ว -->
-<div id="adminPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+
+<!-- ============================================================
+     ADMIN CONTACT POPUP
+     ============================================================ -->
+<div id="adminPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center" onclick="if(event.target===this) this.style.display='none'">
   <div style="width:90%;max-width:480px;background:#0c1524;border-radius:28px;padding:28px 20px 40px;border:1px solid rgba(255,255,255,.07);position:relative;overflow-y:auto;max-height:90vh">
     <button onclick="document.getElementById('adminPopup').style.display='none'" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:18px;cursor:pointer">✕</button>
+
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
       <img src="admin.jpg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #38bdf8" onerror="this.src='https://via.placeholder.com/64?text=👤'">
-      <div><h3 style="font-size:17px;color:#fff">แอดมินไอซ์</h3><p style="font-size:12px;color:#38bdf8;font-weight:600">เจ้าของเพจ "เที่ยวนี่เหอะ"</p></div>
+      <div>
+        <h3 style="font-size:17px;color:#fff">แอดมินไอซ์</h3>
+        <p style="font-size:12px;color:#38bdf8;font-weight:600">เจ้าของเพจ "เที่ยวนี่เหอะ"</p>
+      </div>
     </div>
+
     <p style="font-size:13px;line-height:1.8;color:#cbd5e1;margin-bottom:20px">จากคนธรรมดาที่เริ่มต้นจากการชอบเดินป่า วันนี้ผมแค่อยากชวนทุกคนออกไปเห็นโลกอีกมุม เห็นหมอกตอนเช้า เห็นดาวตอนกลางคืน และได้เจอมิตรภาพดีๆ ระหว่างทาง 🌿</p>
-    
+
     <div style="margin-top:18px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.07);background:#0b1220">
       <img src="team.jpg" onerror="this.src='https://via.placeholder.com/480x280?text=TEAM'" style="width:100%;display:block">
-      <div style="padding:16px"><h3 style="color:#fff;font-size:18px;margin-bottom:8px">🔥 ทีมงานเที่ยวนี่เหอะ</h3><p style="color:#cbd5e1;font-size:13px;line-height:1.7">ทีมงานสายลุยที่พร้อมพาทุกคนออกเดินทาง ตั้งแต่ขึ้นรถ ยันถึงยอดเขา ⛰️</p></div>
+      <div style="padding:16px">
+        <h3 style="color:#fff;font-size:18px;margin-bottom:8px">🔥 ทีมงานเที่ยวนี่เหอะ</h3>
+        <p style="color:#cbd5e1;font-size:13px;line-height:1.7">ทีมงานสายลุยที่พร้อมพาทุกคนออกเดินทาง ตั้งแต่ขึ้นรถ ยันถึงยอดเขา ⛰️</p>
+      </div>
     </div>
-    
+
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
       <a href="https://line.me/ti/p/~tiaewneehur" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;background:#06C755;color:#fff;padding:12px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:18px;height:18px"> LINE</a>
       <a href="https://www.facebook.com/tiawneehur" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;background:#1877F2;color:#fff;padding:12px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" style="width:18px;height:18px"> Facebook</a>
@@ -765,805 +1077,715 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 
-
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbxjiCzVeaBJKeON5w5fKJjf8GQSSXUOXa9OaYF6-gdTWZc9DuhDzHyv6OVaT67iX9fV/exec";
-const QUERY_URL=API_URL+"?action=read";
-const CLOSED_TRIPS=
-  ["ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69"
-  ]; 
-const BUS_GRID_STRUCTURE=['driver',3,6,9,'spacer',2,5,8,'เบาะซ้าย',1,4,7];
+/* ================================================================
+   CONFIG / CONSTANTS
+   ================================================================ */
+const API_URL = "https://script.google.com/macros/s/AKfycbxjiCzVeaBJKeON5w5fKJjf8GQSSXUOXa9OaYF6-gdTWZc9DuhDzHyv6OVaT67iX9fV/exec";
+const QUERY_URL = API_URL + "?action=read";
 
-const TRIP_DETAILS={
- "แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69": {
-days: "3 วัน 2 คืน",
-distance: "ประมาณ 14-15 กม.",
-level: "🟡 ปานกลาง",
-price: "2900 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight: "ไม่รู้ เดี๋ยวไปดูก่อนเดี๋ยวมาบอก จุ๊ฟๆ",
-image: "แม่ละเมา.jpg",
-loc:"จ.ตาก"},
-  "โบลาเวน 6-8 มิ.ย.69": {
-days: "3 วัน 2 คืน",
-distance: "ประมาณ 8-10 กม.",
-level: "🟡 ปานกลาง",
-price: "3650 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight: "มึงเจอฝนแน่ๆ 50%",
-image: "โบลาเวน.jpg",
-loc:"สปป.ลาว"},
-  "ดอยผาเวียง 13-14 มิ.ย.69":{
-days:"2 วัน 1 คืน",
-distance:"13-15 กม.",
-level:"🟡 ปานกลาง",
-price:"3,400 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"🌄 ป่าอาจไม่แมส…แต่ธรรมชาติของจริง",
-image:"ดอยผาเวียง.jpg",
-loc:"จ.เชียงใหม่"},
-  "ดอยห้วยทู่ 4-5 ก.ค.69":{
-days:"2 วัน 1 คืน",
-distance:"6-7 กม.",
-level:"🟡 ปานกลาง",
-price:"2,510 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"ได้พบน้อทากุเป็นจำนวนมากมายก่ายกอง",
-image:"ดอยห้วยทู่.jpg",
-loc:"จ.ตาก"},
-  "ดอยทูเลจอวาเล 30-1 พ.ย.69":{
-days:"3 วัน 2 คืน",
-distance:"20+ กม.",
-level:"🟡 ปานกลาง",
-price:"2,950 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"ทะเลหมอกลอยต่ำ ดาวเต็มท้องฟ้า แสงทองกระทบทุ่งหญ้า",
-image:"ดอยทูเลจอวาเล.jpg",
-loc:"จ.ตาก"},
-  "เปรโต๊ะ 19-21 มิ.ย.69":{
-days:"3 วัน 2 คืน",
-distance:"15-20 กม.",
-level:"🟡 ปานกลาง",
-price:"2,900 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
-image:"เปรโต๊ะ.jpg",loc:"จ.ตาก"},
-  "ดอยหลวงตาก 27-28 มิ.ย.69":{
-days:"2 วัน 1 คืน",
-distance:"22 กม.",
-level:"🟡 ปานกลาง",
-price:"2,900 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"ต้นสนเดียวดาย วิวเขาสวย",
-image:"ดอยหลวงตาก.jpg",
-loc:"จ.ตาก"},
-  "เปรโต๊ะ 17-19 ก.ค.69":{
-days:"3 วัน 2 คืน",
-distance:"15-20 กม.",
-level:"🟡 ปานกลาง",
-price:"2,900 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
-image:"เปรโต๊ะ.jpg",
-loc:"จ.ตาก"},
-  "น้ำตกสายรุ้งละอองดาว 25-26 ก.ค.69":{
-days:"2 วัน 1 คืน",
-distance:"9-10 กม.",
-level:"🟡 ปานกลาง",
-price:"2,660 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"น้ำตก ลอยคอตามน้ำ",
-image:"สายรุ้งละอองดาว.jpg",
-loc:"จ.ระนอง"},
-  "น้ำตกห้วยน้ำเย็น 8-9 ส.ค.69":{
-days:"2 วัน 1 คืน",
-distance:"8-10 กม.",
-level:"🟢 ง่าย",
-price:"2,580 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"น้ำตกในป่าลึก ธรรมชาติแท้",
-image:"ห้วยน้ำเย็น.jpg",
-loc:"จ.เชียงใหม่"},
-  "เขาหลัก 14-16 ส.ค.69":{
-days:"3 วัน 2 คืน",
-distance:"30-35 กม.",
-level:"🔴 ยาก",
-price:"3,600 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"สัมผัสธรรมชาติป่าใต้ที่จริงใจ",
-image:"เขาหลัก.jpg",
-loc:"จ.พัทลุง"},
-  "ภูสอยดาว 22-23 ส.ค.69":{
-days:"2 วัน 1 คืน",
-distance:"13-16 กม.",
-level:"🟡 ปานกลาง",
-price:"1,800 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"⛰️ ลานสนสามใบ น้ำตกสายทิพย์ ดาวเต็มฟ้า",
-image:"ภูสอยดาว.jpg",
-loc:"จ.อุตรดิตถ์"},
-  "ป่าบงเปียง 29-30 ส.ค.69":{
-days:"2 วัน 1 คืน",
-distance:"ไม่เดิน",
-level:"-",
-price:"2,550 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"ทุ่งนาขั้นบันได สายหมอกยามเช้า",
-image:"ป่าบงเปียง.jpg",
-loc:"จ.เชียงใหม่"},
-  "ป่าบงเปียง(ตู้4) 29-30 ส.ค.69":{
-days:"2 วัน 1 คืน",
-distance:"ไม่เดิน",
-level:"-",
-price:"2,550 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"ทุ่งนาขั้นบันได สายหมอกยามเช้า",
-image:"ป่าบงเปียง.jpg",
-loc:"จ.เชียงใหม่"},
-  "หว่าวาโจ 18-20 ก.ย.69":{
-days:"3 วัน 2 คืน",
-distance:"9-11 กม.",
-level:"🟢 ง่าย",
-price:"2,950 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"☁️ วิวหมอกโคตรปัง พายุแน่นอนรอบนี้",
-image:"หว่าวาโจ.jpg",
-loc:"จ.แม่ฮ่องสอน"},
-  "หว่าวาโจ V.2 6-8 พ.ย.69":{
-days:"3 วัน 2 คืน",
-distance:"9-11 กม.",
-level:"🟢 ง่าย",
-price:"2,950 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"☁️ วิวหมอกโคตรปัง ทุ่งดอกบัวตอง",
-image:"หว่าวาโจ.jpg",
-loc:"จ.แม่ฮ่องสอน"},
-  "ภูเขาควาย 8-11 ต.ค.69":{
-days:"4 วัน 3 คืน",
-distance:"30-35 กม.",
-level:"🔴 ยาก",
-price:"4,290 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"☁️ วิวหมอก ทุ่งหญ้าสีเขียว",
-image:"ภูเขาควาย.jpg",
-loc:"จ.สปป.ลาว"},
-  "เลอกวาเดาะ 17-18 ต.ค.69":{
-days:"2 วัน 1 คืน",
-distance:"3-4 กม.",
-level:"🟡 ปานกลาง",
-price:"2,000 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"☁️ วิวหมอกโคตรปัง",
-image:"เลอกวาเดาะ.jpg",
-loc:"จ.ตาก"},
-  "เส่ซูโจ๊ะ-ดอยหมากพริก 23-25 ต.ค.69":{
-days:"3 วัน 2 คืน",
-distance:"7-8 กม.",
-level:"🟡 ปานกลาง",
-price:"3,310 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
-image:"ดอยหมากพริก.jpg",
-loc:"จ.แม่ฮ่องสอน"},
-  "ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69":{
-days:"3 วัน 2 คืน",
-distance:"25 กม.",
-level:"🔴 ยาก",
-price:"2000-3000 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
-image:"ดอยลังกาหลวง.jpg",
-loc:"จ.เชียงใหม่"},
-  "เขาหลวงสุโขทัย 12-13 ก.ย.69":{
-days:"2 วัน 1 คืน",
-distance:" 3- 4 กม.",
-level:"🔴 ยาก",
-price:"1570 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"☁️ วิวสวย ทดสอบควมถึก",
-image:"เขาหลวงสุโขทัย.jpg",
-loc:"จ.สุโขทัย"},
-  "พือหน่อยเล 26-27 ก.ย.69":{
-days:"2 วัน 1 คืน",
-distance:" 6 กม.",
-level:"🟡 ปานกลาง ",
-price:"2350 บาท",
-paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-highlight:"น้ำตกสวย อลังการ",
-image:"พือหน่อยเล.jpg",
-loc:"จ.ตาก"},
-};
+// ทริปที่ปิดรับจองชั่วคราว (ยังไม่เปิดจอง)
+const CLOSED_TRIPS = ["ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69"];
 
-const TRIP_IMAGES={
-  "แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69":"แม่ละเมา.jpg",
-  "โบลาเวน 6-8 มิ.ย.69":"โบลาเวน.jpg",
-  "ดอยผาเวียง 13-14 มิ.ย.69":"ดอยผาเวียง.jpg",
-  "ดอยห้วยทู่ 4-5 ก.ค.69":"ดอยห้วยทู่.jpg",
-  "ดอยทูเลจอวาเล 30-1 พ.ย.69":"ดอยทูเลจอวาเล.jpg",
-  "เปรโต๊ะ 19-21 มิ.ย.69":"เปรโต๊ะ.jpg",
-  "ดอยหลวงตาก 27-28 มิ.ย.69":"ดอยหลวงตาก.jpg",
-  "เปรโต๊ะ 17-19 ก.ค.69":"เปรโต๊ะ.jpg",
-  "น้ำตกสายรุ้งละอองดาว 25-26 ก.ค.69":"สายรุ้งละอองดาว.jpg",
-  "น้ำตกห้วยน้ำเย็น 8-9 ส.ค.69":"ห้วยน้ำเย็น.jpg",
-  "เขาหลัก 14-16 ส.ค.69":"เขาหลัก.jpg",
-  "ป่าบงเปียง 29-30 ส.ค.69":"ป่าบงเปียง.jpg",
-  "ป่าบงเปียง(ตู้4) 29-30 ส.ค.69":"ป่าบงเปียง.jpg",
-  "ภูสอยดาว 22-23 ส.ค.69":"ภูสอยดาว.jpg",
-  "หว่าวาโจ 18-20 ก.ย.69":"หว่าวาโจ.jpg",
-  "หว่าวาโจ V.2 6-8 พ.ย.69":"หว่าวาโจ.jpg",
-  "ภูเขาควาย 8-11 ต.ค.69":"ภูเขาควาย.jpg",
-  "เลอกวาเดาะ 17-18 ต.ค.69":"เลอกวาเดาะ.jpg",
-  "เส่ซูโจ๊ะ-ดอยหมากพริก 23-25 ต.ค.69":"ดอยหมากพริก.jpg",
-  "ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69":"ดอยลังกาหลวง.jpg",
-  "เขาหลวงสุโขทัย 12-13 ก.ย.69":"เขาหลวงสุโขทัย.jpg",
-  "พือหน่อยเล 26-27 ก.ย.69":"พือหน่อยเล.jpg",
-};
-
-const PAST_TRIPS=[
-  {name:"แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69",rounds:1,people:20,rating:4.9,img:"แม่ละเมา.jpg"},
-  {name:"โบลาเวน 6-8 มิ.ย.69",rounds:1,people:28,rating:2.5,img:"โบลาเวน.jpg"},
-  {name:"ดอยผาเวียง 13-14 มิ.ย.69",rounds:1,people:10,rating:4.9,img:"ดอยผาเวียง.jpg"},
-  {name:"เปรโต๊ะ 19-21 มิ.ย.69",rounds:1,people:30,rating:4.0,img:"เปรโต๊ะ.jpg"},
-  {name:"ดอยหลวงตาก 27-28 มิ.ย.69",rounds:1,people:20,rating:4.0,img:"ดอยหลวงตาก.jpg"},
-  {name:"ดอยห้วยทู่ 4-5 ก.ค.69",rounds:1,people:20,rating:4.6,img:"ดอยห้วยทู่.jpg"},
-  {name:"เปรโต๊ะ 19-21 มิ.ย.69",rounds:2,people:30,rating:4,img:"เปรโต๊ะ.jpg"},
-];
-
-let currentUser = null;
-let allBookings = [];
-let cacheTrips = [];
-let pendingTrip = null;
-let selectedSeat = null;
-
-let seatRefreshTimer = null;
-let seatCountdownTimer = null;
-let seatLockExpiresAt = 0;
-let latestSeatRequestId = 0;
+// โครงเบาะต่อรถ 1 คัน: 'driver' = คนขับ, 'spacer' = ช่องว่าง/ทางเดิน,
+// ตัวเลข/ข้อความอื่น = หมายเลขเบาะ (ต่อกับ prefix ตู้ เช่น A3, B7)
+const BUS_GRID_STRUCTURE = ['driver', 3, 6, 9, 'spacer', 2, 5, 8, 'เบาะซ้าย', 1, 4, 7];
 
 const SEAT_LOCK_MINUTES = 5;
-const SEAT_LOCK_DURATION =
-  SEAT_LOCK_MINUTES * 60 * 1000;
+const SEAT_LOCK_DURATION = SEAT_LOCK_MINUTES * 60 * 1000;
 
-const MY_SESSION_ID =
-  sessionStorage.getItem('tnh_session_id') ||
-  (
-    'SESSION-' +
-    Date.now() +
-    '-' +
-    Math.random()
-      .toString(36)
-      .substring(2,10)
-  );
+// รายละเอียดแต่ละทริป: คีย์ = ชื่อทริป (ต้องตรงกับข้อมูลจาก backend เป๊ะๆ)
+const TRIP_DETAILS = {
+  "แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69": {
+    days: "3 วัน 2 คืน", distance: "ประมาณ 14-15 กม.", level: "🟡 ปานกลาง", price: "2900 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ไม่รู้ เดี๋ยวไปดูก่อนเดี๋ยวมาบอก จุ๊ฟๆ",
+    image: "แม่ละเมา.jpg", loc: "จ.ตาก"
+  },
+  "โบลาเวน 6-8 มิ.ย.69": {
+    days: "3 วัน 2 คืน", distance: "ประมาณ 8-10 กม.", level: "🟡 ปานกลาง", price: "3650 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "มึงเจอฝนแน่ๆ 50%",
+    image: "โบลาเวน.jpg", loc: "สปป.ลาว"
+  },
+  "ดอยผาเวียง 13-14 มิ.ย.69": {
+    days: "2 วัน 1 คืน", distance: "13-15 กม.", level: "🟡 ปานกลาง", price: "3,400 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "🌄 ป่าอาจไม่แมส…แต่ธรรมชาติของจริง",
+    image: "ดอยผาเวียง.jpg", loc: "จ.เชียงใหม่"
+  },
+  "ดอยห้วยทู่ 4-5 ก.ค.69": {
+    days: "2 วัน 1 คืน", distance: "6-7 กม.", level: "🟡 ปานกลาง", price: "2,510 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ได้พบน้อทากุเป็นจำนวนมากมายก่ายกอง",
+    image: "ดอยห้วยทู่.jpg", loc: "จ.ตาก"
+  },
+  "ดอยทูเลจอวาเล 30-1 พ.ย.69": {
+    days: "3 วัน 2 คืน", distance: "20+ กม.", level: "🟡 ปานกลาง", price: "2,950 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทะเลหมอกลอยต่ำ ดาวเต็มท้องฟ้า แสงทองกระทบทุ่งหญ้า",
+    image: "ดอยทูเลจอวาเล.jpg", loc: "จ.ตาก"
+  },
+  "เปรโต๊ะ 19-21 มิ.ย.69": {
+    days: "3 วัน 2 คืน", distance: "15-20 กม.", level: "🟡 ปานกลาง", price: "2,900 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
+    image: "เปรโต๊ะ.jpg", loc: "จ.ตาก"
+  },
+  "ดอยหลวงตาก 27-28 มิ.ย.69": {
+    days: "2 วัน 1 คืน", distance: "22 กม.", level: "🟡 ปานกลาง", price: "2,900 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ต้นสนเดียวดาย วิวเขาสวย",
+    image: "ดอยหลวงตาก.jpg", loc: "จ.ตาก"
+  },
+  "เปรโต๊ะ 17-19 ก.ค.69": {
+    days: "3 วัน 2 คืน", distance: "15-20 กม.", level: "🟡 ปานกลาง", price: "2,900 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
+    image: "เปรโต๊ะ.jpg", loc: "จ.ตาก"
+  },
+  "น้ำตกสายรุ้งละอองดาว 25-26 ก.ค.69": {
+    days: "2 วัน 1 คืน", distance: "9-10 กม.", level: "🟡 ปานกลาง", price: "2,660 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "น้ำตก ลอยคอตามน้ำ",
+    image: "สายรุ้งละอองดาว.jpg", loc: "จ.ระนอง"
+  },
+  "น้ำตกห้วยน้ำเย็น 8-9 ส.ค.69": {
+    days: "2 วัน 1 คืน", distance: "8-10 กม.", level: "🟢 ง่าย", price: "2,580 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "น้ำตกในป่าลึก ธรรมชาติแท้",
+    image: "ห้วยน้ำเย็น.jpg", loc: "จ.เชียงใหม่"
+  },
+  "เขาหลัก 14-16 ส.ค.69": {
+    days: "3 วัน 2 คืน", distance: "30-35 กม.", level: "🔴 ยาก", price: "3,600 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "สัมผัสธรรมชาติป่าใต้ที่จริงใจ",
+    image: "เขาหลัก.jpg", loc: "จ.พัทลุง"
+  },
+  "ภูสอยดาว 22-23 ส.ค.69": {
+    days: "2 วัน 1 คืน", distance: "13-16 กม.", level: "🟡 ปานกลาง", price: "1,800 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "⛰️ ลานสนสามใบ น้ำตกสายทิพย์ ดาวเต็มฟ้า",
+    image: "ภูสอยดาว.jpg", loc: "จ.อุตรดิตถ์"
+  },
+  "ป่าบงเปียง 29-30 ส.ค.69": {
+    days: "2 วัน 1 คืน", distance: "ไม่เดิน", level: "-", price: "2,550 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทุ่งนาขั้นบันได สายหมอกยามเช้า",
+    image: "ป่าบงเปียง.jpg", loc: "จ.เชียงใหม่"
+  },
+  "ป่าบงเปียง(ตู้4) 29-30 ส.ค.69": {
+    days: "2 วัน 1 คืน", distance: "ไม่เดิน", level: "-", price: "2,550 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทุ่งนาขั้นบันได สายหมอกยามเช้า",
+    image: "ป่าบงเปียง.jpg", loc: "จ.เชียงใหม่"
+  },
+  "หว่าวาโจ 18-20 ก.ย.69": {
+    days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2,950 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง พายุแน่นอนรอบนี้",
+    image: "หว่าวาโจ.jpg", loc: "จ.แม่ฮ่องสอน"
+  },
+  "หว่าวาโจ V.2 6-8 พ.ย.69": {
+    days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2,950 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง ทุ่งดอกบัวตอง",
+    image: "หว่าวาโจ.jpg", loc: "จ.แม่ฮ่องสอน"
+  },
+  "ภูเขาควาย 8-11 ต.ค.69": {
+    days: "4 วัน 3 คืน", distance: "30-35 กม.", level: "🔴 ยาก", price: "4,290 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก ทุ่งหญ้าสีเขียว",
+    image: "ภูเขาควาย.jpg", loc: "จ.สปป.ลาว"
+  },
+  "เลอกวาเดาะ 17-18 ต.ค.69": {
+    days: "2 วัน 1 คืน", distance: "3-4 กม.", level: "🟡 ปานกลาง", price: "2,000 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง",
+    image: "เลอกวาเดาะ.jpg", loc: "จ.ตาก"
+  },
+  "เส่ซูโจ๊ะ-ดอยหมากพริก 23-25 ต.ค.69": {
+    days: "3 วัน 2 คืน", distance: "7-8 กม.", level: "🟡 ปานกลาง", price: "3,310 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
+    image: "ดอยหมากพริก.jpg", loc: "จ.แม่ฮ่องสอน"
+  },
+  "ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69": {
+    days: "3 วัน 2 คืน", distance: "25 กม.", level: "🔴 ยาก", price: "2000-3000 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
+    image: "ดอยลังกาหลวง.jpg", loc: "จ.เชียงใหม่"
+  },
+  "เขาหลวงสุโขทัย 12-13 ก.ย.69": {
+    days: "2 วัน 1 คืน", distance: " 3- 4 กม.", level: "🔴 ยาก", price: "1570 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวสวย ทดสอบควมถึก",
+    image: "เขาหลวงสุโขทัย.jpg", loc: "จ.สุโขทัย"
+  },
+  "พือหน่อยเล 26-27 ก.ย.69": {
+    days: "2 วัน 1 คืน", distance: " 6 กม.", level: "🟡 ปานกลาง ", price: "2350 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "น้ำตกสวย อลังการ",
+    image: "พือหน่อยเล.jpg", loc: "จ.ตาก"
+  },
+};
 
-sessionStorage.setItem(
-  'tnh_session_id',
-  MY_SESSION_ID
+// รูปแยกต่างหาก (เผื่อบางทริปในอนาคตอยากใช้รูปคนละใบกับ TRIP_DETAILS.image)
+const TRIP_IMAGES = Object.fromEntries(
+  Object.entries(TRIP_DETAILS).map(([name, info]) => [name, info.image])
 );
 
-function startSeatCountdown(resetTime = false){
+// ทริปที่ผ่านมาแล้ว (โชว์ในหน้าแรก สำหรับให้คะแนนความยาก)
+const PAST_TRIPS = [
+  { name: "แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69", rounds: 1, people: 20, rating: 4.9, img: "แม่ละเมา.jpg" },
+  { name: "โบลาเวน 6-8 มิ.ย.69", rounds: 1, people: 28, rating: 2.5, img: "โบลาเวน.jpg" },
+  { name: "ดอยผาเวียง 13-14 มิ.ย.69", rounds: 1, people: 10, rating: 4.9, img: "ดอยผาเวียง.jpg" },
+  { name: "เปรโต๊ะ 19-21 มิ.ย.69", rounds: 1, people: 30, rating: 4.0, img: "เปรโต๊ะ.jpg" },
+  { name: "ดอยหลวงตาก 27-28 มิ.ย.69", rounds: 1, people: 20, rating: 4.0, img: "ดอยหลวงตาก.jpg" },
+  { name: "ดอยห้วยทู่ 4-5 ก.ค.69", rounds: 1, people: 20, rating: 4.6, img: "ดอยห้วยทู่.jpg" },
+  { name: "เปรโต๊ะ 19-21 มิ.ย.69", rounds: 2, people: 30, rating: 4, img: "เปรโต๊ะ.jpg" },
+];
+
+/* ================================================================
+   GLOBAL STATE
+   ================================================================ */
+let currentUser = null;      // { phone, nick }
+let allBookings = [];        // ข้อมูลการจองทั้งหมดจาก backend
+let cacheTrips = [];         // รายการทริป (unique trip+date) ที่สรุปจาก allBookings
+let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
+let selectedSeat = null;     // เบาะที่ผู้ใช้เลือกอยู่ตอนนี้
+let selectedSlipFile = null; // ไฟล์สลิปที่แนบไว้
+
+let seatRefreshTimer = null;    // interval สำหรับ poll ข้อมูลเบาะทุก 5 วิ
+let seatCountdownTimer = null;  // interval สำหรับนับถอยหลังตัวเลข
+let seatLockExpiresAt = 0;      // timestamp ที่ล็อกเบาะจะหมดอายุ
+let latestSeatRequestId = 0;    // ใช้กันข้อมูลเก่ามาทับข้อมูลใหม่ (race condition)
+
+// session id เฉพาะแท็บ/เครื่องนี้ ใช้แยกว่า "เบาะที่กำลังเลือกอยู่" เป็นของเราเองหรือคนอื่น
+const MY_SESSION_ID =
+  sessionStorage.getItem('tnh_session_id') ||
+  ('SESSION-' + Date.now() + '-' + Math.random().toString(36).substring(2, 10));
+sessionStorage.setItem('tnh_session_id', MY_SESSION_ID);
+
+/* ================================================================
+   SEAT LOCK COUNTDOWN
+   ================================================================ */
+
+// resetTime = true  -> บังคับรีเซ็ตเวลาเป็น 5:00 ใหม่ (ใช้ตอนล็อกเบาะสำเร็จ)
+// resetTime = false -> รีเซ็ตเฉพาะกรณีหมดเวลาไปแล้ว/ยังไม่เคยเริ่ม (ใช้ตอนเปิดหน้าชำระเงิน)
+function startSeatCountdown(resetTime = false) {
   clearInterval(seatCountdownTimer);
 
-  if(
-    resetTime ||
-    !seatLockExpiresAt ||
-    seatLockExpiresAt <= Date.now()
-  ){
-    seatLockExpiresAt =
-      Date.now() + SEAT_LOCK_DURATION;
+  if (resetTime || !seatLockExpiresAt || seatLockExpiresAt <= Date.now()) {
+    seatLockExpiresAt = Date.now() + SEAT_LOCK_DURATION;
   }
 
-  const box =
-    document.getElementById(
-      'seatLockTimerBox'
-    );
-
-  const timer =
-    document.getElementById(
-      'seatLockTimer'
-    );
-
-  if(box){
-    box.style.display = 'flex';
-  }
-
-  if(timer){
-    timer.classList.remove('warning');
-  }
+  const box = document.getElementById('seatLockTimerBox');
+  const timer = document.getElementById('seatLockTimer');
+  if (box) box.style.display = 'flex';
+  if (timer) timer.classList.remove('warning');
 
   updateSeatCountdown();
-
-  seatCountdownTimer =
-    setInterval(
-      updateSeatCountdown,
-      1000
-    );
+  seatCountdownTimer = setInterval(updateSeatCountdown, 1000);
 }
 
-function updateSeatCountdown(){
-  const timer =
-    document.getElementById(
-      'seatLockTimer'
-    );
+function updateSeatCountdown() {
+  const timer = document.getElementById('seatLockTimer');
+  if (!timer) return;
 
-  if(!timer){
-    return;
-  }
+  const remaining = seatLockExpiresAt - Date.now();
 
-  const remaining =
-    seatLockExpiresAt - Date.now();
-
-  if(remaining <= 0){
-    clearInterval(
-      seatCountdownTimer
-    );
-
+  if (remaining <= 0) {
+    clearInterval(seatCountdownTimer);
     seatCountdownTimer = null;
-
     timer.textContent = '00:00';
     timer.classList.add('warning');
-
     handleSeatLockExpired();
-
     return;
   }
 
-  const totalSeconds =
-    Math.ceil(remaining / 1000);
-
-  const minutes =
-    Math.floor(totalSeconds / 60);
-
-  const seconds =
-    totalSeconds % 60;
-
-  timer.textContent =
-    String(minutes).padStart(2,'0') +
-    ':' +
-    String(seconds).padStart(2,'0');
-
-  timer.classList.toggle(
-    'warning',
-    remaining <= 60 * 1000
-  );
+  const totalSeconds = Math.ceil(remaining / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  timer.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+  timer.classList.toggle('warning', remaining <= 60 * 1000);
 }
 
-
-function stopSeatCountdown(){
-  clearInterval(
-    seatCountdownTimer
-  );
-
+function stopSeatCountdown() {
+  clearInterval(seatCountdownTimer);
   seatCountdownTimer = null;
   seatLockExpiresAt = 0;
 
-  const box =
-    document.getElementById(
-      'seatLockTimerBox'
-    );
-
-  const timer =
-    document.getElementById(
-      'seatLockTimer'
-    );
-
-  if(box){
-    box.style.display = 'none';
-  }
-
-  if(timer){
+  const box = document.getElementById('seatLockTimerBox');
+  const timer = document.getElementById('seatLockTimer');
+  if (box) box.style.display = 'none';
+  if (timer) {
     timer.textContent = '05:00';
     timer.classList.remove('warning');
   }
 }
 
-
-function handleSeatLockExpired(){
+function handleSeatLockExpired() {
   seatLockExpiresAt = 0;
   selectedSeat = null;
-
-  document
-    .getElementById('f-seat')
-    .value = '';
-
-  document
-    .getElementById('formFieldsBox2')
-    .classList
-    .remove('show');
-
+  document.getElementById('f-seat').value = '';
+  document.getElementById('formFieldsBox2').classList.remove('show');
   checkBook();
 
-  const date =
-    document
-      .getElementById('f-dateraw')
-      .value;
-
+  const date = document.getElementById('f-dateraw').value;
   loadSeats(date);
 
   Swal.fire({
-    icon:'warning',
-    title:'หมดเวลาล็อกเบาะแล้ว',
-    text:'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
-    background:'#0c1524',
-    color:'#f1f5f9',
-    confirmButtonColor:'#0284c7'
+    icon: 'warning',
+    title: 'หมดเวลาล็อกเบาะแล้ว',
+    text: 'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
+    background: '#0c1524',
+    color: '#f1f5f9',
+    confirmButtonColor: '#0284c7'
   });
 }
-  
-/* ── LOGIN ── */
-function checkReady(){
-  const p=document.getElementById('loginPhone').value.trim();
-  const n=document.getElementById('loginNick').value.trim();
-  document.getElementById('loginBtn').disabled=!(p.length>=9&&n.length>0);
+
+/* ================================================================
+   LOGIN
+   ================================================================ */
+function checkReady() {
+  const p = document.getElementById('loginPhone').value.trim();
+  const n = document.getElementById('loginNick').value.trim();
+  document.getElementById('loginBtn').disabled = !(p.length >= 9 && n.length > 0);
 }
-function doLogin(){
-  const phone=document.getElementById('loginPhone').value.trim();
-  const nick=document.getElementById('loginNick').value.trim();
-  currentUser={phone,nick};
-  localStorage.setItem('tnhUser',JSON.stringify(currentUser));
+
+function doLogin() {
+  const phone = document.getElementById('loginPhone').value.trim();
+  const nick = document.getElementById('loginNick').value.trim();
+  currentUser = { phone, nick };
+  localStorage.setItem('tnhUser', JSON.stringify(currentUser));
+
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('appShell').classList.add('show');
-  document.getElementById('f-phone').value=phone;
-  document.getElementById('f-nick').value=nick;
+  document.getElementById('f-phone').value = phone;
+  document.getElementById('f-nick').value = nick;
   fetchData();
 }
 
-window.addEventListener('DOMContentLoaded',()=>{
-  ['input','change','keyup','paste'].forEach(ev=>{
-    document.getElementById('loginPhone').addEventListener(ev,checkReady);
-    document.getElementById('loginNick').addEventListener(ev,checkReady);
+window.addEventListener('DOMContentLoaded', () => {
+  ['input', 'change', 'keyup', 'paste'].forEach(ev => {
+    document.getElementById('loginPhone').addEventListener(ev, checkReady);
+    document.getElementById('loginNick').addEventListener(ev, checkReady);
   });
-  const s=localStorage.getItem('tnhUser');
-  if(s){
-    try{
-      currentUser=JSON.parse(s);
-      document.getElementById('loginPage').classList.add('hidden');
-      document.getElementById('appShell').classList.add('show');
-      document.getElementById('f-phone').value=currentUser.phone;
-      document.getElementById('f-nick').value=currentUser.nick;
-      fetchData();
-    }catch(e){localStorage.removeItem('tnhUser');}
+
+  const saved = localStorage.getItem('tnhUser');
+  if (!saved) return;
+
+  try {
+    currentUser = JSON.parse(saved);
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('appShell').classList.add('show');
+    document.getElementById('f-phone').value = currentUser.phone;
+    document.getElementById('f-nick').value = currentUser.nick;
+    fetchData();
+  } catch (e) {
+    localStorage.removeItem('tnhUser');
   }
 });
 
-/* ── DATA ── */
-function fetchData(){
-  const cb='cb_'+Date.now();
-  window[cb]=(res)=>{
-    allBookings=res.bookings||[];
+/* ================================================================
+   DATA FETCH (JSONP ไป Google Apps Script)
+   ================================================================ */
+function fetchData() {
+  const cb = 'cb_' + Date.now();
 
-    const seen={};cacheTrips=[];
-    allBookings.forEach(b=>{
-      if(!b.trip||!b.date)return;
-      const k=b.trip+'_'+b.date;
-      if(!seen[k]){seen[k]=1;cacheTrips.push({trip:b.trip,date:b.date});}
+  window[cb] = (res) => {
+    allBookings = res.bookings || [];
+
+    const seen = {};
+    cacheTrips = [];
+    allBookings.forEach(b => {
+      if (!b.trip || !b.date) return;
+      const key = b.trip + '_' + b.date;
+      if (!seen[key]) {
+        seen[key] = 1;
+        cacheTrips.push({ trip: b.trip, date: b.date });
+      }
     });
-    renderHome();renderTripList(cacheTrips);renderMyTrips();renderNotif();
-    const _today=new Date(new Date().setHours(0,0,0,0));
-        const _el=document.getElementById('upcomingList');
-    if(_el){
-      _el.innerHTML=cacheTrips.filter(t=>new Date(t.date)>=_today).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
+
+    renderHome();
+    renderTripList(cacheTrips);
+    renderMyTrips();
+    renderNotif();
+
+    const today = new Date(new Date().setHours(0, 0, 0, 0));
+    const upcomingEl = document.getElementById('upcomingList');
+    if (upcomingEl) {
+      const upcoming = cacheTrips.filter(t => new Date(t.date) >= today);
+      upcomingEl.innerHTML = upcoming.map(t => cardHTML(t)).join('')
+        || '<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
+
       clearInterval(window._autoScrollInt);
-      window._autoScrollInt=setInterval(()=>{
-        if(_el.children.length<2)return;
-        const cardW=_el.children[0].offsetWidth+12;
-        const maxScroll=_el.scrollWidth-_el.clientWidth;
-        _el.scrollLeft=_el.scrollLeft>=maxScroll-5?0:_el.scrollLeft+cardW;
-      },2000);
+      window._autoScrollInt = setInterval(() => {
+        if (upcomingEl.children.length < 2) return;
+        const cardW = upcomingEl.children[0].offsetWidth + 12;
+        const maxScroll = upcomingEl.scrollWidth - upcomingEl.clientWidth;
+        upcomingEl.scrollLeft = upcomingEl.scrollLeft >= maxScroll - 5 ? 0 : upcomingEl.scrollLeft + cardW;
+      }, 2000);
     }
+
     delete window[cb];
   };
-  appendScript(QUERY_URL+'&callback='+cb);
+
+  appendScript(QUERY_URL + '&callback=' + cb);
 }
 
-function loadSeats(date, showLoading = false){
+// showLoading: true = ล้างกริดเบาะเป็นข้อความ "กำลังโหลด" ก่อนยิง request (ใช้ตอนเข้าหน้าจองครั้งแรก)
+//              false = แค่ยิง request เงียบๆ ไม่ล้างกริด (ใช้ตอน auto-refresh ทุก 5 วิ กันจอกระพริบ)
+function loadSeats(date, showLoading = false) {
   const requestId = ++latestSeatRequestId;
 
-  if(!date){
-    return;
+  if (!date) return;
+
+  const trip = document.getElementById('b-trip').value.trim();
+  if (!trip) return;
+
+  if (showLoading) {
+    ['A', 'B', 'C'].forEach(prefix => {
+      const grid = document.getElementById('vanGrid' + prefix);
+      if (grid) {
+        grid.innerHTML = `
+          <div style="grid-column:1 / -1;display:flex;align-items:center;justify-content:center;height:20px;color:var(--blue);font-size:12px;">
+            ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
+          </div>
+        `;
+      }
+    });
   }
 
-  const trip =
-    document
-      .getElementById('b-trip')
-      .value
-      .trim();
+  const callback = 'cbs_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
 
-  if(!trip){
-    return;
-  }
-
-  if(showLoading){
-  ['A','B','C'].forEach(prefix=>{
-    const grid = document.getElementById('vanGrid' + prefix);
-
-    if(grid){
-      grid.innerHTML = `
-  <div style="
-    grid-column:1 / -1;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    height:20px;
-    color:var(--blue);
-    font-size:12px;
-  ">
-    ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
-  </div>
-`;
-    }
-  });
-}
-  const callback =
-    'cbs_' +
-    Date.now() +
-    '_' +
-    Math.random()
-      .toString(36)
-      .substring(2,7);
-
-  window[callback] = function(res){
-    /*
-     * ถ้ามีการเปลี่ยนทริป/วันที่ไปแล้วระหว่างรอข้อมูล
-     * ไม่ให้นำข้อมูลจากคำขอเก่ามาทับข้อมูลปัจจุบัน
-     */
-    if(requestId !== latestSeatRequestId){
+  window[callback] = function (res) {
+    // ถ้ามีการเปลี่ยนทริป/วันที่ไปแล้วระหว่างรอข้อมูล ไม่ให้นำข้อมูลเก่ามาทับข้อมูลปัจจุบัน
+    if (requestId !== latestSeatRequestId) {
       delete window[callback];
       return;
     }
-
-    renderVansWithData(
-      res.bookings || [],
-      res.locks || []
-    );
-
+    renderVansWithData(res.bookings || [], res.locks || []);
     delete window[callback];
   };
 
-  appendScript(
-    QUERY_URL +
-    '&date=' +
-    encodeURIComponent(date) +
-    '&trip=' +
-    encodeURIComponent(trip) +
-    '&callback=' +
-    callback
-  );
+  appendScript(QUERY_URL + '&date=' + encodeURIComponent(date) + '&trip=' + encodeURIComponent(trip) + '&callback=' + callback);
 }
 
-/* ── HOME ── */
-function renderHome(){
-  const h=new Date().getHours();
-  const gr=h<12?'🌅 อรุณสวัสดิ์':h<17?'☀️ สวัสดีตอนบ่าย':'🌙 สวัสดีตอนเย็น';
-  const norm=(p)=>String(p||'').replace(/\D/g,'').slice(-9);
-  const mc=allBookings.filter(b=>norm(b.phone)===norm(currentUser.phone)).length;
-  document.getElementById('homeContent').innerHTML=`
+function appendScript(src) {
+  const s = document.createElement('script');
+  s.src = src;
+  document.body.appendChild(s);
+}
+
+/* ================================================================
+   HOME TAB
+   ================================================================ */
+function renderHome() {
+  const h = new Date().getHours();
+  const greeting = h < 12 ? '🌅 อรุณสวัสดิ์' : h < 17 ? '☀️ สวัสดีตอนบ่าย' : '🌙 สวัสดีตอนเย็น';
+  const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
+  const myTripCount = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone)).length;
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const closedTrips = cacheTrips.filter(t => CLOSED_TRIPS.includes(t.trip));
+  const pastTrips = cacheTrips.filter(t => new Date(t.date) < today);
+
+  document.getElementById('homeContent').innerHTML = `
     <div class="greet-bar">
-      <div class="left"><h2>${gr}, ${currentUser.nick}! 👋</h2><p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${mc} ทริป</strong></p></div>
+      <div class="left">
+        <h2>${greeting}, ${currentUser.nick}! 👋</h2>
+        <p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${myTripCount} ทริป</strong></p>
+      </div>
       <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
     </div>
-   <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3><span onclick="switchTab('trips')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
-    <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none"><p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p></div>
+
+    <div class="sec-hdr">
+      <h3>🏕️ ทริปที่เปิดจอง</h3>
+      <span onclick="switchTab('trips')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>
+    </div>
+    <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none">
+      <p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p>
+    </div>
+
     <div class="divider"></div>
-    <div class="sec-hdr"><h3>⚠️ จะเปิดจองเร็วๆ นี้</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทั้งหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
-    <div class="trip-list" id="closedList">${cacheTrips.filter(t=>CLOSED_TRIPS.includes(t.trip)).map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
+    <div class="sec-hdr">
+      <h3>⚠️ จะเปิดจองเร็วๆ นี้</h3>
+      <span onclick="togglePastList(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>
+    </div>
+    <div class="trip-list" id="closedList">
+      ${closedTrips.map(t => cardHTML(t)).join('') || '<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}
+    </div>
+
     <div class="divider"></div>
-    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3><span onclick="document.getElementById('pastList').classList.toggle('expanded');this.innerText=this.innerText.includes('ทั้งหมด')?'ย่อ ‹':'ดูทั้งหมด ›'" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span></div>
-    <div class="trip-list" id="pastList" style="opacity:.7">${cacheTrips.filter(t=>new Date(t.date)<new Date(new Date().setHours(0,0,0,0))).map((t,i)=>`<div class="${i>=2?'past-extra':''}" style="${i>=2?'display:none':''}">${cardHTML(t)}</div>`).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
+    <div class="sec-hdr">
+      <h3>📅 ทริปที่ผ่านมา</h3>
+      <span onclick="togglePastList(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>
+    </div>
+    <div class="trip-list" id="pastList" style="opacity:.7">
+      ${pastTrips.map((t, i) => `<div class="${i >= 2 ? 'past-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">${cardHTML(t)}</div>`).join('')
+        || '<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}
+    </div>
+
     <div class="divider"></div>
     <div class="sec-hdr"><h3>🌟 ให้ระดับความยาก</h3></div>
-    <div class="past-grid">${PAST_TRIPS.map(p=>`<div class="past-card"><img src="${p.img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}"><div class="past-card-rating">⭐ ${p.rating}</div><div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div></div>`).join('')}</div>
-    <div class="stat-bar"><div class="ico">👥</div><div class="txt"><h4>ยอดรวมผู้เดินทางกว่า 300+ คน</h4><p>ขอบคุณทุกความไว้วางใจจากเที่ยวนี่เหอะ 💙</p></div></div>
-    <a
-  href="https://tiaewneehur.github.io/STAFF.TIAEWNEEHUR/"
-  target="_blank"
-  rel="noopener noreferrer"
-  style="
-    text-decoration:none;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:14px;
-    background:linear-gradient(135deg,rgba(2,132,199,.18),rgba(56,189,248,.08));
-    border:1px solid rgba(56,189,248,.22);
-    border-radius:22px;
-    padding:18px 18px;
-    margin-top:18px;
-    color:#fff;
-    box-shadow:0 8px 24px rgba(2,132,199,.12);
-    transition:.2s;
-  "
-  onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(56,189,248,.5)'"
-  onmouseout="this.style.transform='translateY(0)';this.style.borderColor='rgba(56,189,248,.22)'"
->
-  <div style="display:flex;align-items:center;gap:14px">
-    <div style="
-      width:48px;
-      height:48px;
-      border-radius:15px;
-      background:linear-gradient(135deg,var(--blue2),var(--blue));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:24px;
-      flex-shrink:0;
-      box-shadow:0 0 18px rgba(56,189,248,.3)
-    ">
-      🎒
+    <div class="past-grid">
+      ${PAST_TRIPS.map(p => `
+        <div class="past-card">
+          <img src="${p.img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}">
+          <div class="past-card-rating">⭐ ${p.rating}</div>
+          <div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div>
+        </div>
+      `).join('')}
     </div>
 
-    <div>
-      <div style="font-size:15px;font-weight:800;color:#fff">
-        สมัครเป็น STAFF
-      </div>
-      <div style="font-size:11px;color:var(--sub);margin-top:3px">
-        ร่วมลุยป่าและดูแลลูกทริปไปกับเที่ยวนี่เหอะ
-      </div>
+    <div class="stat-bar">
+      <div class="ico">👥</div>
+      <div class="txt"><h4>ยอดรวมผู้เดินทางกว่า 300+ คน</h4><p>ขอบคุณทุกความไว้วางใจจากเที่ยวนี่เหอะ 💙</p></div>
     </div>
-  </div>
 
-  <div style="
-    width:34px;
-    height:34px;
-    border-radius:50%;
-    background:rgba(56,189,248,.12);
-    color:var(--blue);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    flex-shrink:0
-  ">
-    ›
-  </div>
-</a>
-</div>
-    </div>`;
-  // อัปเดต avatar ในหน้าหลัก
-  const _av=localStorage.getItem('userAvatar');
-  const _el=document.getElementById('homeAva');
-  if(_av&&_el){_el.style.background='none';_el.innerHTML=`<img src="${_av}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;}
+    <a href="https://tiaewneehur.github.io/STAFF.TIAEWNEEHUR/" target="_blank" rel="noopener noreferrer"
+       style="text-decoration:none;display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,rgba(2,132,199,.18),rgba(56,189,248,.08));border:1px solid rgba(56,189,248,.22);border-radius:22px;padding:18px;margin-top:18px;color:#fff;box-shadow:0 8px 24px rgba(2,132,199,.12);transition:.2s"
+       onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(56,189,248,.5)'"
+       onmouseout="this.style.transform='translateY(0)';this.style.borderColor='rgba(56,189,248,.22)'">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 18px rgba(56,189,248,.3)">🎒</div>
+        <div>
+          <div style="font-size:15px;font-weight:800;color:#fff">สมัครเป็น STAFF</div>
+          <div style="font-size:11px;color:var(--sub);margin-top:3px">ร่วมลุยป่าและดูแลลูกทริปไปกับเที่ยวนี่เหอะ</div>
+        </div>
+      </div>
+      <div style="width:34px;height:34px;border-radius:50%;background:rgba(56,189,248,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">›</div>
+    </a>
+  `;
+
+  // อัปเดต avatar ในหน้าหลัก (ถ้าเคยอัปโหลดไว้)
+  const savedAvatar = localStorage.getItem('userAvatar');
+  const avaEl = document.getElementById('homeAva');
+  if (savedAvatar && avaEl) {
+    avaEl.style.background = 'none';
+    avaEl.innerHTML = `<img src="${savedAvatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+  }
 }
 
-/* ── CARD HTML ── */
-function cardHTML(item){
-  const info=TRIP_DETAILS[item.trip]||{};
-  const img=TRIP_IMAGES[item.trip]||'default.jpg';
-  const d=new Date(item.date);
-  const fmt=d.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});
-  const locked=CLOSED_TRIPS.includes(item.trip);
-  const totalSeats=BUS_GRID_STRUCTURE.filter(n=>n!=='driver'&&n!=='spacer').length*3;
-  const notAvail=allBookings.filter(b=>b.seat&&b.trip===item.trip&&b.date===item.date).length;
-  const avail=totalSeats-notAvail;
-
-  
-  // แก้ไขตรงนี้: เปลี่ยน badge และสีของที่นั่ง
-  const isPast=new Date(item.date)<new Date(new Date().setHours(0,0,0,0));
-const badge=locked?'<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>':
-            isPast?'<span class="thc-badge" style="background:rgba(100,116,139,.85);color:#fff">✅ ไปมาแล้วเว้ย!!</span>':
-            avail<=0?'<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>':
-            avail<=5?'<span class="thc-badge badge-almost">🔥 ใกล้เต็ม!</span>':
-            '<span class="thc-badge badge-open">เปิดจอง</span>';
-
-const seats=locked?'<span class="seats-full">⚠️ ยังไม่เปิด</span>':
-            isPast?'<span style="color:var(--muted);font-size:11px;font-weight:600">✅ ไปมาแล้วเว้ย!!</span>':
-            avail<=0?'<span class="seats-full">🔴 เต็มแล้ว</span>':
-            avail<=5?`<span style="color:#f59e0b;font-size:11px;font-weight:600">🔥 ว่าง ${avail} ที่</span>`:
-            `<span class="seats-ok">🟢 ว่าง ${avail} ที่</span>`;
-  return `<div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')"><div class="thc-img"><img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">${badge}${locked?'<div class="locked-ov">🔒</div>':''}</div><div class="thc-info"><h4>${item.trip}</h4><div class="loc">📍 ${info.loc||'ประเทศไทย'}</div><div class="thc-meta">${seats}<span class="price-txt">฿${info.price||'-'}</span></div><span class="date-chip">📅 ${fmt}</span></div><div class="thc-arr">›</div></div>`;
+// สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับลิสต์ทริปที่ผ่านมา
+function togglePastList(triggerEl) {
+  const expanded = document.getElementById('pastList').classList.toggle('expanded');
+  triggerEl.innerText = expanded ? 'ย่อ ‹' : 'ดูทั้งหมด ›';
 }
 
-/* ── TRIPS TAB ── */
-function renderTripList(list){
-  const today = new Date(new Date().setHours(0,0,0,0));
-  const upcoming = list.filter(t=>new Date(t.date)>=today);
-  const past = list.filter(t=>new Date(t.date)<today);
-  document.getElementById('tripListFull').innerHTML=`
-    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
-    <div class="trip-list">${upcoming.map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>'}</div>
-    <div class="divider"></div>
-    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3></div>
-    <div class="trip-list" style="opacity:.7">${past.map(t=>cardHTML(t)).join('')||'<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
+/* ================================================================
+   TRIP CARD (ใช้ร่วมกันหลายหน้า)
+   ================================================================ */
+function cardHTML(item) {
+  const info = TRIP_DETAILS[item.trip] || {};
+  const img = TRIP_IMAGES[item.trip] || 'default.jpg';
+  const fmtDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+  const locked = CLOSED_TRIPS.includes(item.trip);
+  const isPast = new Date(item.date) < new Date(new Date().setHours(0, 0, 0, 0));
+
+  const totalSeats = BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').length * 3;
+  const bookedCount = allBookings.filter(b => b.seat && b.trip === item.trip && b.date === item.date).length;
+  const avail = totalSeats - bookedCount;
+
+  const badge = locked
+    ? '<span class="thc-badge badge-soon">⚠️ เร็วๆนี้</span>'
+    : isPast
+      ? '<span class="thc-badge" style="background:rgba(100,116,139,.85);color:#fff">✅ ไปมาแล้วเว้ย!!</span>'
+      : avail <= 0
+        ? '<span class="thc-badge badge-hot">🔴 เต็มแล้ว</span>'
+        : avail <= 5
+          ? '<span class="thc-badge badge-almost">🔥 ใกล้เต็ม!</span>'
+          : '<span class="thc-badge badge-open">เปิดจอง</span>';
+
+  const seatsLabel = locked
+    ? '<span class="seats-full">⚠️ ยังไม่เปิด</span>'
+    : isPast
+      ? '<span style="color:var(--muted);font-size:11px;font-weight:600">✅ ไปมาแล้วเว้ย!!</span>'
+      : avail <= 0
+        ? '<span class="seats-full">🔴 เต็มแล้ว</span>'
+        : avail <= 5
+          ? `<span style="color:#f59e0b;font-size:11px;font-weight:600">🔥 ว่าง ${avail} ที่</span>`
+          : `<span class="seats-ok">🟢 ว่าง ${avail} ที่</span>`;
+
+  return `
+    <div class="trip-hcard" onclick="openModal('${item.trip}','${item.date}')">
+      <div class="thc-img">
+        <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=200&q=60'}">
+        ${badge}
+        ${locked ? '<div class="locked-ov">🔒</div>' : ''}
+      </div>
+      <div class="thc-info">
+        <h4>${item.trip}</h4>
+        <div class="loc">📍 ${info.loc || 'ประเทศไทย'}</div>
+        <div class="thc-meta">${seatsLabel}<span class="price-txt">฿${info.price || '-'}</span></div>
+        <span class="date-chip">📅 ${fmtDate}</span>
+      </div>
+      <div class="thc-arr">›</div>
+    </div>
   `;
 }
-function searchTrips(){const q=document.getElementById('searchInput').value.toLowerCase();renderTripList(cacheTrips.filter(t=>t.trip.toLowerCase().includes(q)));}
 
-/* ── MY TRIPS ── */
-function renderMyTrips(){
-  const norm2=(p)=>String(p||'').replace(/\D/g,'').slice(-9);
-  const my=allBookings.filter(b=>norm2(b.phone)===norm2(currentUser.phone));
-  const seen={};const dd=[];my.forEach(b=>{const k=b.trip+'_'+b.date+'_'+b.seat;if(!seen[k]){seen[k]=1;dd.push(b);}});
-  const prov=[...new Set(dd.map(b=>(TRIP_DETAILS[b.trip]||{}).loc).filter(Boolean))].length;
-  document.getElementById('myContent').innerHTML=`
+/* ================================================================
+   TRIPS TAB (ค้นหา / รายการทั้งหมด)
+   ================================================================ */
+function renderTripList(list) {
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const upcoming = list.filter(t => new Date(t.date) >= today);
+  const past = list.filter(t => new Date(t.date) < today);
+
+  document.getElementById('tripListFull').innerHTML = `
+    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
+    <div class="trip-list">${upcoming.map(t => cardHTML(t)).join('') || '<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>'}</div>
+    <div class="divider"></div>
+    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3></div>
+    <div class="trip-list" style="opacity:.7">${past.map(t => cardHTML(t)).join('') || '<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
+  `;
+}
+
+function searchTrips() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  renderTripList(cacheTrips.filter(t => t.trip.toLowerCase().includes(q)));
+}
+
+/* ================================================================
+   MY TRIPS TAB
+   ================================================================ */
+function renderMyTrips() {
+  const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
+  const myBookings = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone));
+
+  const seen = {};
+  const uniqueBookings = [];
+  myBookings.forEach(b => {
+    const key = b.trip + '_' + b.date + '_' + b.seat;
+    if (!seen[key]) {
+      seen[key] = 1;
+      uniqueBookings.push(b);
+    }
+  });
+
+  const provinceCount = [...new Set(uniqueBookings.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
+
+  document.getElementById('myContent').innerHTML = `
     <div class="my-profile">
       <div class="my-ava" onclick="document.getElementById('fileInput').click()" style="cursor:pointer;overflow:hidden;border-radius:50%;width:58px;height:58px;padding:0;flex-shrink:0">
         <img id="userAvatar" src="https://via.placeholder.com/150?text=👤" style="width:100%;height:100%;object-fit:cover">
         <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAvatar(this)">
       </div>
-      <div class="my-info" style="flex:1"><h3>${currentUser.nick}</h3><p>📞 ${currentUser.phone}</p><div class="my-stats"><div class="my-stat"><h4>${dd.length}</h4><p>ทริปทั้งหมด</p></div><div class="my-stat"><h4>${prov}</h4><p>จังหวัด</p></div><div class="my-stat"><h4>${"⭐".repeat(Math.min(dd.length,5))}</h4><p>ระดับสายลุยกับเพจ</p></div></div></div>
+      <div class="my-info" style="flex:1">
+        <h3>${currentUser.nick}</h3>
+        <p>📞 ${currentUser.phone}</p>
+        <div class="my-stats">
+          <div class="my-stat"><h4>${uniqueBookings.length}</h4><p>ทริปทั้งหมด</p></div>
+          <div class="my-stat"><h4>${provinceCount}</h4><p>จังหวัด</p></div>
+          <div class="my-stat"><h4>${"⭐".repeat(Math.min(uniqueBookings.length, 5))}</h4><p>ระดับสายลุยกับเพจ</p></div>
+        </div>
+      </div>
     </div>
+
     <div class="sec-hdr"><h3>📋 ประวัติความบ้า</h3></div>
-    ${dd.length===0?'<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>':dd.map(b=>{const img=TRIP_IMAGES[b.trip]||'default.jpg';const fmt=new Date(b.date).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'});const past=new Date(b.date)<new Date();return `<div class="h-item"><img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}"><div class="hi"><h4>${b.trip}</h4><p>📅 ${fmt}</p><p style="margin-top:4px">${past?'<span class="chip chip-green">✅ ไปแล้ว</span>':'<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p></div><div class="h-seat"><div class="snum">${b.seat||'-'}</div><p>ที่นั่ง</p></div></div>`;}).join('')}
+    ${uniqueBookings.length === 0
+      ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>'
+      : uniqueBookings.map(b => {
+          const img = TRIP_IMAGES[b.trip] || 'default.jpg';
+          const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+          const isPast = new Date(b.date) < new Date();
+          return `
+            <div class="h-item">
+              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
+              <div class="hi">
+                <h4>${b.trip}</h4>
+                <p>📅 ${fmtDate}</p>
+                <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
+              </div>
+              <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
+            </div>
+          `;
+        }).join('')}
+
     <div style="height:1px;background:var(--border);margin:20px 0"></div>
-    <button class="btn-logout" onclick="logOut()">🚪 ออกจากระบบ</button>`;
-  // โหลดรูป avatar ที่บันทึกไว้
-  const savedAv=localStorage.getItem('userAvatar');
-  const avEl=document.getElementById('userAvatar');
-  if(savedAv&&avEl)avEl.src=savedAv;
+    <button class="btn-logout" onclick="logOut()">🚪 ออกจากระบบ</button>
+  `;
+
+  const savedAvatar = localStorage.getItem('userAvatar');
+  const avatarEl = document.getElementById('userAvatar');
+  if (savedAvatar && avatarEl) avatarEl.src = savedAvatar;
 }
 
-/* ── NOTIF ── */
-function renderNotif(){
-  const slides = [
-    "เดินป่า - 1.jpg","เดินป่า - 2.jpg","เดินป่า - 3.jpg","เดินป่า - 4.jpg",
-    "เดินป่า - 5.jpg","เดินป่า - 6.jpg","เดินป่า - 7.jpg","เดินป่า - 8.jpg"
-  ].map(s =>
-    `<div style="flex:0 0 82%;scroll-snap-align:start">
-       <img src="${s}" style="width:100%;border-radius:18px;display:block"
-            onerror="this.style.display='none'">
-     </div>`
-  ).join('');
+/* ================================================================
+   NOTIF TAB (สาระ / เตรียมตัวเดินป่า)
+   ================================================================ */
+const HIKING_GEAR_SLIDES = [
+  "เดินป่า - 1.jpg", "เดินป่า - 2.jpg", "เดินป่า - 3.jpg", "เดินป่า - 4.jpg",
+  "เดินป่า - 5.jpg", "เดินป่า - 6.jpg", "เดินป่า - 7.jpg", "เดินป่า - 8.jpg"
+];
 
-  const list=[{t:"📋 ศึกษาข้อมูลเส้นทาง!",m:`* ระยะทางทั้งหมด<br>* ระดับความยาก<br>* ระยะเวลาเดิน<br>* ความสูงสะสม (Elevation Gain)<br>* จุดกางเต็นท์<br>* แหล่งน้ำ<br>* จุดรับสัญญาณโทรศัพท์<br>* สภาพอากาศล่าสุด<br>* ฤดูกาลที่เหมาะสม<br>* กฎของอุทยานหรือพื้นที่`,r:false},
-  {t:"❤️ เตรียมร่างกาย!",m:`* พักผ่อนให้เพียงพอ<br>* ฝึกเดินหรือวิ่งก่อนเดินจริง<br>* ซ้อมแบกเป้<br>* ยืดกล้ามเนื้อ<br>* ดื่มน้ำให้เพียงพอ<br>* งดแอลกอฮอล์ก่อนเดิน`,r:false},
-  {t:"‍👩‍👧 แจ้งคนใกล้ตัว!",m:`* แจ้งเส้นทาง<br>* แจ้งวันเข้า-ออก<br>* แจ้งผู้ร่วมเดินทาง<br>* ส่งพิกัดหรือแผนที่<br>* แจ้งเบอร์ติดต่อฉุกเฉิน`,r:false},
-  {t:"🎒 อุปกรณ์แบกสัมภาระ!",m:`* เป้เดินป่า<br>* Rain Cover คลุมเป้<br>* Dry Bag<br>* ถุงซิปล็อกกันน้ำ<br>* กระเป๋าคาดอก<br>* กระเป๋าคาดเอว`,r:false},
-  {t:"👕 เสื้อผ้า!",m:`เสื้อ<br>* เสื้อแห้งไว<br>* เสื้อแขนยาวกันแดด<br>* เสื้อกันหนาว<br>* เสื้อสำรอง<br>* เสื้อใส่นอน<br>กางเกง<br>* กางเกงเดินป่า<br>* กางเกงสำรอง<br>* กางเกงใส่นอน<br>ชุดชั้นใน<br>* กางเกงใน<br>* สปอร์ตบราสำหรับผู้หญิง<br>ถุงเท้า<br>* ถุงเท้าเดินป่า<br>* ถุงเท้าสำรอง`,r:false},
-  {t:"👟 รองเท้า!",m:`* รองเท้าเดินป่า<br>* รองเท้าแตะ<br>* เชือกรองเท้าสำรอง<br>* แผ่นรองพื้นรองเท้า (ถ้าจำเป็น)`,r:false},
-  {t:"🌧 อุปกรณ์กันฝน!",m:`* เสื้อกันฝน<br>* กางเกงกันฝน<br>* Poncho<br>* ถุงคลุมเป้<br>* ถุงกันน้ำใส่มือถือ`,r:false},
-  {t:"🏕 อุปกรณ์แคมป์!",m:`* เต็นท์<br>* ฟลายชีท<br>* สมอบก<br>* เชือก<br>* Ground Sheet<br>* ถุงนอน<br>* แผ่นรองนอน<br>* หมอนลม`,r:false},
-  {t:"🍳 อุปกรณ์ทำอาหาร!",m:`* เตาแก๊ส<br>* แก๊สกระป๋อง<br>* หม้อ<br>* กระทะ<br>* ช้อน<br>* ส้อม<br>* มีด<br>* เขียงพับ<br>* แก้วน้ำ<br>* ถ้วย<br>* ไฟแช็ก<br>* ไม้ขีดกันน้ำ`,r:false},
-  {t:"💧 น้ำ!",m:`* ขวดน้ำ<br>* ถุงน้ำ (Hydration)<br>* เครื่องกรองน้ำ<br>* เม็ดฆ่าเชื้อ<br>* ถุงน้ำสำรอง`,r:false},
-  {t:"🔦 อุปกรณ์ส่องสว่าง!",m:`* ไฟฉายคาดหัว<br>* ไฟฉายมือถือ<br>* แบตเตอรี่สำรอง<br>* โคมไฟแคมป์`,r:false},
-  {t:"🔋 อุปกรณ์ไฟฟ้า!",m:`* Power Bank<br>* สายชาร์จ<br>* Adapter<br>* สายชาร์จสำรอง<br>* นาฬิกา GPS<br>* GPS Handheld<br>* โทรศัพท์มือถือ`,r:false},
-  {t:"🩹 ชุดปฐมพยาบาล!",m:`* พลาสเตอร์<br>* ผ้าก๊อซ<br>* ผ้ายืดพันแผล<br>* เทปพันแผล<br>* เบตาดีน<br>* แอลกอฮอล์<br>* สำลี<br>* ยาประจำตัว<br>* ยาแก้ปวด<br>* ยาแก้แพ้<br>* ยาแก้ท้องเสีย<br>* ยาแก้เมารถ<br>* ยาดม<br>* ยาหม่อง`,r:false},
-  {t:"🦟 ป้องกันแมลง!",m:`* สเปรย์กันทาก<br>* ครีมกันแมลง<br>* แหนบคีบเห็บ`,r:false},
-  {t:"🧼 ของใช้ส่วนตัว!",m:`* แปรงสีฟัน<br>* ยาสีฟัน<br>* สบู่<br>* แชมพู<br>* ผ้าเช็ดตัว<br>* กระดาษชำระ<br>* ทิชชู่เปียก`,r:false},
-  {t:"🔥 ความปลอดภัย!",m:`* ไฟแช็กสำรอง<br>* เชือกอเนกประสงค์<br>* มีดพกอเนกประสงค์<br>* เทปผ้า<br>* Emergency Blanket<br>* Emergency Bivy<br>* Fire Starter<br>* นกหวีดฉุกเฉิน`,r:false},
-  {t:"📄 เอกสารสำคัญ!",m:`* บัตรประชาชน<br>* เงินสด<br>* ใบจองอุทยาน<br>* ใบอนุญาต (ถ้ามี)<br>* ประกันการเดินทาง<br>* เบอร์โทรฉุกเฉิน`,r:false},
-  {t:"⚠️ ก่อนออกเดินทุกครั้ง อย่าลืมเช็ก 10 ข้อนี้!",m:`1. เป้ไม่หนักเกิน 20–25% ของน้ำหนักตัว<br>2. ชาร์จอุปกรณ์ไฟฟ้าเต็ม<br>3. โหลดแผนที่ออฟไลน์<br>4. เช็กพยากรณ์อากาศ<br>5. แจ้งคนที่บ้าน<br>6. เช็กรองเท้าและเชือกผูก<br>7. เตรียมน้ำและอาหารให้เพียงพอ<br>8. พกชุดปฐมพยาบาล<br>9. ทดสอบไฟฉายและแบตเตอรี่<br>10. เคารพธรรมชาติ และเก็บขยะกลับทุกชิ้น`,r:false}];
+const PREP_CHECKLIST = [
+  { t: "📋 ศึกษาข้อมูลเส้นทาง!", m: "* ระยะทางทั้งหมด<br>* ระดับความยาก<br>* ระยะเวลาเดิน<br>* ความสูงสะสม (Elevation Gain)<br>* จุดกางเต็นท์<br>* แหล่งน้ำ<br>* จุดรับสัญญาณโทรศัพท์<br>* สภาพอากาศล่าสุด<br>* ฤดูกาลที่เหมาะสม<br>* กฎของอุทยานหรือพื้นที่" },
+  { t: "❤️ เตรียมร่างกาย!", m: "* พักผ่อนให้เพียงพอ<br>* ฝึกเดินหรือวิ่งก่อนเดินจริง<br>* ซ้อมแบกเป้<br>* ยืดกล้ามเนื้อ<br>* ดื่มน้ำให้เพียงพอ<br>* งดแอลกอฮอล์ก่อนเดิน" },
+  { t: "‍👩‍👧 แจ้งคนใกล้ตัว!", m: "* แจ้งเส้นทาง<br>* แจ้งวันเข้า-ออก<br>* แจ้งผู้ร่วมเดินทาง<br>* ส่งพิกัดหรือแผนที่<br>* แจ้งเบอร์ติดต่อฉุกเฉิน" },
+  { t: "🎒 อุปกรณ์แบกสัมภาระ!", m: "* เป้เดินป่า<br>* Rain Cover คลุมเป้<br>* Dry Bag<br>* ถุงซิปล็อกกันน้ำ<br>* กระเป๋าคาดอก<br>* กระเป๋าคาดเอว" },
+  { t: "👕 เสื้อผ้า!", m: "เสื้อ<br>* เสื้อแห้งไว<br>* เสื้อแขนยาวกันแดด<br>* เสื้อกันหนาว<br>* เสื้อสำรอง<br>* เสื้อใส่นอน<br>กางเกง<br>* กางเกงเดินป่า<br>* กางเกงสำรอง<br>* กางเกงใส่นอน<br>ชุดชั้นใน<br>* กางเกงใน<br>* สปอร์ตบราสำหรับผู้หญิง<br>ถุงเท้า<br>* ถุงเท้าเดินป่า<br>* ถุงเท้าสำรอง" },
+  { t: "👟 รองเท้า!", m: "* รองเท้าเดินป่า<br>* รองเท้าแตะ<br>* เชือกรองเท้าสำรอง<br>* แผ่นรองพื้นรองเท้า (ถ้าจำเป็น)" },
+  { t: "🌧 อุปกรณ์กันฝน!", m: "* เสื้อกันฝน<br>* กางเกงกันฝน<br>* Poncho<br>* ถุงคลุมเป้<br>* ถุงกันน้ำใส่มือถือ" },
+  { t: "🏕 อุปกรณ์แคมป์!", m: "* เต็นท์<br>* ฟลายชีท<br>* สมอบก<br>* เชือก<br>* Ground Sheet<br>* ถุงนอน<br>* แผ่นรองนอน<br>* หมอนลม" },
+  { t: "🍳 อุปกรณ์ทำอาหาร!", m: "* เตาแก๊ส<br>* แก๊สกระป๋อง<br>* หม้อ<br>* กระทะ<br>* ช้อน<br>* ส้อม<br>* มีด<br>* เขียงพับ<br>* แก้วน้ำ<br>* ถ้วย<br>* ไฟแช็ก<br>* ไม้ขีดกันน้ำ" },
+  { t: "💧 น้ำ!", m: "* ขวดน้ำ<br>* ถุงน้ำ (Hydration)<br>* เครื่องกรองน้ำ<br>* เม็ดฆ่าเชื้อ<br>* ถุงน้ำสำรอง" },
+  { t: "🔦 อุปกรณ์ส่องสว่าง!", m: "* ไฟฉายคาดหัว<br>* ไฟฉายมือถือ<br>* แบตเตอรี่สำรอง<br>* โคมไฟแคมป์" },
+  { t: "🔋 อุปกรณ์ไฟฟ้า!", m: "* Power Bank<br>* สายชาร์จ<br>* Adapter<br>* สายชาร์จสำรอง<br>* นาฬิกา GPS<br>* GPS Handheld<br>* โทรศัพท์มือถือ" },
+  { t: "🩹 ชุดปฐมพยาบาล!", m: "* พลาสเตอร์<br>* ผ้าก๊อซ<br>* ผ้ายืดพันแผล<br>* เทปพันแผล<br>* เบตาดีน<br>* แอลกอฮอล์<br>* สำลี<br>* ยาประจำตัว<br>* ยาแก้ปวด<br>* ยาแก้แพ้<br>* ยาแก้ท้องเสีย<br>* ยาแก้เมารถ<br>* ยาดม<br>* ยาหม่อง" },
+  { t: "🦟 ป้องกันแมลง!", m: "* สเปรย์กันทาก<br>* ครีมกันแมลง<br>* แหนบคีบเห็บ" },
+  { t: "🧼 ของใช้ส่วนตัว!", m: "* แปรงสีฟัน<br>* ยาสีฟัน<br>* สบู่<br>* แชมพู<br>* ผ้าเช็ดตัว<br>* กระดาษชำระ<br>* ทิชชู่เปียก" },
+  { t: "🔥 ความปลอดภัย!", m: "* ไฟแช็กสำรอง<br>* เชือกอเนกประสงค์<br>* มีดพกอเนกประสงค์<br>* เทปผ้า<br>* Emergency Blanket<br>* Emergency Bivy<br>* Fire Starter<br>* นกหวีดฉุกเฉิน" },
+  { t: "📄 เอกสารสำคัญ!", m: "* บัตรประชาชน<br>* เงินสด<br>* ใบจองอุทยาน<br>* ใบอนุญาต (ถ้ามี)<br>* ประกันการเดินทาง<br>* เบอร์โทรฉุกเฉิน" },
+  { t: "⚠️ ก่อนออกเดินทุกครั้ง อย่าลืมเช็ก 10 ข้อนี้!", m: "1. เป้ไม่หนักเกิน 20–25% ของน้ำหนักตัว<br>2. ชาร์จอุปกรณ์ไฟฟ้าเต็ม<br>3. โหลดแผนที่ออฟไลน์<br>4. เช็กพยากรณ์อากาศ<br>5. แจ้งคนที่บ้าน<br>6. เช็กรองเท้าและเชือกผูก<br>7. เตรียมน้ำและอาหารให้เพียงพอ<br>8. พกชุดปฐมพยาบาล<br>9. ทดสอบไฟฉายและแบตเตอรี่<br>10. เคารพธรรมชาติ และเก็บขยะกลับทุกชิ้น" },
+];
 
-  document.getElementById('notifContent').innerHTML=`
-    <div style="margin-bottom:12px">
-      <h3 style="font-size:16px;font-weight:700;color:#fff">🥾 ของจำเป็นในการเดินป่า</h3>
+function renderNotif() {
+  const slidesHTML = HIKING_GEAR_SLIDES.map(src => `
+    <div style="flex:0 0 82%;scroll-snap-align:start">
+      <img src="${src}" style="width:100%;border-radius:18px;display:block" onerror="this.style.display='none'">
     </div>
+  `).join('');
+
+  const listHTML = PREP_CHECKLIST.map(n => `
+    <div class="notif-item">
+      <div class="notif-dot"></div>
+      <div class="notif-info"><h4>${n.t}</h4><p>${n.m}</p></div>
+    </div>
+  `).join('');
+
+  document.getElementById('notifContent').innerHTML = `
+    <div style="margin-bottom:12px"><h3 style="font-size:16px;font-weight:700;color:#fff">🥾 ของจำเป็นในการเดินป่า</h3></div>
     <div id="gearSlider" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;padding-bottom:8px;-ms-overflow-style:none;scrollbar-width:none;margin-bottom:24px">
-      ${slides}
+      ${slidesHTML}
     </div>
-    <div style="margin-bottom:16px">
-      <h3 style="font-size:16px;font-weight:700;color:#fff">🔔 การเตรียมตัวก่อนเดินป่า</h3>
-    </div>
-    ${list.map(n=>`<div class="notif-item"><div class="notif-dot ${n.r?'read':''}"></div><div class="notif-info"><h4>${n.t}</h4><p>${n.m}</p></div></div>`).join('')}
+    <div style="margin-bottom:16px"><h3 style="font-size:16px;font-weight:700;color:#fff">🔔 การเตรียมตัวก่อนเดินป่า</h3></div>
+    ${listHTML}
   `;
 
   clearInterval(window._gearInt);
-  const el=document.getElementById('gearSlider');
-  if(el){
-    window._gearInt=setInterval(()=>{
-      const max=el.scrollWidth-el.clientWidth;
-      el.scrollLeft=el.scrollLeft>=max-5?0:el.scrollLeft+el.children[0].offsetWidth+12;
-    },2500);
+  const slider = document.getElementById('gearSlider');
+  if (slider) {
+    window._gearInt = setInterval(() => {
+      const max = slider.scrollWidth - slider.clientWidth;
+      slider.scrollLeft = slider.scrollLeft >= max - 5 ? 0 : slider.scrollLeft + slider.children[0].offsetWidth + 12;
+    }, 2500);
   }
 }
 
-/* ── TABS ── */
-const TABS=['home','trips','mytrips','notif'];
-function switchTab(id){TABS.forEach(t=>{document.getElementById('tab-'+t).classList.toggle('active-page',t===id);document.getElementById('nav-'+t).classList.toggle('active',t===id);});window.scrollTo({top:0,behavior:'smooth'});}
+/* ================================================================
+   BOTTOM NAV TABS
+   ================================================================ */
+const TABS = ['home', 'trips', 'mytrips', 'notif'];
 
-/* ── MODAL ── */
+function switchTab(id) {
+  TABS.forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('active-page', t === id);
+    document.getElementById('nav-' + t).classList.toggle('active', t === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ================================================================
+   TRIP DETAIL MODAL
+   ================================================================ */
 function openModal(name, dateStr) {
   const info = TRIP_DETAILS[name] || { days: '-', distance: '-', level: '-', price: '-', highlight: '-', image: 'default.jpg' };
   const img = TRIP_IMAGES[name] || info.image || 'default.jpg';
   const locked = CLOSED_TRIPS.includes(name);
-  const seatIds = ['A', 'B', 'C'].flatMap(p => BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').map(n => p + n));
+
+  const seatIds = ['A', 'B', 'C'].flatMap(prefix =>
+    BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').map(n => prefix + n)
+  );
   const takenSeats = allBookings.filter(b => b.seat && b.trip === name && b.date === dateStr).map(b => String(b.seat));
   const emptySeats = seatIds.filter(id => !takenSeats.includes(id));
   const avail = emptySeats.length;
-  const d = new Date(dateStr);
-  const fmt = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+  const fmtDate = new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
 
   document.getElementById('md-img').src = img;
   document.getElementById('md-name').innerText = name;
-  document.getElementById('md-date').innerText = '📅 ' + fmt;
+  document.getElementById('md-date').innerText = '📅 ' + fmtDate;
   document.getElementById('md-price').innerText = '💸 ค่าใช้จ่ายประมาณ ' + info.price;
   document.getElementById('md-payment').innerText = info.paymentNote ? '💰 ' + info.paymentNote : '';
   document.getElementById('md-days').innerText = info.days;
@@ -1571,476 +1793,297 @@ function openModal(name, dateStr) {
   document.getElementById('md-level').innerText = info.level;
   document.getElementById('md-hl').innerText = info.highlight;
 
-  const av = document.getElementById('md-avail');
-  const st = document.getElementById('md-status');
-  const btn = document.getElementById('md-bookBtn');
+  const availEl = document.getElementById('md-avail');
+  const statusEl = document.getElementById('md-status');
+  const bookBtn = document.getElementById('md-bookBtn');
 
-  // ตั้งค่าเริ่มต้นปุ่ม
-  btn.disabled = false;
-  btn.onclick = () => goToBook();
-  btn.style.background = 'linear-gradient(145deg, #ff4747, #d91f2f)'; // สีแดงปกติ
+  bookBtn.disabled = false;
+  bookBtn.onclick = () => goToBook();
+  bookBtn.style.background = 'linear-gradient(145deg, #ff4747, #d91f2f)';
 
   if (locked) {
-    av.innerText = 'ยังไม่เปิดจอง';
-    av.className = 'avail full';
-    st.innerText = 'เร็วๆ นี้';
-    st.className = 'chip chip-yellow';
-    btn.disabled = true;
-    btn.innerText = '⚠️ ยังไม่เปิดจองครับ';
+    availEl.innerText = 'ยังไม่เปิดจอง';
+    availEl.className = 'avail full';
+    statusEl.innerText = 'เร็วๆ นี้';
+    statusEl.className = 'chip chip-yellow';
+    bookBtn.disabled = true;
+    bookBtn.innerText = '⚠️ ยังไม่เปิดจองครับ';
   } else if (avail <= 0) {
-    // กล่องสถานะทริปเต็ม (สีทึบ)
-    av.innerHTML = `
-      <div style="background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); padding:12px; border-radius:12px; text-align:center;">
-        <div style="color:#ef4444; font-weight:800; font-size:14px;">🔴 ที่นั่งเต็มแล้วครับ</div>
-        <div style="color:#94a3b8; font-size:11px; margin-top:2px;">กดปุ่มด้านล่างเพื่อดูผังเบาะได้ครับ</div>
+    availEl.innerHTML = `
+      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:12px;border-radius:12px;text-align:center;">
+        <div style="color:#ef4444;font-weight:800;font-size:14px;">🔴 ที่นั่งเต็มแล้วครับ</div>
+        <div style="color:#94a3b8;font-size:11px;margin-top:2px;">กดปุ่มด้านล่างเพื่อดูผังเบาะได้ครับ</div>
       </div>
     `;
-    st.innerText = 'เต็มแล้ว';
-    st.className = 'chip';
-    st.style.cssText = 'background:rgba(239,68,68,.2);color:var(--red)';
-    btn.innerText = '🔴 ที่นั่งเต็มแล้วครับ 👀 กดดูผังเบาะ';
-    btn.style.background = '#475569'; // ปุ่มสีเทาเข้ม
+    statusEl.innerText = 'เต็มแล้ว';
+    statusEl.className = 'chip';
+    statusEl.style.cssText = 'background:rgba(239,68,68,.2);color:var(--red)';
+    bookBtn.innerText = '🔴 ที่นั่งเต็มแล้วครับ 👀 กดดูผังเบาะ';
+    bookBtn.style.background = '#475569';
   } else {
-    // สถานะปกติ (ที่นั่งยังว่าง)
-    av.innerText = `เหลือ ${avail} ที่ — ${emptySeats.slice(0, 5).join(', ')}${emptySeats.length > 5 ? '...' : ''}`;
-    av.className = 'avail ' + (avail <= 5 ? 'low' : 'ok');
-    st.innerText = 'เปิดจอง';
-    st.className = 'chip chip-green';
-    btn.innerText = 'จองที่นั่ง 🚐';
+    availEl.innerText = `เหลือ ${avail} ที่ — ${emptySeats.slice(0, 5).join(', ')}${emptySeats.length > 5 ? '...' : ''}`;
+    availEl.className = 'avail ' + (avail <= 5 ? 'low' : 'ok');
+    statusEl.innerText = 'เปิดจอง';
+    statusEl.className = 'chip chip-green';
+    bookBtn.innerText = 'จองที่นั่ง 🚐';
   }
 
-  pendingTrip = { name, date: fmt, raw: dateStr };
+  pendingTrip = { name, date: fmtDate, raw: dateStr };
   document.getElementById('modalBg').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
-function closeModal(){document.getElementById('modalBg').classList.remove('show');document.body.style.overflow='';}
 
-/* ── BOOKING ── */
-function goToBook(){
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+/* ================================================================
+   BOOKING PAGE
+   ================================================================ */
+function goToBook() {
   closeModal();
-  // Format date เป็น YYYY-MM-DD เหมือนโค้ดเดิม
-  const cleanDate=new Date(pendingTrip.raw);
-  const yyyy=cleanDate.getFullYear();
-  const mm=String(cleanDate.getMonth()+1).padStart(2,'0');
-  const dd=String(cleanDate.getDate()).padStart(2,'0');
-  const formattedDate=`${yyyy}-${mm}-${dd}`;
-  document.getElementById('b-trip').value=pendingTrip.name;
-  document.getElementById('b-date').value=pendingTrip.date;
-  document.getElementById('f-dateraw').value=formattedDate;
-  document.getElementById('f-phone').value=currentUser.phone;
-  document.getElementById('f-nick').value=currentUser.nick;
-  selectedSeat=null;document.getElementById('f-seat').value='';
+
+  const cleanDate = new Date(pendingTrip.raw);
+  const yyyy = cleanDate.getFullYear();
+  const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
+  const dd = String(cleanDate.getDate()).padStart(2, '0');
+  const formattedDate = `${yyyy}-${mm}-${dd}`;
+
+  document.getElementById('b-trip').value = pendingTrip.name;
+  document.getElementById('b-date').value = pendingTrip.date;
+  document.getElementById('f-dateraw').value = formattedDate;
+  document.getElementById('f-phone').value = currentUser.phone;
+  document.getElementById('f-nick').value = currentUser.nick;
+
+  selectedSeat = null;
+  document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
   document.getElementById('bookingPage2').classList.add('show');
-  window.scrollTo({top:0,behavior:'instant'});
+  window.scrollTo({ top: 0, behavior: 'instant' });
+
   loadSeats(formattedDate, true);
 
-clearInterval(
-  seatRefreshTimer
-);
-
-seatRefreshTimer =
-  setInterval(()=>{
-    const page =
-      document.getElementById(
-        'bookingPage2'
-      );
-
-    if(
-      page &&
-      page.classList.contains('show')
-    ){
-      loadSeats(
-        document
-          .getElementById('f-dateraw')
-          .value
-      );
+  clearInterval(seatRefreshTimer);
+  seatRefreshTimer = setInterval(() => {
+    const page = document.getElementById('bookingPage2');
+    if (page && page.classList.contains('show')) {
+      loadSeats(document.getElementById('f-dateraw').value);
     }
-  },5000);
+  }, 5000);
 
-checkBook();
+  checkBook();
 }
-function closeBook(){
-  document
-    .getElementById('bookingPage2')
-    .classList
-    .remove('show');
 
-  clearInterval(
-    seatRefreshTimer
-  );
-
+function closeBook() {
+  document.getElementById('bookingPage2').classList.remove('show');
+  clearInterval(seatRefreshTimer);
   seatRefreshTimer = null;
-
   stopSeatCountdown();
 }
 
-/* ── SEAT GRID (โค้ดเดิมไอซ์) ── */
-function renderVansWithData(
-  bookedList,
-  lockList = []
-){
+/* ================================================================
+   SEAT MAP RENDERING
+   ================================================================ */
+function renderVansWithData(bookedList, lockList = []) {
   const bookedMapping = {};
+  bookedList.forEach(booking => {
+    const seat = String(booking.seat || '').trim();
+    if (seat) bookedMapping[seat] = booking.nickname || 'เต็ม';
+  });
+
+  // เบาะที่ "คนอื่น" (ไม่ใช่เรา) กำลังล็อกอยู่ชั่วคราว และยังไม่ถูกจองจริง
   const lockedMapping = {};
-
-  bookedList.forEach(booking=>{
-    const seat =
-      String(
-        booking.seat || ''
-      ).trim();
-
-    if(seat){
-      bookedMapping[seat] =
-        booking.nickname || 'เต็ม';
-    }
+  lockList.forEach(lock => {
+    const seat = String(lock.seat || '').trim();
+    const isMine = String(lock.session_id || '') === String(MY_SESSION_ID);
+    if (seat && !isMine && !bookedMapping[seat]) lockedMapping[seat] = true;
   });
 
-  lockList.forEach(lock=>{
-    const seat =
-      String(
-        lock.seat || ''
-      ).trim();
+  ['A', 'B', 'C'].forEach(prefix => {
+    const grid = document.getElementById('vanGrid' + prefix);
+    if (!grid) return;
 
-    const lockSession =
-      String(
-        lock.session_id || ''
-      );
+    grid.innerHTML = '';
 
-    const isMine =
-      lockSession ===
-      String(MY_SESSION_ID);
+    BUS_GRID_STRUCTURE.forEach(n => {
+      const cell = document.createElement('div');
 
-    if(
-      seat &&
-      !isMine &&
-      !bookedMapping[seat]
-    ){
-      lockedMapping[seat] = true;
-    }
-  });
+      if (n === 'driver') {
+        cell.className = 'seat driver';
+        cell.innerHTML = '<span style="font-size:22px">👨‍✈️</span><span style="font-size:15px">คนขับ</span>';
+        grid.appendChild(cell);
+        return;
+      }
 
-  ['A','B','C'].forEach(prefix=>{
-  const grid = document.getElementById('vanGrid' + prefix);
+      if (n === 'spacer') {
+        cell.className = 'seat spacer';
+        grid.appendChild(cell);
+        return;
+      }
 
-  if(!grid){
-    return;
-  }
-
-  grid.innerHTML = '';
-
-  BUS_GRID_STRUCTURE.forEach(n=>{
-    const cell = document.createElement('div');
-
-    if(n === 'driver'){
-      cell.className = 'seat driver';
-
-      cell.innerHTML =
-        '<span style="font-size:22px">👨‍✈️</span>' +
-        '<span style="font-size:15px">คนขับ</span>';
-
-    }else if(n === 'spacer'){
-      cell.className = 'seat spacer';
-
-    }else{
       const id = prefix + n;
-
       cell.className = 'seat';
 
-      if(bookedMapping[id]){
-        if(bookedMapping[id] === 'งดจอง'){
+      if (bookedMapping[id]) {
+        if (bookedMapping[id] === 'งดจอง') {
           cell.classList.add('hidden-seat');
-
-        }else{
+        } else {
           cell.classList.add('booked');
-
-          cell.innerHTML = `
-            <span style="font-size:9px">
-              ${id}
-            </span>
-
-            <div style="
-              font-size:12px;
-              text-align:center
-            ">
-              ${bookedMapping[id]}
-            </div>
-          `;
+          cell.innerHTML = `<span style="font-size:9px">${id}</span><div style="font-size:12px;text-align:center">${bookedMapping[id]}</div>`;
         }
-
-      }else if(lockedMapping[id]){
+      } else if (lockedMapping[id]) {
+        // 🟠 มีคนอื่นกำลังเลือกเบาะนี้อยู่ (ล็อกชั่วคราว)
         cell.classList.add('locking');
-
-        cell.innerHTML = `
-          <span style="font-size:9px">
-            ${id}
-          </span>
-
-          <div style="
-            font-size:10px;
-            text-align:center
-          ">
-            ⏳ มีคนเลือก
-          </div>
-        `;
-
-      }else{
+        cell.innerHTML = `<span style="font-size:9px">${id}</span><div style="font-size:10px;text-align:center">⏳ มีคนเลือก</div>`;
+      } else {
         cell.classList.add('empty');
-
-        if(id === selectedSeat){
-          cell.classList.add('selected');
-        }
-
-        cell.innerHTML = `
-          <span style="font-size:10px">
-            เบาะ
-          </span>
-
-          <span style="font-size:15px">
-            ${id}
-          </span>
-        `;
-
-        cell.onclick = function(){
-          pickSeat(cell,id);
-        };
+        if (id === selectedSeat) cell.classList.add('selected');
+        cell.innerHTML = `<span style="font-size:10px">เบาะ</span><span style="font-size:15px">${id}</span>`;
+        cell.onclick = () => pickSeat(cell, id);
       }
-    }
 
-    grid.appendChild(cell);
+      grid.appendChild(cell);
+    });
   });
-});
 }
-async function pickSeat(el,id){
-  const trip =
-    document.getElementById('b-trip').value.trim();
 
-  const date =
-    document.getElementById('f-dateraw').value.trim();
+async function pickSeat(el, id) {
+  const trip = document.getElementById('b-trip').value.trim();
+  const date = document.getElementById('f-dateraw').value.trim();
 
-  if(!trip || !date){
+  if (!trip || !date) {
     Swal.fire({
-      icon:'error',
-      title:'ข้อมูลทริปไม่ครบ',
-      text:'กรุณากลับไปเลือกทริปใหม่',
-      background:'#0c1524',
-      color:'#f1f5f9',
-      confirmButtonColor:'#0284c7'
+      icon: 'error', title: 'ข้อมูลทริปไม่ครบ', text: 'กรุณากลับไปเลือกทริปใหม่',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
     return;
   }
 
-  /*
-   * จำเบาะเดิมไว้ เผื่อล็อกไม่สำเร็จ
-   */
-  const previousSeat = selectedSeat;
+  const previousSeat = selectedSeat; // จำเบาะเดิมไว้ เผื่อล็อกไม่สำเร็จ
 
-/* แสดงผลทันที */
-selectedSeat = id;
-
-document
-  .querySelectorAll('.seat.selected')
-  .forEach(seat=>{
-    seat.classList.remove('selected');
-  });
-
-el.classList.add('selected');
-
-document.getElementById('f-seat').value = id;
-
-document
-  .getElementById('formFieldsBox2')
-  .classList
-  .add('show');
-
-checkBook();
-
-setTimeout(()=>{
-  document
-    .getElementById('formFieldsBox2')
-    .scrollIntoView({
-      behavior:'smooth',
-      block:'start'
-    });
-},50);
-
-/* ค่อยส่งไปล็อกหลังบ้าน */
-try{
-const response = await fetch(API_URL,{
-  method:'POST',
-  body:new URLSearchParams({
-    action:'lockSeat',
-    date:date,
-    trip:trip,
-    seat:id,
-    session_id:MY_SESSION_ID
-  })
-});
-
-    const result = await response.json();
-
-if(!result.ok){
-  /*
-   * ล็อกไม่ผ่าน ย้อนสถานะกลับ
-   */
-  selectedSeat = previousSeat;
-
-  el.classList.remove('selected');
-
-  document.getElementById('f-seat').value =
-    previousSeat || '';
-
-  if(previousSeat){
-    const previousEl =
-      [...document.querySelectorAll('.seat')]
-        .find(seat=>{
-          return seat.textContent.includes(previousSeat);
-        });
-
-    if(previousEl){
-      previousEl.classList.add('selected');
-    }
-  }else{
-    document
-      .getElementById('formFieldsBox2')
-      .classList
-      .remove('show');
-  }
-
+  // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
+  selectedSeat = id;
+  document.querySelectorAll('.seat.selected').forEach(seat => seat.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('f-seat').value = id;
+  document.getElementById('formFieldsBox2').classList.add('show');
   checkBook();
 
-  Swal.fire({
-    icon:'warning',
-    title:'เบาะนี้ไม่ว่างแล้ว',
-    text:
-      result.error === 'seat_booked'
-        ? 'เบาะนี้ถูกจองไปแล้ว กรุณาเลือกเบาะอื่น'
-        : 'มีคนอื่นกำลังเลือกเบาะนี้ กรุณาเลือกเบาะอื่น',
-    background:'#0c1524',
-    color:'#f1f5f9',
-    confirmButtonColor:'#0284c7'
-  });
+  setTimeout(() => {
+    document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
 
-  loadSeats(date);
-  return;
-}
-
-/* ล็อกเบาะสำเร็จ เริ่มเวลาใหม่ 5 นาที */
-startSeatCountdown(true);
-
-}catch(error){
+  function revertToPreviousSeat() {
     selectedSeat = previousSeat;
-
     el.classList.remove('selected');
+    document.getElementById('f-seat').value = previousSeat || '';
 
-    document.getElementById('f-seat').value =
-      previousSeat || '';
+    if (previousSeat) {
+      const previousEl = [...document.querySelectorAll('.seat')].find(seat => seat.textContent.includes(previousSeat));
+      if (previousEl) previousEl.classList.add('selected');
+    } else {
+      document.getElementById('formFieldsBox2').classList.remove('show');
+    }
+    checkBook();
+  }
 
-    if(!previousSeat){
-      document
-        .getElementById('formFieldsBox2')
-        .classList
-        .remove('show');
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ action: 'lockSeat', date, trip, seat: id, session_id: MY_SESSION_ID })
+    });
+    const result = await response.json();
+
+    if (!result.ok) {
+      revertToPreviousSeat();
+      Swal.fire({
+        icon: 'warning',
+        title: 'เบาะนี้ไม่ว่างแล้ว',
+        text: result.error === 'seat_booked' ? 'เบาะนี้ถูกจองไปแล้ว กรุณาเลือกเบาะอื่น' : 'มีคนอื่นกำลังเลือกเบาะนี้ กรุณาเลือกเบาะอื่น',
+        background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+      });
+      loadSeats(date);
+      return;
     }
 
-    checkBook();
+    // ล็อกเบาะสำเร็จ -> เริ่มนับเวลาใหม่ 5 นาที
+    startSeatCountdown(true);
 
+  } catch (error) {
+    revertToPreviousSeat();
     Swal.fire({
-      icon:'error',
-      title:'ล็อกเบาะไม่สำเร็จ',
-      text:'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
-      background:'#0c1524',
-      color:'#f1f5f9',
-      confirmButtonColor:'#0284c7'
+      icon: 'error', title: 'ล็อกเบาะไม่สำเร็จ', text: 'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
-
     loadSeats(date);
-
-  }finally{
+  } finally {
     el.style.pointerEvents = '';
   }
 }
-function checkBook(){
-  const ok=['f-name','f-nick','f-phone','f-line','f-seat'].every(id=>document.getElementById(id).value.trim()!=='');
-  const btn=document.getElementById('confirmBtn');
-  btn.disabled=!ok;btn.classList.toggle('ready',ok);
-  btn.innerText=ok?'👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨':'🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง';
+
+function checkBook() {
+  const ok = ['f-name', 'f-nick', 'f-phone', 'f-line', 'f-seat'].every(id => document.getElementById(id).value.trim() !== '');
+  const btn = document.getElementById('confirmBtn');
+  btn.disabled = !ok;
+  btn.classList.toggle('ready', ok);
+  btn.innerText = ok ? '👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨' : '🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง';
 }
 
-let selectedSlipFile = null;
-
-function handleSlipFile(input){
+/* ================================================================
+   SLIP UPLOAD
+   ================================================================ */
+function handleSlipFile(input) {
   const drop = document.getElementById('slipDrop');
   const nameEl = document.getElementById('slipName');
   const preview = document.getElementById('slipPreview');
   const button = document.getElementById('payOkBtn');
 
-  if(!input.files || !input.files[0]){
+  if (!input.files || !input.files[0]) {
     resetSlipUpload();
     return;
   }
 
   const file = input.files[0];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
-  const allowedTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/webp'
-  ];
-
-  if(!allowedTypes.includes(file.type)){
+  if (!allowedTypes.includes(file.type)) {
     input.value = '';
-
     Swal.fire({
-      icon:'warning',
-      title:'ไฟล์ไม่ถูกต้อง',
-      text:'กรุณาแนบสลิปชนิด JPG, PNG หรือ WEBP',
-      background:'#0c1524',
-      color:'#f1f5f9',
-      confirmButtonColor:'#0284c7'
+      icon: 'warning', title: 'ไฟล์ไม่ถูกต้อง', text: 'กรุณาแนบสลิปชนิด JPG, PNG หรือ WEBP',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
-
     resetSlipUpload();
     return;
   }
 
   const maxSize = 5 * 1024 * 1024;
-
-  if(file.size > maxSize){
+  if (file.size > maxSize) {
     input.value = '';
-
     Swal.fire({
-      icon:'warning',
-      title:'ไฟล์ใหญ่เกินไป',
-      text:'กรุณาใช้รูปสลิปขนาดไม่เกิน 5MB',
-      background:'#0c1524',
-      color:'#f1f5f9',
-      confirmButtonColor:'#0284c7'
+      icon: 'warning', title: 'ไฟล์ใหญ่เกินไป', text: 'กรุณาใช้รูปสลิปขนาดไม่เกิน 5MB',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
-
     resetSlipUpload();
     return;
   }
 
   selectedSlipFile = file;
-
   drop.classList.add('has-file');
   nameEl.textContent = '✅ ' + file.name;
 
   const reader = new FileReader();
-
-  reader.onload = function(event){
+  reader.onload = (event) => {
     preview.src = event.target.result;
     preview.classList.add('show');
   };
-
   reader.readAsDataURL(file);
 
   button.disabled = false;
   button.textContent = '✔️ ส่งสลิปและยืนยันการจอง';
 }
 
-
-function resetSlipUpload(){
+function resetSlipUpload() {
   selectedSlipFile = null;
 
   const input = document.getElementById('slipFile');
@@ -2049,308 +2092,202 @@ function resetSlipUpload(){
   const preview = document.getElementById('slipPreview');
   const button = document.getElementById('payOkBtn');
 
-  if(input){
-    input.value = '';
-  }
-
-  if(drop){
-    drop.classList.remove('has-file');
-  }
-
-  if(nameEl){
-    nameEl.textContent = 'แตะเพื่อเลือกรูปสลิป';
-  }
-
-  if(preview){
+  if (input) input.value = '';
+  if (drop) drop.classList.remove('has-file');
+  if (nameEl) nameEl.textContent = 'แตะเพื่อเลือกรูปสลิป';
+  if (preview) {
     preview.src = '';
     preview.classList.remove('show');
   }
-
-  if(button){
+  if (button) {
     button.disabled = true;
     button.textContent = '🧾 กรุณาแนบสลิปก่อน';
   }
 }
 
-
-function slipFileToBase64(file){
-  return new Promise((resolve,reject)=>{
+function slipFileToBase64(file) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
-
-    reader.onload = function(){
+    reader.onload = () => {
       const result = String(reader.result || '');
       const commaIndex = result.indexOf(',');
-
       resolve({
-        name:file.name,
-        mimeType:file.type || 'image/jpeg',
-        data:commaIndex >= 0
-          ? result.substring(commaIndex + 1)
-          : result
+        name: file.name,
+        mimeType: file.type || 'image/jpeg',
+        data: commaIndex >= 0 ? result.substring(commaIndex + 1) : result
       });
     };
-
-    reader.onerror = function(){
-      reject(
-        new Error('ไม่สามารถอ่านรูปสลิปได้')
-      );
-    };
-
+    reader.onerror = () => reject(new Error('ไม่สามารถอ่านรูปสลิปได้'));
     reader.readAsDataURL(file);
   });
 }
-  
-/* ── PAYMENT ── */
 
-function openPay(){
-  if(!selectedSeat){
+/* ================================================================
+   PAYMENT
+   ================================================================ */
+function openPay() {
+  if (!selectedSeat) {
     Swal.fire({
-      icon:'warning',
-      title:'ยังไม่ได้เลือกที่นั่ง',
-      text:'กรุณาเลือกที่นั่งก่อนชำระเงิน',
-      background:'#0c1524',
-      color:'#f1f5f9',
-      confirmButtonColor:'#0284c7'
+      icon: 'warning', title: 'ยังไม่ได้เลือกที่นั่ง', text: 'กรุณาเลือกที่นั่งก่อนชำระเงิน',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
-
     return;
   }
 
   resetSlipUpload();
-
-  /*
-   * เริ่มนับ 5 นาทีตอนเปิดหน้าชำระเงิน (ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ)
-   */
-  startSeatCountdown();
-
-  document
-    .getElementById('payModal')
-    .classList
-    .add('show');
+  startSeatCountdown(); // ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ
+  document.getElementById('payModal').classList.add('show');
 }
 
-function closePay(){
-  document
-    .getElementById('payModal')
-    .classList
-    .remove('show');
-
-  /*
-   * หยุดแค่ตัวนับเวลาที่แสดงผลชั่วคราว
-   * แต่ไม่รีเซ็ตเวลาหมดอายุของการล็อกเบาะ (ยังนับต่อเนื่องอยู่หลังบ้าน)
-   */
+function closePay() {
+  document.getElementById('payModal').classList.remove('show');
+  // หยุดแค่ตัวนับเวลาที่แสดงผลชั่วคราว แต่ไม่รีเซ็ตเวลาหมดอายุของการล็อกเบาะ
   clearInterval(seatCountdownTimer);
   seatCountdownTimer = null;
 }
 
-async function submitBook(){
+async function submitBook() {
   const btn = document.getElementById('payOkBtn');
 
-  if(!selectedSlipFile){
+  if (!selectedSlipFile) {
     Swal.fire({
-      icon:'warning',
-      title:'ยังไม่ได้แนบสลิป',
-      text:'กรุณาแนบรูปสลิปก่อนยืนยันการจอง',
-      background:'#0c1524',
-      color:'#f1f5f9',
-      confirmButtonColor:'#0284c7'
+      icon: 'warning', title: 'ยังไม่ได้แนบสลิป', text: 'กรุณาแนบรูปสลิปก่อนยืนยันการจอง',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
-
     return;
   }
 
   btn.innerHTML = '⌛ กำลังส่งข้อมูลและสลิป...';
   btn.disabled = true;
 
-  try{
-    const slipData = await slipFileToBase64(
-      selectedSlipFile
-    );
+  try {
+    const slipData = await slipFileToBase64(selectedSlipFile);
+    const bookingId = 'BOOK-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7).toUpperCase();
 
-    const bookingId =
-      'BOOK-' +
-      Date.now() +
-      '-' +
-      Math.random()
-        .toString(36)
-        .substring(2,7)
-        .toUpperCase();
-
-    /*
-     * เก็บข้อมูลเดิมทุกตัวไว้
-     * แล้วเพิ่มข้อมูลสลิปต่อท้าย
-     */
     const payload = {
-      date:
-        document.getElementById('f-dateraw').value,
-
-      trip:
-        document.getElementById('b-trip').value,
-
-      seat:
-        document.getElementById('f-seat').value,
-
-      name:
-        document.getElementById('f-name').value.trim(),
-
-      nickname:
-        document.getElementById('f-nick').value.trim(),
-
-      phone:
-        document.getElementById('f-phone').value.trim(),
-
-      line:
-        document.getElementById('f-line').value.trim(),
-
-      confirm:'true',
-
-bookingId:bookingId,
-
-session_id:MY_SESSION_ID,
-
-slipBase64:slipData.data,
-slipName:slipData.name,
-slipMime:slipData.mimeType
+      date: document.getElementById('f-dateraw').value,
+      trip: document.getElementById('b-trip').value,
+      seat: document.getElementById('f-seat').value,
+      name: document.getElementById('f-name').value.trim(),
+      nickname: document.getElementById('f-nick').value.trim(),
+      phone: document.getElementById('f-phone').value.trim(),
+      line: document.getElementById('f-line').value.trim(),
+      confirm: 'true',
+      bookingId: bookingId,
+      session_id: MY_SESSION_ID,
+      slipBase64: slipData.data,
+      slipName: slipData.name,
+      slipMime: slipData.mimeType
     };
 
+    // ส่งผ่านฟอร์ม + iframe ที่ซ่อนไว้ (ใช้ textarea เพราะ Base64 ยาวมาก)
     const form = document.createElement('form');
-
     form.method = 'POST';
     form.action = API_URL;
     form.target = '_ifr_booking';
     form.acceptCharset = 'UTF-8';
     form.style.display = 'none';
 
-    Object.entries(payload).forEach(
-      ([key,value])=>{
-        /*
-         * ใช้ textarea เพราะ Base64 ยาวมาก
-         * เหมือนระบบสมัคร Staff
-         */
-        const field =
-          document.createElement('textarea');
+    Object.entries(payload).forEach(([key, value]) => {
+      const field = document.createElement('textarea');
+      field.name = key;
+      field.value = value == null ? '' : String(value);
+      field.style.display = 'none';
+      form.appendChild(field);
+    });
 
-        field.name = key;
-        field.value =
-          value == null ? '' : String(value);
-
-        field.style.display = 'none';
-
-        form.appendChild(field);
-      }
-    );
-
-    let iframe =
-      document.getElementById('_ifr_booking');
-
-    if(!iframe){
-      iframe =
-        document.createElement('iframe');
-
+    let iframe = document.getElementById('_ifr_booking');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
       iframe.name = '_ifr_booking';
       iframe.id = '_ifr_booking';
       iframe.style.display = 'none';
-
       document.body.appendChild(iframe);
     }
 
     document.body.appendChild(form);
     form.submit();
 
-    /*
-     * รอหลังบ้านบันทึกรูปและข้อมูล
-     */
-    setTimeout(()=>{
-      clearInterval(
-  seatRefreshTimer
-);
-
-seatRefreshTimer = null;
-
-stopSeatCountdown();
+    // รอหลังบ้านบันทึกรูปและข้อมูลก่อนแสดงหน้าสำเร็จ
+    setTimeout(() => {
+      clearInterval(seatRefreshTimer);
+      seatRefreshTimer = null;
+      stopSeatCountdown();
       closePay();
 
-      document.getElementById('r-name').innerText =
-        payload.name;
+      document.getElementById('r-name').innerText = payload.name;
+      document.getElementById('r-trip').innerText = payload.trip;
+      document.getElementById('r-date').innerText = new Date(payload.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+      document.getElementById('r-seat').innerText = payload.seat;
 
-      document.getElementById('r-trip').innerText =
-        payload.trip;
-
-      document.getElementById('r-date').innerText =
-        new Date(payload.date)
-          .toLocaleDateString(
-            'th-TH',
-            {
-              day:'numeric',
-              month:'short',
-              year:'2-digit'
-            }
-          );
-
-      document.getElementById('r-seat').innerText =
-        payload.seat;
-
-      document
-        .getElementById('successPage2')
-        .classList
-        .add('show');
-
-      allBookings.push({
-        ...payload,
-        paymentStatus:'รอตรวจสอบสลิป'
-      });
-
+      document.getElementById('successPage2').classList.add('show');
+      allBookings.push({ ...payload, paymentStatus: 'รอตรวจสอบสลิป' });
       renderMyTrips();
 
-      if(form.parentNode){
-        form.remove();
-      }
-
+      if (form.parentNode) form.remove();
       selectedSlipFile = null;
+    }, 8000);
 
-    },8000);
-
-  }catch(error){
+  } catch (error) {
     btn.disabled = false;
-    btn.textContent =
-      '✔️ ส่งสลิปและยืนยันการจอง';
-
+    btn.textContent = '✔️ ส่งสลิปและยืนยันการจอง';
     Swal.fire({
-      icon:'error',
-      title:'ส่งสลิปไม่สำเร็จ',
-      text:
-        error.message ||
-        'กรุณาลองใหม่อีกครั้ง',
-      background:'#0c1524',
-      color:'#f1f5f9',
-      confirmButtonColor:'#0284c7'
+      icon: 'error', title: 'ส่งสลิปไม่สำเร็จ', text: error.message || 'กรุณาลองใหม่อีกครั้ง',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
   }
 }
-function backHome(){document.getElementById('successPage2').classList.remove('show');document.getElementById('bookingPage2').classList.remove('show');switchTab('home');renderHome();}
 
-/* ── LOGOUT ── */
-function logOut(){Swal.fire({title:'ออกจากระบบ?',text:'ต้องล็อกอินด้วยเบอร์ใหม่อีกครั้ง',icon:'warning',showCancelButton:true,confirmButtonText:'ออกเลย',cancelButtonText:'ยกเลิก',background:'#0c1524',color:'#f1f5f9',confirmButtonColor:'#ef4444'}).then(r=>{if(r.isConfirmed){localStorage.removeItem('tnhUser');location.reload();}});}
+function backHome() {
+  document.getElementById('successPage2').classList.remove('show');
+  document.getElementById('bookingPage2').classList.remove('show');
+  switchTab('home');
+  renderHome();
+}
 
-/* ── DRAWER ── */
-function openDrawer(){document.getElementById('drawer').classList.add('open');document.getElementById('ov').style.display='block';}
-function closeDrawer(){document.getElementById('drawer').classList.remove('open');document.getElementById('ov').style.display='none';}
+/* ================================================================
+   LOGOUT
+   ================================================================ */
+function logOut() {
+  Swal.fire({
+    title: 'ออกจากระบบ?', text: 'ต้องล็อกอินด้วยเบอร์ใหม่อีกครั้ง', icon: 'warning',
+    showCancelButton: true, confirmButtonText: 'ออกเลย', cancelButtonText: 'ยกเลิก',
+    background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#ef4444'
+  }).then(r => {
+    if (r.isConfirmed) {
+      localStorage.removeItem('tnhUser');
+      location.reload();
+    }
+  });
+}
 
-function appendScript(src){const s=document.createElement('script');s.src=src;document.body.appendChild(s);}
+/* ================================================================
+   DRAWER
+   ================================================================ */
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('ov').style.display = 'block';
+}
 
-// อัปโหลดรูปโปรไฟล์
-function uploadAvatar(input){
-  if(input.files&&input.files[0]){
-    const reader=new FileReader();
-    reader.onload=(e)=>{
-      const img=document.getElementById('userAvatar');
-      if(img){img.src=e.target.result;}
-      localStorage.setItem('userAvatar',e.target.result);
-      // อัปเดตรูปในหน้าหลักด้วย
-      renderHome();
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('ov').style.display = 'none';
+}
+
+/* ================================================================
+   PROFILE AVATAR UPLOAD
+   ================================================================ */
+function uploadAvatar(input) {
+  if (!input.files || !input.files[0]) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('userAvatar');
+    if (img) img.src = e.target.result;
+    localStorage.setItem('userAvatar', e.target.result);
+    renderHome(); // อัปเดตรูปในหน้าหลักด้วย
+  };
+  reader.readAsDataURL(input.files[0]);
 }
 </script>
 </body>
