@@ -768,6 +768,92 @@ body {
 .info-block { background: rgba(255, 255, 255, .02); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--yellow); font-size: 12px; line-height: 1.5; }
 .mem-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
 .mem-grid img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
+
+/* ============================================================
+   HOME QUICK ACTIONS (กดจองทริป / เช่าอุปกรณ์)
+   ============================================================ */
+.quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 2px 0 22px; }
+.qa-box {
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, .08);
+  animation: qaBeat 1.8s ease-in-out infinite;
+  transition: transform .15s;
+  text-align: center;
+  padding: 10px;
+}
+.qa-box:active { transform: scale(.96); }
+.qa-box .qa-ico { font-size: 34px; }
+.qa-box .qa-label { font-size: 14px; font-weight: 800; color: #fff; }
+.qa-box .qa-sub { font-size: 10px; color: rgba(255, 255, 255, .75); }
+.qa-trip { background: linear-gradient(145deg, rgba(2, 132, 199, .38), rgba(56, 189, 248, .14)); box-shadow: 0 8px 22px rgba(2, 132, 199, .22); }
+.qa-rent { background: linear-gradient(145deg, rgba(16, 185, 129, .38), rgba(16, 185, 129, .12)); box-shadow: 0 8px 22px rgba(16, 185, 129, .2); }
+@keyframes qaBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+
+/* ============================================================
+   EQUIPMENT RENTAL PAGE (เช่าอุปกรณ์)
+   ============================================================ */
+#equipPage { position: fixed; inset: 0; z-index: 950; background: var(--bg); overflow-y: auto; display: none; }
+#equipPage.show { display: block; animation: fadeUp .25s ease; }
+
+.eq-sec-title { font-size: 14px; color: var(--blue); font-weight: 700; margin: 22px 0 12px; display: flex; align-items: center; gap: 8px; }
+
+.eq-trip-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: .15s;
+}
+.eq-trip-card.selected { border-color: var(--blue); background: rgba(56, 189, 248, .08); }
+.eq-trip-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--muted); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.eq-trip-card.selected .eq-trip-radio { border-color: var(--blue); }
+.eq-trip-radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); display: none; }
+.eq-trip-card.selected .eq-trip-radio::after { display: block; }
+.eq-trip-info h4 { font-size: 13px; color: #fff; font-weight: 700; }
+.eq-trip-info p { font-size: 11px; color: var(--sub); margin-top: 2px; }
+
+.eq-item-card { display: flex; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 12px; margin-bottom: 12px; }
+.eq-item-img { width: 74px; height: 74px; border-radius: 14px; overflow: hidden; flex-shrink: 0; background: #fff; display: flex; align-items: center; justify-content: center; }
+.eq-item-img img { width: 100%; height: 100%; object-fit: contain; }
+.eq-item-info { flex: 1; min-width: 0; }
+.eq-item-info h4 { font-size: 14px; color: #fff; font-weight: 700; }
+.eq-item-info p.model { font-size: 11px; color: var(--sub); margin-top: 2px; }
+.eq-item-info p.price { font-size: 12px; color: var(--blue); font-weight: 700; margin-top: 4px; }
+.eq-stepper { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.eq-step-btn { width: 30px; height: 30px; border-radius: 10px; border: none; background: var(--bg3); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.eq-step-val { min-width: 22px; text-align: center; font-size: 15px; font-weight: 800; color: #fff; }
+
+.eq-summary-card {
+  background: linear-gradient(180deg, rgba(56, 189, 248, .1), rgba(56, 189, 248, .03));
+  border: 1px solid rgba(56, 189, 248, .18);
+  border-radius: 18px;
+  padding: 14px 16px;
+  margin: 18px 0 100px;
+}
+.eq-summary-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--sub); padding: 4px 0; }
+.eq-summary-row.total { font-size: 15px; font-weight: 800; color: #fff; border-top: 1px solid var(--border); margin-top: 8px; padding-top: 10px; }
+.eq-summary-row.total span:last-child { color: var(--blue); }
+
+.eq-note { font-size: 11px; color: #fbbf24; background: rgba(245, 158, 11, .08); border: 1px solid rgba(245, 158, 11, .25); border-radius: 12px; padding: 10px 12px; margin-top: 10px; line-height: 1.6; }
+
+/* ใบเสร็จค่าเช่าอุปกรณ์ */
+#equipReceiptPage { position: fixed; inset: 0; z-index: 1150; background: var(--bg); display: none; overflow-y: auto; }
+#equipReceiptPage.show { display: block; animation: fadeUp .3s ease; }
+.r-item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; color: #334155; }
+.r-item-row:last-of-type { border-bottom: none; }
+.r-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #15803d; padding-top: 10px; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -1077,6 +1163,60 @@ body {
   </div>
 </div>
 
+<!-- ============================================================
+     EQUIPMENT RENTAL PAGE (เช่าอุปกรณ์)
+     ============================================================ -->
+<div id="equipPage">
+  <div class="bk-hdr">
+    <button class="btn-back" onclick="closeEquipRent()">⬅ ย้อนกลับ</button>
+    <span class="chip chip-green" style="font-size:11px">เช่าอุปกรณ์แคมป์</span>
+  </div>
+
+  <div class="bk-body">
+    <div style="text-align:center;margin-bottom:6px">
+      <h2 style="font-size:20px;font-weight:700;color:#fff">🏕️ เช่าอุปกรณ์แคมป์</h2>
+      <p style="font-size:12px;color:var(--yellow);margin-top:4px">เลือกทริปที่จะไป แล้วเลือกของที่อยากเช่าได้เลยครับ</p>
+    </div>
+
+    <div class="eq-sec-title">🎒 เลือกทริปที่จะไป</div>
+    <div id="eqTripList"></div>
+
+    <div class="eq-sec-title">🧺 เลือกอุปกรณ์ที่ต้องการเช่า</div>
+    <div id="eqItemList"></div>
+
+    <div id="eqSummaryBox" class="eq-summary-card" style="display:none">
+      <div id="eqSummaryRows"></div>
+      <div class="eq-summary-row total"><span>ยอดรวมที่ต้องจ่าย</span><span id="eqTotalPrice">0 บาท</span></div>
+      <div class="eq-note">⚠️ ทางแอดมินจะเรียกเก็บเงินค่าเช่าอุปกรณ์นี้ในกลุ่มอีกครั้งครับ ไม่ต้องโอนตอนนี้</div>
+    </div>
+  </div>
+
+  <div class="sticky-bar">
+    <button id="eqConfirmBtn" class="btn-confirm" disabled onclick="confirmEquipRent()">🚀 กรุณาเลือกทริปก่อนครับ</button>
+  </div>
+</div>
+
+<!-- EQUIPMENT RENTAL RECEIPT -->
+<div id="equipReceiptPage">
+  <div class="succ-body">
+    <div class="succ-ico">🧾</div>
+    <h2 style="font-size:24px;font-weight:700;color:#fff">ใบเสร็จค่าเช่าอุปกรณ์</h2>
+    <div class="receipt">
+      <div class="r-row">⛺ <span>ทริป:</span> <strong id="eqr-trip">-</strong></div>
+      <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="eqr-name">-</strong></div>
+      <div class="r-row">🪑 <span>เบาะ:</span> <strong id="eqr-seat">-</strong></div>
+      <div style="height:1px;background:#e2e8f0;margin:12px 0"></div>
+      <div id="eqr-items"></div>
+      <div class="r-total-row"><span>ยอดรวม</span><span id="eqr-total">0 บาท</span></div>
+    </div>
+    <p style="font-size:15px;color:var(--red);line-height:1.6;margin-bottom:20px">
+      ⚠️ ทางแอดมินจะเรียกเก็บเงินค่าเช่าอุปกรณ์นี้ในกลุ่มอีกครั้งครับ ไม่ต้องโอนตอนนี้
+      <br><span style="font-size:13px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
+    </p>
+    <button class="btn-home" onclick="closeEquipReceipt()">กลับสู่หน้าหลัก 🏠</button>
+  </div>
+</div>
+
 <script>
 /* ================================================================
    CONFIG / CONSTANTS
@@ -1224,6 +1364,31 @@ const PAST_TRIPS = [
   { name: "เปรโต๊ะ 19-21 มิ.ย.69", rounds: 2, people: 30, rating: 4, img: "เปรโต๊ะ.jpg" },
 ];
 
+// อุปกรณ์แคมป์ให้เช่า (ราคาต่อทริป) — รูปดึงจากหน้าสินค้าจริงของ Decathlon
+const EQUIP_ITEMS = {
+  tent: {
+    label: "เต็นท์",
+    brand: "Decathlon Quechua MH100",
+    price: 300,
+    unit: "หลัง/ทริป",
+    img: "https://contents.mediadecathlon.com/p2754515/k$0c5138baa6a18029208375492aa8e649/picture.jpg?format=auto&f=800x0"
+  },
+  sleepingBag: {
+    label: "ถุงนอน",
+    brand: "Decathlon Quechua Arpenaz 20°",
+    price: 100,
+    unit: "ใบ/ทริป",
+    img: "https://contents.mediadecathlon.com/p2455218/k$ccb8b375884f01d6a31a25868874a4cc/camping-sleeping-bag-arpenaz-20-quechua-8648438.jpg"
+  },
+  sleepingPad: {
+    label: "แผ่นรองนอน",
+    brand: "Decathlon Forclaz Trek100",
+    price: 100,
+    unit: "แผ่น/ทริป",
+    img: "https://www.decathlon.com/cdn/shop/files/8492712-product_image-p2422856.jpg?v=1701346667"
+  }
+};
+
 /* ================================================================
    GLOBAL STATE
    ================================================================ */
@@ -1233,6 +1398,9 @@ let cacheTrips = [];         // รายการทริป (unique trip+date
 let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
 let selectedSeat = null;     // เบาะที่ผู้ใช้เลือกอยู่ตอนนี้
 let selectedSlipFile = null; // ไฟล์สลิปที่แนบไว้
+
+let eqSelectedTripKey = null;                                  // ทริป (trip_date_seat) ที่เลือกเช่าอุปกรณ์ให้
+let eqQty = { tent: 0, sleepingBag: 0, sleepingPad: 0 };        // จำนวนที่เลือกเช่าของแต่ละชิ้น
 
 let seatRefreshTimer = null;    // interval สำหรับ poll ข้อมูลเบาะทุก 5 วิ
 let seatCountdownTimer = null;  // interval สำหรับนับถอยหลังตัวเลข
@@ -1485,6 +1653,19 @@ function renderHome() {
     </div>
     <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none">
       <p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p>
+    </div>
+
+    <div class="quick-actions">
+      <div class="qa-box qa-trip" onclick="switchTab('trips')">
+        <div class="qa-ico">🎒</div>
+        <div class="qa-label">กดจองทริป</div>
+        <div class="qa-sub">เลือกทริปที่ใช่ได้เลย</div>
+      </div>
+      <div class="qa-box qa-rent" onclick="openEquipRent()">
+        <div class="qa-ico">🏕️</div>
+        <div class="qa-label">เช่าอุปกรณ์</div>
+        <div class="qa-sub">เต็นท์ / ถุงนอน / แผ่นรองนอน</div>
+      </div>
     </div>
 
     <div class="divider"></div>
@@ -2288,6 +2469,159 @@ function uploadAvatar(input) {
     renderHome(); // อัปเดตรูปในหน้าหลักด้วย
   };
   reader.readAsDataURL(input.files[0]);
+}
+
+/* ================================================================
+   EQUIPMENT RENTAL (เช่าอุปกรณ์)
+   ================================================================ */
+
+// ทริปทั้งหมดที่ผู้ใช้คนนี้เคยจองไว้ (unique ตามทริป+วันที่+เบาะ) ใช้เป็นตัวเลือกตอนเช่าอุปกรณ์
+function getMyUniqueBookings() {
+  const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
+  const mine = allBookings.filter(b => b.trip && b.date && norm(b.phone) === norm(currentUser.phone));
+
+  const seen = {};
+  const list = [];
+  mine.forEach(b => {
+    const key = b.trip + '_' + b.date + '_' + (b.seat || '');
+    if (!seen[key]) {
+      seen[key] = 1;
+      list.push(b);
+    }
+  });
+  return list;
+}
+
+function openEquipRent() {
+  eqSelectedTripKey = null;
+  eqQty = { tent: 0, sleepingBag: 0, sleepingPad: 0 };
+
+  renderEqTripList();
+  renderEqItemList();
+  updateEqSummary();
+
+  document.getElementById('equipPage').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function closeEquipRent() {
+  document.getElementById('equipPage').classList.remove('show');
+}
+
+function renderEqTripList() {
+  const box = document.getElementById('eqTripList');
+  const myBookings = getMyUniqueBookings();
+
+  if (myBookings.length === 0) {
+    box.innerHTML = `
+      <p style="text-align:center;color:var(--muted);padding:24px;background:var(--bg2);border:1px solid var(--border);border-radius:16px">
+        ยังไม่มีทริปที่จองไว้ครับ 🥲<br>กรุณาจองทริปก่อน ถึงจะเช่าอุปกรณ์ให้ทริปนั้นได้ครับ
+      </p>
+    `;
+    return;
+  }
+
+  box.innerHTML = myBookings.map(b => {
+    const key = b.trip + '_' + b.date + '_' + (b.seat || '');
+    const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+    const selected = key === eqSelectedTripKey;
+    return `
+      <div class="eq-trip-card ${selected ? 'selected' : ''}" onclick="selectEqTrip('${key}')">
+        <div class="eq-trip-radio"></div>
+        <div class="eq-trip-info">
+          <h4>${b.trip}</h4>
+          <p>📅 ${fmtDate} · 🪑 เบาะ ${b.seat || '-'}</p>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectEqTrip(key) {
+  eqSelectedTripKey = key;
+  renderEqTripList();
+  updateEqSummary();
+}
+
+function renderEqItemList() {
+  const box = document.getElementById('eqItemList');
+  box.innerHTML = Object.entries(EQUIP_ITEMS).map(([key, item]) => `
+    <div class="eq-item-card">
+      <div class="eq-item-img"><img src="${item.img}" onerror="this.style.display='none'"></div>
+      <div class="eq-item-info">
+        <h4>${item.label}</h4>
+        <p class="model">${item.brand}</p>
+        <p class="price">฿${item.price} / ${item.unit}</p>
+        <div class="eq-stepper">
+          <button class="eq-step-btn" onclick="changeEqQty('${key}', -1)">−</button>
+          <div class="eq-step-val" id="eqQtyVal-${key}">0</div>
+          <button class="eq-step-btn" onclick="changeEqQty('${key}', 1)">+</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function changeEqQty(key, delta) {
+  const next = Math.max(0, Math.min(10, (eqQty[key] || 0) + delta));
+  eqQty[key] = next;
+  document.getElementById('eqQtyVal-' + key).textContent = next;
+  updateEqSummary();
+}
+
+function getEqSelectedRows() {
+  return Object.entries(EQUIP_ITEMS)
+    .filter(([key]) => eqQty[key] > 0)
+    .map(([key, item]) => ({ key, item, qty: eqQty[key], subtotal: item.price * eqQty[key] }));
+}
+
+function updateEqSummary() {
+  const rows = getEqSelectedRows();
+  const total = rows.reduce((sum, r) => sum + r.subtotal, 0);
+
+  const summaryBox = document.getElementById('eqSummaryBox');
+  const rowsBox = document.getElementById('eqSummaryRows');
+  const totalEl = document.getElementById('eqTotalPrice');
+  const confirmBtn = document.getElementById('eqConfirmBtn');
+
+  if (rows.length === 0) {
+    summaryBox.style.display = 'none';
+  } else {
+    summaryBox.style.display = 'block';
+    rowsBox.innerHTML = rows.map(r => `<div class="eq-summary-row"><span>${r.item.label} x${r.qty}</span><span>${r.subtotal.toLocaleString()} บาท</span></div>`).join('');
+    totalEl.textContent = total.toLocaleString() + ' บาท';
+  }
+
+  const ready = Boolean(eqSelectedTripKey) && rows.length > 0;
+  confirmBtn.disabled = !ready;
+  confirmBtn.classList.toggle('ready', ready);
+  confirmBtn.innerText = ready
+    ? `👉 ยืนยันเช่าอุปกรณ์ (${total.toLocaleString()} บาท) ✨`
+    : (!eqSelectedTripKey ? '🚀 กรุณาเลือกทริปก่อนครับ' : '🚀 กรุณาเลือกอุปกรณ์อย่างน้อย 1 ชิ้น');
+}
+
+function confirmEquipRent() {
+  const booking = getMyUniqueBookings().find(b => (b.trip + '_' + b.date + '_' + (b.seat || '')) === eqSelectedTripKey);
+  if (!booking) return;
+
+  const rows = getEqSelectedRows();
+  const total = rows.reduce((sum, r) => sum + r.subtotal, 0);
+
+  document.getElementById('eqr-trip').innerText = booking.trip;
+  document.getElementById('eqr-name').innerText = booking.name || currentUser.nick;
+  document.getElementById('eqr-seat').innerText = booking.seat || '-';
+  document.getElementById('eqr-items').innerHTML = rows.map(r =>
+    `<div class="r-item-row"><span>${r.item.label} (${r.item.brand}) x${r.qty}</span><span>${r.subtotal.toLocaleString()} บาท</span></div>`
+  ).join('');
+  document.getElementById('eqr-total').innerText = total.toLocaleString() + ' บาท';
+
+  document.getElementById('equipReceiptPage').classList.add('show');
+}
+
+function closeEquipReceipt() {
+  document.getElementById('equipReceiptPage').classList.remove('show');
+  document.getElementById('equipPage').classList.remove('show');
+  switchTab('home');
 }
 </script>
 </body>
