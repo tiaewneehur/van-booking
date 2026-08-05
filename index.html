@@ -772,7 +772,15 @@ body {
 /* ============================================================
    HOME QUICK ACTIONS (กดจองทริป / เช่าอุปกรณ์)
    ============================================================ */
-.quick-actions { display: flex; justify-content: center; gap: 16px; margin: 2px 0 22px; }
+.quick-actions-wrap {
+  background: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .015));
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: 18px 14px;
+  margin: 20px 0 24px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 6px 18px rgba(0, 0, 0, .18);
+}
+.quick-actions { display: flex; justify-content: center; gap: 16px; }
 .qa-box {
   width: 128px;
   aspect-ratio: 1 / 1;
@@ -1656,16 +1664,18 @@ function renderHome() {
       <p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p>
     </div>
 
-    <div class="quick-actions">
-      <div class="qa-box qa-trip" onclick="switchTab('trips')">
-        <div class="qa-ico">🎒</div>
-        <div class="qa-label">กดจองทริป</div>
-        <div class="qa-sub">เลือกทริปที่ใช่ได้เลย</div>
-      </div>
-      <div class="qa-box qa-rent" onclick="openEquipRent()">
-        <div class="qa-ico">🏕️</div>
-        <div class="qa-label">เช่าอุปกรณ์</div>
-        <div class="qa-sub">เต็นท์ / ถุงนอน / แผ่นรองนอน</div>
+    <div class="quick-actions-wrap">
+      <div class="quick-actions">
+        <div class="qa-box qa-trip" onclick="switchTab('trips')">
+          <div class="qa-ico">🎒</div>
+          <div class="qa-label">กดจองทริป</div>
+          <div class="qa-sub">เลือกทริปที่ใช่ได้เลย</div>
+        </div>
+        <div class="qa-box qa-rent" onclick="openEquipRent()">
+          <div class="qa-ico">🏕️</div>
+          <div class="qa-label">เช่าอุปกรณ์</div>
+          <div class="qa-sub">เต็นท์ / ถุงนอน / แผ่นรองนอน</div>
+        </div>
       </div>
     </div>
 
