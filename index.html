@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
 /* ============================================================
    RESET & THEME TOKENS
@@ -208,18 +207,26 @@ body {
 }
 .greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; }
 .greet-bar .left p { font-size: 12px; color: var(--sub); margin-top: 2px; }
-.greet-bar .ava {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--blue2), var(--blue));
+.greet-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.qa-mini {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-  box-shadow: 0 0 16px rgba(56, 189, 248, .3);
+  gap: 1px;
+  cursor: pointer;
+  animation: qaBeat 1.8s ease-in-out infinite;
+  transition: transform .15s;
 }
+.qa-mini:active { transform: scale(.92); }
+.qa-mini .qa-mini-ico { font-size: 19px; }
+.qa-mini .qa-mini-label { font-size: 7.5px; font-weight: 800; color: rgba(0, 0, 0, .72); line-height: 1; }
+.qa-trip-mini { background: linear-gradient(145deg, #ffe066, #ffc400); box-shadow: 0 4px 12px rgba(255, 196, 0, .35); }
+.qa-rent-mini { background: linear-gradient(145deg, #34e89e, #0bb96f); box-shadow: 0 4px 12px rgba(11, 185, 111, .35); }
+@keyframes qaBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 .sec-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .sec-hdr h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
 
@@ -738,24 +745,6 @@ body {
 #successPage2.show { display: block; animation: fadeUp .3s ease; }
 .succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px; text-align: center; }
 .succ-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 20px; box-shadow: 0 0 24px rgba(16, 185, 129, .45); }
-.btn-save-receipt {
-  width: 100%;
-  height: 50px;
-  border-radius: 12px;
-  border: 1.5px solid var(--blue);
-  background: rgba(56, 189, 248, .08);
-  color: var(--blue);
-  font-size: 15px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  margin-top: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-.btn-save-receipt:disabled { opacity: .6; cursor: wait; }
 .receipt { background: #fff; color: #1e293b; border-radius: 18px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0, 0, 0, .3); margin: 20px 0; }
 .r-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 500; }
 .r-row span { color: #64748b; font-weight: 400; }
@@ -787,42 +776,6 @@ body {
 .info-block { background: rgba(255, 255, 255, .02); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--yellow); font-size: 12px; line-height: 1.5; }
 .mem-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
 .mem-grid img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
-
-/* ============================================================
-   HOME QUICK ACTIONS (กดจองทริป / เช่าอุปกรณ์)
-   ============================================================ */
-.quick-actions-wrap {
-  background: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .015));
-  border: 1px solid var(--border);
-  border-radius: 26px;
-  padding: 18px 14px;
-  margin: 20px 0 24px;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 6px 18px rgba(0, 0, 0, .18);
-}
-.quick-actions { display: flex; justify-content: center; gap: 16px; }
-.qa-box {
-  width: 128px;
-  aspect-ratio: 1 / 1;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, .08);
-  animation: qaBeat 1.8s ease-in-out infinite;
-  transition: transform .15s;
-  text-align: center;
-  padding: 8px;
-}
-.qa-box:active { transform: scale(.96); }
-.qa-box .qa-ico { font-size: 26px; }
-.qa-box .qa-label { font-size: 12.5px; font-weight: 800; color: #fff; }
-.qa-box .qa-sub { font-size: 9px; color: rgba(255, 255, 255, .75); line-height: 1.3; }
-.qa-trip { background: linear-gradient(145deg, rgba(2, 132, 199, .38), rgba(56, 189, 248, .14)); box-shadow: 0 6px 16px rgba(2, 132, 199, .2); }
-.qa-rent { background: linear-gradient(145deg, rgba(16, 185, 129, .38), rgba(16, 185, 129, .12)); box-shadow: 0 6px 16px rgba(16, 185, 129, .18); }
-@keyframes qaBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.025); } }
 
 /* ============================================================
    EQUIPMENT RENTAL PAGE (เช่าอุปกรณ์)
@@ -1114,7 +1067,6 @@ body {
         <h4 id="r-seat">-</h4>
       </div>
     </div>
-    <button class="btn-save-receipt" onclick="saveReceiptImage(this, 'r-receipt-card', 'ใบจองทริป.png')">📸 บันทึกภาพใบเสร็จ</button>
     <p style="font-size:16px;color:var(--red);line-height:1.5;margin-bottom:20px">
       กรุณาติดต่อแอดมินที่ช่องทางติดต่อในหน้าหลัก
       <br><span style="font-size:16px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
@@ -1238,7 +1190,6 @@ body {
       <div id="eqr-items"></div>
       <div class="r-total-row"><span>ยอดรวม</span><span id="eqr-total">0 บาท</span></div>
     </div>
-    <button class="btn-save-receipt" onclick="saveReceiptImage(this, 'eqr-receipt-card', 'ใบเสร็จเช่าอุปกรณ์.png')">📸 บันทึกภาพใบเสร็จ</button>
     <p style="font-size:15px;color:var(--red);line-height:1.6;margin-bottom:20px">
       ⚠️ ทางแอดมินจะเรียกเก็บเงินค่าเช่าอุปกรณ์นี้ในกลุ่มอีกครั้งครับ ไม่ต้องโอนตอนนี้
       <br><span style="font-size:13px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
@@ -1674,7 +1625,16 @@ function renderHome() {
         <h2>${greeting}, ${currentUser.nick}! 👋</h2>
         <p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${myTripCount} ทริป</strong></p>
       </div>
-      <div class="ava" id="homeAva" style="padding:0;overflow:hidden;background:linear-gradient(135deg,var(--blue2),var(--blue))">🏕️</div>
+      <div class="greet-actions">
+        <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
+          <div class="qa-mini-ico">🎒</div>
+          <div class="qa-mini-label">จองทริป</div>
+        </div>
+        <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
+          <div class="qa-mini-ico">🏕️</div>
+          <div class="qa-mini-label">เช่าของ</div>
+        </div>
+      </div>
     </div>
 
     <div class="sec-hdr">
@@ -1683,21 +1643,6 @@ function renderHome() {
     </div>
     <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none">
       <p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p>
-    </div>
-
-    <div class="quick-actions-wrap">
-      <div class="quick-actions">
-        <div class="qa-box qa-trip" onclick="switchTab('trips')">
-          <div class="qa-ico">🎒</div>
-          <div class="qa-label">กดจองทริป</div>
-          <div class="qa-sub">เลือกทริปที่ใช่ได้เลย</div>
-        </div>
-        <div class="qa-box qa-rent" onclick="openEquipRent()">
-          <div class="qa-ico">🏕️</div>
-          <div class="qa-label">เช่าอุปกรณ์</div>
-          <div class="qa-sub">เต็นท์ / ถุงนอน / แผ่นรองนอน</div>
-        </div>
-      </div>
     </div>
 
     <div class="divider"></div>
@@ -1750,14 +1695,6 @@ function renderHome() {
       <div style="width:34px;height:34px;border-radius:50%;background:rgba(56,189,248,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">›</div>
     </a>
   `;
-
-  // อัปเดต avatar ในหน้าหลัก (ถ้าเคยอัปโหลดไว้)
-  const savedAvatar = localStorage.getItem('userAvatar');
-  const avaEl = document.getElementById('homeAva');
-  if (savedAvatar && avaEl) {
-    avaEl.style.background = 'none';
-    avaEl.innerHTML = `<img src="${savedAvatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-  }
 }
 
 // สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับลิสต์ทริปที่ผ่านมา
@@ -2639,15 +2576,79 @@ function confirmEquipRent() {
   const rows = getEqSelectedRows();
   const total = rows.reduce((sum, r) => sum + r.subtotal, 0);
 
-  document.getElementById('eqr-trip').innerText = booking.trip;
-  document.getElementById('eqr-name').innerText = booking.name || currentUser.nick;
-  document.getElementById('eqr-seat').innerText = booking.seat || '-';
-  document.getElementById('eqr-items').innerHTML = rows.map(r =>
-    `<div class="r-item-row"><span>${r.item.label} (${r.item.brand}) x${r.qty}</span><span>${r.subtotal.toLocaleString()} บาท</span></div>`
-  ).join('');
-  document.getElementById('eqr-total').innerText = total.toLocaleString() + ' บาท';
+  const btn = document.getElementById('eqConfirmBtn');
+  const originalText = btn.innerText;
+  btn.disabled = true;
+  btn.innerText = '⌛ กำลังบันทึกข้อมูล...';
 
-  document.getElementById('equipReceiptPage').classList.add('show');
+  const rentId = 'RENT-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+
+  /*
+   * ส่ง action:'rentEquip' แยกจาก action:'read'/booking ปกติ
+   * ฝั่ง Google Apps Script (backend) ต้องเช็ค action นี้แล้วเขียนลง "ชีทใหม่" (เช่น EquipRentals)
+   * ไม่ปนกับชีท bookings เดิม — ดูตัวอย่างโค้ด Apps Script ที่ต้องเพิ่ม ในคำอธิบายท้ายข้อความ
+   */
+  const payload = {
+    action: 'rentEquip',
+    rentId: rentId,
+    trip: booking.trip,
+    date: booking.date,
+    seat: booking.seat || '',
+    name: booking.name || currentUser.nick,
+    nickname: currentUser.nick,
+    phone: currentUser.phone,
+    tent: String(eqQty.tent || 0),
+    sleepingBag: String(eqQty.sleepingBag || 0),
+    sleepingPad: String(eqQty.sleepingPad || 0),
+    itemsSummary: rows.map(r => `${r.item.label} x${r.qty}`).join(', '),
+    total: String(total),
+    session_id: MY_SESSION_ID
+  };
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = API_URL;
+  form.target = '_ifr_equiprent';
+  form.acceptCharset = 'UTF-8';
+  form.style.display = 'none';
+
+  Object.entries(payload).forEach(([key, value]) => {
+    const field = document.createElement('textarea');
+    field.name = key;
+    field.value = value == null ? '' : String(value);
+    field.style.display = 'none';
+    form.appendChild(field);
+  });
+
+  let iframe = document.getElementById('_ifr_equiprent');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.name = '_ifr_equiprent';
+    iframe.id = '_ifr_equiprent';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+
+  // รอหลังบ้านบันทึกข้อมูลสักครู่ก่อนแสดงใบเสร็จ (เหมือนตอนจองที่นั่ง)
+  setTimeout(() => {
+    document.getElementById('eqr-trip').innerText = booking.trip;
+    document.getElementById('eqr-name').innerText = booking.name || currentUser.nick;
+    document.getElementById('eqr-seat').innerText = booking.seat || '-';
+    document.getElementById('eqr-items').innerHTML = rows.map(r =>
+      `<div class="r-item-row"><span>${r.item.label} (${r.item.brand}) x${r.qty}</span><span>${r.subtotal.toLocaleString()} บาท</span></div>`
+    ).join('');
+    document.getElementById('eqr-total').innerText = total.toLocaleString() + ' บาท';
+
+    document.getElementById('equipReceiptPage').classList.add('show');
+
+    if (form.parentNode) form.remove();
+
+    btn.disabled = false;
+    btn.innerText = originalText;
+  }, 2500);
 }
 
 function closeEquipReceipt() {
@@ -2656,44 +2657,6 @@ function closeEquipReceipt() {
   switchTab('home');
 }
 
-/* ================================================================
-   SAVE RECEIPT AS IMAGE (ใช้ร่วมกันทั้งใบเสร็จจองทริป และใบเสร็จเช่าอุปกรณ์)
-   ================================================================ */
-async function saveReceiptImage(btn, elementId, filename) {
-  const el = document.getElementById(elementId);
-
-  if (!el || typeof html2canvas === 'undefined') {
-    Swal.fire({
-      icon: 'error',
-      title: 'บันทึกภาพไม่สำเร็จ',
-      text: 'ระบบโหลดตัวช่วยบันทึกภาพไม่สำเร็จ กรุณาลองใหม่ หรือแคปหน้าจอไว้แทนครับ',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-    return;
-  }
-
-  const originalText = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '⌛ กำลังบันทึกภาพ...';
-
-  try {
-    const canvas = await html2canvas(el, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
-    const link = document.createElement('a');
-    link.download = filename;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  } catch (err) {
-    Swal.fire({
-      icon: 'error',
-      title: 'บันทึกภาพไม่สำเร็จ',
-      text: 'กรุณาลองใหม่ หรือแคปหน้าจอไว้แทนครับ',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = originalText;
-  }
-}
 </script>
 </body>
 </html>
