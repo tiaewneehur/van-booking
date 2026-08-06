@@ -898,6 +898,53 @@ body {
 .r-item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; color: #334155; }
 .r-item-row:last-of-type { border-bottom: none; }
 .r-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #15803d; padding-top: 10px; margin-top: 6px; }
+
+/* ============================================================
+   FLOATING ADMIN TAB — แถบลอยจางๆ ริมจอ กดแล้วค่อยกางเป็นปุ่ม
+   ============================================================ */
+.admin-tab {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 52px;
+  padding: 0 9px;
+  background: rgba(56, 189, 248, .1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(56, 189, 248, .18);
+  border-right: none;
+  border-radius: 16px 0 0 16px;
+  cursor: pointer;
+  opacity: .45;
+  transition: opacity .25s ease, padding .25s ease, background .25s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.admin-tab:active { opacity: .8; }
+.admin-tab .admin-tab-dots { font-size: 13px; color: var(--blue); letter-spacing: -1px; flex-shrink: 0; }
+.admin-tab .admin-tab-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--blue);
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-width .25s ease, opacity .2s ease .05s;
+}
+.admin-tab.expanded {
+  opacity: 1;
+  padding: 0 14px 0 10px;
+  background: rgba(56, 189, 248, .16);
+  border-color: rgba(56, 189, 248, .35);
+  box-shadow: -4px 0 16px rgba(2, 132, 199, .25);
+}
+.admin-tab.expanded .admin-tab-label { max-width: 120px; opacity: 1; }
+
 </style>
 </head>
 <body>
@@ -1259,6 +1306,14 @@ body {
     </p>
     <button class="btn-home" onclick="closeEquipReceipt()">กลับสู่หน้าหลัก 🏠</button>
   </div>
+</div>
+
+<!-- ============================================================
+     FLOATING ADMIN TAB (มุมขวาจอ — กดครั้งแรกกาง / กดซ้ำเพื่อเข้าหน้าแอดมิน)
+     ============================================================ -->
+<div id="adminTab" class="admin-tab" onclick="toggleAdminTab(event)">
+  <span class="admin-tab-dots">⋮</span>
+  <span class="admin-tab-label">สำหรับแอดมิน</span>
 </div>
 
 <script>
@@ -2569,6 +2624,45 @@ function closeDrawer() {
   document.getElementById('drawer').classList.remove('open');
   document.getElementById('ov').style.display = 'none';
 }
+
+/* ================================================================
+   FLOATING ADMIN TAB
+   ================================================================ */
+// กดครั้งแรก -> กางออกมาเป็นปุ่ม "สำหรับแอดมิน"
+// กดซ้ำตอนกางอยู่ -> เด้งไปหน้าแอดมิน
+// ถ้าไม่แตะซ้ำภายในไม่กี่วิ หรือกดที่อื่นในจอ -> หุบกลับอัตโนมัติ
+let adminTabExpanded = false;
+let adminTabCollapseTimer = null;
+
+function toggleAdminTab(e) {
+  e.stopPropagation();
+  const tab = document.getElementById('adminTab');
+
+  if (!adminTabExpanded) {
+    tab.classList.add('expanded');
+    adminTabExpanded = true;
+
+    clearTimeout(adminTabCollapseTimer);
+    adminTabCollapseTimer = setTimeout(collapseAdminTab, 4000);
+    return;
+  }
+
+  // กางอยู่แล้ว กดซ้ำ = ไปหน้าแอดมิน (แก้ path ตรงนี้ถ้าไฟล์แอดมินอยู่คนละที่)
+  window.location.href = 'admin.html';
+}
+
+function collapseAdminTab() {
+  const tab = document.getElementById('adminTab');
+  if (tab) tab.classList.remove('expanded');
+  adminTabExpanded = false;
+  clearTimeout(adminTabCollapseTimer);
+}
+
+document.addEventListener('click', (e) => {
+  if (!adminTabExpanded) return;
+  const tab = document.getElementById('adminTab');
+  if (tab && !tab.contains(e.target)) collapseAdminTab();
+});
 
 /* ================================================================
    PROFILE AVATAR UPLOAD
