@@ -626,30 +626,32 @@ body {
 .form-sec-title { font-size: 15px; font-weight: 800; color: #fff; }
 .form-sec-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
 
-/* เลือกจุดขึ้นรถ */
-.pickup-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* เลือกจุดขึ้นรถ — ใช้ dropdown เพื่อรองรับตัวเลือกหลายจุดแบบไม่กินพื้นที่ */
+.pickup-select {
+  width: 100%;
+  height: 48px;
   background: rgba(0, 0, 0, .2);
-  border: 1.5px solid rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 14px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 0 40px 0 14px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 8l5 5 5-5' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
   cursor: pointer;
-  transition: .15s;
 }
-.pickup-card.selected { border-color: var(--blue); background: rgba(56, 189, 248, .08); }
-.pickup-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--muted); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.pickup-card.selected .pickup-radio { border-color: var(--blue); }
-.pickup-radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); display: none; }
-.pickup-card.selected .pickup-radio::after { display: block; }
-.pickup-info h4 { font-size: 13.5px; color: #fff; font-weight: 700; }
-.pickup-info p { font-size: 11px; color: var(--sub); margin-top: 2px; }
+.pickup-select:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1); }
+.pickup-select option { background: var(--bg3); color: #fff; }
 .pickup-other-input {
   width: 100%;
   height: 46px;
-  margin-top: 4px;
+  margin-top: 10px;
   background: rgba(0, 0, 0, .2);
   border: 1px solid rgba(56, 189, 248, .3);
   border-radius: 12px;
@@ -1186,21 +1188,14 @@ body {
       <div class="ig">
         <label>🚏 จุดขึ้นรถ</label>
 
-        <div class="pickup-card selected" id="pickupCardBts" onclick="selectPickup('bts')">
-          <div class="pickup-radio"></div>
-          <div class="pickup-info">
-            <h4>ลานจอด BTS หมอชิต</h4>
-            <p>จุดนัดพบมาตรฐานของทริป</p>
-          </div>
-        </div>
-
-        <div class="pickup-card" id="pickupCardOther" onclick="selectPickup('other')">
-          <div class="pickup-radio"></div>
-          <div class="pickup-info">
-            <h4>แวะรับจุดอื่น</h4>
-            <p>ระบุสถานที่ที่ต้องการให้แวะรับ</p>
-          </div>
-        </div>
+        <select id="f-pickup-select" class="pickup-select" onchange="handlePickupSelect()">
+          <option value="ลานจอด BTS หมอชิต">ลานจอด BTS หมอชิต</option>
+          <option value="สี่แยกสแควร์หลักสี่">สี่แยกสแควร์หลักสี่</option>
+          <option value="ศาลาหน้าดอนเมือง">ศาลาหน้าดอนเมือง</option>
+          <option value="หน้าโลตัสรังสิต">หน้าโลตัสรังสิต</option>
+          <option value="หน้าโลตัสอยุธยา">หน้าโลตัสอยุธยา</option>
+          <option value="__other__">📍 แวะรับจุดอื่น (ระบุเอง)</option>
+        </select>
 
         <input
           id="f-pickup-other"
@@ -2334,9 +2329,7 @@ function goToBook() {
   document.body.style.overflow = 'hidden'; // กันไม่ให้หน้าเพจข้างหลังเลื่อน/โผล่ตอนคีย์บอร์ดเด้ง (เช่นตอนพิมพ์ชื่อ LINE)
   window.scrollTo({ top: 0, behavior: 'instant' });
 
-  selectPickup('bts'); // รีเซ็ตจุดขึ้นรถกลับเป็นค่าเริ่มต้นทุกครั้งที่เข้าหน้านี้ใหม่
-  const pickupOtherInput = document.getElementById('f-pickup-other');
-  if (pickupOtherInput) pickupOtherInput.value = '';
+  resetPickupSelector(); // รีเซ็ตจุดขึ้นรถกลับเป็นค่าเริ่มต้นทุกครั้งที่เข้าหน้านี้ใหม่
 
   loadSeats(formattedDate, true);
 
@@ -2359,28 +2352,37 @@ function closeBook() {
   stopSeatCountdown();
 }
 
-// สลับจุดขึ้นรถ: 'bts' = ลานจอด BTS หมอชิต (ค่าเริ่มต้น), 'other' = ให้พิมพ์ระบุเอง
-function selectPickup(type) {
-  const btsCard = document.getElementById('pickupCardBts');
-  const otherCard = document.getElementById('pickupCardOther');
+// จัดการตอนเลือกจุดขึ้นรถจาก dropdown — ถ้าเลือก "จุดอื่น" ให้โผล่ช่องพิมพ์ระบุเอง
+function handlePickupSelect() {
+  const select = document.getElementById('f-pickup-select');
   const otherInput = document.getElementById('f-pickup-other');
   const hiddenInput = document.getElementById('f-pickup');
-  if (!btsCard || !otherCard || !otherInput || !hiddenInput) return;
+  if (!select || !otherInput || !hiddenInput) return;
 
-  if (type === 'other') {
-    btsCard.classList.remove('selected');
-    otherCard.classList.add('selected');
+  if (select.value === '__other__') {
     otherInput.style.display = 'block';
     hiddenInput.value = otherInput.value.trim();
     otherInput.focus();
   } else {
-    btsCard.classList.add('selected');
-    otherCard.classList.remove('selected');
     otherInput.style.display = 'none';
-    hiddenInput.value = 'ลานจอด BTS หมอชิต';
+    otherInput.value = '';
+    hiddenInput.value = select.value;
   }
 
   checkBook();
+}
+
+// รีเซ็ตตัวเลือกจุดขึ้นรถกลับเป็นค่าเริ่มต้น (ใช้ตอนเปิดหน้าจองใหม่ทุกครั้ง)
+function resetPickupSelector() {
+  const select = document.getElementById('f-pickup-select');
+  const otherInput = document.getElementById('f-pickup-other');
+  const hiddenInput = document.getElementById('f-pickup');
+  if (!select || !otherInput || !hiddenInput) return;
+
+  select.selectedIndex = 0;
+  otherInput.style.display = 'none';
+  otherInput.value = '';
+  hiddenInput.value = select.value;
 }
 
 /* ================================================================
