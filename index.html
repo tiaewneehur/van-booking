@@ -43,6 +43,7 @@ body {
 }
 
 #pastList.expanded .past-extra { display: block !important; }
+#bookingHistoryList.expanded .hist-extra { display: block !important; }
 
 /* ============================================================
    LOGIN PAGE
@@ -567,6 +568,7 @@ body {
 .bk-hdr {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
   border-bottom: 1px solid var(--border);
@@ -1131,7 +1133,8 @@ body {
 <div id="payModal" class="pay-modal">
   <div class="pay-box">
     <button class="pay-x" onclick="closePay()">✕</button>
-    <h3>💰 ชำระเงินค่ามัดจำทริป 💰</h3>
+    <span class="chip chip-green" style="font-size:11px;position:absolute;top:16px;left:16px">ขั้นตอนที่ 3: ชำระเงิน</span>
+    <h3 style="margin-top:22px">💰 ชำระเงินค่ามัดจำทริป 💰</h3>
     <p class="sub">(สแกน QR หรือบันทึกภาพเพื่อชำระเงิน)</p>
     <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
 
@@ -1873,6 +1876,12 @@ function togglePastList(triggerEl) {
   triggerEl.innerText = expanded ? 'ย่อ ‹' : 'ดูทั้งหมด ›';
 }
 
+// สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับประวัติความบ้าในหน้าโปรไฟล์
+function toggleBookingHistory(triggerEl) {
+  const expanded = document.getElementById('bookingHistoryList').classList.toggle('expanded');
+  triggerEl.innerText = expanded ? 'ย่อ ‹' : 'ดูทั้งหมด ›';
+}
+
 /* ================================================================
    TRIP CARD (ใช้ร่วมกันหลายหน้า)
    ================================================================ */
@@ -2000,26 +2009,33 @@ function renderMyTrips() {
       </div>
     </div>
 
-    <div class="sec-hdr"><h3>📋 ประวัติความบ้า</h3></div>
+    <div class="sec-hdr">
+      <h3>📋 ประวัติความบ้า</h3>
+      ${uniqueBookings.length > 2 ? `<span onclick="toggleBookingHistory(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
+    </div>
+    <div id="bookingHistoryList">
     ${uniqueBookings.length === 0
       ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>'
-      : uniqueBookings.map(b => {
+      : uniqueBookings.map((b, i) => {
           const img = TRIP_IMAGES[b.trip] || 'default.jpg';
           const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
           const isPast = new Date(b.date) < new Date();
           return `
-            <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
-              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
-              <div class="hi">
-                <h4>${b.trip}</h4>
-                <p>📅 ${fmtDate}</p>
-                <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
+            <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
+              <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
+                <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
+                <div class="hi">
+                  <h4>${b.trip}</h4>
+                  <p>📅 ${fmtDate}</p>
+                  <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
+                </div>
+                <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
+                <div class="h-arr">›</div>
               </div>
-              <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
-              <div class="h-arr">›</div>
             </div>
           `;
         }).join('')}
+    </div>
 
     <div class="sec-hdr" style="margin-top:24px"><h3>🎒 ประวัติการเช่าอุปกรณ์</h3></div>
     ${myEquipRentals.length === 0
