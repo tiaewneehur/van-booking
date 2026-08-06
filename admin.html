@@ -296,6 +296,29 @@ button, input, select { font-family: inherit; }
 .status-approved { color: #04150e; background: rgba(16, 185, 129, .88); }
 .status-rejected { color: #fff; background: rgba(239, 68, 68, .9); }
 .status-other { color: #fff; background: rgba(100, 116, 139, .85); }
+.price-pill { color: #fff; background: linear-gradient(135deg, var(--blue2), var(--blue)); }
+
+/* ============================================================
+   ADMIN TAB SWITCHER
+   ============================================================ */
+.admin-tabs { display: flex; gap: 6px; background: var(--bg2); border: 1px solid var(--border); border-radius: 15px; padding: 4px; margin-bottom: 16px; }
+.admin-tab-btn { flex: 1; height: 42px; border: 0; border-radius: 12px; background: transparent; color: var(--sub); font-size: 13px; font-weight: 700; cursor: pointer; }
+.admin-tab-btn.active { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 4px 14px rgba(2, 132, 199, .35); }
+
+/* ============================================================
+   EQUIPMENT RENTAL CARDS
+   ============================================================ */
+.equip-items { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.equip-items span { background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .06); border-radius: 10px; padding: 6px 10px; font-size: 11.5px; color: #e2e8f0; }
+.equip-total-row {
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(56, 189, 248, .08);
+  border: 1px solid rgba(56, 189, 248, .18);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 13px; font-weight: 800; color: #fff;
+}
+.equip-total-row span:last-child { color: var(--blue); font-size: 15px; }
 
 .card-body { padding: 14px 16px 16px; }
 .card-sub { font-size: 11.5px; color: var(--sub); margin-bottom: 12px; display: flex; align-items: center; gap: 5px; }
@@ -381,29 +404,34 @@ button, input, select { font-family: inherit; }
       <div class="header-title">
         <div class="header-ico">📥</div>
         <div>
-          <h1>ตรวจสลิปการจอง</h1>
-          <p>ระบบหลังบ้านเที่ยวนี่เหอะ</p>
+          <h1>หลังบ้านเที่ยวนี่เหอะ</h1>
+          <p>ตรวจสลิป & เช่าอุปกรณ์</p>
         </div>
       </div>
 
       <div class="header-actions">
-        <button class="icon-btn" onclick="loadBookings(false)" title="อัปเดต">🔄</button>
+        <button class="icon-btn" onclick="refreshCurrentTab()" title="อัปเดต">🔄</button>
         <button class="icon-btn" onclick="adminLogout()" title="ออกจากระบบ">🚪</button>
       </div>
     </div>
   </header>
 
   <main class="main">
+    <div class="admin-tabs" id="adminTabs">
+      <button class="admin-tab-btn active" data-tab="bookings" onclick="switchAdminTab('bookings')">🧾 ตรวจสลิป</button>
+      <button class="admin-tab-btn" data-tab="equip" onclick="switchAdminTab('equip')">🎒 เช่าอุปกรณ์</button>
+    </div>
+
     <div class="stats">
-      <div class="stat"><strong id="statAll">0</strong><span>ทั้งหมด</span></div>
-      <div class="stat pending"><strong id="statPending">0</strong><span>รอตรวจ</span></div>
-      <div class="stat approved"><strong id="statApproved">0</strong><span>ชำระแล้ว</span></div>
+      <div class="stat" id="statBox1"><strong id="statVal1">0</strong><span id="statLabel1">ทั้งหมด</span></div>
+      <div class="stat" id="statBox2"><strong id="statVal2">0</strong><span id="statLabel2">รอตรวจ</span></div>
+      <div class="stat" id="statBox3"><strong id="statVal3">0</strong><span id="statLabel3">ชำระแล้ว</span></div>
     </div>
 
     <div class="filters">
       <div class="search-wrap">
         <span class="s-ico">🔍</span>
-        <input id="searchInput" class="search-input" placeholder="ค้นหาชื่อ เบอร์ ทริป หรือที่นั่ง" oninput="renderBookings()">
+        <input id="searchInput" class="search-input" placeholder="ค้นหาชื่อ เบอร์ ทริป หรือที่นั่ง" oninput="onSearchInput()">
       </div>
 
       <div class="status-chips" id="statusChips">
@@ -459,6 +487,9 @@ function getTripImage(tripName) {
 
 let adminToken = "";
 let allBookings = [];
+let allEquipRentals = [];
+let equipLoaded = false;
+let currentAdminTab = "bookings"; // 'bookings' | 'equip'
 let currentStatusFilter = "";
 
 
@@ -577,7 +608,7 @@ function loadBookings(firstLogin) {
           "block";
       }
 
-      updateStats();
+      updateBookingStats();
       renderBookings();
 
     } catch (error) {
@@ -680,7 +711,15 @@ function setStatusFilter(status) {
   renderBookings();
 }
 
-function updateStats() {
+function setStatBox(n, value, label, colorClass) {
+  document.getElementById('statVal' + n).textContent = value;
+  document.getElementById('statLabel' + n).textContent = label;
+  const box = document.getElementById('statBox' + n);
+  box.classList.remove('pending', 'approved');
+  if (colorClass) box.classList.add(colorClass);
+}
+
+function updateBookingStats() {
   const pending =
     allBookings.filter(
       item =>
@@ -693,14 +732,67 @@ function updateStats() {
         item.status === "ชำระเงินแล้ว"
     ).length;
 
-  document.getElementById("statAll").textContent =
-    allBookings.length;
+  setStatBox(1, allBookings.length, 'ทั้งหมด', null);
+  setStatBox(2, pending, 'รอตรวจ', 'pending');
+  setStatBox(3, approved, 'ชำระแล้ว', 'approved');
+}
 
-  document.getElementById("statPending").textContent =
-    pending;
+function updateEquipStats() {
+  const totalItems = allEquipRentals.reduce(
+    (sum, r) => sum + Number(r.tent || 0) + Number(r.sleepingBag || 0) + Number(r.sleepingPad || 0),
+    0
+  );
+  const totalRevenue = allEquipRentals.reduce((sum, r) => sum + Number(r.total || 0), 0);
 
-  document.getElementById("statApproved").textContent =
-    approved;
+  setStatBox(1, allEquipRentals.length, 'รายการเช่า', null);
+  setStatBox(2, totalItems, 'ชิ้นอุปกรณ์', null);
+  setStatBox(3, totalRevenue.toLocaleString(), 'ยอดรวม (บาท)', 'approved');
+}
+
+/* ============================================================
+   TAB SWITCHER (ตรวจสลิป ⇄ เช่าอุปกรณ์)
+============================================================ */
+
+function switchAdminTab(tab) {
+  currentAdminTab = tab;
+
+  document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tab);
+  });
+
+  document.getElementById('statusChips').style.display = tab === 'bookings' ? 'flex' : 'none';
+
+  const search = document.getElementById('searchInput');
+  search.value = '';
+  search.placeholder = tab === 'bookings'
+    ? 'ค้นหาชื่อ เบอร์ ทริป หรือที่นั่ง'
+    : 'ค้นหาชื่อผู้เช่า เบอร์ หรือทริป';
+
+  if (tab === 'bookings') {
+    updateBookingStats();
+    renderBookings();
+  } else if (equipLoaded) {
+    updateEquipStats();
+    renderEquipRentalsList();
+  } else {
+    loadEquipRentals();
+  }
+}
+
+function onSearchInput() {
+  if (currentAdminTab === 'bookings') {
+    renderBookings();
+  } else {
+    renderEquipRentalsList();
+  }
+}
+
+function refreshCurrentTab() {
+  if (currentAdminTab === 'bookings') {
+    loadBookings(false);
+  } else {
+    loadEquipRentals();
+  }
 }
 
 
@@ -880,6 +972,171 @@ function getStatusClass(status) {
   }
 
   return "status-other";
+}
+
+
+/* ============================================================
+   EQUIPMENT RENTALS (เช่าอุปกรณ์) — ชีทแยกจาก bookings
+============================================================ */
+
+function loadEquipRentals() {
+  if (!adminToken) return;
+
+  const list = document.getElementById("bookingList");
+  list.innerHTML = '<div class="loading">⌛ กำลังโหลดรายการเช่าอุปกรณ์...</div>';
+
+  const callbackName = "adminEquipCb_" + Date.now();
+  const script = document.createElement("script");
+  let finished = false;
+
+  window[callbackName] = function (response) {
+    finished = true;
+
+    try {
+      if (!response || !response.ok) {
+        throw new Error(response?.message || "ไม่สามารถโหลดข้อมูลได้");
+      }
+
+      allEquipRentals = Array.isArray(response.rentals) ? response.rentals : [];
+      equipLoaded = true;
+
+      updateEquipStats();
+      renderEquipRentalsList();
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "โหลดข้อมูลเช่าอุปกรณ์ไม่สำเร็จ",
+        text: error.message,
+        background: "#0c1524",
+        color: "#f1f5f9",
+        confirmButtonColor: "#0284c7"
+      });
+
+      list.innerHTML = '<div class="empty"><span class="ico">📭</span>ไม่สามารถโหลดข้อมูลได้</div>';
+
+    } finally {
+      cleanupJsonp(callbackName, script);
+    }
+  };
+
+  script.onerror = function () {
+    if (finished) return;
+
+    Swal.fire({
+      icon: "error",
+      title: "เชื่อมต่อหลังบ้านไม่ได้",
+      text: "ตรวจสอบ URL และการ Deploy Apps Script",
+      background: "#0c1524",
+      color: "#f1f5f9",
+      confirmButtonColor: "#0284c7"
+    });
+
+    cleanupJsonp(callbackName, script);
+  };
+
+  script.src =
+    API_URL +
+    "?action=adminEquipRentals" +
+    "&adminToken=" +
+    encodeURIComponent(adminToken) +
+    "&callback=" +
+    encodeURIComponent(callbackName) +
+    "&_=" +
+    Date.now();
+
+  document.body.appendChild(script);
+}
+
+
+function renderEquipRentalsList() {
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const filtered = allEquipRentals.filter(function (item) {
+    const searchable = [
+      item.trip,
+      item.name,
+      item.nickname,
+      item.phone,
+      item.seat,
+      item.itemsSummary,
+      item.rentId
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return !search || searchable.includes(search);
+  });
+
+  const list = document.getElementById("bookingList");
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty"><span class="ico">🎒</span>ยังไม่มีรายการเช่าอุปกรณ์</div>';
+    return;
+  }
+
+  list.className = "";
+  list.innerHTML = filtered.map(equipCardHtml).join("");
+}
+
+
+function equipItemsHtml(item) {
+  const rows = [];
+  if (Number(item.tent) > 0) rows.push(`<span>⛺ เต็นท์ x${escapeHtml(item.tent)}</span>`);
+  if (Number(item.sleepingBag) > 0) rows.push(`<span>🛏️ ถุงนอน x${escapeHtml(item.sleepingBag)}</span>`);
+  if (Number(item.sleepingPad) > 0) rows.push(`<span>🧻 แผ่นรองนอน x${escapeHtml(item.sleepingPad)}</span>`);
+  return rows.join('');
+}
+
+
+function equipCardHtml(item) {
+  const tripImg = getTripImage(item.trip);
+  const totalText = '฿' + Number(item.total || 0).toLocaleString();
+
+  return `
+    <article class="card">
+      <div class="card-photo">
+        <img src="${escapeHtml(tripImg)}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&q=70'}">
+        <span class="status price-pill">${totalText}</span>
+        <div class="card-photo-title">${escapeHtml(item.trip || "-")}</div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-sub">📅 ${escapeHtml(item.date || "-")} &nbsp;·&nbsp; 🪑 เบาะ ${escapeHtml(item.seat || "-")}</div>
+
+        <div class="info-grid">
+          <div class="info">
+            <span>ผู้เช่า</span>
+            <strong>${escapeHtml(item.name || "-")}</strong>
+          </div>
+
+          <div class="info">
+            <span>ชื่อเล่น</span>
+            <strong>${escapeHtml(item.nickname || "-")}</strong>
+          </div>
+
+          <div class="info">
+            <span>เบอร์โทร</span>
+            <strong>${escapeHtml(item.phone || "-")}</strong>
+          </div>
+
+          <div class="info">
+            <span>เวลาเช่า</span>
+            <strong>${escapeHtml(item.timestamp || "-")}</strong>
+          </div>
+        </div>
+
+        <div class="equip-items">${equipItemsHtml(item)}</div>
+
+        <div class="equip-total-row"><span>ยอดรวม</span><span>${totalText}</span></div>
+      </div>
+    </article>
+  `;
 }
 
 
