@@ -1161,7 +1161,7 @@ body {
       <div class="form-sec-header">
         <div class="form-sec-ico">📝</div>
         <div>
-          <div class="form-sec-title">กรอกข้อมูลผู้จอง</div>
+          <div class="form-sec-title">กรอกข้อมูลคนไข้</div>
           <div class="form-sec-sub">ใช้ยืนยันตัวตนตอนขึ้นรถ กรอกให้ครบนะครับ</div>
         </div>
       </div>
@@ -1205,7 +1205,7 @@ body {
         <input
           id="f-pickup-other"
           class="pickup-other-input"
-          placeholder="ระบุจุดที่ต้องการให้แวะรับ เช่น ปั๊ม ปตท. สายไหม..."
+          placeholder="ระบุจุดที่ต้องการให้แวะรับ เช่น ปั๊ม ปตท.ไชโย"
           style="display:none"
           oninput="document.getElementById('f-pickup').value=this.value.trim(); checkBook()"
         >
@@ -1560,6 +1560,7 @@ const PAST_TRIPS = [
   { name: "ดอยหลวงตาก 27-28 มิ.ย.69", rounds: 1, people: 20, rating: 4.0, img: "ดอยหลวงตาก.jpg" },
   { name: "ดอยห้วยทู่ 4-5 ก.ค.69", rounds: 1, people: 20, rating: 4.6, img: "ดอยห้วยทู่.jpg" },
   { name: "เปรโต๊ะ 19-21 มิ.ย.69", rounds: 2, people: 30, rating: 4, img: "เปรโต๊ะ.jpg" },
+  { name: "น้ำตกสายรุ้งละอองดาว 25-26 ก.ค.69", rounds: 1, people: 20, rating: 3.5, img: "สายรุ้งละอองดาว.jpg" },
 ];
 
 // อุปกรณ์แคมป์ให้เช่า (ราคาต่อทริป) — รูปดึงจากหน้าสินค้าจริงของ Decathlon
@@ -1880,7 +1881,7 @@ function setupCarouselAutoScroll(key, el, intervalMs) {
    ================================================================ */
 function renderHome() {
   const h = new Date().getHours();
-  const greeting = h < 12 ? '🌅 อรุณสวัสดิ์' : h < 17 ? '☀️ สวัสดีตอนบ่าย' : '🌙 สวัสดีตอนเย็น';
+  const greeting = h < 12 ? '🌅 อรุณสวัสดิ์' : h < 17 ? '☀️ สวัสดีตอนบ่าย' : '🌅 สวัสดีตอนเย็น': h < 20 ? '🌚 สวัสดีตอนดึกๆนะ';
   const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
   const myTripCount = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone)).length;
 
@@ -1897,7 +1898,7 @@ function renderHome() {
       <div class="greet-actions">
         <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
           <div class="qa-mini-ico">🎒</div>
-          <div class="qa-mini-label">จองทริป</div>
+          <div class="qa-mini-label">กดจองทริป</div>
         </div>
         <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
           <div class="qa-mini-ico">🏕️</div>
