@@ -1493,6 +1493,7 @@ const EQUIP_ITEMS = {
    ================================================================ */
 let currentUser = null;      // { phone, nick }
 let allBookings = [];        // ข้อมูลการจองทั้งหมดจาก backend
+let allEquipRentals = [];    // ข้อมูลการเช่าอุปกรณ์ทั้งหมดจาก backend (คนละชีทกับ bookings)
 let cacheTrips = [];         // รายการทริป (unique trip+date) ที่สรุปจาก allBookings
 let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
 let selectedSeat = null;     // เบาะที่ผู้ใช้เลือกอยู่ตอนนี้
@@ -1642,6 +1643,7 @@ function fetchData() {
 
   window[cb] = (res) => {
     allBookings = res.bookings || [];
+    allEquipRentals = res.rentals || [];
 
     const seen = {};
     cacheTrips = [];
@@ -1974,6 +1976,8 @@ function renderMyTrips() {
     }
   });
 
+  const myEquipRentals = allEquipRentals.filter(r => norm(r.phone) === norm(currentUser.phone));
+
   const provinceCount = [...new Set(uniqueBookings.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
 
   document.getElementById('myContent').innerHTML = `
@@ -2013,6 +2017,25 @@ function renderMyTrips() {
               </div>
               <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
               <div class="h-arr">›</div>
+            </div>
+          `;
+        }).join('')}
+
+    <div class="sec-hdr" style="margin-top:24px"><h3>🎒 ประวัติการเช่าอุปกรณ์</h3></div>
+    ${myEquipRentals.length === 0
+      ? '<div class="empty-st" style="padding:34px 20px"><div class="ico" style="font-size:38px">🏕️</div><p>ยังไม่มีประวัติการเช่าอุปกรณ์ครับ</p></div>'
+      : myEquipRentals.map(r => {
+          const img = TRIP_IMAGES[r.trip] || 'default.jpg';
+          const fmtDate = new Date(r.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+          return `
+            <div class="h-item" style="cursor:default">
+              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
+              <div class="hi">
+                <h4>${r.trip}</h4>
+                <p>📅 ${fmtDate}</p>
+                <p style="margin-top:4px;color:var(--sub);font-size:11px">${r.itemsSummary || '-'}</p>
+              </div>
+              <div class="h-seat"><div class="snum" style="font-size:15px">฿${Number(r.total || 0).toLocaleString()}</div><p>ยอดรวม</p></div>
             </div>
           `;
         }).join('')}
