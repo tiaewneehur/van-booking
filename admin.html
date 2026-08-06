@@ -917,6 +917,11 @@ function cardHtml(item) {
             <span>เวลาส่งสลิป</span>
             <strong>${escapeHtml(item.slipSubmittedAt || "-")}</strong>
           </div>
+
+          <div class="info" style="grid-column:1 / -1">
+            <span>🚏 จุดขึ้นรถ</span>
+            <strong>${escapeHtml(item.pickup || "-")}</strong>
+          </div>
         </div>
 
         ${slipButton}
