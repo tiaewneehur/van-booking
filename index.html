@@ -1881,7 +1881,7 @@ function setupCarouselAutoScroll(key, el, intervalMs) {
    ================================================================ */
 function renderHome() {
   const h = new Date().getHours();
-  const greeting = h < 12 ? '🌅 อรุณสวัสดิ์' : h < 17 ? '☀️ สวัสดีตอนบ่าย' : '🌅 สวัสดีตอนเย็น': h < 20 ? '🌚 สวัสดีตอนดึกๆนะ':;
+  const greeting = h < 12 ? '🌅 อรุณสวัสดิ์' : h < 17 ? '☀️ สวัสดีตอนบ่าย' : '🌅 สวัสดีตอนเย็น':;
   const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
   const myTripCount = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone)).length;
 
