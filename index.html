@@ -232,6 +232,8 @@ body {
 .sec-hdr h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
 
 #upcomingList::-webkit-scrollbar { display: none; }
+#upcomingList { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+#upcomingList .trip-hcard { flex: 0 0 86%; min-height: auto; scroll-snap-align: start; scroll-snap-stop: always; }
 
 .stat-bar {
   display: flex;
@@ -319,8 +321,6 @@ body {
 .lux-seats.low { color: #f1c14a; }
 .lux-seats.full { color: #ef6a6a; }
 .lux-cta { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: #f1d488; }
-
-#upcomingList .trip-hcard { flex: 0 0 86%; min-height: auto; }
 
 /* การ์ดขนาดย่อ — ใช้ในหน้า "ทริปทั้งหมด"/ผลค้นหา ที่มีรายการเยอะ ให้ไล่ดูได้ไวขึ้น */
 .trip-hcard.compact .lux-photo { aspect-ratio: 16 / 7; }
@@ -1611,13 +1611,7 @@ function fetchData() {
       upcomingEl.innerHTML = upcoming.map(t => cardHTML(t)).join('')
         || '<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
 
-      clearInterval(window._autoScrollInt);
-      window._autoScrollInt = setInterval(() => {
-        if (upcomingEl.children.length < 2) return;
-        const cardW = upcomingEl.children[0].offsetWidth + 12;
-        const maxScroll = upcomingEl.scrollWidth - upcomingEl.clientWidth;
-        upcomingEl.scrollLeft = upcomingEl.scrollLeft >= maxScroll - 5 ? 0 : upcomingEl.scrollLeft + cardW;
-      }, 2000);
+      setupCarouselAutoScroll('upcoming', upcomingEl, 2000);
     }
 
     delete window[cb];
@@ -1668,6 +1662,61 @@ function appendScript(src) {
   const s = document.createElement('script');
   s.src = src;
   document.body.appendChild(s);
+}
+
+/*
+ * เลื่อนแคโรเซลอัตโนมัติแบบ "รู้จังหวะคน" — ถ้าผู้ใช้กำลังปัด/สกรอลเองอยู่
+ * จะหยุดเลื่อนอัตโนมัติชั่วคราวทันที แล้วค่อยเริ่มเลื่อนต่อหลังจากผู้ใช้ปล่อยนิ้วไปสักพัก
+ * ป้องกันปัญหาเลื่อนอัตโนมัติไปชนกับตอนผู้ใช้ปัดเอง จนการ์ดค้างอยู่ครึ่งใบ
+ * (ตัว CSS scroll-snap จะจัดให้ลงล็อกเต็มการ์ดเองทุกครั้งที่ปล่อยนิ้ว)
+ */
+window._carouselControllers = window._carouselControllers || {};
+
+function setupCarouselAutoScroll(key, el, intervalMs) {
+  if (window._carouselControllers[key]) {
+    window._carouselControllers[key].destroy();
+    window._carouselControllers[key] = null;
+  }
+  if (!el) return;
+
+  let timer = null;
+  let resumeTimer = null;
+  let isProgrammatic = false;
+
+  function tick() {
+    if (el.children.length < 2) return;
+    const cardW = el.children[0].offsetWidth + 12;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    isProgrammatic = true;
+    el.scrollLeft = el.scrollLeft >= maxScroll - 5 ? 0 : el.scrollLeft + cardW;
+  }
+
+  function start() {
+    clearInterval(timer);
+    timer = setInterval(tick, intervalMs);
+  }
+
+  function pauseThenResume() {
+    clearInterval(timer);
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(start, intervalMs + 2000);
+  }
+
+  function onScroll() {
+    if (isProgrammatic) { isProgrammatic = false; return; }
+    pauseThenResume();
+  }
+
+  el.addEventListener('scroll', onScroll, { passive: true });
+  start();
+
+  window._carouselControllers[key] = {
+    destroy() {
+      clearInterval(timer);
+      clearTimeout(resumeTimer);
+      el.removeEventListener('scroll', onScroll);
+    }
+  };
 }
 
 /* ================================================================
@@ -1961,7 +2010,7 @@ const PREP_CHECKLIST = [
 
 function renderNotif() {
   const slidesHTML = HIKING_GEAR_SLIDES.map(src => `
-    <div style="flex:0 0 82%;scroll-snap-align:start">
+    <div style="flex:0 0 82%;scroll-snap-align:start;scroll-snap-stop:always">
       <img src="${src}" style="width:100%;border-radius:18px;display:block" onerror="this.style.display='none'">
     </div>
   `).join('');
@@ -1975,21 +2024,15 @@ function renderNotif() {
 
   document.getElementById('notifContent').innerHTML = `
     <div style="margin-bottom:12px"><h3 style="font-size:16px;font-weight:700;color:#fff">🥾 ของจำเป็นในการเดินป่า</h3></div>
-    <div id="gearSlider" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;padding-bottom:8px;-ms-overflow-style:none;scrollbar-width:none;margin-bottom:24px">
+    <div id="gearSlider" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:8px;-ms-overflow-style:none;scrollbar-width:none;margin-bottom:24px">
       ${slidesHTML}
     </div>
     <div style="margin-bottom:16px"><h3 style="font-size:16px;font-weight:700;color:#fff">🔔 การเตรียมตัวก่อนเดินป่า</h3></div>
     ${listHTML}
   `;
 
-  clearInterval(window._gearInt);
   const slider = document.getElementById('gearSlider');
-  if (slider) {
-    window._gearInt = setInterval(() => {
-      const max = slider.scrollWidth - slider.clientWidth;
-      slider.scrollLeft = slider.scrollLeft >= max - 5 ? 0 : slider.scrollLeft + slider.children[0].offsetWidth + 12;
-    }, 2500);
-  }
+  setupCarouselAutoScroll('gear', slider, 2500);
 }
 
 /* ================================================================
