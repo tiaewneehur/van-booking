@@ -488,6 +488,7 @@ function getTripImage(tripName) {
 let adminToken = "";
 let allBookings = [];
 let allEquipRentals = [];
+let allPickupPoints = [];
 let equipLoaded = false;
 let currentAdminTab = "bookings"; // 'bookings' | 'equip'
 let currentStatusFilter = "";
@@ -610,6 +611,7 @@ function loadBookings(firstLogin) {
 
       updateBookingStats();
       renderBookings();
+      loadPickupPoints();
 
     } catch (error) {
       if (firstLogin) {
@@ -920,7 +922,7 @@ function cardHtml(item) {
 
           <div class="info" style="grid-column:1 / -1">
             <span>🚏 จุดขึ้นรถ</span>
-            <strong>${escapeHtml(item.pickup || "-")}</strong>
+            <strong>${escapeHtml(findPickupText(item.bookingKey))}</strong>
           </div>
         </div>
 
@@ -977,6 +979,66 @@ function getStatusClass(status) {
   }
 
   return "status-other";
+}
+
+
+/* ============================================================
+   PICKUP POINTS (จุดขึ้นรถ) — ชีทแยกต่างหากจาก bookings เต็มรูปแบบ
+   ดึงตรงจากชีท PickupPoints แล้ว "จับคู่ฝั่ง client" ด้วย bookingKey
+   เท่านั้น ไม่ไปยุ่งกับโครงสร้างคอลัมน์ของ bookings เลย
+============================================================ */
+
+function loadPickupPoints() {
+  if (!adminToken) return;
+
+  const callbackName = "adminPickupCb_" + Date.now();
+  const script = document.createElement("script");
+  let finished = false;
+
+  window[callbackName] = function (response) {
+    finished = true;
+
+    try {
+      if (response && response.ok) {
+        allPickupPoints = Array.isArray(response.pickups) ? response.pickups : [];
+      } else {
+        allPickupPoints = [];
+      }
+
+      // รีเฟรชการ์ดจองอีกครั้ง ให้ช่องจุดขึ้นรถอัปเดตด้วยข้อมูลที่เพิ่งโหลดมา
+      if (currentAdminTab === 'bookings') {
+        renderBookings();
+      }
+
+    } finally {
+      cleanupJsonp(callbackName, script);
+    }
+  };
+
+  script.onerror = function () {
+    if (finished) return;
+    allPickupPoints = [];
+    cleanupJsonp(callbackName, script);
+  };
+
+  script.src =
+    API_URL +
+    "?action=adminPickupPoints" +
+    "&adminToken=" +
+    encodeURIComponent(adminToken) +
+    "&callback=" +
+    encodeURIComponent(callbackName) +
+    "&_=" +
+    Date.now();
+
+  document.body.appendChild(script);
+}
+
+// จับคู่จุดขึ้นรถของรายการจองด้วย bookingKey (ฝั่ง client ล้วนๆ ไม่พึ่งพา backend merge)
+function findPickupText(bookingKey) {
+  if (!bookingKey) return "-";
+  const match = allPickupPoints.find(p => p.bookingKey === bookingKey);
+  return (match && match.pickup) ? match.pickup : "-";
 }
 
 
@@ -1313,7 +1375,7 @@ function updateStatus(
 
   }, 1600);
 }
- 
+
 
 /* ============================================================
    ESCAPE
