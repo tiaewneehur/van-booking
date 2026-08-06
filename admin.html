@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -1153,6 +1152,22 @@ function equipCardHtml(item) {
 function openSlip(encodedUrl) {
   const url =
     decodeURIComponent(encodedUrl);
+
+  /*
+   * กันไว้เผื่อข้อมูลคอลัมน์เพี้ยน (เช่น แถวเก่าก่อน migrate)
+   * แล้วค่าที่ได้ไม่ใช่ URL จริงๆ — จะเจอ Swal แจ้งเตือนแทนหน้า 404
+   */
+  if (!/^https?:\/\//i.test(url)) {
+    Swal.fire({
+      icon: "warning",
+      title: "ลิงก์สลิปไม่ถูกต้อง",
+      text: "รายการนี้อาจเป็นข้อมูลเก่าที่ยังไม่ได้ย้ายคอลัมน์ (ลอง Run migrateBookingColumns ใน Apps Script ก่อน)",
+      background: "#0c1524",
+      color: "#f1f5f9",
+      confirmButtonColor: "#0284c7"
+    });
+    return;
+  }
 
   window.open(
     url,
