@@ -1163,7 +1163,7 @@ body {
       <div class="form-sec-header">
         <div class="form-sec-ico">📝</div>
         <div>
-          <div class="form-sec-title">กรอกข้อมูลผู้จอง</div>
+          <div class="form-sec-title">กรอกข้อมูลคนไข้</div>
           <div class="form-sec-sub">ใช้ยืนยันตัวตนตอนขึ้นรถ กรอกให้ครบนะครับ</div>
         </div>
       </div>
@@ -1200,7 +1200,7 @@ body {
         <input
           id="f-pickup-other"
           class="pickup-other-input"
-          placeholder="ระบุจุดที่ต้องการให้แวะรับ เช่น ปั๊ม ปตท. สายไหม..."
+          placeholder="ระบุจุดที่ต้องการให้แวะรับ เช่น ปั๊ม ปตท.ไชโย"
           style="display:none"
           oninput="document.getElementById('f-pickup').value=this.value.trim(); checkBook()"
         >
@@ -2087,7 +2087,7 @@ function renderMyTrips() {
           <img id="userAvatar" src="https://via.placeholder.com/150?text=👤" style="width:100%;height:100%;object-fit:cover">
           <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAvatar(this)">
         </div>
-        <p class="my-ava-hint">📷 แตะเพื่อเปลี่ยนรูปได้</p>
+        <p class="my-ava-hint">📷 แตะเปลี่ยนรูป</p>
       </div>
       <div class="my-info" style="flex:1">
         <h3>${currentUser.nick}</h3>
