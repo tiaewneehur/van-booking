@@ -161,30 +161,28 @@ body {
 #pdfPage {
   width: 794px;
   flex-shrink: 0;
-  padding: 14px 42px 10px;
+  padding: 24px 42px 16px;
   background: #ffffff;
   color: #111;
-  /* ใช้ 'TH Sarabun New' ก่อนถ้าเครื่องผู้ใช้มีติดตั้งอยู่ (ฟอนต์ราชการไทยมาตรฐาน)
-     ถ้าไม่มีค่อย fallback ไปที่ 'Sarabun' ของ Google Fonts */
   font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', sans-serif;
-  font-size: 21px;   /* = 16pt ที่ 96dpi บนแคนวาสกว้าง 794px (A4) */
-  line-height: 1.04;
+  font-size: 20px;   
+  line-height: 1.15;
 }
-#pdfPage .doc-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 1px; } /* = 18pt */
-#pdfPage .doc-sub { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 4px; }   /* = 18pt */
-#pdfPage .doc-date { text-align: right; margin-bottom: 4px; }
-#pdfPage .doc-line { margin-bottom: 0; }
+#pdfPage .doc-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 2px; }
+#pdfPage .doc-sub { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+#pdfPage .doc-date { text-align: right; margin-bottom: 6px; }
+#pdfPage .doc-line { margin-bottom: 2px; }
 #pdfPage .doc-indent { text-indent: 38px; }
 #pdfPage .blank {
   display: inline-block; border-bottom: 1px dotted #333;
   padding: 0 2px 0px; min-width: 34px; font-weight: 600;
 }
 #pdfPage .cb { font-family: inherit; margin-right: 3px; }
-#pdfPage .sign-block { margin-top: 6px; text-align: center; }
+#pdfPage .sign-block { margin-top: 10px; text-align: center; }
 #pdfPage .sign-block .line { margin-bottom: 0; }
-#pdfPage .staff-hd { font-weight: 700; text-decoration: underline; margin: 6px 0 2px; }
-#pdfPage .divider { border-top: 1px dashed #999; margin: 6px 0 4px; }
-#pdfPage .staff-row { display: flex; justify-content: space-between; margin-top: 8px; }
+#pdfPage .staff-hd { font-weight: 700; text-decoration: underline; margin: 8px 0 4px; }
+#pdfPage .divider { border-top: 1px dashed #999; margin: 10px 0 6px; }
+#pdfPage .staff-row { display: flex; justify-content: space-between; margin-top: 10px; }
 #pdfPage .staff-row .col { width: 48%; text-align: center; }
 </style>
 </head>
@@ -362,13 +360,12 @@ body {
 </div>
 
 <!-- ============================================================
-     PDF TEMPLATE (ซ่อนไว้ ไม่โชว์บนหน้าจอ ใช้แปลงเป็นรูปสำหรับสร้าง PDF)
+     PDF TEMPLATE (ปรับเลย์เอาต์ตามต้นฉบับเป๊ะ)
      ============================================================ -->
 <div id="pdfWrap">
   <div id="pdfPage">
     <div class="doc-title">แบบคำขออนุญาตเข้าศึกษา กิจกรรมเส้นทางเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก</div>
     <div class="doc-sub">ประจำปีงบประมาณ พ.ศ. ๒๕๖๙</div>
-    <div style="text-align:center;font-size:10px;color:#888;margin-bottom:5px">จัดทำแบบฟอร์มโดยเพจ เที่ยวนี่เหอะ</div>
 
     <div class="doc-date">
       วันที่ <span id="p-formDay" class="blank"></span>
@@ -377,92 +374,99 @@ body {
     </div>
 
     <div class="doc-line">เรื่อง&nbsp;&nbsp;&nbsp;ขออนุญาตเข้าศึกษาธรรมชาติระยะไกลเขาช้างเผือก</div>
-    <div class="doc-line" style="margin-bottom:5px">เรียน&nbsp;&nbsp;&nbsp;หัวหน้าอุทยานแห่งชาติทองผาภูมิ</div>
+    <div class="doc-line" style="margin-bottom:6px">เรียน&nbsp;&nbsp;&nbsp;หัวหน้าอุทยานแห่งชาติทองผาภูมิ</div>
 
     <div class="doc-line doc-indent">
-      ข้าพเจ้า <span id="p-titleFname" class="blank"></span>
-      นามสกุล <span id="p-lname" class="blank"></span>
+      ข้าพเจ้า <span id="p-cb นาย" class="cb"></span> นาย 
+      <span id="p-cb นาง" class="cb"></span> นาง 
+      <span id="p-cb นางสาว" class="cb"></span> นางสาว 
+      <span id="p-fname" class="blank"></span> 
+      นามสกุล <span id="p-lname" class="blank"></span> 
       อายุ <span id="p-age" class="blank"></span> ปี
     </div>
     <div class="doc-line">
-      สัญชาติ <span id="p-nation" class="blank"></span> ศาสนา <span id="p-religion" class="blank"></span>
+      สัญชาติ <span id="p-nation" class="blank"></span> 
+      ศาสนา <span id="p-religion" class="blank"></span> 
       เลขประจำตัวประชาชน (๑๓ ตัว) <span id="p-idcard" class="blank"></span>
     </div>
     <div class="doc-line">
-      โรคประจำตัว <span id="p-disease" class="blank"></span> กรุ๊ปเลือด <span id="p-blood" class="blank"></span>
+      โรคประจำตัว <span id="p-disease" class="blank"></span> 
+      กรุ๊ปเลือด <span id="p-blood" class="blank"></span> 
       มีภูมิลำเนาอยู่บ้านเลขที่ <span id="p-houseNo" class="blank"></span>
     </div>
     <div class="doc-line">
-      หมู่ที่ <span id="p-moo" class="blank"></span> ซอย <span id="p-soi" class="blank"></span>
-      ถนน <span id="p-road" class="blank"></span> แขวง/ตำบล <span id="p-tambon" class="blank"></span>
+      หมู่ที่ <span id="p-moo" class="blank"></span> 
+      ซอย <span id="p-soi" class="blank"></span> 
+      ถนน <span id="p-road" class="blank"></span> 
+      แขวง/ตำบล <span id="p-tambon" class="blank"></span>
     </div>
     <div class="doc-line">
-      เขต/อำเภอ <span id="p-amphoe" class="blank"></span> จังหวัด <span id="p-province" class="blank"></span>
+      เขต/อำเภอ <span id="p-amphoe" class="blank"></span> 
+      จังหวัด <span id="p-province" class="blank"></span> 
       โทรศัพท์(บ้าน) <span id="p-homePhone" class="blank"></span>
     </div>
     <div class="doc-line">
-      (มือถือ) <span id="p-mobile" class="blank"></span> E-mail <span id="p-email" class="blank"></span>
+      (มือถือ) <span id="p-mobile" class="blank"></span> 
+      E-mail <span id="p-email" class="blank"></span>
     </div>
-    <div class="doc-line" style="margin-bottom:5px">
-      บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน ชื่อ <span id="p-ecFname" class="blank"></span>
-      นามสกุล <span id="p-ecLname" class="blank"></span> โทรศัพท์ <span id="p-ecPhone" class="blank"></span>
+    <div class="doc-line" style="margin-bottom:6px">
+      บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน ชื่อ <span id="p-ecFname" class="blank"></span> 
+      นามสกุล <span id="p-ecLname" class="blank"></span> 
+      โทรศัพท์ <span id="p-ecPhone" class="blank"></span>
     </div>
 
     <div class="doc-line">
       โดยข้าพเจ้า มีความประสงค์ขออนุญาตเข้าศึกษาธรรมชาติระยะไกล เขาช้างเผือก พื้นที่อุทยานแห่งชาติทองผาภูมิ จังหวัดกาญจนบุรี ดังนี้
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:0">
-      ๑. ขออนุญาตเข้าพื้นที่เพื่อศึกษาธรรมชาติฯ มีกำหนด <span id="p-days" class="blank"></span> วัน
-      ตั้งแต่วันที่ <span id="p-startDay" class="blank"></span>
-      เดือน <span id="p-startMonth" class="blank"></span>
-      พ.ศ. <span id="p-startYear" class="blank"></span>
-      ถึงวันที่ <span id="p-endDay" class="blank"></span>
-      เดือน <span id="p-endMonth" class="blank"></span>
+    <div class="doc-line doc-indent" style="margin-top:2px">
+      ๑. ขออนุญาตเข้าพื้นที่เพื่อศึกษาธรรมชาติฯ มีกำหนด <span id="p-days" class="blank"></span> วัน 
+      ตั้งแต่วันที่ <span id="p-startDay" class="blank"></span> 
+      เดือน <span id="p-startMonth" class="blank"></span> 
+      พ.ศ. <span id="p-startYear" class="blank"></span> 
+      ถึงวันที่ <span id="p-endDay" class="blank"></span> 
+      เดือน <span id="p-endMonth" class="blank"></span> 
       พ.ศ. <span id="p-endYear" class="blank"></span>
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:0">
-      ๒. ได้ศึกษากิจกรรมการเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก และรับทราบเป็นอย่างดีแล้ว
-      และขอรับรองว่าข้าพเจ้ามีสภาพร่างกายที่แข็งแรง ไม่เป็นโรคต้องห้ามตามกฏหมายหรือโรคที่เป็นอันตรายต่อการเดินศึกษาธรรมชาติ แต่อย่างใด
+    <div class="doc-line doc-indent" style="margin-top:2px">
+      ๒. ได้ศึกษากิจกรรมการเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก และรับทราบเป็นอย่างดีแล้ว และขอรับรองว่าข้าพเจ้ามีสภาพร่างกายที่แข็งแรง ไม่เป็นโรคต้องห้ามตามกฎหมายหรือโรคที่เป็นอันตรายต่อการเดินศึกษาธรรมชาติ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:0">
-      ๓. ปฏิบัติตามกฎหมาย ระเบียบและข้อบังคับ ตามพระราชบัญญัติอุทยานแห่งชาติ พ.ศ.๒๕๖๒
-      และคำสั่งของพนักงานเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ ที่ได้กำหนดไว้อย่างเคร่งครัดต่อไป
+    <div class="doc-line doc-indent" style="margin-top:2px">
+      ๓. ปฏิบัติตามกฎหมาย ระเบียบและข้อบังคับ ตามพระราชบัญญัติอุทยานแห่งชาติ พ.ศ. ๒๕๖๒ และคำสั่งของพนักงานเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ ที่ได้กำหนดไว้อย่างเคร่งครัดต่อไป
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:0">
-      ๔. ในการเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้ หากได้รับอันตรายหรืออุบัติเหตุ
-      ข้าพเจ้าจะไม่ขอดำเนินคดี หรือฟ้องร้องเพื่อเรียกร้องค่าเสียหายจากเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ หรือหน่วยงานของรัฐ แต่อย่างใด
+    <div class="doc-line doc-indent" style="margin-top:2px">
+      ๔. ในการเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้ หากได้รับอันตรายหรืออุบัติเหตุ ข้าพเจ้าจะไม่ขอดำเนินคดี หรือฟ้องร้องเพื่อเรียกร้องค่าเสียหายจากเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ หรือหน่วยงานของรัฐ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:0">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
+    <div class="doc-line doc-indent" style="margin-top:2px">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
     <div class="doc-line" style="margin-left:34px"><span id="p-cbYes" class="cb"></span>ทำประกันภัยอุบัติเหตุ กับบริษัท <span id="p-insCo" class="blank"></span> เบอร์โทร <span id="p-insPhone" class="blank"></span></div>
     <div class="doc-line" style="margin-left:34px"><span id="p-cbNo" class="cb"></span>ไม่ได้ทำประกันภัยอุบัติเหตุ</div>
 
     <div class="sign-block">
-      <div class="line">(ลงชื่อ) ......................................... ผู้ขออนุญาต</div>
-      <div class="line">( <span id="p-signName"></span> )</div>
+      <div class="line">(ลงชื่อ) ........................................................... ผู้ขออนุญาต</div>
+      <div class="line" style="margin-top:2px">( <span id="p-signName"></span> )</div>
     </div>
 
     <div class="divider"></div>
     <div class="staff-hd">สำหรับเจ้าหน้าที่</div>
 
     <div class="doc-line doc-indent">๑. ตรวจสอบแล้ว ปรากฏว่า ☐ บุคคลเดียว</div>
-    <div class="doc-line" style="margin-left:34px">☐ กลุ่มคณะ ชื่อกลุ่ม.......................................... จำนวน.............. คน</div>
+    <div class="doc-line" style="margin-left:34px">☐ กลุ่มคณะ ชื่อกลุ่ม.................................................................................. จำนวน........................ คน</div>
     <div class="doc-line" style="margin-left:34px"><strong>เห็นควร</strong> ☐ อนุญาต</div>
-    <div class="doc-line" style="margin-left:75px">☐ ไม่อนุญาต เนื่องจาก......................................................</div>
-    <div class="doc-line doc-indent" style="margin-top:6px">๒. เจ้าหน้าที่ดูแลความปลอดภัย ชื่อ.......................................... ตำแหน่ง..........................</div>
+    <div class="doc-line" style="margin-left:75px">☐ ไม่อนุญาต เนื่องจาก.............................................................................................................</div>
+    <div class="doc-line doc-indent" style="margin-top:4px">๒. เจ้าหน้าที่ดูแลความปลอดภัย ชื่อ....................................................................... ตำแหน่ง..................................................</div>
 
     <div class="staff-row">
       <div class="col">
-        <div>(ลงชื่อ)........................จนท. ตรวจสอบข้อมูล</div>
-        <div style="margin-top:4px">(....................................)</div>
+        <div>(ลงชื่อ).................................................จนท. ตรวจสอบข้อมูล</div>
+        <div style="margin-top:2px">(...............................................................)</div>
       </div>
       <div class="col">
-        <div>(ลงชื่อ) ........................ ผู้อนุญาต</div>
-        <div style="margin-top:4px">(....................................)</div>
+        <div>(ลงชื่อ) ................................................ ผู้อนุญาต</div>
+        <div style="margin-top:2px">(...............................................................)</div>
       </div>
     </div>
   </div>
@@ -482,7 +486,6 @@ function fillMonthSelect(id) {
 }
 ['f-formMonth', 'f-startMonth', 'f-endMonth'].forEach(fillMonthSelect);
 
-// เติมปี พ.ศ. ปัจจุบันไว้ล่วงหน้าให้เป็นค่าเริ่มต้น (แก้ไขเองได้)
 const currentBEYear = new Date().getFullYear() + 543;
 document.getElementById('f-formYear').value = currentBEYear;
 
@@ -521,7 +524,6 @@ function checkForm() {
   btn.classList.toggle('ready', ok);
   btn.innerText = ok ? '📄 ดาวน์โหลดเป็น PDF' : '📄 กรอกข้อมูลให้ครบก่อนนะครับ';
 
-  // เติมชื่อผู้ลงนามอัตโนมัติ ถ้าผู้ใช้ยังไม่เคยแก้เอง
   const signInput = document.getElementById('f-signName');
   if (!signInput.dataset.touched && titleChecked && val('f-fname') && val('f-lname')) {
     signInput.value = titleChecked.value + val('f-fname') + ' ' + val('f-lname');
@@ -548,12 +550,16 @@ async function generatePDF() {
   const titleChecked = document.querySelector('input[name="title"]:checked').value;
   const insChecked = document.querySelector('input[name="insurance"]:checked').value;
 
-  // เติมข้อมูลลงในเทมเพลตที่ซ่อนไว้
   document.getElementById('p-formDay').textContent = val('f-formDay');
   document.getElementById('p-formMonth').textContent = val('f-formMonth');
   document.getElementById('p-formYear').textContent = val('f-formYear');
 
-  document.getElementById('p-titleFname').textContent = titleChecked + ' ' + val('f-fname');
+  // ติ๊กเลือกคำนำหน้า
+  ['นาย', 'นาง', 'นางสาว'].forEach(t => {
+    document.getElementById('p-cb ' + t).textContent = (titleChecked === t) ? '☑ ' : '☐ ';
+  });
+
+  document.getElementById('p-fname').textContent = val('f-fname');
   document.getElementById('p-lname').textContent = val('f-lname');
 
   document.getElementById('p-age').textContent = val('f-age');
@@ -595,12 +601,9 @@ async function generatePDF() {
     const wrap = document.getElementById('pdfWrap');
     const target = document.getElementById('pdfPage');
 
-    // แสดง pdfPage บนจอจริงชั่วคราว (คลุมเต็มจอ) ก่อน capture
-    // เพราะมือถือบางรุ่น (โดยเฉพาะ Safari) รับภาพ element ที่ซ่อนไว้นอกจอไม่แม่นยำ
     wrap.classList.add('capturing');
     document.body.style.overflow = 'hidden';
 
-    // รอให้เบราว์เซอร์วาดเฟรมจริงก่อนค่อย capture กันปัญหาจับภาพไม่ครบ
     await new Promise(r => requestAnimationFrame(r));
     await new Promise(r => requestAnimationFrame(r));
 
@@ -630,8 +633,6 @@ async function generatePDF() {
     let xOffset = 0;
     let yOffset = 0;
 
-    // ยืนยันว่าอยู่ใน 1 แผ่นเสมอ ไม่ว่าข้อมูลจะยาวแค่ไหน — ถ้าเนื้อหาสูงเกินหน้า A4
-    // ให้ย่อสัดส่วนลงพอดี 1 หน้าเป๊ะ (ไม่ตัดหน้าแบ่งเป็นหน้าที่ 2 อีกต่อไป กันปัญหาข้อความซ้อนทับ)
     if (imgHeight > pageHeight) {
       const scale = pageHeight / imgHeight;
       imgHeight = pageHeight;
