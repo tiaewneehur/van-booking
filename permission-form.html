@@ -597,26 +597,22 @@ async function generatePDF() {
 
     const pageWidth = 210;
     const pageHeight = 297;
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-    if (imgHeight <= pageHeight) {
-      pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
-    } else {
-      // ถ้าเนื้อหายาวเกิน 1 หน้า ให้ตัดแบ่งหน้าอัตโนมัติ
-      let heightLeft = imgHeight;
-      let position = 0;
+    let imgWidth = pageWidth;
+    let imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let xOffset = 0;
+    let yOffset = 0;
 
-      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
+    // ยืนยันว่าอยู่ใน 1 แผ่นเสมอ ไม่ว่าข้อมูลจะยาวแค่ไหน — ถ้าเนื้อหาสูงเกินหน้า A4
+    // ให้ย่อสัดส่วนลงพอดี 1 หน้าเป๊ะ (ไม่ตัดหน้าแบ่งเป็นหน้าที่ 2 อีกต่อไป กันปัญหาข้อความซ้อนทับ)
+    if (imgHeight > pageHeight) {
+      const scale = pageHeight / imgHeight;
+      imgHeight = pageHeight;
+      imgWidth = imgWidth * scale;
+      xOffset = (pageWidth - imgWidth) / 2;
     }
+
+    pdf.addImage(imgData, 'JPEG', xOffset, yOffset, imgWidth, imgHeight);
 
     const fileName = 'คำขออนุญาตเข้าศึกษาธรรมชาติ_' + val('f-fname') + val('f-lname') + '.pdf';
     pdf.save(fileName);
