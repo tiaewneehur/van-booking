@@ -660,16 +660,6 @@ body {
    FORM IMAGE
    ============================================================ */
 
-/*
-  จุดสำคัญมาก
-
-  ใช้ container query เพื่อให้ขนาด font
-  คำนวณจาก "ความกว้างของกระดาษ"
-  ไม่ใช่ความกว้างของหน้าจอ
-
-  1cqw = 1% ของความกว้างรูปแบบฟอร์ม
-*/
-
 #formImageWrap {
 
   position: relative;
@@ -704,11 +694,6 @@ body {
 
   position: absolute;
 
-  /*
-    ใช้ TH Sarabun ก่อน
-    เพื่อให้รูปแบบใกล้เคียงเอกสารราชการ
-  */
-
   font-family:
     'TH Sarabun New',
     'THSarabunNew',
@@ -716,14 +701,6 @@ body {
     'THSarabunPSK',
     'Sarabun',
     sans-serif;
-
-  /*
-    เดิม 1.47vw ทำให้บน iPhone
-    ตัวหนังสือเหลือประมาณ 5-6px
-
-    เปลี่ยนเป็น cqw
-    เพื่ออิงกับกระดาษ
-  */
 
   font-size: 1.42cqw;
 
@@ -734,11 +711,6 @@ body {
   white-space: nowrap;
 
   line-height: 1;
-
-  /*
-    สำคัญ:
-    ไม่ให้ตัวอักษรลากลงไปทับเส้นปะ
-  */
 
   transform:
     translateY(-18%);
@@ -867,11 +839,6 @@ body {
 
 <body>
 
-
-<!-- ============================================================
-     HEADER
-     ============================================================ -->
-
 <div class="hdr">
 
   <img
@@ -907,2156 +874,551 @@ body {
 
 <div class="main">
 
-
-<!-- ============================================================
-     วันที่กรอกแบบฟอร์ม
-     ============================================================ -->
-
 <div class="sec">
 
   <div class="sec-hd">
-
-    <div class="sec-num">
-      📅
-    </div>
-
+    <div class="sec-num">📅</div>
     <div>
-      <h2>
-        วันที่กรอกแบบฟอร์มนี้
-      </h2>
-
-      <p>
-        วันที่ที่คุณกำลังกรอกฟอร์มอยู่ตอนนี้
-      </p>
+      <h2>วันที่กรอกแบบฟอร์มนี้</h2>
+      <p>วันที่ที่คุณกำลังกรอกฟอร์มอยู่ตอนนี้</p>
     </div>
-
   </div>
 
-
   <div class="date-row">
-
     <div class="fld">
-
-      <label>
-        วัน <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-formDay"
-        type="number"
-        min="1"
-        max="31"
-        placeholder="14"
-        oninput="checkForm()"
-      >
-
+      <label>วัน <span class="req">*</span></label>
+      <input id="f-formDay" type="number" min="1" max="31" placeholder="14" oninput="checkForm()">
     </div>
-
-
     <div class="fld">
-
-      <label>
-        เดือน <span class="req">*</span>
-      </label>
-
-      <select
-        id="f-formMonth"
-        onchange="checkForm()"
-      >
-        <option value="">
-          เลือกเดือน
-        </option>
+      <label>เดือน <span class="req">*</span></label>
+      <select id="f-formMonth" onchange="checkForm()">
+        <option value="">เลือกเดือน</option>
       </select>
-
     </div>
-
-
     <div class="fld">
-
-      <label>
-        พ.ศ. <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-formYear"
-        type="number"
-        placeholder="2569"
-        oninput="checkForm()"
-      >
-
+      <label>พ.ศ. <span class="req">*</span></label>
+      <input id="f-formYear" type="number" placeholder="2569" oninput="checkForm()">
     </div>
-
   </div>
 
 </div>
 
-
-<!-- ============================================================
-     ข้อมูลผู้ขออนุญาต
-     ============================================================ -->
-
 <div class="sec">
 
   <div class="sec-hd">
-
-    <div class="sec-num">
-      1
-    </div>
-
+    <div class="sec-num">1</div>
     <div>
-      <h2>
-        ข้อมูลผู้ขออนุญาต
-      </h2>
-
-      <p>
-        ข้อมูลส่วนตัวตามบัตรประชาชน
-      </p>
+      <h2>ข้อมูลผู้ขออนุญาต</h2>
+      <p>ข้อมูลส่วนตัวตามบัตรประชาชน</p>
     </div>
-
   </div>
 
-
   <div class="fld full">
-
-    <label>
-      คำนำหน้า <span class="req">*</span>
-    </label>
-
+    <label>คำนำหน้า <span class="req">*</span></label>
     <div class="chip-group">
-
       <label class="chip-opt">
-
-        <input
-          type="radio"
-          name="title"
-          value="นาย"
-          onchange="checkForm()"
-        >
-
-        <span>
-          นาย
-        </span>
-
+        <input type="radio" name="title" value="นาย" onchange="checkForm()">
+        <span>นาย</span>
       </label>
-
-
       <label class="chip-opt">
-
-        <input
-          type="radio"
-          name="title"
-          value="นาง"
-          onchange="checkForm()"
-        >
-
-        <span>
-          นาง
-        </span>
-
+        <input type="radio" name="title" value="นาง" onchange="checkForm()">
+        <span>นาง</span>
       </label>
-
-
       <label class="chip-opt">
-
-        <input
-          type="radio"
-          name="title"
-          value="นางสาว"
-          onchange="checkForm()"
-        >
-
-        <span>
-          นางสาว
-        </span>
-
+        <input type="radio" name="title" value="นางสาว" onchange="checkForm()">
+        <span>นางสาว</span>
       </label>
-
     </div>
-
   </div>
-
 
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        ชื่อ <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-fname"
-        placeholder="ชื่อจริง"
-        oninput="checkForm()"
-      >
-
+      <label>ชื่อ <span class="req">*</span></label>
+      <input id="f-fname" placeholder="ชื่อจริง" oninput="checkForm()">
     </div>
-
-
     <div class="fld">
-
-      <label>
-        นามสกุล <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-lname"
-        placeholder="นามสกุล"
-        oninput="checkForm()"
-      >
-
+      <label>นามสกุล <span class="req">*</span></label>
+      <input id="f-lname" placeholder="นามสกุล" oninput="checkForm()">
     </div>
-
-
-    <div
-      class="fld"
-      style="max-width:100px"
-    >
-
-      <label>
-        อายุ <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-age"
-        type="number"
-        placeholder="ปี"
-        oninput="checkForm()"
-      >
-
+    <div class="fld" style="max-width:100px">
+      <label>อายุ <span class="req">*</span></label>
+      <input id="f-age" type="number" placeholder="ปี" oninput="checkForm()">
     </div>
-
   </div>
-
 
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        สัญชาติ <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-nation"
-        placeholder="ไทย"
-        oninput="checkForm()"
-      >
-
+      <label>สัญชาติ <span class="req">*</span></label>
+      <input id="f-nation" placeholder="ไทย" oninput="checkForm()">
     </div>
-
-
     <div class="fld">
-
-      <label>
-        ศาสนา
-      </label>
-
-      <input
-        id="f-religion"
-        placeholder="พุทธ"
-      >
-
+      <label>ศาสนา</label>
+      <input id="f-religion" placeholder="พุทธ">
     </div>
-
   </div>
-
 
   <div class="fld full">
-
-    <label>
-      เลขประจำตัวประชาชน (13 หลัก)
-      <span class="req">*</span>
-    </label>
-
+    <label>เลขประจำตัวประชาชน (13 หลัก) <span class="req">*</span></label>
     <input
       id="f-idcard"
       inputmode="numeric"
       maxlength="13"
       placeholder="1234567890123"
       oninput="
-        this.value=this.value
-          .replace(/\D/g,'')
-          .slice(0,13);
+        this.value=this.value.replace(/\D/g,'').slice(0,13);
         checkForm()
       "
     >
-
   </div>
 
-
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        โรคประจำตัว
-      </label>
-
-      <input
-        id="f-disease"
-        placeholder="ไม่มี"
-        value="ไม่มี"
-      >
-
+      <label>โรคประจำตัว</label>
+      <input id="f-disease" placeholder="ไม่มี" value="ไม่มี">
     </div>
-
-
-    <div
-      class="fld"
-      style="max-width:120px"
-    >
-
-      <label>
-        กรุ๊ปเลือด
-      </label>
-
-      <input
-        id="f-blood"
-        placeholder="เช่น O, A, B, AB"
-      >
-
+    <div class="fld" style="max-width:120px">
+      <label>กรุ๊ปเลือด</label>
+      <input id="f-blood" placeholder="เช่น O, A, B, AB">
     </div>
-
   </div>
 
 </div>
 
-
-<!-- ============================================================
-     ที่อยู่
-     ============================================================ -->
-
 <div class="sec">
 
   <div class="sec-hd">
-
-    <div class="sec-num">
-      2
-    </div>
-
+    <div class="sec-num">2</div>
     <div>
-
-      <h2>
-        ที่อยู่ตามภูมิลำเนา
-      </h2>
-
-      <p>
-        ที่อยู่ปัจจุบันตามบัตรประชาชน
-      </p>
-
+      <h2>ที่อยู่ตามภูมิลำเนา</h2>
+      <p>ที่อยู่ปัจจุบันตามบัตรประชาชน</p>
     </div>
-
   </div>
-
 
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        บ้านเลขที่ <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-houseNo"
-        oninput="checkForm()"
-      >
-
+      <label>บ้านเลขที่ <span class="req">*</span></label>
+      <input id="f-houseNo" oninput="checkForm()">
     </div>
-
-
-    <div
-      class="fld"
-      style="max-width:100px"
-    >
-
-      <label>
-        หมู่ที่
-      </label>
-
-      <input
-        id="f-moo"
-      >
-
+    <div class="fld" style="max-width:100px">
+      <label>หมู่ที่</label>
+      <input id="f-moo">
     </div>
-
   </div>
-
 
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        ซอย
-      </label>
-
-      <input
-        id="f-soi"
-      >
-
+      <label>ซอย</label>
+      <input id="f-soi">
     </div>
-
-
     <div class="fld">
-
-      <label>
-        ถนน
-      </label>
-
-      <input
-        id="f-road"
-      >
-
+      <label>ถนน</label>
+      <input id="f-road">
     </div>
-
   </div>
-
 
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        แขวง/ตำบล <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-tambon"
-        oninput="checkForm()"
-      >
-
+      <label>แขวง/ตำบล <span class="req">*</span></label>
+      <input id="f-tambon" oninput="checkForm()">
     </div>
-
-
     <div class="fld">
-
-      <label>
-        เขต/อำเภอ <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-amphoe"
-        oninput="checkForm()"
-      >
-
+      <label>เขต/อำเภอ <span class="req">*</span></label>
+      <input id="f-amphoe" oninput="checkForm()">
     </div>
-
   </div>
-
 
   <div class="fld full">
-
-    <label>
-      จังหวัด <span class="req">*</span>
-    </label>
-
-    <input
-      id="f-province"
-      oninput="checkForm()"
-    >
-
+    <label>จังหวัด <span class="req">*</span></label>
+    <input id="f-province" oninput="checkForm()">
   </div>
 
 </div>
 
-
-<!-- ============================================================
-     ติดต่อ
-     ============================================================ -->
-
 <div class="sec">
 
   <div class="sec-hd">
-
-    <div class="sec-num">
-      3
-    </div>
-
+    <div class="sec-num">3</div>
     <div>
-
-      <h2>
-        ช่องทางติดต่อ
-      </h2>
-
-      <p>
-        ไว้ใช้ติดต่อกรณีฉุกเฉินระหว่างทริป
-      </p>
-
+      <h2>ช่องทางติดต่อ</h2>
+      <p>ไว้ใช้ติดต่อกรณีฉุกเฉินระหว่างทริป</p>
     </div>
-
   </div>
-
 
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        โทรศัพท์ (บ้าน)
-      </label>
-
-      <input
-        id="f-homePhone"
-        inputmode="numeric"
-        placeholder="ถ้ามี"
-      >
-
+      <label>โทรศัพท์ (บ้าน)</label>
+      <input id="f-homePhone" inputmode="numeric" placeholder="ถ้ามี">
     </div>
-
-
     <div class="fld">
-
-      <label>
-        มือถือ <span class="req">*</span>
-      </label>
-
-      <input
-        id="f-mobile"
-        inputmode="numeric"
-        placeholder="08xxxxxxxx"
-        oninput="checkForm()"
-      >
-
+      <label>มือถือ <span class="req">*</span></label>
+      <input id="f-mobile" inputmode="numeric" placeholder="08xxxxxxxx" oninput="checkForm()">
     </div>
-
   </div>
-
 
   <div class="fld full">
-
-    <label>
-      E-mail
-    </label>
-
-    <input
-      id="f-email"
-      type="email"
-      placeholder="you@email.com"
-    >
-
+    <label>E-mail</label>
+    <input id="f-email" type="email" placeholder="you@email.com">
   </div>
 
-
-  <div
-    class="fld full"
-    style="
-      margin-top:6px;
-      font-size:12.5px;
-      color:var(--sub);
-      font-weight:600
-    "
-  >
-
-    บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน
-    <span class="req">*</span>
-
+  <div class="fld full" style="margin-top:6px; font-size:12.5px; color:var(--sub); font-weight:600">
+    บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน <span class="req">*</span>
   </div>
-
 
   <div class="row">
-
     <div class="fld">
-
-      <label>
-        ชื่อ
-      </label>
-
-      <input
-        id="f-ecFname"
-        oninput="checkForm()"
-      >
-
+      <label>ชื่อ</label>
+      <input id="f-ecFname" oninput="checkForm()">
     </div>
-
-
     <div class="fld">
-
-      <label>
-        นามสกุล
-      </label>
-
-      <input
-        id="f-ecLname"
-        oninput="checkForm()"
-      >
-
+      <label>นามสกุล</label>
+      <input id="f-ecLname" oninput="checkForm()">
     </div>
-
   </div>
 
-
   <div class="fld full">
-
-    <label>
-      โทรศัพท์
-    </label>
-
-    <input
-      id="f-ecPhone"
-      inputmode="numeric"
-      oninput="checkForm()"
-    >
-
+    <label>โทรศัพท์</label>
+    <input id="f-ecPhone" inputmode="numeric" oninput="checkForm()">
   </div>
 
 </div>
 
-
-<!-- ============================================================
-     รายละเอียดการเข้าพื้นที่
-     ============================================================ -->
-
 <div class="sec">
 
   <div class="sec-hd">
-
-    <div class="sec-num">
-      4
-    </div>
-
+    <div class="sec-num">4</div>
     <div>
-
-      <h2>
-        รายละเอียดการขอเข้าพื้นที่
-      </h2>
-
-      <p>
-        ช่วงวันที่จะเดินป่าศึกษาธรรมชาติ
-      </p>
-
+      <h2>รายละเอียดการขอเข้าพื้นที่</h2>
+      <p>ช่วงวันที่จะเดินป่าศึกษาธรรมชาติ</p>
     </div>
-
   </div>
 
-
-  <div
-    class="fld full"
-    style="max-width:140px"
-  >
-
-    <label>
-      จำนวนวัน <span class="req">*</span>
-    </label>
-
-    <input
-      id="f-days"
-      type="number"
-      min="1"
-      placeholder="เช่น 2"
-      oninput="checkForm()"
-    >
-
+  <div class="fld full" style="max-width:140px">
+    <label>จำนวนวัน <span class="req">*</span></label>
+    <input id="f-days" type="number" min="1" placeholder="เช่น 2" oninput="checkForm()">
   </div>
 
+  <div class="fld full"><label>ตั้งแต่วันที่ <span class="req">*</span></label></div>
 
-  <div class="fld full">
-
-    <label>
-      ตั้งแต่วันที่ <span class="req">*</span>
-    </label>
-
+  <div class="date-row" style="margin-bottom:13px">
+    <input id="f-startDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+    <select id="f-startMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
+    <input id="f-startYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
   </div>
 
-
-  <div
-    class="date-row"
-    style="margin-bottom:13px"
-  >
-
-    <input
-      id="f-startDay"
-      type="number"
-      min="1"
-      max="31"
-      placeholder="วัน"
-      oninput="checkForm()"
-    >
-
-    <select
-      id="f-startMonth"
-      onchange="checkForm()"
-    >
-      <option value="">
-        เลือกเดือน
-      </option>
-    </select>
-
-    <input
-      id="f-startYear"
-      type="number"
-      placeholder="พ.ศ."
-      oninput="checkForm()"
-    >
-
-  </div>
-
-
-  <div class="fld full">
-
-    <label>
-      ถึงวันที่ <span class="req">*</span>
-    </label>
-
-  </div>
-
+  <div class="fld full"><label>ถึงวันที่ <span class="req">*</span></label></div>
 
   <div class="date-row">
-
-    <input
-      id="f-endDay"
-      type="number"
-      min="1"
-      max="31"
-      placeholder="วัน"
-      oninput="checkForm()"
-    >
-
-    <select
-      id="f-endMonth"
-      onchange="checkForm()"
-    >
-      <option value="">
-        เลือกเดือน
-      </option>
-    </select>
-
-    <input
-      id="f-endYear"
-      type="number"
-      placeholder="พ.ศ."
-      oninput="checkForm()"
-    >
-
+    <input id="f-endDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+    <select id="f-endMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
+    <input id="f-endYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
   </div>
 
 </div>
 
-
-<!-- ============================================================
-     ประกัน
-     ============================================================ -->
-
 <div class="sec">
 
   <div class="sec-hd">
-
-    <div class="sec-num">
-      5
-    </div>
-
+    <div class="sec-num">5</div>
     <div>
-
-      <h2>
-        การทำประกันภัยอุบัติเหตุ
-      </h2>
-
-      <p>
-        สำหรับการเข้าศึกษาธรรมชาติครั้งนี้
-      </p>
-
+      <h2>การทำประกันภัยอุบัติเหตุ</h2>
+      <p>สำหรับการเข้าศึกษาธรรมชาติครั้งนี้</p>
     </div>
-
   </div>
 
-
   <div class="fld full">
-
     <div class="chip-group">
-
       <label class="chip-opt">
-
-        <input
-          type="radio"
-          name="insurance"
-          value="yes"
-          onchange="
-            toggleInsurance();
-            checkForm()
-          "
-        >
-
-        <span>
-          ✅ ทำประกันภัยอุบัติเหตุ
-        </span>
-
+        <input type="radio" name="insurance" value="yes" onchange="toggleInsurance(); checkForm()">
+        <span>✅ ทำประกันภัยอุบัติเหตุ</span>
       </label>
-
-
       <label class="chip-opt">
-
-        <input
-          type="radio"
-          name="insurance"
-          value="no"
-          onchange="
-            toggleInsurance();
-            checkForm()
-          "
-        >
-
-        <span>
-          ไม่ได้ทำประกันภัย
-        </span>
-
+        <input type="radio" name="insurance" value="no" onchange="toggleInsurance(); checkForm()">
+        <span>ไม่ได้ทำประกันภัย</span>
       </label>
-
     </div>
-
   </div>
 
-
-  <div
-    id="insBox"
-    class="ins-box"
-  >
-
-    <div
-      class="row"
-      style="margin-bottom:0"
-    >
-
+  <div id="insBox" class="ins-box">
+    <div class="row" style="margin-bottom:0">
       <div class="fld">
-
-        <label>
-          บริษัทประกัน
-          <span class="req">*</span>
-        </label>
-
-        <input
-          id="f-insCo"
-          oninput="checkForm()"
-        >
-
+        <label>บริษัทประกัน <span class="req">*</span></label>
+        <input id="f-insCo" oninput="checkForm()">
       </div>
-
-
       <div class="fld">
-
-        <label>
-          เบอร์โทรบริษัท
-        </label>
-
-        <input
-          id="f-insPhone"
-          inputmode="numeric"
-        >
-
+        <label>เบอร์โทรบริษัท</label>
+        <input id="f-insPhone" inputmode="numeric">
       </div>
-
     </div>
-
   </div>
 
 </div>
-
-
-<!-- ============================================================
-     SIGN
-     ============================================================ -->
 
 <div class="sec">
 
   <div class="sec-hd">
-
-    <div class="sec-num">
-      ✍️
-    </div>
-
+    <div class="sec-num">✍️</div>
     <div>
-
-      <h2>
-        ชื่อผู้ลงนาม
-      </h2>
-
-      <p>
-        ชื่อ-นามสกุลที่จะพิมพ์กำกับใต้ลายเซ็นในเอกสาร
-      </p>
-
+      <h2>ชื่อผู้ลงนาม</h2>
+      <p>ชื่อ-นามสกุลที่จะพิมพ์กำกับใต้ลายเซ็นในเอกสาร</p>
     </div>
-
   </div>
-
 
   <div class="fld full">
-
-    <input
-      id="f-signName"
-      placeholder="จะเติมให้อัตโนมัติจากชื่อ-นามสกุลด้านบน"
-    >
-
-    <p class="hint">
-      พิมพ์ชื่อเองก่อนแคปหน้าจอ
-      แล้วเซ็นด้วยลายมือทับตอนพิมพ์ออกมาก็ได้ครับ
-    </p>
-
+    <input id="f-signName" placeholder="จะเติมให้อัตโนมัติจากชื่อ-นามสกุลด้านบน">
+    <p class="hint">พิมพ์ชื่อเองก่อนแคปหน้าจอ แล้วเซ็นด้วยลายมือทับตอนพิมพ์ออกมาก็ได้ครับ</p>
   </div>
 
 </div>
 
-
 </div>
-
-
-<!-- ============================================================
-     SUBMIT
-     ============================================================ -->
 
 <div class="sticky-bar">
-
-  <button
-    id="submitBtn"
-    class="btn-submit"
-    disabled
-    onclick="showResult()"
-  >
+  <button id="submitBtn" class="btn-submit" disabled onclick="showResult()">
     📄 กรอกข้อมูลให้ครบก่อนนะครับ
   </button>
-
 </div>
-
-
-<!-- ============================================================
-     RESULT VIEW
-     ============================================================ -->
 
 <div id="resultWrap">
 
-
   <div class="result-bar">
-
-    <button
-      class="back-btn"
-      onclick="closeResult()"
-    >
-      ‹ กลับไปแก้ไข
-    </button>
-
-
+    <button class="back-btn" onclick="closeResult()">‹ กลับไปแก้ไข</button>
     <div class="result-hint">
-
       📸 แคปหน้าจอเก็บไว้ได้เลยครับ<br>
-
       เลื่อน/ซูมดูให้ครบก่อนแคปนะครับ
-
     </div>
-
   </div>
 
-
-  <!-- ==========================================================
-       ORIGINAL FORM
-       ========================================================== -->
-
   <div id="formImageWrap">
-
-    <img
-      src="IMG_0527.jpeg"
-      alt="แบบฟอร์มต้นฉบับ"
-    >
-
-
-    <!-- ========================================================
-         วันที่ด้านบน
-         ======================================================== -->
-
-    <span
-      id="p-formDay"
-      class="ov"
-      style="
-        left:56.20%;
-        top:15.82%;
-      "
-    ></span>
-
-
-    <span
-      id="p-formMonth"
-      class="ov"
-      style="
-        left:68.20%;
-        top:15.82%;
-      "
-    ></span>
-
-
-    <span
-      id="p-formYear"
-      class="ov"
-      style="
-        left:88.05%;
-        top:15.82%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         คำนำหน้า
-         ======================================================== -->
-
-    <span
-      id="p-cbNai"
-      class="ov check"
-      style="
-        left:28.10%;
-        top:23.00%;
-      "
-    ></span>
-
-
-    <span
-      id="p-cbNang"
-      class="ov check"
-      style="
-        left:34.80%;
-        top:23.00%;
-      "
-    ></span>
-
-
-    <span
-      id="p-cbNangsao"
-      class="ov check"
-      style="
-        left:41.35%;
-        top:23.00%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         ชื่อ / นามสกุล / อายุ
-         ======================================================== -->
-
-    <span
-      id="p-fname"
-      class="ov"
-      style="
-        left:52.75%;
-        top:23.25%;
-      "
-    ></span>
-
-
-    <span
-      id="p-lname"
-      class="ov"
-      style="
-        left:72.95%;
-        top:23.25%;
-      "
-    ></span>
-
-
-    <span
-      id="p-age"
-      class="ov"
-      style="
-        left:91.75%;
-        top:23.25%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         สัญชาติ / ศาสนา / เลขบัตร
-         ======================================================== -->
-
-    <span
-      id="p-nation"
-      class="ov"
-      style="
-        left:22.65%;
-        top:25.30%;
-      "
-    ></span>
-
-
-    <span
-      id="p-religion"
-      class="ov"
-      style="
-        left:39.10%;
-        top:25.30%;
-      "
-    ></span>
-
-
-    <span
-      id="p-idcard"
-      class="ov small"
-      style="
-        left:61.10%;
-        top:25.30%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         โรค / เลือด / บ้านเลขที่
-         ======================================================== -->
-
-    <span
-      id="p-disease"
-      class="ov"
-      style="
-        left:28.00%;
-        top:27.25%;
-      "
-    ></span>
-
-
-    <span
-      id="p-blood"
-      class="ov"
-      style="
-        left:50.15%;
-        top:27.25%;
-      "
-    ></span>
-
-
-    <span
-      id="p-houseNo"
-      class="ov"
-      style="
-        left:76.95%;
-        top:27.25%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         หมู่ / ซอย / ถนน / ตำบล
-         ======================================================== -->
-
-    <span
-      id="p-moo"
-      class="ov"
-      style="
-        left:22.10%;
-        top:29.32%;
-      "
-    ></span>
-
-
-    <span
-      id="p-soi"
-      class="ov"
-      style="
-        left:31.65%;
-        top:29.32%;
-      "
-    ></span>
-
-
-    <span
-      id="p-road"
-      class="ov"
-      style="
-        left:51.10%;
-        top:29.32%;
-      "
-    ></span>
-
-
-    <span
-      id="p-tambon"
-      class="ov"
-      style="
-        left:75.20%;
-        top:29.32%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         อำเภอ / จังหวัด / โทรบ้าน
-         ======================================================== -->
-
-    <span
-      id="p-amphoe"
-      class="ov"
-      style="
-        left:25.55%;
-        top:31.40%;
-      "
-    ></span>
-
-
-    <span
-      id="p-province"
-      class="ov"
-      style="
-        left:48.00%;
-        top:31.40%;
-      "
-    ></span>
-
-
-    <span
-      id="p-homePhone"
-      class="ov"
-      style="
-        left:76.60%;
-        top:31.40%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         มือถือ / E-mail
-         ======================================================== -->
-
-    <span
-      id="p-mobile"
-      class="ov"
-      style="
-        left:21.85%;
-        top:33.45%;
-      "
-    ></span>
-
-
-    <span
-      id="p-email"
-      class="ov small"
-      style="
-        left:43.55%;
-        top:33.45%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         บุคคลฉุกเฉิน
-         ======================================================== -->
-
-    <span
-      id="p-ecFname"
-      class="ov"
-      style="
-        left:46.75%;
-        top:35.50%;
-      "
-    ></span>
-
-
-    <span
-      id="p-ecLname"
-      class="ov"
-      style="
-        left:68.10%;
-        top:35.50%;
-      "
-    ></span>
-
-
-    <span
-      id="p-ecPhone"
-      class="ov"
-      style="
-        left:84.45%;
-        top:35.50%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         จำนวนวัน
-         ======================================================== -->
-
-    <span
-      id="p-days"
-      class="ov"
-      style="
-        left:63.25%;
-        top:42.15%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         วันที่เริ่มต้น
-         ======================================================== -->
-
-    <span
-      id="p-startDay"
-      class="ov"
-      style="
-        left:23.05%;
-        top:44.20%;
-      "
-    ></span>
-
-
-    <span
-      id="p-startMonth"
-      class="ov small"
-      style="
-        left:34.00%;
-        top:44.20%;
-      "
-    ></span>
-
-
-    <span
-      id="p-startYear"
-      class="ov small"
-      style="
-        left:51.05%;
-        top:44.20%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         วันที่สิ้นสุด
-         ======================================================== -->
-
-    <span
-      id="p-endDay"
-      class="ov"
-      style="
-        left:61.95%;
-        top:44.20%;
-      "
-    ></span>
-
-
-    <span
-      id="p-endMonth"
-      class="ov small"
-      style="
-        left:72.05%;
-        top:44.20%;
-      "
-    ></span>
-
-
-    <span
-      id="p-endYear"
-      class="ov"
-      style="
-        left:86.25%;
-        top:44.20%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         ประกันภัย
-         ======================================================== -->
-
-    <span
-      id="p-cbIns1"
-      class="ov check"
-      style="
-        left:24.75%;
-        top:65.70%;
-      "
-    ></span>
-
-
-    <span
-      id="p-insCo"
-      class="ov"
-      style="
-        left:49.15%;
-        top:65.62%;
-      "
-    ></span>
-
-
-    <span
-      id="p-insPhone"
-      class="ov"
-      style="
-        left:78.30%;
-        top:65.62%;
-      "
-    ></span>
-
-
-    <span
-      id="p-cbIns2"
-      class="ov check"
-      style="
-        left:24.75%;
-        top:67.52%;
-      "
-    ></span>
-
-
-    <!-- ========================================================
-         ลายเซ็น
-         ======================================================== -->
-
-    <span
-      id="p-signName1"
-      class="ov signature"
-      style="
-        left:57.25%;
-        top:71.15%;
-      "
-    ></span>
-
-
-    <span
-      id="p-signName2"
-      class="ov signature-name"
-      style="
-        left:53.75%;
-        top:73.05%;
-      "
-    ></span>
-
+    <img src="IMG_0527.jpeg" alt="แบบฟอร์มต้นฉบับ">
+
+    <!-- วันที่ด้านบน -->
+    <span id="p-formDay" class="ov" style="left:56.20%; top:15.82%;"></span>
+    <span id="p-formMonth" class="ov" style="left:68.20%; top:15.82%;"></span>
+    <span id="p-formYear" class="ov" style="left:88.05%; top:15.82%;"></span>
+
+    <!-- คำนำหน้า -->
+    <span id="p-cbNai" class="ov check" style="left:28.10%; top:23.00%;"></span>
+    <span id="p-cbNang" class="ov check" style="left:34.80%; top:23.00%;"></span>
+    <span id="p-cbNangsao" class="ov check" style="left:41.35%; top:23.00%;"></span>
+
+    <!-- ชื่อ / นามสกุล / อายุ (ปรับตำแหน่งให้ตรงบรรทัดเป๊ะ) -->
+    <span id="p-fname" class="ov" style="left:51.50%; top:23.10%;"></span>
+    <span id="p-lname" class="ov" style="left:73.50%; top:23.10%;"></span>
+    <span id="p-age" class="ov" style="left:92.50%; top:23.10%;"></span>
+
+    <!-- สัญชาติ / ศาสนา / เลขบัตร -->
+    <span id="p-nation" class="ov" style="left:22.50%; top:25.20%;"></span>
+    <span id="p-religion" class="ov" style="left:38.50%; top:25.20%;"></span>
+    <span id="p-idcard" class="ov small" style="left:61.10%; top:25.20%;"></span>
+
+    <!-- โรค / เลือด / บ้านเลขที่ -->
+    <span id="p-disease" class="ov" style="left:28.00%; top:27.25%;"></span>
+    <span id="p-blood" class="ov" style="left:50.15%; top:27.25%;"></span>
+    <span id="p-houseNo" class="ov" style="left:76.95%; top:27.25%;"></span>
+
+    <!-- หมู่ / ซอย / ถนน / ตำบล -->
+    <span id="p-moo" class="ov" style="left:22.10%; top:29.32%;"></span>
+    <span id="p-soi" class="ov" style="left:31.65%; top:29.32%;"></span>
+    <span id="p-road" class="ov" style="left:51.10%; top:29.32%;"></span>
+    <span id="p-tambon" class="ov" style="left:75.20%; top:29.32%;"></span>
+
+    <!-- อำเภอ / จังหวัด / โทรบ้าน -->
+    <span id="p-amphoe" class="ov" style="left:25.55%; top:31.40%;"></span>
+    <span id="p-province" class="ov" style="left:48.00%; top:31.40%;"></span>
+    <span id="p-homePhone" class="ov" style="left:76.60%; top:31.40%;"></span>
+
+    <!-- มือถือ / E-mail -->
+    <span id="p-mobile" class="ov" style="left:21.85%; top:33.45%;"></span>
+    <span id="p-email" class="ov small" style="left:43.55%; top:33.45%;"></span>
+
+    <!-- บุคคลฉุกเฉิน -->
+    <span id="p-ecFname" class="ov" style="left:46.75%; top:35.50%;"></span>
+    <span id="p-ecLname" class="ov" style="left:68.10%; top:35.50%;"></span>
+    <span id="p-ecPhone" class="ov" style="left:84.45%; top:35.50%;"></span>
+
+    <!-- จำนวนวัน -->
+    <span id="p-days" class="ov" style="left:63.25%; top:42.15%;"></span>
+
+    <!-- วันที่เริ่มต้น -->
+    <span id="p-startDay" class="ov" style="left:23.05%; top:44.20%;"></span>
+    <span id="p-startMonth" class="ov small" style="left:34.00%; top:44.20%;"></span>
+    <span id="p-startYear" class="ov small" style="left:51.05%; top:44.20%;"></span>
+
+    <!-- วันที่สิ้นสุด -->
+    <span id="p-endDay" class="ov" style="left:61.95%; top:44.20%;"></span>
+    <span id="p-endMonth" class="ov small" style="left:72.05%; top:44.20%;"></span>
+    <span id="p-endYear" class="ov" style="left:86.25%; top:44.20%;"></span>
+
+    <!-- ประกันภัย -->
+    <span id="p-cbIns1" class="ov check" style="left:24.75%; top:65.70%;"></span>
+    <span id="p-insCo" class="ov" style="left:49.15%; top:65.62%;"></span>
+    <span id="p-insPhone" class="ov" style="left:78.30%; top:65.62%;"></span>
+    <span id="p-cbIns2" class="ov check" style="left:24.75%; top:67.52%;"></span>
+
+    <!-- ลายเซ็น -->
+    <span id="p-signName1" class="ov signature" style="left:57.25%; top:71.15%;"></span>
+    <span id="p-signName2" class="ov signature-name" style="left:53.75%; top:73.05%;"></span>
 
   </div>
 
 </div>
 
-
 <script>
 
-
-/* ============================================================
-   MONTHS
-   ============================================================ */
-
 const THAI_MONTHS = [
-
-  "มกราคม",
-  "กุมภาพันธ์",
-  "มีนาคม",
-  "เมษายน",
-  "พฤษภาคม",
-  "มิถุนายน",
-  "กรกฎาคม",
-  "สิงหาคม",
-  "กันยายน",
-  "ตุลาคม",
-  "พฤศจิกายน",
-  "ธันวาคม"
-
+  "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน",
+  "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม",
+  "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
 ];
 
-
 function fillMonthSelect(id) {
-
-  const sel =
-    document.getElementById(id);
-
-  THAI_MONTHS.forEach(
-    month => {
-
-      const opt =
-        document.createElement('option');
-
-      opt.value = month;
-
-      opt.textContent = month;
-
-      sel.appendChild(opt);
-
-    }
-  );
-
+  const sel = document.getElementById(id);
+  THAI_MONTHS.forEach(month => {
+    const opt = document.createElement('option');
+    opt.value = month;
+    opt.textContent = month;
+    sel.appendChild(opt);
+  });
 }
 
+['f-formMonth', 'f-startMonth', 'f-endMonth'].forEach(fillMonthSelect);
 
-[
-  'f-formMonth',
-  'f-startMonth',
-  'f-endMonth'
-
-].forEach(fillMonthSelect);
-
-
-/* ============================================================
-   CURRENT YEAR
-   ============================================================ */
-
-const currentBEYear =
-  new Date().getFullYear() + 543;
-
-document.getElementById(
-  'f-formYear'
-).value = currentBEYear;
-
-
-/* ============================================================
-   INSURANCE
-   ============================================================ */
+const currentBEYear = new Date().getFullYear() + 543;
+document.getElementById('f-formYear').value = currentBEYear;
 
 function toggleInsurance() {
-
-  const yes =
-    document.querySelector(
-      'input[name="insurance"][value="yes"]'
-    ).checked;
-
-
-  const box =
-    document.getElementById(
-      'insBox'
-    );
-
-
-  box.classList.toggle(
-    'show',
-    yes
-  );
-
-
+  const yes = document.querySelector('input[name="insurance"][value="yes"]').checked;
+  const box = document.getElementById('insBox');
+  box.classList.toggle('show', yes);
   if (!yes) {
-
-    document.getElementById(
-      'f-insCo'
-    ).value = '';
-
-    document.getElementById(
-      'f-insPhone'
-    ).value = '';
-
+    document.getElementById('f-insCo').value = '';
+    document.getElementById('f-insPhone').value = '';
   }
-
 }
-
-
-/* ============================================================
-   VALUE
-   ============================================================ */
 
 function val(id) {
-
-  const el =
-    document.getElementById(id);
-
-  return el
-    ? el.value.trim()
-    : '';
-
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
 }
-
-
-/* ============================================================
-   FORM CHECK
-   ============================================================ */
 
 function checkForm() {
-
-  const titleChecked =
-    document.querySelector(
-      'input[name="title"]:checked'
-    );
-
-
-  const insChecked =
-    document.querySelector(
-      'input[name="insurance"]:checked'
-    );
-
-
-  const insOk =
-    insChecked &&
-    (
-      insChecked.value === 'no' ||
-
-      (
-        insChecked.value === 'yes' &&
-        val('f-insCo')
-      )
-    );
-
+  const titleChecked = document.querySelector('input[name="title"]:checked');
+  const insChecked = document.querySelector('input[name="insurance"]:checked');
+  const insOk = insChecked && (insChecked.value === 'no' || (insChecked.value === 'yes' && val('f-insCo')));
 
   const required = [
-
-    'f-formDay',
-    'f-formYear',
-
-    'f-fname',
-    'f-lname',
-    'f-age',
-
-    'f-nation',
-    'f-idcard',
-
-    'f-houseNo',
-    'f-tambon',
-    'f-amphoe',
-    'f-province',
-
+    'f-formDay', 'f-formYear',
+    'f-fname', 'f-lname', 'f-age',
+    'f-nation', 'f-idcard',
+    'f-houseNo', 'f-tambon', 'f-amphoe', 'f-province',
     'f-mobile',
-
-    'f-ecFname',
-    'f-ecLname',
-    'f-ecPhone',
-
+    'f-ecFname', 'f-ecLname', 'f-ecPhone',
     'f-days',
-
-    'f-startDay',
-    'f-startYear',
-
-    'f-endDay',
-    'f-endYear'
-
+    'f-startDay', 'f-startYear',
+    'f-endDay', 'f-endYear'
   ];
 
+  const allFilled = required.every(id => val(id) !== '');
+  const monthsOk = val('f-formMonth') && val('f-startMonth') && val('f-endMonth');
+  const idOk = val('f-idcard').length === 13;
+  const ok = allFilled && monthsOk && idOk && titleChecked && insOk;
 
-  const allFilled =
-    required.every(
-      id => val(id) !== ''
-    );
-
-
-  const monthsOk =
-    val('f-formMonth') &&
-    val('f-startMonth') &&
-    val('f-endMonth');
-
-
-  const idOk =
-    val('f-idcard').length === 13;
-
-
-  const ok =
-    allFilled &&
-    monthsOk &&
-    idOk &&
-    titleChecked &&
-    insOk;
-
-
-  const btn =
-    document.getElementById(
-      'submitBtn'
-    );
-
-
+  const btn = document.getElementById('submitBtn');
   btn.disabled = !ok;
+  btn.classList.toggle('ready', ok);
+  btn.innerText = ok ? '📄 ดูเอกสารที่กรอกแล้ว (แคปหน้าจอเก็บไว้)' : '📄 กรอกข้อมูลให้ครบก่อนนะครับ';
 
-
-  btn.classList.toggle(
-    'ready',
-    ok
-  );
-
-
-  btn.innerText =
-    ok
-      ? '📄 ดูเอกสารที่กรอกแล้ว (แคปหน้าจอเก็บไว้)'
-      : '📄 กรอกข้อมูลให้ครบก่อนนะครับ';
-
-
-  /* ==========================================================
-     AUTO SIGN NAME
-     ========================================================== */
-
-  const signInput =
-    document.getElementById(
-      'f-signName'
-    );
-
-
-  if (
-    !signInput.dataset.touched &&
-    titleChecked &&
-    val('f-fname') &&
-    val('f-lname')
-  ) {
-
-    signInput.value =
-      titleChecked.value +
-      val('f-fname') +
-      ' ' +
-      val('f-lname');
-
+  const signInput = document.getElementById('f-signName');
+  if (!signInput.dataset.touched && titleChecked && val('f-fname') && val('f-lname')) {
+    signInput.value = titleChecked.value + val('f-fname') + ' ' + val('f-lname');
   }
-
 }
 
-
-/* ============================================================
-   SIGN NAME MANUAL EDIT
-   ============================================================ */
-
-document
-  .getElementById('f-signName')
-  .addEventListener(
-    'input',
-    function () {
-
-      this.dataset.touched = '1';
-
-    }
-  );
-
-
-/* ============================================================
-   ID CARD FORMAT
-   ============================================================ */
+document.getElementById('f-signName').addEventListener('input', function () {
+  this.dataset.touched = '1';
+});
 
 function formatIdCard(id) {
-
-  const digits =
-    id.replace(/\D/g, '');
-
-
-  if (digits.length !== 13) {
-
-    return id;
-
-  }
-
-
-  return (
-
-    digits[0] +
-    '-' +
-    digits.slice(1,5) +
-    '-' +
-    digits.slice(5,10) +
-    '-' +
-    digits.slice(10,12) +
-    '-' +
-    digits.slice(12)
-
-  );
-
+  const digits = id.replace(/\D/g, '');
+  if (digits.length !== 13) return id;
+  return digits[0] + '-' + digits.slice(1,5) + '-' + digits.slice(5,10) + '-' + digits.slice(10,12) + '-' + digits.slice(12);
 }
-
-
-/* ============================================================
-   EMPTY VALUE
-   ============================================================ */
 
 function dashOr(v) {
-
-  return v
-    ? v
-    : '-';
-
+  return v ? v : '-';
 }
 
-
-/* ============================================================
-   SET OVERLAY
-   ============================================================ */
-
-function setOv(id,text) {
-
-  const el =
-    document.getElementById(id);
-
-  if (el) {
-
-    el.textContent =
-      text || '';
-
-  }
-
+function setOv(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text || '';
 }
-
-
-/* ============================================================
-   SHOW RESULT
-   ============================================================ */
 
 function showResult() {
-
-  const btn =
-    document.getElementById(
-      'submitBtn'
-    );
-
-
-  if (btn.disabled) {
-
-    return;
-
-  }
-
-
-  const titleChecked =
-    document.querySelector(
-      'input[name="title"]:checked'
-    ).value;
-
-
-  const insChecked =
-    document.querySelector(
-      'input[name="insurance"]:checked'
-    ).value;
-
-
-  /* ==========================================================
-     DATE
-     ========================================================== */
-
-  setOv(
-    'p-formDay',
-    val('f-formDay')
-  );
-
-
-  setOv(
-    'p-formMonth',
-    val('f-formMonth')
-  );
-
-
-  setOv(
-    'p-formYear',
-    val('f-formYear')
-  );
-
-
-  /* ==========================================================
-     TITLE CHECKBOX
-     ========================================================== */
-
-  setOv(
-    'p-cbNai',
-    titleChecked === 'นาย'
-      ? '✓'
-      : ''
-  );
-
-
-  setOv(
-    'p-cbNang',
-    titleChecked === 'นาง'
-      ? '✓'
-      : ''
-  );
-
-
-  setOv(
-    'p-cbNangsao',
-    titleChecked === 'นางสาว'
-      ? '✓'
-      : ''
-  );
-
-
-  /* ==========================================================
-     PERSONAL
-     ========================================================== */
-
-  setOv(
-    'p-fname',
-    val('f-fname')
-  );
-
-
-  setOv(
-    'p-lname',
-    val('f-lname')
-  );
-
-
-  setOv(
-    'p-age',
-    val('f-age')
-  );
-
-
-  setOv(
-    'p-nation',
-    val('f-nation')
-  );
-
-
-  setOv(
-    'p-religion',
-    dashOr(
-      val('f-religion')
-    )
-  );
-
-
-  setOv(
-    'p-idcard',
-    formatIdCard(
-      val('f-idcard')
-    )
-  );
-
-
-  /* ==========================================================
-     ADDRESS
-     ========================================================== */
-
-  setOv(
-    'p-disease',
-    dashOr(
-      val('f-disease')
-    )
-  );
-
-
-  setOv(
-    'p-blood',
-    dashOr(
-      val('f-blood')
-    )
-  );
-
-
-  setOv(
-    'p-houseNo',
-    val('f-houseNo')
-  );
-
-
-  setOv(
-    'p-moo',
-    dashOr(
-      val('f-moo')
-    )
-  );
-
-
-  setOv(
-    'p-soi',
-    dashOr(
-      val('f-soi')
-    )
-  );
-
-
-  setOv(
-    'p-road',
-    dashOr(
-      val('f-road')
-    )
-  );
-
-
-  setOv(
-    'p-tambon',
-    val('f-tambon')
-  );
-
-
-  setOv(
-    'p-amphoe',
-    val('f-amphoe')
-  );
-
-
-  setOv(
-    'p-province',
-    val('f-province')
-  );
-
-
-  setOv(
-    'p-homePhone',
-    dashOr(
-      val('f-homePhone')
-    )
-  );
-
-
-  /* ==========================================================
-     CONTACT
-     ========================================================== */
-
-  setOv(
-    'p-mobile',
-    val('f-mobile')
-  );
-
-
-  setOv(
-    'p-email',
-    dashOr(
-      val('f-email')
-    )
-  );
-
-
-  setOv(
-    'p-ecFname',
-    val('f-ecFname')
-  );
-
-
-  setOv(
-    'p-ecLname',
-    val('f-ecLname')
-  );
-
-
-  setOv(
-    'p-ecPhone',
-    val('f-ecPhone')
-  );
-
-
-  /* ==========================================================
-     TRIP DATE
-     ========================================================== */
-
-  setOv(
-    'p-days',
-    val('f-days')
-  );
-
-
-  setOv(
-    'p-startDay',
-    val('f-startDay')
-  );
-
-
-  setOv(
-    'p-startMonth',
-    val('f-startMonth')
-  );
-
-
-  setOv(
-    'p-startYear',
-    val('f-startYear')
-  );
-
-
-  setOv(
-    'p-endDay',
-    val('f-endDay')
-  );
-
-
-  setOv(
-    'p-endMonth',
-    val('f-endMonth')
-  );
-
-
-  setOv(
-    'p-endYear',
-    val('f-endYear')
-  );
-
-
-  /* ==========================================================
-     INSURANCE
-     ========================================================== */
-
-  setOv(
-    'p-cbIns1',
-    insChecked === 'yes'
-      ? '✓'
-      : ''
-  );
-
-
-  setOv(
-    'p-cbIns2',
-    insChecked === 'no'
-      ? '✓'
-      : ''
-  );
-
-
-  setOv(
-    'p-insCo',
-    insChecked === 'yes'
-      ? val('f-insCo')
-      : ''
-  );
-
-
-  setOv(
-    'p-insPhone',
-    insChecked === 'yes'
-      ? dashOr(
-          val('f-insPhone')
-        )
-      : ''
-  );
-
-
-  /* ==========================================================
-     SIGNATURE
-     ========================================================== */
-
-  const signNameVal =
-    val('f-signName') ||
-
-    (
-      titleChecked +
-      val('f-fname') +
-      ' ' +
-      val('f-lname')
-    );
-
-
-  setOv(
-    'p-signName1',
-    signNameVal
-  );
-
-
-  setOv(
-    'p-signName2',
-    signNameVal
-  );
-
-
-  /* ==========================================================
-     SHOW
-     ========================================================== */
-
-  document
-    .getElementById(
-      'resultWrap'
-    )
-    .classList.add('show');
-
-
-  document
-    .getElementById(
-      'resultWrap'
-    )
-    .scrollTop = 0;
-
-
-  document
-    .getElementById(
-      'resultWrap'
-    )
-    .scrollLeft = 0;
-
-
-  document.body.style.overflow =
-    'hidden';
-
+  const btn = document.getElementById('submitBtn');
+  if (btn.disabled) return;
+
+  const titleChecked = document.querySelector('input[name="title"]:checked').value;
+  const insChecked = document.querySelector('input[name="insurance"]:checked').value;
+
+  setOv('p-formDay', val('f-formDay'));
+  setOv('p-formMonth', val('f-formMonth'));
+  setOv('p-formYear', val('f-formYear'));
+
+  setOv('p-cbNai', titleChecked === 'นาย' ? '✓' : '');
+  setOv('p-cbNang', titleChecked === 'นาง' ? '✓' : '');
+  setOv('p-cbNangsao', titleChecked === 'นางสาว' ? '✓' : '');
+
+  setOv('p-fname', val('f-fname'));
+  setOv('p-lname', val('f-lname'));
+  setOv('p-age', val('f-age'));
+  setOv('p-nation', val('f-nation'));
+  setOv('p-religion', dashOr(val('f-religion')));
+  setOv('p-idcard', formatIdCard(val('f-idcard')));
+
+  setOv('p-disease', dashOr(val('f-disease')));
+  setOv('p-blood', dashOr(val('f-blood')));
+  setOv('p-houseNo', val('f-houseNo'));
+  setOv('p-moo', dashOr(val('f-moo')));
+  setOv('p-soi', dashOr(val('f-soi')));
+  setOv('p-road', dashOr(val('f-road')));
+  setOv('p-tambon', val('f-tambon'));
+  setOv('p-amphoe', val('f-amphoe'));
+  setOv('p-province', val('f-province'));
+  setOv('p-homePhone', dashOr(val('f-homePhone')));
+
+  setOv('p-mobile', val('f-mobile'));
+  setOv('p-email', dashOr(val('f-email')));
+  setOv('p-ecFname', val('f-ecFname'));
+  setOv('p-ecLname', val('f-ecLname'));
+  setOv('p-ecPhone', val('f-ecPhone'));
+
+  setOv('p-days', val('f-days'));
+  setOv('p-startDay', val('f-startDay'));
+  setOv('p-startMonth', val('f-startMonth'));
+  setOv('p-startYear', val('f-startYear'));
+  setOv('p-endDay', val('f-endDay'));
+  setOv('p-endMonth', val('f-endMonth'));
+  setOv('p-endYear', val('f-endYear'));
+
+  setOv('p-cbIns1', insChecked === 'yes' ? '✓' : '');
+  setOv('p-cbIns2', insChecked === 'no' ? '✓' : '');
+  setOv('p-insCo', insChecked === 'yes' ? val('f-insCo') : '');
+  setOv('p-insPhone', insChecked === 'yes' ? dashOr(val('f-insPhone')) : '');
+
+  const signNameVal = val('f-signName') || (titleChecked + val('f-fname') + ' ' + val('f-lname'));
+  setOv('p-signName1', signNameVal);
+  setOv('p-signName2', signNameVal);
+
+  document.getElementById('resultWrap').classList.add('show');
+  document.getElementById('resultWrap').scrollTop = 0;
+  document.getElementById('resultWrap').scrollLeft = 0;
+  document.body.style.overflow = 'hidden';
 }
-
-
-/* ============================================================
-   CLOSE RESULT
-   ============================================================ */
 
 function closeResult() {
-
-  document
-    .getElementById(
-      'resultWrap'
-    )
-    .classList.remove('show');
-
-
-  document.body.style.overflow =
-    '';
-
+  document.getElementById('resultWrap').classList.remove('show');
+  document.body.style.overflow = '';
 }
-
 
 </script>
 
