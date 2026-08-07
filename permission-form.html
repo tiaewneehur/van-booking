@@ -9,12 +9,13 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
-  --paper: #fbf9f3; --ink: #1f2b23; --sub: #5b6b60; --muted: #93a196;
+  --paper: #fbf9f3; --ink: #1f2b23; --sub: #5b6b60;
   --accent: #2f6f4f; --accent-dk: #1f4d36; --accent-lt: #e6efe8;
   --border: #dcd6c4; --card: #ffffff; --red: #b3431e;
 }
 body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; padding-bottom: 110px; }
 .hdr { background: linear-gradient(160deg, var(--accent-dk), var(--accent)); color: #fff; padding: 28px 20px 26px; text-align: center; border-radius: 0 0 28px 28px; box-shadow: 0 10px 30px rgba(31,77,54,.25); }
+.hdr .logo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin: 0 auto 10px; border: 3px solid rgba(255,255,255,.75); box-shadow: 0 4px 16px rgba(0,0,0,.2); display: block; }
 .hdr h1 { font-size: 19px; font-weight: 700; line-height: 1.4; }
 .hdr p { font-size: 12.5px; opacity: .85; margin-top: 6px; }
 .main { max-width: 560px; margin: 0 auto; padding: 20px 16px 0; }
@@ -46,7 +47,7 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
 #formImageWrap { position: relative; width: 100%; max-width: 1206px; margin: 0 auto; background: #fff; container-type: inline-size; }
 #formImageWrap img { display: block; width: 100%; height: auto; }
 
-/* ปรับตำแหน่งที่จูนตามมาตรฐานโซนวันที่ด้านบน */
+/* พิกัดวัดจากตาราง Grid เป๊ะๆ */
 .ov {
   position: absolute;
   font-family: 'TH Sarabun New', 'THSarabunNew', 'TH Sarabun PSK', 'THSarabunPSK', 'Sarabun', sans-serif;
@@ -65,6 +66,7 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
 <body>
 
 <div class="hdr">
+  <img class="logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/64?text=🏕'" alt="โลโก้เพจ">
   <h1>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ<br>เส้นทางเดินป่าเขาช้างเผือก</h1>
   <p>อุทยานแห่งชาติทองผาภูมิ · ประจำปีงบประมาณ พ.ศ. 2569</p>
 </div>
@@ -197,7 +199,7 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
     <span id="p-formMonth" class="ov" style="left:63.5%; top:15.6%;"></span>
     <span id="p-formYear" class="ov" style="left:82.5%; top:15.6%;"></span>
 
-    <!-- คำนำหน้า (ปรับระยะให้ตรงแนวบรรทัดใหม่) -->
+    <!-- คำนำหน้า -->
     <span id="p-cbNai" class="ov check" style="left:23.9%; top:22.2%;"></span>
     <span id="p-cbNang" class="ov check" style="left:30.8%; top:22.2%;"></span>
     <span id="p-cbNangsao" class="ov check" style="left:37.3%; top:22.2%;"></span>
