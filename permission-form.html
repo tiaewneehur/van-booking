@@ -151,28 +151,30 @@ body {
 #pdfWrap { position: fixed; top: 0; left: -9999px; z-index: -1; }
 #pdfPage {
   width: 794px;
-  padding: 40px 50px 34px;
+  padding: 42px 55px 36px;
   background: #ffffff;
   color: #111;
-  font-family: 'Sarabun', sans-serif;
-  font-size: 13px;
-  line-height: 1.62;
+  /* ใช้ 'TH Sarabun New' ก่อนถ้าเครื่องผู้ใช้มีติดตั้งอยู่ (ฟอนต์ราชการไทยมาตรฐาน)
+     ถ้าไม่มีค่อย fallback ไปที่ 'Sarabun' ของ Google Fonts */
+  font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', sans-serif;
+  font-size: 15px;
+  line-height: 1.38;
 }
-#pdfPage .doc-title { text-align: center; font-size: 15px; font-weight: 700; margin-bottom: 2px; }
-#pdfPage .doc-sub { text-align: center; font-size: 13.5px; font-weight: 700; margin-bottom: 12px; }
-#pdfPage .doc-date { text-align: right; margin-bottom: 8px; }
-#pdfPage .doc-line { margin-bottom: 1px; }
-#pdfPage .doc-indent { text-indent: 30px; }
+#pdfPage .doc-title { text-align: center; font-size: 17px; font-weight: 700; margin-bottom: 1px; }
+#pdfPage .doc-sub { text-align: center; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+#pdfPage .doc-date { text-align: right; margin-bottom: 6px; }
+#pdfPage .doc-line { margin-bottom: 0; }
+#pdfPage .doc-indent { text-indent: 28px; }
 #pdfPage .blank {
   display: inline-block; border-bottom: 1px dotted #333;
-  padding: 0 3px 0px; min-width: 36px; font-weight: 600;
+  padding: 0 2px 0px; min-width: 30px; font-weight: 600;
 }
-#pdfPage .cb { font-family: 'Sarabun', sans-serif; margin-right: 4px; }
-#pdfPage .sign-block { margin-top: 16px; text-align: center; }
-#pdfPage .sign-block .line { margin-bottom: 2px; }
-#pdfPage .staff-hd { font-weight: 700; text-decoration: underline; margin: 14px 0 6px; }
-#pdfPage .divider { border-top: 1px dashed #999; margin: 14px 0 10px; }
-#pdfPage .staff-row { display: flex; justify-content: space-between; margin-top: 18px; font-size: 12.5px; }
+#pdfPage .cb { font-family: inherit; margin-right: 3px; }
+#pdfPage .sign-block { margin-top: 12px; text-align: center; }
+#pdfPage .sign-block .line { margin-bottom: 1px; }
+#pdfPage .staff-hd { font-weight: 700; text-decoration: underline; margin: 10px 0 4px; }
+#pdfPage .divider { border-top: 1px dashed #999; margin: 10px 0 8px; }
+#pdfPage .staff-row { display: flex; justify-content: space-between; margin-top: 14px; font-size: 14px; }
 #pdfPage .staff-row .col { width: 48%; text-align: center; }
 </style>
 </head>
@@ -358,13 +360,19 @@ body {
     <div class="doc-sub">ประจำปีงบประมาณ พ.ศ. ๒๕๖๙</div>
     <div style="text-align:center;font-size:10.5px;color:#888;margin-bottom:10px">จัดทำแบบฟอร์มโดยเพจ เที่ยวนี่เหอะ</div>
 
-    <div class="doc-date">วันที่ <span id="p-formDate" class="blank"></span></div>
+    <div class="doc-date">
+      วันที่ <span id="p-formDay" class="blank"></span>
+      เดือน <span id="p-formMonth" class="blank"></span>
+      พ.ศ. <span id="p-formYear" class="blank"></span>
+    </div>
 
     <div class="doc-line">เรื่อง&nbsp;&nbsp;&nbsp;ขออนุญาตเข้าศึกษาธรรมชาติระยะไกลเขาช้างเผือก</div>
     <div class="doc-line" style="margin-bottom:10px">เรียน&nbsp;&nbsp;&nbsp;หัวหน้าอุทยานแห่งชาติทองผาภูมิ</div>
 
     <div class="doc-line doc-indent">
-      ข้าพเจ้า <span id="p-titleName" class="blank"></span> อายุ <span id="p-age" class="blank"></span> ปี
+      ข้าพเจ้า <span id="p-titleFname" class="blank"></span>
+      นามสกุล <span id="p-lname" class="blank"></span>
+      อายุ <span id="p-age" class="blank"></span> ปี
     </div>
     <div class="doc-line">
       สัญชาติ <span id="p-nation" class="blank"></span> ศาสนา <span id="p-religion" class="blank"></span>
@@ -394,27 +402,32 @@ body {
       โดยข้าพเจ้า มีความประสงค์ขออนุญาตเข้าศึกษาธรรมชาติระยะไกล เขาช้างเผือก พื้นที่อุทยานแห่งชาติทองผาภูมิ จังหวัดกาญจนบุรี ดังนี้
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:5px">
+    <div class="doc-line doc-indent" style="margin-top:3px">
       ๑. ขออนุญาตเข้าพื้นที่เพื่อศึกษาธรรมชาติฯ มีกำหนด <span id="p-days" class="blank"></span> วัน
-      ตั้งแต่วันที่ <span id="p-startDate" class="blank"></span> ถึงวันที่ <span id="p-endDate" class="blank"></span>
+      ตั้งแต่วันที่ <span id="p-startDay" class="blank"></span>
+      เดือน <span id="p-startMonth" class="blank"></span>
+      พ.ศ. <span id="p-startYear" class="blank"></span>
+      ถึงวันที่ <span id="p-endDay" class="blank"></span>
+      เดือน <span id="p-endMonth" class="blank"></span>
+      พ.ศ. <span id="p-endYear" class="blank"></span>
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:5px">
+    <div class="doc-line doc-indent" style="margin-top:3px">
       ๒. ได้ศึกษากิจกรรมการเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก และรับทราบเป็นอย่างดีแล้ว
       และขอรับรองว่าข้าพเจ้ามีสภาพร่างกายที่แข็งแรง ไม่เป็นโรคต้องห้ามตามกฏหมายหรือโรคที่เป็นอันตรายต่อการเดินศึกษาธรรมชาติ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:5px">
+    <div class="doc-line doc-indent" style="margin-top:3px">
       ๓. ปฏิบัติตามกฎหมาย ระเบียบและข้อบังคับ ตามพระราชบัญญัติอุทยานแห่งชาติ พ.ศ.๒๕๖๒
       และคำสั่งของพนักงานเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ ที่ได้กำหนดไว้อย่างเคร่งครัดต่อไป
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:5px">
+    <div class="doc-line doc-indent" style="margin-top:3px">
       ๔. ในการเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้ หากได้รับอันตรายหรืออุบัติเหตุ
       ข้าพเจ้าจะไม่ขอดำเนินคดี หรือฟ้องร้องเพื่อเรียกร้องค่าเสียหายจากเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ หรือหน่วยงานของรัฐ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:5px">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
+    <div class="doc-line doc-indent" style="margin-top:3px">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
     <div class="doc-line" style="margin-left:34px"><span id="p-cbYes" class="cb"></span>ทำประกันภัยอุบัติเหตุ กับบริษัท <span id="p-insCo" class="blank"></span> เบอร์โทร <span id="p-insPhone" class="blank"></span></div>
     <div class="doc-line" style="margin-left:34px"><span id="p-cbNo" class="cb"></span>ไม่ได้ทำประกันภัยอุบัติเหตุ</div>
 
@@ -526,11 +539,12 @@ async function generatePDF() {
   const insChecked = document.querySelector('input[name="insurance"]:checked').value;
 
   // เติมข้อมูลลงในเทมเพลตที่ซ่อนไว้
-  document.getElementById('p-formDate').textContent =
-    val('f-formDay') + ' ' + val('f-formMonth') + ' พ.ศ. ' + val('f-formYear');
+  document.getElementById('p-formDay').textContent = val('f-formDay');
+  document.getElementById('p-formMonth').textContent = val('f-formMonth');
+  document.getElementById('p-formYear').textContent = val('f-formYear');
 
-  document.getElementById('p-titleName').textContent =
-    titleChecked + ' ' + val('f-fname') + ' นามสกุล ' + val('f-lname');
+  document.getElementById('p-titleFname').textContent = titleChecked + ' ' + val('f-fname');
+  document.getElementById('p-lname').textContent = val('f-lname');
 
   document.getElementById('p-age').textContent = val('f-age');
   document.getElementById('p-nation').textContent = val('f-nation');
@@ -553,10 +567,12 @@ async function generatePDF() {
   document.getElementById('p-ecPhone').textContent = val('f-ecPhone');
 
   document.getElementById('p-days').textContent = val('f-days');
-  document.getElementById('p-startDate').textContent =
-    val('f-startDay') + ' ' + val('f-startMonth') + ' พ.ศ. ' + val('f-startYear');
-  document.getElementById('p-endDate').textContent =
-    val('f-endDay') + ' ' + val('f-endMonth') + ' พ.ศ. ' + val('f-endYear');
+  document.getElementById('p-startDay').textContent = val('f-startDay');
+  document.getElementById('p-startMonth').textContent = val('f-startMonth');
+  document.getElementById('p-startYear').textContent = val('f-startYear');
+  document.getElementById('p-endDay').textContent = val('f-endDay');
+  document.getElementById('p-endMonth').textContent = val('f-endMonth');
+  document.getElementById('p-endYear').textContent = val('f-endYear');
 
   document.getElementById('p-cbYes').textContent = insChecked === 'yes' ? '☑ ' : '☐ ';
   document.getElementById('p-cbNo').textContent = insChecked === 'no' ? '☑ ' : '☐ ';
