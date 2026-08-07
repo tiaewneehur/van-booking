@@ -2,87 +2,302 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <title>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ เขาช้างเผือก</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
+/* ============================================================
+   RESET & THEME
+   ============================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
 :root {
-  --paper: #fbf9f3; --ink: #1f2b23; --sub: #5b6b60;
-  --accent: #2f6f4f; --accent-dk: #1f4d36; --accent-lt: #e6efe8;
-  --border: #dcd6c4; --card: #ffffff; --red: #b3431e;
+  --paper: #fbf9f3;
+  --ink: #1f2b23;
+  --sub: #5b6b60;
+  --muted: #93a196;
+  --accent: #2f6f4f;
+  --accent-dk: #1f4d36;
+  --accent-lt: #e6efe8;
+  --border: #dcd6c4;
+  --card: #ffffff;
+  --red: #b3431e;
 }
-body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; padding-bottom: 110px; }
-.hdr { background: linear-gradient(160deg, var(--accent-dk), var(--accent)); color: #fff; padding: 28px 20px 26px; text-align: center; border-radius: 0 0 28px 28px; box-shadow: 0 10px 30px rgba(31,77,54,.25); }
-.hdr .logo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin: 0 auto 10px; border: 3px solid rgba(255,255,255,.75); box-shadow: 0 4px 16px rgba(0,0,0,.2); display: block; }
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  padding-bottom: 110px;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.hdr {
+  background: linear-gradient(160deg, var(--accent-dk), var(--accent));
+  color: #fff;
+  padding: 28px 20px 26px;
+  text-align: center;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 10px 30px rgba(31, 77, 54, .25);
+}
+.hdr .ico { font-size: 34px; margin-bottom: 8px; }
+.hdr .logo {
+  width: 64px; height: 64px; border-radius: 50%;
+  object-fit: cover; margin: 0 auto 10px;
+  border: 3px solid rgba(255,255,255,.75);
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  display: block;
+}
 .hdr h1 { font-size: 19px; font-weight: 700; line-height: 1.4; }
 .hdr p { font-size: 12.5px; opacity: .85; margin-top: 6px; }
+
 .main { max-width: 560px; margin: 0 auto; padding: 20px 16px 0; }
-.sec { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px 16px; margin-bottom: 16px; box-shadow: 0 4px 14px rgba(31,43,35,.04); }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.sec {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(31, 43, 35, .04);
+}
 .sec-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-.sec-num { width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0; background: var(--accent-lt); color: var(--accent-dk); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+.sec-num {
+  width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0;
+  background: var(--accent-lt); color: var(--accent-dk);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px;
+}
 .sec-hd h2 { font-size: 15.5px; font-weight: 700; color: var(--ink); }
+.sec-hd p { font-size: 11px; color: var(--sub); margin-top: 1px; }
+
 .row { display: flex; gap: 10px; flex-wrap: wrap; }
 .fld { margin-bottom: 13px; flex: 1; min-width: 120px; }
 .fld.full { flex-basis: 100%; }
 .fld label { display: block; font-size: 12.5px; color: var(--sub); font-weight: 600; margin-bottom: 6px; }
 .fld label .req { color: var(--red); }
-.fld input, .fld select { width: 100%; height: 46px; border: 1.5px solid var(--border); border-radius: 12px; padding: 0 13px; font-size: 14.5px; font-family: inherit; color: var(--ink); outline: none; background: #fff; }
+.fld input, .fld select {
+  width: 100%;
+  height: 46px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 0 13px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+  background: #fff;
+  transition: .15s;
+}
+.fld input:focus, .fld select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47,111,79,.12); }
+.fld input::placeholder { color: var(--muted); }
+.hint { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+
+/* คำนำหน้า/ตัวเลือก radio แบบชิป */
 .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip-opt { position: relative; }
 .chip-opt input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
-.chip-opt span { display: flex; align-items: center; justify-content: center; height: 42px; padding: 0 16px; border: 1.5px solid var(--border); border-radius: 999px; font-size: 13.5px; color: var(--sub); font-weight: 600; }
+.chip-opt span {
+  display: flex; align-items: center; justify-content: center;
+  height: 42px; padding: 0 16px;
+  border: 1.5px solid var(--border); border-radius: 999px;
+  font-size: 13.5px; color: var(--sub); font-weight: 600;
+  transition: .15s;
+}
 .chip-opt input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; }
+
 .ins-box { margin-top: 4px; padding: 14px; background: var(--accent-lt); border-radius: 12px; display: none; }
 .ins-box.show { display: block; }
+
 .date-row { display: grid; grid-template-columns: 70px 1.4fr 90px; gap: 8px; }
-.sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(251,249,243,.92); backdrop-filter: blur(14px); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: center; z-index: 50; }
-.btn-submit { width: 100%; max-width: 528px; height: 52px; border: none; border-radius: 14px; background: #cbd5c9; color: #6b7a70; font-size: 15px; font-weight: 700; font-family: inherit; cursor: not-allowed; }
-.btn-submit.ready { background: linear-gradient(135deg, var(--accent-dk), var(--accent)); color: #fff; cursor: pointer; box-shadow: 0 8px 22px rgba(47,111,79,.32); }
-#resultWrap { position: fixed; inset: 0; z-index: 9999; background: #333; display: none; overflow: auto; }
+
+/* ============================================================
+   STICKY SUBMIT BAR
+   ============================================================ */
+.sticky-bar {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: rgba(251, 249, 243, .92);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0));
+  display: flex; justify-content: center; z-index: 50;
+}
+.btn-submit {
+  width: 100%; max-width: 528px; height: 52px;
+  border: none; border-radius: 14px;
+  background: #cbd5c9; color: #6b7a70;
+  font-size: 15px; font-weight: 700; font-family: inherit;
+  cursor: not-allowed; transition: .2s;
+}
+.btn-submit.ready {
+  background: linear-gradient(135deg, var(--accent-dk), var(--accent));
+  color: #fff; cursor: pointer;
+  box-shadow: 0 8px 22px rgba(47, 111, 79, .32);
+}
+
+/* ============================================================
+   RESULT VIEW — เอาข้อมูลไปแปะทับบนรูปสแกนต้นฉบับจริง (ไม่ได้พิมพ์ขึ้นมาใหม่)
+   ผู้ใช้เลื่อน/ซูมดูแล้วแคปหน้าจอเก็บไว้เอง
+   ============================================================ */
+#resultWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #333;
+  display: none;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
 #resultWrap.show { display: block; }
-.result-bar { position: sticky; top: 0; left: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--accent-dk); color: #fff; }
-.result-bar .back-btn { background: rgba(255,255,255,.15); border: none; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 10px; cursor: pointer; }
-#formImageWrap { position: relative; width: 100%; max-width: 1206px; margin: 0 auto; background: #fff; container-type: inline-size; }
+.result-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--accent-dk);
+  color: #fff;
+}
+.result-bar .back-btn {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.result-hint {
+  font-size: 12px;
+  text-align: right;
+  line-height: 1.4;
+  opacity: .95;
+}
+
+#calibBar {
+  position: sticky;
+  top: 45px;
+  z-index: 9;
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #1a1a1a;
+}
+.calib-btn {
+  flex: 1;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.calib-btn.primary { background: #2f6f4f; border-color: #2f6f4f; }
+#calibOutput {
+  width: 100%;
+  height: 140px;
+  box-sizing: border-box;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 11px;
+  background: #111;
+  color: #7fffb0;
+  border: none;
+  border-top: 2px solid #2f6f4f;
+}
+
+/* ตอนเปิดโหมดปรับตำแหน่ง — ทำให้แต่ละช่องลากได้ และมองเห็นง่ายขึ้น */
+.ov.calib-on {
+  outline: 1px dashed rgba(255,0,0,.7);
+  background: rgba(255,255,0,.35);
+  cursor: grab;
+  touch-action: none;
+  padding: 1px 3px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ov.calib-on:active { cursor: grabbing; background: rgba(255,140,0,.5); }
+.ov.calib-empty::after {
+  content: attr(data-fieldname);
+  color: #b00;
+  font-size: inherit;
+}
+
+/* กรอบรูปภาพ — กว้างเท่าจอมือถือพอดี ล็อกอัตราส่วนภาพ (1206:1658) ไว้เสมอ
+   ไม่ต้องเลื่อนซ้าย-ขวาอีกต่อไป เลื่อนขึ้น-ลงอย่างเดียวพอ */
+#formImageWrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+}
 #formImageWrap img { display: block; width: 100%; height: auto; }
 
-/* พิกัดวัดจากตาราง Grid เป๊ะๆ */
 .ov {
   position: absolute;
-  font-family: 'TH Sarabun New', 'THSarabunNew', 'TH Sarabun PSK', 'THSarabunPSK', 'Sarabun', sans-serif;
-  font-size: 1.35cqw;
-  font-weight: 500;
-  color: #113f28;
+  font-family: 'TH Sarabun PSK', 'THSarabunPSK', 'TH Sarabun New', 'THSarabunNew', 'Sarabun', sans-serif;
+  font-weight: 700;
+  color: #16326b;
   white-space: nowrap;
   line-height: 1;
-  transform: translateY(-50%);
 }
-.ov.check { font-size: 1.5cqw; font-family: Arial, sans-serif; font-weight: 700; transform: translateY(-52%); }
-.ov.small { font-size: 1.15cqw; }
-.ov.signature { font-style: italic; }
 </style>
 </head>
 <body>
 
 <div class="hdr">
-  <img class="logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/64?text=🏕'" alt="โลโก้เพจ">
+  <img class="logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/64?text=🏕'" alt="โลโก้เที่ยวนี่เหอะ">
   <h1>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ<br>เส้นทางเดินป่าเขาช้างเผือก</h1>
   <p>อุทยานแห่งชาติทองผาภูมิ · ประจำปีงบประมาณ พ.ศ. 2569</p>
+  <p style="margin-top:2px;opacity:.7">จัดทำโดยเพจ เที่ยวนี่เหอะ 🏕️</p>
 </div>
 
 <div class="main">
+
+  <!-- วันที่กรอกแบบฟอร์ม -->
   <div class="sec">
-    <div class="sec-hd"><div class="sec-num">📅</div><div><h2>วันที่เขียนคำขอ</h2></div></div>
+    <div class="sec-hd">
+      <div class="sec-num">📅</div>
+      <div><h2>วันที่กรอกแบบฟอร์มนี้</h2><p>วันที่ที่คุณกำลังกรอกฟอร์มอยู่ตอนนี้</p></div>
+    </div>
     <div class="date-row">
-      <div class="fld"><label>วัน <span class="req">*</span></label><input id="f-formDay" type="number" placeholder="14" oninput="checkForm()"></div>
-      <div class="fld"><label>เดือน <span class="req">*</span></label><select id="f-formMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select></div>
+      <div class="fld"><label>วัน <span class="req">*</span></label><input id="f-formDay" type="number" min="1" max="31" placeholder="14" oninput="checkForm()"></div>
+      <div class="fld"><label>เดือน <span class="req">*</span></label>
+        <select id="f-formMonth" onchange="checkForm()">
+          <option value="">เลือกเดือน</option>
+        </select>
+      </div>
       <div class="fld"><label>พ.ศ. <span class="req">*</span></label><input id="f-formYear" type="number" placeholder="2569" oninput="checkForm()"></div>
     </div>
   </div>
 
+  <!-- ข้อมูลผู้ขออนุญาต -->
   <div class="sec">
-    <div class="sec-hd"><div class="sec-num">1</div><div><h2>ข้อมูลผู้ขออนุญาต</h2></div></div>
+    <div class="sec-hd">
+      <div class="sec-num">1</div>
+      <div><h2>ข้อมูลผู้ขออนุญาต</h2><p>ข้อมูลส่วนตัวตามบัตรประชาชน</p></div>
+    </div>
+
     <div class="fld full">
       <label>คำนำหน้า <span class="req">*</span></label>
       <div class="chip-group">
@@ -91,27 +306,36 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
         <label class="chip-opt"><input type="radio" name="title" value="นางสาว" onchange="checkForm()"><span>นางสาว</span></label>
       </div>
     </div>
+
     <div class="row">
       <div class="fld"><label>ชื่อ <span class="req">*</span></label><input id="f-fname" placeholder="ชื่อจริง" oninput="checkForm()"></div>
       <div class="fld"><label>นามสกุล <span class="req">*</span></label><input id="f-lname" placeholder="นามสกุล" oninput="checkForm()"></div>
       <div class="fld" style="max-width:100px"><label>อายุ <span class="req">*</span></label><input id="f-age" type="number" placeholder="ปี" oninput="checkForm()"></div>
     </div>
+
     <div class="row">
       <div class="fld"><label>สัญชาติ <span class="req">*</span></label><input id="f-nation" placeholder="ไทย" oninput="checkForm()"></div>
       <div class="fld"><label>ศาสนา</label><input id="f-religion" placeholder="พุทธ"></div>
     </div>
+
     <div class="fld full">
       <label>เลขประจำตัวประชาชน (13 หลัก) <span class="req">*</span></label>
       <input id="f-idcard" inputmode="numeric" maxlength="13" placeholder="1234567890123" oninput="this.value=this.value.replace(/\D/g,'').slice(0,13); checkForm()">
     </div>
+
     <div class="row">
-      <div class="fld"><label>โรคประจำตัว</label><input id="f-disease" value="ไม่มี"></div>
-      <div class="fld" style="max-width:120px"><label>กรุ๊ปเลือด</label><input id="f-blood"></div>
+      <div class="fld"><label>โรคประจำตัว</label><input id="f-disease" placeholder="ไม่มี" value="ไม่มี"></div>
+      <div class="fld" style="max-width:120px"><label>กรุ๊ปเลือด</label><input id="f-blood" placeholder="เช่น O, A, B, AB"></div>
     </div>
   </div>
 
+  <!-- ที่อยู่ -->
   <div class="sec">
-    <div class="sec-hd"><div class="sec-num">2</div><div><h2>ที่อยู่ตามภูมิลำเนา</h2></div></div>
+    <div class="sec-hd">
+      <div class="sec-num">2</div>
+      <div><h2>ที่อยู่ตามภูมิลำเนา</h2><p>ที่อยู่ปัจจุบันตามบัตรประชาชน</p></div>
+    </div>
+
     <div class="row">
       <div class="fld"><label>บ้านเลขที่ <span class="req">*</span></label><input id="f-houseNo" oninput="checkForm()"></div>
       <div class="fld" style="max-width:100px"><label>หมู่ที่</label><input id="f-moo"></div>
@@ -127,14 +351,20 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
     <div class="fld full"><label>จังหวัด <span class="req">*</span></label><input id="f-province" oninput="checkForm()"></div>
   </div>
 
+  <!-- ช่องทางติดต่อ -->
   <div class="sec">
-    <div class="sec-hd"><div class="sec-num">3</div><div><h2>ช่องทางติดต่อ</h2></div></div>
-    <div class="row">
-      <div class="fld"><label>โทรศัพท์ (บ้าน)</label><input id="f-homePhone" inputmode="numeric"></div>
-      <div class="fld"><label>มือถือ <span class="req">*</span></label><input id="f-mobile" inputmode="numeric" oninput="checkForm()"></div>
+    <div class="sec-hd">
+      <div class="sec-num">3</div>
+      <div><h2>ช่องทางติดต่อ</h2><p>ไว้ใช้ติดต่อกรณีฉุกเฉินระหว่างทริป</p></div>
     </div>
-    <div class="fld full"><label>E-mail</label><input id="f-email" type="email"></div>
-    <div class="fld full" style="margin-top:6px; font-size:12.5px; color:var(--sub); font-weight:600">บุคคลติดต่อกรณีเร่งด่วน <span class="req">*</span></div>
+
+    <div class="row">
+      <div class="fld"><label>โทรศัพท์ (บ้าน)</label><input id="f-homePhone" inputmode="numeric" placeholder="ถ้ามี"></div>
+      <div class="fld"><label>มือถือ <span class="req">*</span></label><input id="f-mobile" inputmode="numeric" placeholder="08xxxxxxxx" oninput="checkForm()"></div>
+    </div>
+    <div class="fld full"><label>E-mail</label><input id="f-email" type="email" placeholder="you@email.com"></div>
+
+    <div class="fld full" style="margin-top:6px;font-size:12.5px;color:var(--sub);font-weight:600">บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน <span class="req">*</span></div>
     <div class="row">
       <div class="fld"><label>ชื่อ</label><input id="f-ecFname" oninput="checkForm()"></div>
       <div class="fld"><label>นามสกุล</label><input id="f-ecLname" oninput="checkForm()"></div>
@@ -142,31 +372,44 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
     <div class="fld full"><label>โทรศัพท์</label><input id="f-ecPhone" inputmode="numeric" oninput="checkForm()"></div>
   </div>
 
+  <!-- รายละเอียดการขอเข้าพื้นที่ -->
   <div class="sec">
-    <div class="sec-hd"><div class="sec-num">4</div><div><h2>รายละเอียดการขอเข้าพื้นที่</h2></div></div>
-    <div class="fld full" style="max-width:140px"><label>จำนวนวัน <span class="req">*</span></label><input id="f-days" type="number" min="1" oninput="checkForm()"></div>
+    <div class="sec-hd">
+      <div class="sec-num">4</div>
+      <div><h2>รายละเอียดการขอเข้าพื้นที่</h2><p>ช่วงวันที่จะเดินป่าศึกษาธรรมชาติ</p></div>
+    </div>
+
+    <div class="fld full" style="max-width:140px"><label>จำนวนวัน <span class="req">*</span></label><input id="f-days" type="number" min="1" placeholder="เช่น 2" oninput="checkForm()"></div>
+
     <div class="fld full"><label>ตั้งแต่วันที่ <span class="req">*</span></label></div>
     <div class="date-row" style="margin-bottom:13px">
-      <input id="f-startDay" type="number" placeholder="วัน" oninput="checkForm()">
+      <input id="f-startDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
       <select id="f-startMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
       <input id="f-startYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
     </div>
+
     <div class="fld full"><label>ถึงวันที่ <span class="req">*</span></label></div>
     <div class="date-row">
-      <input id="f-endDay" type="number" placeholder="วัน" oninput="checkForm()">
+      <input id="f-endDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
       <select id="f-endMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
       <input id="f-endYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
     </div>
   </div>
 
+  <!-- ประกันภัย -->
   <div class="sec">
-    <div class="sec-hd"><div class="sec-num">5</div><div><h2>การทำประกันภัยอุบัติเหตุ</h2></div></div>
+    <div class="sec-hd">
+      <div class="sec-num">5</div>
+      <div><h2>การทำประกันภัยอุบัติเหตุ</h2><p>สำหรับการเข้าศึกษาธรรมชาติครั้งนี้</p></div>
+    </div>
+
     <div class="fld full">
       <div class="chip-group">
-        <label class="chip-opt"><input type="radio" name="insurance" value="yes" onchange="toggleInsurance(); checkForm()"><span>✅ ทำประกัน</span></label>
-        <label class="chip-opt"><input type="radio" name="insurance" value="no" onchange="toggleInsurance(); checkForm()"><span>ไม่ได้ทำประกัน</span></label>
+        <label class="chip-opt"><input type="radio" name="insurance" value="yes" onchange="toggleInsurance(); checkForm()"><span>✅ ทำประกันภัยอุบัติเหตุ</span></label>
+        <label class="chip-opt"><input type="radio" name="insurance" value="no" onchange="toggleInsurance(); checkForm()"><span>ไม่ได้ทำประกันภัย</span></label>
       </div>
     </div>
+
     <div id="insBox" class="ins-box">
       <div class="row" style="margin-bottom:0">
         <div class="fld"><label>บริษัทประกัน <span class="req">*</span></label><input id="f-insCo" oninput="checkForm()"></div>
@@ -175,179 +418,223 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
     </div>
   </div>
 
+  <!-- ลงชื่อ -->
   <div class="sec">
-    <div class="sec-hd"><div class="sec-num">✍️</div><div><h2>ชื่อผู้ลงนาม</h2></div></div>
-    <div class="fld full"><input id="f-signName" placeholder="ชื่อ-นามสกุล"></div>
+    <div class="sec-hd">
+      <div class="sec-num">✍️</div>
+      <div><h2>ชื่อผู้ลงนาม</h2><p>ชื่อ-นามสกุลที่จะพิมพ์กำกับใต้ลายเซ็นในเอกสาร</p></div>
+    </div>
+    <div class="fld full">
+      <input id="f-signName" placeholder="จะเติมให้อัตโนมัติจากชื่อ-นามสกุลด้านบน">
+      <p class="hint">พิมพ์ชื่อเองก่อนแคปหน้าจอ แล้วเซ็นด้วยลายมือทับตอนพิมพ์ออกมาก็ได้ครับ</p>
+    </div>
   </div>
+
 </div>
 
 <div class="sticky-bar">
-  <button id="submitBtn" class="btn-submit" disabled>📄 กรอกข้อมูลให้ครบก่อนนะครับ</button>
+  <button id="submitBtn" class="btn-submit" disabled onclick="showResult()">📄 กรอกข้อมูลให้ครบก่อนนะครับ</button>
 </div>
 
+<!-- ============================================================
+     RESULT VIEW — เอกสารที่กรอกแล้ว แสดงเต็มจอให้กดแคปหน้าจอเก็บไว้เอง
+     ============================================================ -->
 <div id="resultWrap">
   <div class="result-bar">
     <button class="back-btn" onclick="closeResult()">‹ กลับไปแก้ไข</button>
-    <div style="font-size:12px">📸 แคปหน้าจอเก็บไว้ได้เลยครับ</div>
+    <div class="result-hint">📸 แคปหน้าจอเก็บไว้ได้เลยครับ<br>(เลื่อน/ซูมดูให้ครบก่อนแคปนะครับ)</div>
   </div>
+
+  <div id="calibBar">
+    <button id="calibToggleBtn" class="calib-btn" onclick="toggleCalibMode()">🔧 โหมดปรับตำแหน่ง</button>
+    <button id="calibExportBtn" class="calib-btn primary" style="display:none" onclick="exportCalibCoords()">📋 คัดลอกตำแหน่งทั้งหมด</button>
+  </div>
+  <textarea id="calibOutput" style="display:none"></textarea>
 
   <div id="formImageWrap">
     <img src="IMG_0527.jpeg" alt="แบบฟอร์มต้นฉบับ">
 
-    <!-- วันที่เอกสารด้านบน (จุดอ้างอิงหลักที่ตรงเป๊ะ) -->
-    <span id="p-formDay" class="ov" style="left:54.0%; top:15.6%;"></span>
-    <span id="p-formMonth" class="ov" style="left:63.5%; top:15.6%;"></span>
-    <span id="p-formYear" class="ov" style="left:82.5%; top:15.6%;"></span>
+    <!-- วันที่กรอกฟอร์ม -->
+    <span id="p-formDay"   class="ov" data-fieldname="p-formDay" style="left:52.00%; top:16.65%; font-size:1.35vw;"></span>
+    <span id="p-formMonth" class="ov" data-fieldname="p-formMonth" style="left:65.50%; top:16.65%; font-size:1.35vw;"></span>
+    <span id="p-formYear"  class="ov" data-fieldname="p-formYear" style="left:83.50%; top:16.65%; font-size:1.35vw;"></span>
 
-    <!-- คำนำหน้า -->
-    <span id="p-cbNai" class="ov check" style="left:23.9%; top:22.2%;"></span>
-    <span id="p-cbNang" class="ov check" style="left:30.8%; top:22.2%;"></span>
-    <span id="p-cbNangsao" class="ov check" style="left:37.3%; top:22.2%;"></span>
-
-    <!-- ชื่อ / นามสกุล / อายุ -->
-    <span id="p-fname" class="ov" style="left:48.5%; top:22.2%;"></span>
-    <span id="p-lname" class="ov" style="left:68.5%; top:22.2%;"></span>
-    <span id="p-age" class="ov" style="left:89.5%; top:22.2%;"></span>
+    <!-- ข้าพเจ้า (checkbox คำนำหน้า / ชื่อ / นามสกุล / อายุ) -->
+    <span id="p-cbNai"    class="ov" data-fieldname="p-cbNai" style="left:20.00%; top:23.85%; font-size:1.35vw;"></span>
+    <span id="p-cbNang"   class="ov" data-fieldname="p-cbNang" style="left:27.30%; top:23.85%; font-size:1.35vw;"></span>
+    <span id="p-cbNangsao" class="ov" data-fieldname="p-cbNangsao" style="left:34.30%; top:23.85%; font-size:1.35vw;"></span>
+    <span id="p-fname"    class="ov" data-fieldname="p-fname" style="left:42.00%; top:23.65%; font-size:1.47vw;"></span>
+    <span id="p-lname"    class="ov" data-fieldname="p-lname" style="left:68.50%; top:23.65%; font-size:1.47vw;"></span>
+    <span id="p-age"      class="ov" data-fieldname="p-age" style="left:89.50%; top:23.65%; font-size:1.35vw;"></span>
 
     <!-- สัญชาติ / ศาสนา / เลขบัตร -->
-    <span id="p-nation" class="ov" style="left:21.0%; top:24.4%;"></span>
-    <span id="p-religion" class="ov" style="left:35.0%; top:24.4%;"></span>
-    <span id="p-idcard" class="ov small" style="left:54.5%; top:24.4%;"></span>
+    <span id="p-nation"   class="ov" data-fieldname="p-nation" style="left:22.50%; top:25.85%; font-size:1.47vw;"></span>
+    <span id="p-religion" class="ov" data-fieldname="p-religion" style="left:40.50%; top:25.85%; font-size:1.47vw;"></span>
+    <span id="p-idcard"   class="ov" data-fieldname="p-idcard" style="left:84.00%; top:25.85%; font-size:1.30vw;"></span>
 
-    <!-- โรค / กรุ๊ปเลือด / บ้านเลขที่ -->
-    <span id="p-disease" class="ov" style="left:26.5%; top:26.6%;"></span>
-    <span id="p-blood" class="ov" style="left:53.5%; top:26.6%;"></span>
-    <span id="p-houseNo" class="ov" style="left:77.5%; top:26.6%;"></span>
+    <!-- โรคประจำตัว / กรุ๊ปเลือด / บ้านเลขที่ -->
+    <span id="p-disease" class="ov" data-fieldname="p-disease" style="left:25.50%; top:27.75%; font-size:1.47vw;"></span>
+    <span id="p-blood"   class="ov" data-fieldname="p-blood" style="left:61.50%; top:27.75%; font-size:1.47vw;"></span>
+    <span id="p-houseNo" class="ov" data-fieldname="p-houseNo" style="left:93.00%; top:27.75%; font-size:1.35vw;"></span>
 
-    <!-- หมู่ / ซอย / ถนน / ตำบล -->
-    <span id="p-moo" class="ov" style="left:21.0%; top:28.8%;"></span>
-    <span id="p-soi" class="ov" style="left:30.0%; top:28.8%;"></span>
-    <span id="p-road" class="ov" style="left:51.5%; top:28.8%;"></span>
-    <span id="p-tambon" class="ov" style="left:74.5%; top:28.8%;"></span>
+    <!-- หมู่ที่ / ซอย / ถนน / ตำบล -->
+    <span id="p-moo"    class="ov" data-fieldname="p-moo" style="left:20.50%; top:29.85%; font-size:1.47vw;"></span>
+    <span id="p-soi"    class="ov" data-fieldname="p-soi" style="left:32.50%; top:29.85%; font-size:1.47vw;"></span>
+    <span id="p-road"   class="ov" data-fieldname="p-road" style="left:57.50%; top:29.85%; font-size:1.47vw;"></span>
+    <span id="p-tambon" class="ov" data-fieldname="p-tambon" style="left:80.50%; top:29.85%; font-size:1.35vw;"></span>
 
-    <!-- อำเภอ / จังหวัด / โทรบ้าน -->
-    <span id="p-amphoe" class="ov" style="left:24.0%; top:31.0%;"></span>
-    <span id="p-province" class="ov" style="left:49.0%; top:31.0%;"></span>
-    <span id="p-homePhone" class="ov" style="left:77.0%; top:31.0%;"></span>
+    <!-- เขต/อำเภอ / จังหวัด / โทรบ้าน -->
+    <span id="p-amphoe"    class="ov" data-fieldname="p-amphoe" style="left:24.50%; top:31.85%; font-size:1.47vw;"></span>
+    <span id="p-province"  class="ov" data-fieldname="p-province" style="left:50.50%; top:31.85%; font-size:1.47vw;"></span>
+    <span id="p-homePhone" class="ov" data-fieldname="p-homePhone" style="left:81.50%; top:31.85%; font-size:1.35vw;"></span>
 
-    <!-- มือถือ / E-mail -->
-    <span id="p-mobile" class="ov" style="left:21.0%; top:33.2%;"></span>
-    <span id="p-email" class="ov small" style="left:45.5%; top:33.2%;"></span>
+    <!-- มือถือ / อีเมล -->
+    <span id="p-mobile" class="ov" data-fieldname="p-mobile" style="left:23.50%; top:34.05%; font-size:1.47vw;"></span>
+    <span id="p-email"  class="ov" data-fieldname="p-email" style="left:49.50%; top:34.05%; font-size:1.25vw;"></span>
 
-    <!-- บุคคลติดต่อเร่งด่วน -->
-    <span id="p-ecFname" class="ov" style="left:43.0%; top:35.4%;"></span>
-    <span id="p-ecLname" class="ov" style="left:63.5%; top:35.4%;"></span>
-    <span id="p-ecPhone" class="ov" style="left:81.5%; top:35.4%;"></span>
+    <!-- ผู้ติดต่อฉุกเฉิน -->
+    <span id="p-ecFname" class="ov" data-fieldname="p-ecFname" style="left:50.50%; top:36.25%; font-size:1.47vw;"></span>
+    <span id="p-ecLname" class="ov" data-fieldname="p-ecLname" style="left:71.50%; top:36.25%; font-size:1.47vw;"></span>
+    <span id="p-ecPhone" class="ov" data-fieldname="p-ecPhone" style="left:88.50%; top:36.25%; font-size:1.30vw;"></span>
 
-    <!-- จำนวนวัน -->
-    <span id="p-days" class="ov" style="left:61.5%; top:41.8%;"></span>
+    <!-- ข้อ ๑ จำนวนวัน + ช่วงวันที่ -->
+    <span id="p-days"       class="ov" data-fieldname="p-days" style="left:62.50%; top:43.35%; font-size:1.47vw;"></span>
+    <span id="p-startDay"   class="ov" data-fieldname="p-startDay" style="left:25.50%; top:45.35%; font-size:1.35vw;"></span>
+    <span id="p-startMonth" class="ov" data-fieldname="p-startMonth" style="left:36.50%; top:45.35%; font-size:1.20vw;"></span>
+    <span id="p-startYear"  class="ov" data-fieldname="p-startYear" style="left:51.30%; top:45.35%; font-size:0.95vw;"></span>
+    <span id="p-endDay"     class="ov" data-fieldname="p-endDay" style="left:62.50%; top:45.35%; font-size:1.20vw;"></span>
+    <span id="p-endMonth"   class="ov" data-fieldname="p-endMonth" style="left:73.50%; top:45.35%; font-size:1.10vw;"></span>
+    <span id="p-endYear"    class="ov" data-fieldname="p-endYear" style="left:89.30%; top:45.35%; font-size:1.15vw;"></span>
 
-    <!-- วันที่เริ่มต้น -->
-    <span id="p-startDay" class="ov" style="left:22.0%; top:44.0%;"></span>
-    <span id="p-startMonth" class="ov small" style="left:33.0%; top:44.0%;"></span>
-    <span id="p-startYear" class="ov small" style="left:45.5%; top:44.0%;"></span>
+    <!-- ข้อ ๕ ประกันภัย -->
+    <span id="p-cbIns1"   class="ov" data-fieldname="p-cbIns1" style="left:25.30%; top:66.35%; font-size:1.40vw;"></span>
+    <span id="p-insCo"    class="ov" data-fieldname="p-insCo" style="left:51.50%; top:66.35%; font-size:1.40vw;"></span>
+    <span id="p-insPhone" class="ov" data-fieldname="p-insPhone" style="left:80.50%; top:66.35%; font-size:1.25vw;"></span>
+    <span id="p-cbIns2"   class="ov" data-fieldname="p-cbIns2" style="left:25.30%; top:68.35%; font-size:1.40vw;"></span>
 
-    <!-- วันที่สิ้นสุด -->
-    <span id="p-endDay" class="ov" style="left:60.5%; top:44.0%;"></span>
-    <span id="p-endMonth" class="ov small" style="left:71.5%; top:44.0%;"></span>
-    <span id="p-endYear" class="ov" style="left:83.5%; top:44.0%;"></span>
-
-    <!-- ประกันภัย -->
-    <span id="p-cbIns1" class="ov check" style="left:23.2%; top:64.8%;"></span>
-    <span id="p-insCo" class="ov" style="left:47.5%; top:64.8%;"></span>
-    <span id="p-insPhone" class="ov" style="left:78.5%; top:64.8%;"></span>
-    <span id="p-cbIns2" class="ov check" style="left:23.2%; top:67.0%;"></span>
-
-    <!-- ลายเซ็น -->
-    <span id="p-signName1" class="ov signature" style="left:57.0%; top:70.4%;"></span>
-    <span id="p-signName2" class="ov" style="left:55.0%; top:72.3%;"></span>
+    <!-- ชื่อผู้ลงนามพิมพ์ใต้ลายเซ็น -->
+    <span id="p-signName1" class="ov" data-fieldname="p-signName1" style="left:62.50%; top:71.35%; font-size:1.16vw; font-style:italic;"></span>
+    <span id="p-signName2" class="ov" data-fieldname="p-signName2" style="left:54.50%; top:73.85%; font-size:1.30vw; font-weight:600;"></span>
   </div>
 </div>
 
 <script>
-const THAI_MONTHS = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+const THAI_MONTHS = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+
 function fillMonthSelect(id) {
   const sel = document.getElementById(id);
-  THAI_MONTHS.forEach(month => {
+  THAI_MONTHS.forEach(m => {
     const opt = document.createElement('option');
-    opt.value = month; opt.textContent = month;
+    opt.value = m;
+    opt.textContent = m;
     sel.appendChild(opt);
   });
 }
 ['f-formMonth', 'f-startMonth', 'f-endMonth'].forEach(fillMonthSelect);
-document.getElementById('f-formYear').value = new Date().getFullYear() + 543;
+
+// เติมปี พ.ศ. ปัจจุบันไว้ล่วงหน้าให้เป็นค่าเริ่มต้น (แก้ไขเองได้)
+const currentBEYear = new Date().getFullYear() + 543;
+document.getElementById('f-formYear').value = currentBEYear;
 
 function toggleInsurance() {
   const yes = document.querySelector('input[name="insurance"][value="yes"]').checked;
-  document.getElementById('insBox').classList.toggle('show', yes);
-  if (!yes) { document.getElementById('f-insCo').value = ''; document.getElementById('f-insPhone').value = ''; }
+  const box = document.getElementById('insBox');
+  box.classList.toggle('show', yes);
+  if (!yes) {
+    document.getElementById('f-insCo').value = '';
+    document.getElementById('f-insPhone').value = '';
+  }
 }
 
-function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function val(id) { return document.getElementById(id).value.trim(); }
 
 function checkForm() {
   const titleChecked = document.querySelector('input[name="title"]:checked');
   const insChecked = document.querySelector('input[name="insurance"]:checked');
   const insOk = insChecked && (insChecked.value === 'no' || (insChecked.value === 'yes' && val('f-insCo')));
-  const required = ['f-formDay', 'f-formYear', 'f-fname', 'f-lname', 'f-age', 'f-nation', 'f-idcard', 'f-houseNo', 'f-tambon', 'f-amphoe', 'f-province', 'f-mobile', 'f-ecFname', 'f-ecLname', 'f-ecPhone', 'f-days', 'f-startDay', 'f-startYear', 'f-endDay', 'f-endYear'];
+
+  const required = [
+    'f-formDay', 'f-formYear', 'f-fname', 'f-lname', 'f-age', 'f-nation', 'f-idcard',
+    'f-houseNo', 'f-tambon', 'f-amphoe', 'f-province', 'f-mobile',
+    'f-ecFname', 'f-ecLname', 'f-ecPhone',
+    'f-days', 'f-startDay', 'f-startYear', 'f-endDay', 'f-endYear'
+  ];
+
   const allFilled = required.every(id => val(id) !== '');
   const monthsOk = val('f-formMonth') && val('f-startMonth') && val('f-endMonth');
-  const ok = allFilled && monthsOk && val('f-idcard').length === 13 && titleChecked && insOk;
+  const idOk = val('f-idcard').length === 13;
+
+  const ok = allFilled && monthsOk && idOk && titleChecked && insOk;
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = !ok;
   btn.classList.toggle('ready', ok);
   btn.innerText = ok ? '📄 ดูเอกสารที่กรอกแล้ว (แคปหน้าจอเก็บไว้)' : '📄 กรอกข้อมูลให้ครบก่อนนะครับ';
-  if(ok) { btn.setAttribute('onclick', 'showResult();'); } else { btn.removeAttribute('onclick'); }
 
+  // เติมชื่อผู้ลงนามอัตโนมัติ ถ้าผู้ใช้ยังไม่เคยแก้เอง
   const signInput = document.getElementById('f-signName');
   if (!signInput.dataset.touched && titleChecked && val('f-fname') && val('f-lname')) {
     signInput.value = titleChecked.value + val('f-fname') + ' ' + val('f-lname');
   }
 }
-document.getElementById('f-signName').addEventListener('input', function() { this.dataset.touched = '1'; });
+document.getElementById('f-signName').addEventListener('input', function () { this.dataset.touched = '1'; });
 
 function formatIdCard(id) {
-  const d = id.replace(/\D/g, '');
-  if (d.length !== 13) return id;
-  return d[0] + '-' + d.slice(1,5) + '-' + d.slice(5,10) + '-' + d.slice(10,12) + '-' + d[12];
+  const digits = id.replace(/\D/g, '');
+  if (digits.length !== 13) return id;
+  return digits[0] + '-' + digits.slice(1, 5) + '-' + digits.slice(5, 10) + '-' + digits.slice(10, 12) + '-' + digits.slice(12);
 }
+
 function dashOr(v) { return v ? v : '-'; }
-function setOv(id, text) { const el = document.getElementById(id); if (el) el.textContent = text || ''; }
 
 function showResult() {
   const btn = document.getElementById('submitBtn');
   if (btn.disabled) return;
+
   const titleChecked = document.querySelector('input[name="title"]:checked').value;
   const insChecked = document.querySelector('input[name="insurance"]:checked').value;
+
+  function setOv(id, text) {
+    document.getElementById(id).textContent = text;
+  }
 
   setOv('p-formDay', val('f-formDay'));
   setOv('p-formMonth', val('f-formMonth'));
   setOv('p-formYear', val('f-formYear'));
+
+  // ติ๊กถูกทับกล่องสี่เหลี่ยม ☐ ที่พิมพ์ไว้ในภาพต้นฉบับ ตรงตำแหน่งคำนำหน้าที่เลือก
   setOv('p-cbNai', titleChecked === 'นาย' ? '✓' : '');
   setOv('p-cbNang', titleChecked === 'นาง' ? '✓' : '');
   setOv('p-cbNangsao', titleChecked === 'นางสาว' ? '✓' : '');
+
   setOv('p-fname', val('f-fname'));
   setOv('p-lname', val('f-lname'));
   setOv('p-age', val('f-age'));
+
   setOv('p-nation', val('f-nation'));
   setOv('p-religion', dashOr(val('f-religion')));
   setOv('p-idcard', formatIdCard(val('f-idcard')));
+
   setOv('p-disease', dashOr(val('f-disease')));
   setOv('p-blood', dashOr(val('f-blood')));
   setOv('p-houseNo', val('f-houseNo'));
+
   setOv('p-moo', dashOr(val('f-moo')));
   setOv('p-soi', dashOr(val('f-soi')));
   setOv('p-road', dashOr(val('f-road')));
   setOv('p-tambon', val('f-tambon'));
+
   setOv('p-amphoe', val('f-amphoe'));
   setOv('p-province', val('f-province'));
   setOv('p-homePhone', dashOr(val('f-homePhone')));
+
   setOv('p-mobile', val('f-mobile'));
   setOv('p-email', dashOr(val('f-email')));
+
   setOv('p-ecFname', val('f-ecFname'));
   setOv('p-ecLname', val('f-ecLname'));
   setOv('p-ecPhone', val('f-ecPhone'));
+
   setOv('p-days', val('f-days'));
   setOv('p-startDay', val('f-startDay'));
   setOv('p-startMonth', val('f-startMonth'));
@@ -355,6 +642,8 @@ function showResult() {
   setOv('p-endDay', val('f-endDay'));
   setOv('p-endMonth', val('f-endMonth'));
   setOv('p-endYear', val('f-endYear'));
+
+  // ติ๊กถูกทับกล่องประกันภัยตามที่เลือก
   setOv('p-cbIns1', insChecked === 'yes' ? '✓' : '');
   setOv('p-cbIns2', insChecked === 'no' ? '✓' : '');
   setOv('p-insCo', insChecked === 'yes' ? val('f-insCo') : '');
@@ -366,12 +655,123 @@ function showResult() {
 
   document.getElementById('resultWrap').classList.add('show');
   document.getElementById('resultWrap').scrollTop = 0;
+  document.getElementById('resultWrap').scrollLeft = 0;
   document.body.style.overflow = 'hidden';
 }
+
 function closeResult() {
   document.getElementById('resultWrap').classList.remove('show');
   document.body.style.overflow = '';
 }
+
+/* ================================================================
+   โหมดปรับตำแหน่ง (CALIBRATION MODE)
+   ให้ผู้ใช้ลากแต่ละช่องด้วยนิ้ว/เมาส์ไปวางตรงตำแหน่งจริงบนจอตัวเอง
+   แล้วกด "คัดลอกตำแหน่งทั้งหมด" เพื่อได้พิกัดที่แม่นยำส่งกลับมาให้ปรับโค้ดจริง
+   ================================================================ */
+let calibOn = false;
+
+function toggleCalibMode() {
+  calibOn = !calibOn;
+
+  const wrap = document.getElementById('formImageWrap');
+  const toggleBtn = document.getElementById('calibToggleBtn');
+  const exportBtn = document.getElementById('calibExportBtn');
+
+  wrap.querySelectorAll('.ov').forEach(el => {
+    el.classList.toggle('calib-on', calibOn);
+
+    // ถ้าช่องนี้ว่างเปล่า (เช่น checkbox ที่ไม่ได้เลือก) ให้โชว์ชื่อช่องแทน จะได้ลากได้เหมือนกัน
+    if (calibOn) {
+      if (!el.textContent.trim()) {
+        el.classList.add('calib-empty');
+        el.dataset.wasEmpty = '1';
+      }
+    } else {
+      if (el.dataset.wasEmpty === '1') {
+        el.classList.remove('calib-empty');
+        delete el.dataset.wasEmpty;
+      }
+    }
+  });
+
+  toggleBtn.textContent = calibOn ? '✅ ปิดโหมดปรับตำแหน่ง' : '🔧 โหมดปรับตำแหน่ง';
+  exportBtn.style.display = calibOn ? 'block' : 'none';
+
+  if (calibOn) attachDragHandlers();
+}
+
+function attachDragHandlers() {
+  const wrap = document.getElementById('formImageWrap');
+
+  wrap.querySelectorAll('.ov').forEach(el => {
+    if (el.dataset.dragBound === '1') return;
+    el.dataset.dragBound = '1';
+
+    let startX, startY, startLeftPct, startTopPct;
+
+    el.addEventListener('pointerdown', (e) => {
+      if (!calibOn) return;
+      e.preventDefault();
+      el.setPointerCapture(e.pointerId);
+
+      const wrapRect = wrap.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeftPct = parseFloat(el.style.left);
+      startTopPct = parseFloat(el.style.top);
+
+      function onMove(ev) {
+        const dxPct = ((ev.clientX - startX) / wrapRect.width) * 100;
+        const dyPct = ((ev.clientY - startY) / wrapRect.height) * 100;
+        el.style.left = (startLeftPct + dxPct).toFixed(2) + '%';
+        el.style.top = (startTopPct + dyPct).toFixed(2) + '%';
+      }
+
+      function onUp(ev) {
+        el.removeEventListener('pointermove', onMove);
+        el.removeEventListener('pointerup', onUp);
+      }
+
+      el.addEventListener('pointermove', onMove);
+      el.addEventListener('pointerup', onUp);
+    });
+  });
+}
+
+function exportCalibCoords() {
+  const wrap = document.getElementById('formImageWrap');
+  const lines = [];
+
+  wrap.querySelectorAll('.ov').forEach(el => {
+    const id = el.id;
+    const left = parseFloat(el.style.left).toFixed(2);
+    const top = parseFloat(el.style.top).toFixed(2);
+    const fontSize = el.style.fontSize || '';
+    lines.push(`${id} | left:${left}% top:${top}% ${fontSize}`);
+  });
+
+  const output = lines.join('\n');
+  const textarea = document.getElementById('calibOutput');
+  textarea.value = output;
+  textarea.style.display = 'block';
+  textarea.focus();
+  textarea.select();
+
+  try {
+    document.execCommand('copy');
+  } catch (e) {
+    // เผื่อ copy อัตโนมัติไม่ได้ ผู้ใช้เลือกข้อความเองแล้ว copy ได้จาก textarea ที่โชว์อยู่
+  }
+
+  Swal.fire({
+    icon: 'success',
+    title: 'คัดลอกตำแหน่งแล้ว!',
+    text: 'วางส่งกลับมาในแชทได้เลยครับ (หรือดูข้อความในกล่องสีเขียวด้านล่างแล้วก็อปเอง)',
+    confirmButtonColor: '#2f6f4f'
+  });
+}
 </script>
+
 </body>
 </html>
