@@ -6,7 +6,6 @@
 <title>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ เขาช้างเผือก</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
@@ -16,7 +15,6 @@
 }
 body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; padding-bottom: 110px; }
 .hdr { background: linear-gradient(160deg, var(--accent-dk), var(--accent)); color: #fff; padding: 28px 20px 26px; text-align: center; border-radius: 0 0 28px 28px; box-shadow: 0 10px 30px rgba(31,77,54,.25); }
-.hdr .logo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin: 0 auto 10px; border: 3px solid rgba(255,255,255,.75); box-shadow: 0 4px 16px rgba(0,0,0,.2); display: block; }
 .hdr h1 { font-size: 19px; font-weight: 700; line-height: 1.4; }
 .hdr p { font-size: 12.5px; opacity: .85; margin-top: 6px; }
 .main { max-width: 560px; margin: 0 auto; padding: 20px 16px 0; }
@@ -24,34 +22,31 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
 .sec-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .sec-num { width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0; background: var(--accent-lt); color: var(--accent-dk); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
 .sec-hd h2 { font-size: 15.5px; font-weight: 700; color: var(--ink); }
-.sec-hd p { font-size: 11px; color: var(--sub); margin-top: 1px; }
 .row { display: flex; gap: 10px; flex-wrap: wrap; }
 .fld { margin-bottom: 13px; flex: 1; min-width: 120px; }
 .fld.full { flex-basis: 100%; }
 .fld label { display: block; font-size: 12.5px; color: var(--sub); font-weight: 600; margin-bottom: 6px; }
 .fld label .req { color: var(--red); }
-.fld input, .fld select { width: 100%; height: 46px; border: 1.5px solid var(--border); border-radius: 12px; padding: 0 13px; font-size: 14.5px; font-family: inherit; color: var(--ink); outline: none; background: #fff; transition: .15s; }
-.fld input:focus, .fld select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47,111,79,.12); }
+.fld input, .fld select { width: 100%; height: 46px; border: 1.5px solid var(--border); border-radius: 12px; padding: 0 13px; font-size: 14.5px; font-family: inherit; color: var(--ink); outline: none; background: #fff; }
 .chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip-opt { position: relative; }
 .chip-opt input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
-.chip-opt span { display: flex; align-items: center; justify-content: center; height: 42px; padding: 0 16px; border: 1.5px solid var(--border); border-radius: 999px; font-size: 13.5px; color: var(--sub); font-weight: 600; transition: .15s; }
+.chip-opt span { display: flex; align-items: center; justify-content: center; height: 42px; padding: 0 16px; border: 1.5px solid var(--border); border-radius: 999px; font-size: 13.5px; color: var(--sub); font-weight: 600; }
 .chip-opt input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; }
 .ins-box { margin-top: 4px; padding: 14px; background: var(--accent-lt); border-radius: 12px; display: none; }
 .ins-box.show { display: block; }
 .date-row { display: grid; grid-template-columns: 70px 1.4fr 90px; gap: 8px; }
-.sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(251,249,243,.92); backdrop-filter: blur(14px); border-top: 1px solid var(--border); padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0)); display: flex; justify-content: center; z-index: 50; }
-.btn-submit { width: 100%; max-width: 528px; height: 52px; border: none; border-radius: 14px; background: #cbd5c9; color: #6b7a70; font-size: 15px; font-weight: 700; font-family: inherit; cursor: not-allowed; transition: .2s; }
+.sticky-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(251,249,243,.92); backdrop-filter: blur(14px); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; justify-content: center; z-index: 50; }
+.btn-submit { width: 100%; max-width: 528px; height: 52px; border: none; border-radius: 14px; background: #cbd5c9; color: #6b7a70; font-size: 15px; font-weight: 700; font-family: inherit; cursor: not-allowed; }
 .btn-submit.ready { background: linear-gradient(135deg, var(--accent-dk), var(--accent)); color: #fff; cursor: pointer; box-shadow: 0 8px 22px rgba(47,111,79,.32); }
-#resultWrap { position: fixed; inset: 0; z-index: 9999; background: #333; display: none; overflow: auto; -webkit-overflow-scrolling: touch; }
+#resultWrap { position: fixed; inset: 0; z-index: 9999; background: #333; display: none; overflow: auto; }
 #resultWrap.show { display: block; }
-.result-bar { position: sticky; top: 0; left: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; background: var(--accent-dk); color: #fff; }
-.result-bar .back-btn { background: rgba(255,255,255,.15); border: none; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 10px; cursor: pointer; flex-shrink: 0; }
-.result-hint { font-size: 12px; text-align: right; line-height: 1.4; opacity: .95; }
+.result-bar { position: sticky; top: 0; left: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--accent-dk); color: #fff; }
+.result-bar .back-btn { background: rgba(255,255,255,.15); border: none; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 14px; border-radius: 10px; cursor: pointer; }
 #formImageWrap { position: relative; width: 100%; max-width: 1206px; margin: 0 auto; background: #fff; container-type: inline-size; }
 #formImageWrap img { display: block; width: 100%; height: auto; }
 
-/* ตำแหน่งข้อความทับช่องว่างตามแบบฟอร์มเป๊ะๆ */
+/* ปรับตำแหน่งที่จูนตามมาตรฐานโซนวันที่ด้านบน */
 .ov {
   position: absolute;
   font-family: 'TH Sarabun New', 'THSarabunNew', 'TH Sarabun PSK', 'THSarabunPSK', 'Sarabun', sans-serif;
@@ -62,38 +57,23 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
   line-height: 1;
   transform: translateY(-50%);
 }
-.ov.check {
-  font-size: 1.5cqw;
-  font-family: Arial, sans-serif;
-  font-weight: 700;
-  transform: translateY(-52%);
-}
+.ov.check { font-size: 1.5cqw; font-family: Arial, sans-serif; font-weight: 700; transform: translateY(-52%); }
 .ov.small { font-size: 1.15cqw; }
 .ov.signature { font-style: italic; }
-@media (max-width: 600px) {
-  .hdr { padding: 24px 16px 22px; }
-  .hdr h1 { font-size: 18px; }
-  .main { padding: 16px 12px 0; }
-  .sec { padding: 16px 14px; }
-}
 </style>
 </head>
 <body>
 
 <div class="hdr">
-  <img class="logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/64?text=🏕'" alt="โลโก้">
   <h1>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ<br>เส้นทางเดินป่าเขาช้างเผือก</h1>
   <p>อุทยานแห่งชาติทองผาภูมิ · ประจำปีงบประมาณ พ.ศ. 2569</p>
 </div>
 
 <div class="main">
   <div class="sec">
-    <div class="sec-hd">
-      <div class="sec-num">📅</div>
-      <div><h2>วันที่เขียนคำขอ</h2><p>วันที่ทำรายการ</p></div>
-    </div>
+    <div class="sec-hd"><div class="sec-num">📅</div><div><h2>วันที่เขียนคำขอ</h2></div></div>
     <div class="date-row">
-      <div class="fld"><label>วัน <span class="req">*</span></label><input id="f-formDay" type="number" min="1" max="31" placeholder="14" oninput="checkForm()"></div>
+      <div class="fld"><label>วัน <span class="req">*</span></label><input id="f-formDay" type="number" placeholder="14" oninput="checkForm()"></div>
       <div class="fld"><label>เดือน <span class="req">*</span></label><select id="f-formMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select></div>
       <div class="fld"><label>พ.ศ. <span class="req">*</span></label><input id="f-formYear" type="number" placeholder="2569" oninput="checkForm()"></div>
     </div>
@@ -123,8 +103,8 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
       <input id="f-idcard" inputmode="numeric" maxlength="13" placeholder="1234567890123" oninput="this.value=this.value.replace(/\D/g,'').slice(0,13); checkForm()">
     </div>
     <div class="row">
-      <div class="fld"><label>โรคประจำตัว</label><input id="f-disease" placeholder="ไม่มี" value="ไม่มี"></div>
-      <div class="fld" style="max-width:120px"><label>กรุ๊ปเลือด</label><input id="f-blood" placeholder="เช่น O, A"></div>
+      <div class="fld"><label>โรคประจำตัว</label><input id="f-disease" value="ไม่มี"></div>
+      <div class="fld" style="max-width:120px"><label>กรุ๊ปเลือด</label><input id="f-blood"></div>
     </div>
   </div>
 
@@ -149,9 +129,9 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
     <div class="sec-hd"><div class="sec-num">3</div><div><h2>ช่องทางติดต่อ</h2></div></div>
     <div class="row">
       <div class="fld"><label>โทรศัพท์ (บ้าน)</label><input id="f-homePhone" inputmode="numeric"></div>
-      <div class="fld"><label>มือถือ <span class="req">*</span></label><input id="f-mobile" inputmode="numeric" placeholder="08xxxxxxxx" oninput="checkForm()"></div>
+      <div class="fld"><label>มือถือ <span class="req">*</span></label><input id="f-mobile" inputmode="numeric" oninput="checkForm()"></div>
     </div>
-    <div class="fld full"><label>E-mail</label><input id="f-email" type="email" placeholder="you@email.com"></div>
+    <div class="fld full"><label>E-mail</label><input id="f-email" type="email"></div>
     <div class="fld full" style="margin-top:6px; font-size:12.5px; color:var(--sub); font-weight:600">บุคคลติดต่อกรณีเร่งด่วน <span class="req">*</span></div>
     <div class="row">
       <div class="fld"><label>ชื่อ</label><input id="f-ecFname" oninput="checkForm()"></div>
@@ -162,16 +142,16 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
 
   <div class="sec">
     <div class="sec-hd"><div class="sec-num">4</div><div><h2>รายละเอียดการขอเข้าพื้นที่</h2></div></div>
-    <div class="fld full" style="max-width:140px"><label>จำนวนวัน <span class="req">*</span></label><input id="f-days" type="number" min="1" placeholder="เช่น 2" oninput="checkForm()"></div>
+    <div class="fld full" style="max-width:140px"><label>จำนวนวัน <span class="req">*</span></label><input id="f-days" type="number" min="1" oninput="checkForm()"></div>
     <div class="fld full"><label>ตั้งแต่วันที่ <span class="req">*</span></label></div>
     <div class="date-row" style="margin-bottom:13px">
-      <input id="f-startDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+      <input id="f-startDay" type="number" placeholder="วัน" oninput="checkForm()">
       <select id="f-startMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
       <input id="f-startYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
     </div>
     <div class="fld full"><label>ถึงวันที่ <span class="req">*</span></label></div>
     <div class="date-row">
-      <input id="f-endDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+      <input id="f-endDay" type="number" placeholder="วัน" oninput="checkForm()">
       <select id="f-endMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
       <input id="f-endYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
     </div>
@@ -206,79 +186,79 @@ body { font-family: 'Sarabun', sans-serif; background: var(--paper); color: var(
 <div id="resultWrap">
   <div class="result-bar">
     <button class="back-btn" onclick="closeResult()">‹ กลับไปแก้ไข</button>
-    <div class="result-hint">📸 แคปหน้าจอเก็บไว้ได้เลยครับ</div>
+    <div style="font-size:12px">📸 แคปหน้าจอเก็บไว้ได้เลยครับ</div>
   </div>
 
   <div id="formImageWrap">
     <img src="IMG_0527.jpeg" alt="แบบฟอร์มต้นฉบับ">
 
-    <!-- วันที่เอกสารด้านบน -->
+    <!-- วันที่เอกสารด้านบน (จุดอ้างอิงหลักที่ตรงเป๊ะ) -->
     <span id="p-formDay" class="ov" style="left:54.0%; top:15.6%;"></span>
     <span id="p-formMonth" class="ov" style="left:63.5%; top:15.6%;"></span>
     <span id="p-formYear" class="ov" style="left:82.5%; top:15.6%;"></span>
 
-    <!-- คำนำหน้า (เครื่องหมายถูกลงล็อกช่องสี่เหลี่ยมพอดี) -->
-    <span id="p-cbNai" class="ov check" style="left:23.9%; top:22.5%;"></span>
-    <span id="p-cbNang" class="ov check" style="left:30.8%; top:22.5%;"></span>
-    <span id="p-cbNangsao" class="ov check" style="left:37.3%; top:22.5%;"></span>
+    <!-- คำนำหน้า (ปรับระยะให้ตรงแนวบรรทัดใหม่) -->
+    <span id="p-cbNai" class="ov check" style="left:23.9%; top:22.2%;"></span>
+    <span id="p-cbNang" class="ov check" style="left:30.8%; top:22.2%;"></span>
+    <span id="p-cbNangsao" class="ov check" style="left:37.3%; top:22.2%;"></span>
 
     <!-- ชื่อ / นามสกุล / อายุ -->
-    <span id="p-fname" class="ov" style="left:48.5%; top:22.5%;"></span>
-    <span id="p-lname" class="ov" style="left:68.5%; top:22.5%;"></span>
-    <span id="p-age" class="ov" style="left:89.5%; top:22.5%;"></span>
+    <span id="p-fname" class="ov" style="left:48.5%; top:22.2%;"></span>
+    <span id="p-lname" class="ov" style="left:68.5%; top:22.2%;"></span>
+    <span id="p-age" class="ov" style="left:89.5%; top:22.2%;"></span>
 
     <!-- สัญชาติ / ศาสนา / เลขบัตร -->
-    <span id="p-nation" class="ov" style="left:21.0%; top:24.7%;"></span>
-    <span id="p-religion" class="ov" style="left:35.0%; top:24.7%;"></span>
-    <span id="p-idcard" class="ov small" style="left:54.5%; top:24.7%;"></span>
+    <span id="p-nation" class="ov" style="left:21.0%; top:24.4%;"></span>
+    <span id="p-religion" class="ov" style="left:35.0%; top:24.4%;"></span>
+    <span id="p-idcard" class="ov small" style="left:54.5%; top:24.4%;"></span>
 
     <!-- โรค / กรุ๊ปเลือด / บ้านเลขที่ -->
-    <span id="p-disease" class="ov" style="left:26.5%; top:26.9%;"></span>
-    <span id="p-blood" class="ov" style="left:53.5%; top:26.9%;"></span>
-    <span id="p-houseNo" class="ov" style="left:77.5%; top:26.9%;"></span>
+    <span id="p-disease" class="ov" style="left:26.5%; top:26.6%;"></span>
+    <span id="p-blood" class="ov" style="left:53.5%; top:26.6%;"></span>
+    <span id="p-houseNo" class="ov" style="left:77.5%; top:26.6%;"></span>
 
     <!-- หมู่ / ซอย / ถนน / ตำบล -->
-    <span id="p-moo" class="ov" style="left:21.0%; top:29.1%;"></span>
-    <span id="p-soi" class="ov" style="left:30.0%; top:29.1%;"></span>
-    <span id="p-road" class="ov" style="left:51.5%; top:29.1%;"></span>
-    <span id="p-tambon" class="ov" style="left:74.5%; top:29.1%;"></span>
+    <span id="p-moo" class="ov" style="left:21.0%; top:28.8%;"></span>
+    <span id="p-soi" class="ov" style="left:30.0%; top:28.8%;"></span>
+    <span id="p-road" class="ov" style="left:51.5%; top:28.8%;"></span>
+    <span id="p-tambon" class="ov" style="left:74.5%; top:28.8%;"></span>
 
     <!-- อำเภอ / จังหวัด / โทรบ้าน -->
-    <span id="p-amphoe" class="ov" style="left:24.0%; top:31.3%;"></span>
-    <span id="p-province" class="ov" style="left:49.0%; top:31.3%;"></span>
-    <span id="p-homePhone" class="ov" style="left:77.0%; top:31.3%;"></span>
+    <span id="p-amphoe" class="ov" style="left:24.0%; top:31.0%;"></span>
+    <span id="p-province" class="ov" style="left:49.0%; top:31.0%;"></span>
+    <span id="p-homePhone" class="ov" style="left:77.0%; top:31.0%;"></span>
 
     <!-- มือถือ / E-mail -->
-    <span id="p-mobile" class="ov" style="left:21.0%; top:33.5%;"></span>
-    <span id="p-email" class="ov small" style="left:45.5%; top:33.5%;"></span>
+    <span id="p-mobile" class="ov" style="left:21.0%; top:33.2%;"></span>
+    <span id="p-email" class="ov small" style="left:45.5%; top:33.2%;"></span>
 
     <!-- บุคคลติดต่อเร่งด่วน -->
-    <span id="p-ecFname" class="ov" style="left:43.0%; top:35.7%;"></span>
-    <span id="p-ecLname" class="ov" style="left:63.5%; top:35.7%;"></span>
-    <span id="p-ecPhone" class="ov" style="left:81.5%; top:35.7%;"></span>
+    <span id="p-ecFname" class="ov" style="left:43.0%; top:35.4%;"></span>
+    <span id="p-ecLname" class="ov" style="left:63.5%; top:35.4%;"></span>
+    <span id="p-ecPhone" class="ov" style="left:81.5%; top:35.4%;"></span>
 
     <!-- จำนวนวัน -->
-    <span id="p-days" class="ov" style="left:61.5%; top:42.2%;"></span>
+    <span id="p-days" class="ov" style="left:61.5%; top:41.8%;"></span>
 
     <!-- วันที่เริ่มต้น -->
-    <span id="p-startDay" class="ov" style="left:22.0%; top:44.4%;"></span>
-    <span id="p-startMonth" class="ov small" style="left:33.0%; top:44.4%;"></span>
-    <span id="p-startYear" class="ov small" style="left:45.5%; top:44.4%;"></span>
+    <span id="p-startDay" class="ov" style="left:22.0%; top:44.0%;"></span>
+    <span id="p-startMonth" class="ov small" style="left:33.0%; top:44.0%;"></span>
+    <span id="p-startYear" class="ov small" style="left:45.5%; top:44.0%;"></span>
 
     <!-- วันที่สิ้นสุด -->
-    <span id="p-endDay" class="ov" style="left:60.5%; top:44.4%;"></span>
-    <span id="p-endMonth" class="ov small" style="left:71.5%; top:44.4%;"></span>
-    <span id="p-endYear" class="ov" style="left:83.5%; top:44.4%;"></span>
+    <span id="p-endDay" class="ov" style="left:60.5%; top:44.0%;"></span>
+    <span id="p-endMonth" class="ov small" style="left:71.5%; top:44.0%;"></span>
+    <span id="p-endYear" class="ov" style="left:83.5%; top:44.0%;"></span>
 
     <!-- ประกันภัย -->
-    <span id="p-cbIns1" class="ov check" style="left:23.2%; top:65.2%;"></span>
-    <span id="p-insCo" class="ov" style="left:47.5%; top:65.2%;"></span>
-    <span id="p-insPhone" class="ov" style="left:78.5%; top:65.2%;"></span>
-    <span id="p-cbIns2" class="ov check" style="left:23.2%; top:67.4%;"></span>
+    <span id="p-cbIns1" class="ov check" style="left:23.2%; top:64.8%;"></span>
+    <span id="p-insCo" class="ov" style="left:47.5%; top:64.8%;"></span>
+    <span id="p-insPhone" class="ov" style="left:78.5%; top:64.8%;"></span>
+    <span id="p-cbIns2" class="ov check" style="left:23.2%; top:67.0%;"></span>
 
     <!-- ลายเซ็น -->
-    <span id="p-signName1" class="ov signature" style="left:57.0%; top:70.8%;"></span>
-    <span id="p-signName2" class="ov" style="left:55.0%; top:72.7%;"></span>
+    <span id="p-signName1" class="ov signature" style="left:57.0%; top:70.4%;"></span>
+    <span id="p-signName2" class="ov" style="left:55.0%; top:72.3%;"></span>
   </div>
 </div>
 
