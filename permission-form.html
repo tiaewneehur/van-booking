@@ -160,30 +160,31 @@ body {
 #pdfWrap.capturing { display: flex; justify-content: center; align-items: flex-start; padding: 20px 0; }
 #pdfPage {
   width: 794px;
-  padding: 42px 55px 36px;
+  flex-shrink: 0;
+  padding: 14px 42px 10px;
   background: #ffffff;
   color: #111;
   /* ใช้ 'TH Sarabun New' ก่อนถ้าเครื่องผู้ใช้มีติดตั้งอยู่ (ฟอนต์ราชการไทยมาตรฐาน)
      ถ้าไม่มีค่อย fallback ไปที่ 'Sarabun' ของ Google Fonts */
   font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', sans-serif;
-  font-size: 15px;
-  line-height: 1.38;
+  font-size: 21px;   /* = 16pt ที่ 96dpi บนแคนวาสกว้าง 794px (A4) */
+  line-height: 1.04;
 }
-#pdfPage .doc-title { text-align: center; font-size: 17px; font-weight: 700; margin-bottom: 1px; }
-#pdfPage .doc-sub { text-align: center; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-#pdfPage .doc-date { text-align: right; margin-bottom: 6px; }
+#pdfPage .doc-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 1px; } /* = 18pt */
+#pdfPage .doc-sub { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 4px; }   /* = 18pt */
+#pdfPage .doc-date { text-align: right; margin-bottom: 4px; }
 #pdfPage .doc-line { margin-bottom: 0; }
-#pdfPage .doc-indent { text-indent: 28px; }
+#pdfPage .doc-indent { text-indent: 38px; }
 #pdfPage .blank {
   display: inline-block; border-bottom: 1px dotted #333;
-  padding: 0 2px 0px; min-width: 30px; font-weight: 600;
+  padding: 0 2px 0px; min-width: 34px; font-weight: 600;
 }
 #pdfPage .cb { font-family: inherit; margin-right: 3px; }
-#pdfPage .sign-block { margin-top: 12px; text-align: center; }
-#pdfPage .sign-block .line { margin-bottom: 1px; }
-#pdfPage .staff-hd { font-weight: 700; text-decoration: underline; margin: 10px 0 4px; }
-#pdfPage .divider { border-top: 1px dashed #999; margin: 10px 0 8px; }
-#pdfPage .staff-row { display: flex; justify-content: space-between; margin-top: 14px; font-size: 14px; }
+#pdfPage .sign-block { margin-top: 6px; text-align: center; }
+#pdfPage .sign-block .line { margin-bottom: 0; }
+#pdfPage .staff-hd { font-weight: 700; text-decoration: underline; margin: 6px 0 2px; }
+#pdfPage .divider { border-top: 1px dashed #999; margin: 6px 0 4px; }
+#pdfPage .staff-row { display: flex; justify-content: space-between; margin-top: 8px; }
 #pdfPage .staff-row .col { width: 48%; text-align: center; }
 </style>
 </head>
@@ -367,7 +368,7 @@ body {
   <div id="pdfPage">
     <div class="doc-title">แบบคำขออนุญาตเข้าศึกษา กิจกรรมเส้นทางเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก</div>
     <div class="doc-sub">ประจำปีงบประมาณ พ.ศ. ๒๕๖๙</div>
-    <div style="text-align:center;font-size:10.5px;color:#888;margin-bottom:10px">จัดทำแบบฟอร์มโดยเพจ เที่ยวนี่เหอะ</div>
+    <div style="text-align:center;font-size:10px;color:#888;margin-bottom:5px">จัดทำแบบฟอร์มโดยเพจ เที่ยวนี่เหอะ</div>
 
     <div class="doc-date">
       วันที่ <span id="p-formDay" class="blank"></span>
@@ -376,7 +377,7 @@ body {
     </div>
 
     <div class="doc-line">เรื่อง&nbsp;&nbsp;&nbsp;ขออนุญาตเข้าศึกษาธรรมชาติระยะไกลเขาช้างเผือก</div>
-    <div class="doc-line" style="margin-bottom:10px">เรียน&nbsp;&nbsp;&nbsp;หัวหน้าอุทยานแห่งชาติทองผาภูมิ</div>
+    <div class="doc-line" style="margin-bottom:5px">เรียน&nbsp;&nbsp;&nbsp;หัวหน้าอุทยานแห่งชาติทองผาภูมิ</div>
 
     <div class="doc-line doc-indent">
       ข้าพเจ้า <span id="p-titleFname" class="blank"></span>
@@ -402,7 +403,7 @@ body {
     <div class="doc-line">
       (มือถือ) <span id="p-mobile" class="blank"></span> E-mail <span id="p-email" class="blank"></span>
     </div>
-    <div class="doc-line" style="margin-bottom:10px">
+    <div class="doc-line" style="margin-bottom:5px">
       บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน ชื่อ <span id="p-ecFname" class="blank"></span>
       นามสกุล <span id="p-ecLname" class="blank"></span> โทรศัพท์ <span id="p-ecPhone" class="blank"></span>
     </div>
@@ -411,7 +412,7 @@ body {
       โดยข้าพเจ้า มีความประสงค์ขออนุญาตเข้าศึกษาธรรมชาติระยะไกล เขาช้างเผือก พื้นที่อุทยานแห่งชาติทองผาภูมิ จังหวัดกาญจนบุรี ดังนี้
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
+    <div class="doc-line doc-indent" style="margin-top:0">
       ๑. ขออนุญาตเข้าพื้นที่เพื่อศึกษาธรรมชาติฯ มีกำหนด <span id="p-days" class="blank"></span> วัน
       ตั้งแต่วันที่ <span id="p-startDay" class="blank"></span>
       เดือน <span id="p-startMonth" class="blank"></span>
@@ -421,22 +422,22 @@ body {
       พ.ศ. <span id="p-endYear" class="blank"></span>
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
+    <div class="doc-line doc-indent" style="margin-top:0">
       ๒. ได้ศึกษากิจกรรมการเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก และรับทราบเป็นอย่างดีแล้ว
       และขอรับรองว่าข้าพเจ้ามีสภาพร่างกายที่แข็งแรง ไม่เป็นโรคต้องห้ามตามกฏหมายหรือโรคที่เป็นอันตรายต่อการเดินศึกษาธรรมชาติ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
+    <div class="doc-line doc-indent" style="margin-top:0">
       ๓. ปฏิบัติตามกฎหมาย ระเบียบและข้อบังคับ ตามพระราชบัญญัติอุทยานแห่งชาติ พ.ศ.๒๕๖๒
       และคำสั่งของพนักงานเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ ที่ได้กำหนดไว้อย่างเคร่งครัดต่อไป
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
+    <div class="doc-line doc-indent" style="margin-top:0">
       ๔. ในการเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้ หากได้รับอันตรายหรืออุบัติเหตุ
       ข้าพเจ้าจะไม่ขอดำเนินคดี หรือฟ้องร้องเพื่อเรียกร้องค่าเสียหายจากเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ หรือหน่วยงานของรัฐ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
+    <div class="doc-line doc-indent" style="margin-top:0">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
     <div class="doc-line" style="margin-left:34px"><span id="p-cbYes" class="cb"></span>ทำประกันภัยอุบัติเหตุ กับบริษัท <span id="p-insCo" class="blank"></span> เบอร์โทร <span id="p-insPhone" class="blank"></span></div>
     <div class="doc-line" style="margin-left:34px"><span id="p-cbNo" class="cb"></span>ไม่ได้ทำประกันภัยอุบัติเหตุ</div>
 
