@@ -5,361 +5,508 @@
 <meta charset="utf-8" />
 <title>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ เขาช้างเผือก</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
+/* ============================================================
+   RESET & THEME
+   ============================================================ */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg-app: #eef2ef;
-  --panel-bg: #ffffff;
-  --text-main: #1f2b23;
+  --paper: #fbf9f3;
+  --ink: #1f2b23;
+  --sub: #5b6b60;
+  --muted: #93a196;
   --accent: #2f6f4f;
+  --accent-dk: #1f4d36;
+  --accent-lt: #e6efe8;
   --border: #dcd6c4;
+  --card: #ffffff;
+  --red: #b3431e;
 }
 
 body {
   font-family: 'Sarabun', sans-serif;
-  background: var(--bg-app);
-  color: var(--text-main);
+  background: var(--paper);
+  color: var(--ink);
   min-height: 100vh;
-  padding: 20px 10px 110px;
+  padding-bottom: 110px;
 }
 
-.app-container {
-  max-width: 620px;
-  margin: 0 auto;
+/* ============================================================
+   HEADER
+   ============================================================ */
+.hdr {
+  background: linear-gradient(160deg, var(--accent-dk), var(--accent));
+  color: #fff;
+  padding: 28px 20px 26px;
+  text-align: center;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 10px 30px rgba(31, 77, 54, .25);
 }
+.hdr .ico { font-size: 34px; margin-bottom: 8px; }
+.hdr .logo {
+  width: 64px; height: 64px; border-radius: 50%;
+  object-fit: cover; margin: 0 auto 10px;
+  border: 3px solid rgba(255,255,255,.75);
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  display: block;
+}
+.hdr h1 { font-size: 19px; font-weight: 700; line-height: 1.4; }
+.hdr p { font-size: 12.5px; opacity: .85; margin-top: 6px; }
 
-.form-panel {
-  background: var(--panel-bg);
-  border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+.main { max-width: 560px; margin: 0 auto; padding: 20px 16px 0; }
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+.sec {
+  background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(31, 43, 35, .04);
 }
-.form-panel h3 {
-  font-size: 15px;
-  color: var(--accent);
-  margin-bottom: 10px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.sec-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.sec-num {
+  width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0;
+  background: var(--accent-lt); color: var(--accent-dk);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px;
 }
+.sec-hd h2 { font-size: 15.5px; font-weight: 700; color: var(--ink); }
+.sec-hd p { font-size: 11px; color: var(--sub); margin-top: 1px; }
 
-.row { display: flex; gap: 8px; flex-wrap: wrap; }
-.fld { margin-bottom: 8px; flex: 1; min-width: 110px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.fld { margin-bottom: 13px; flex: 1; min-width: 120px; }
 .fld.full { flex-basis: 100%; }
-.fld label { display: block; font-size: 12px; color: #555; font-weight: 600; margin-bottom: 3px; }
+.fld label { display: block; font-size: 12.5px; color: var(--sub); font-weight: 600; margin-bottom: 6px; }
+.fld label .req { color: var(--red); }
 .fld input, .fld select {
-  width: 100%; height: 40px; border: 1px solid #ccc;
-  border-radius: 8px; padding: 0 10px; font-size: 14px;
-  font-family: inherit; outline: none; background: #fff;
+  width: 100%;
+  height: 46px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 0 13px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+  background: #fff;
+  transition: .15s;
 }
-.fld input:focus, .fld select:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(47,111,79,0.15); }
+.fld input:focus, .fld select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47,111,79,.12); }
+.fld input::placeholder { color: var(--muted); }
+.hint { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
 
-.chip-group { display: flex; gap: 6px; flex-wrap: wrap; }
+/* คำนำหน้า/ตัวเลือก radio แบบชิป */
+.chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip-opt { position: relative; }
 .chip-opt input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
 .chip-opt span {
   display: flex; align-items: center; justify-content: center;
-  height: 36px; padding: 0 14px; border: 1px solid #ccc;
-  border-radius: 99px; font-size: 13px; color: #555; font-weight: 600;
+  height: 42px; padding: 0 16px;
+  border: 1.5px solid var(--border); border-radius: 999px;
+  font-size: 13.5px; color: var(--sub); font-weight: 600;
+  transition: .15s;
 }
 .chip-opt input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-.ins-box { margin-top: 6px; padding: 10px; background: #f4f8f5; border-radius: 8px; display: none; }
+.ins-box { margin-top: 4px; padding: 14px; background: var(--accent-lt); border-radius: 12px; display: none; }
 .ins-box.show { display: block; }
-.date-row { display: grid; grid-template-columns: 65px 1.4fr 85px; gap: 6px; }
 
+.date-row { display: grid; grid-template-columns: 70px 1.4fr 90px; gap: 8px; }
+
+/* ============================================================
+   STICKY SUBMIT BAR
+   ============================================================ */
 .sticky-bar {
   position: fixed; bottom: 0; left: 0; width: 100%;
-  background: rgba(238, 242, 239, 0.92); backdrop-filter: blur(10px);
-  border-top: 1px solid #ddd; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0));
+  background: rgba(251, 249, 243, .92);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0));
   display: flex; justify-content: center; z-index: 50;
 }
 .btn-submit {
-  width: 100%; max-width: 520px; height: 48px; border: none; border-radius: 12px;
-  background: #ccc; color: #666; font-size: 15px; font-weight: 700;
-  font-family: inherit; cursor: not-allowed; transition: 0.2s;
+  width: 100%; max-width: 528px; height: 52px;
+  border: none; border-radius: 14px;
+  background: #cbd5c9; color: #6b7a70;
+  font-size: 15px; font-weight: 700; font-family: inherit;
+  cursor: not-allowed; transition: .2s;
 }
 .btn-submit.ready {
-  background: var(--accent);
-  color: #fff; cursor: pointer; box-shadow: 0 6px 20px rgba(47,111,79,0.3);
+  background: linear-gradient(135deg, var(--accent-dk), var(--accent));
+  color: #fff; cursor: pointer;
+  box-shadow: 0 8px 22px rgba(47, 111, 79, .32);
 }
 
 /* ============================================================
-   A4 PREVIEW CANVAS (จำลองหน้ากระดาษ A4 เสมือนจริง)
+   RESULT VIEW — แสดงเอกสารที่กรอกแล้วเต็มจอ ให้กดแคปหน้าจอเก็บไว้เอง
+   (แสดงผลด้วยฟอนต์จริงในเครื่องผู้ใช้ ไม่ผ่านการแปลงเป็นรูป/PDF อีกต่อไป)
    ============================================================ */
-.preview-container {
-  display: flex;
-  justify-content: center;
-  overflow-x: auto;
-  margin-bottom: 20px;
-  padding: 10px 0;
+#resultWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #e8e8e8;
+  display: none;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
-
-#a4Page {
-  width: 794px;
-  min-height: 1123px;
-  background: #ffffff;
-  color: #000000;
-  font-family: 'TH Sarabun New', 'THSarabunNew', 'Sarabun', sans-serif;
-  font-size: 20px;
-  line-height: 1.15;
-  padding: 45px 55px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  position: relative;
+#resultWrap.show { display: block; }
+.result-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--accent-dk);
+  color: #fff;
+}
+.result-bar .back-btn {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
   flex-shrink: 0;
 }
-
-#a4Page .doc-title { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 2px; }
-#a4Page .doc-sub { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 14px; }
-#a4Page .doc-date { text-align: right; margin-bottom: 8px; }
-#a4Page .doc-line { margin-bottom: 3px; }
-#a4Page .doc-indent { text-indent: 40px; }
-#a4Page .blank {
-  display: inline-block; border-bottom: 1px dotted #333;
-  padding: 0 2px; min-width: 60px; font-weight: 600; text-align: center;
+.result-hint {
+  font-size: 12px;
+  text-align: right;
+  line-height: 1.4;
+  opacity: .95;
 }
-#a4Page .blank-short { min-width: 35px; }
-#a4Page .cb { font-family: inherit; margin-right: 2px; }
-#a4Page .sign-block { margin-top: 14px; text-align: center; }
-#a4Page .staff-hd { font-weight: 700; text-decoration: underline; margin: 12px 0 4px; font-size: 21px; }
-#a4Page .staff-row { display: flex; justify-content: space-between; margin-top: 12px; }
-#a4Page .staff-row .col { width: 48%; text-align: center; }
+
+#pdfPage {
+  max-width: 650px;
+  margin: 18px auto 40px;
+  padding: 24px 24px 18px;
+  background: #ffffff;
+  color: #111;
+  box-shadow: 0 6px 24px rgba(0,0,0,.18);
+  border-radius: 4px;
+  /* ใช้ 'TH Sarabun PSK' ก่อน (ฟอนต์จริงในไฟล์เวิร์ดต้นฉบับ) ถ้าเครื่องผู้ใช้มีติดตั้งอยู่
+     ถ้าไม่มีค่อย fallback ไปตามลำดับ */
+  font-family: 'TH Sarabun PSK', 'THSarabunPSK', 'TH Sarabun New', 'THSarabunNew', 'Sarabun', sans-serif;
+  font-size: 18px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+#pdfPage .doc-title { text-align: center; font-size: 21px; font-weight: 700; margin-bottom: 2px; }
+#pdfPage .doc-sub { text-align: center; font-size: 21px; font-weight: 700; margin-bottom: 6px; }
+#pdfPage .doc-date { text-align: right; margin-bottom: 6px; }
+#pdfPage .doc-line { margin-bottom: 2px; }
+#pdfPage .doc-indent { text-indent: 34px; }
+#pdfPage .blank {
+  display: inline-block; border-bottom: 1px dotted #333;
+  padding: 0 2px 0px; min-width: 34px; font-weight: 600;
+}
+#pdfPage .cb { font-family: inherit; margin-right: 3px; }
+#pdfPage .sign-block { margin-top: 12px; text-align: center; }
+#pdfPage .sign-block .line { margin-bottom: 2px; }
+#pdfPage .staff-hd { font-weight: 700; text-decoration: underline; margin: 12px 0 4px; }
+#pdfPage .divider { border-top: 1px dashed #999; margin: 12px 0 8px; }
+#pdfPage .staff-row { display: flex; justify-content: space-between; margin-top: 14px; }
+#pdfPage .staff-row .col { width: 48%; text-align: center; overflow-wrap: anywhere; }
 </style>
 </head>
 <body>
 
-<div class="app-container">
-  <!-- ส่วนฟอร์มกรอกข้อมูล -->
-  <div class="form-panel">
-    <h3>📅 วันที่กรอกแบบฟอร์ม</h3>
-    <div class="date-row">
-      <div class="fld"><label>วัน *</label><input id="f-formDay" type="number" min="1" max="31" placeholder="4" oninput="updatePreview()"></div>
-      <div class="fld"><label>เดือน *</label><select id="f-formMonth" onchange="updatePreview()"><option value="">เลือกเดือน</option></select></div>
-      <div class="fld"><label>พ.ศ. *</label><input id="f-formYear" type="number" value="2569" oninput="updatePreview()"></div>
-    </div>
-  </div>
-
-  <div class="form-panel">
-    <h3>1. ข้อมูลผู้ขออนุญาต</h3>
-    <div class="fld full">
-      <label>คำนำหน้า *</label>
-      <div class="chip-group">
-        <label class="chip-opt"><input type="radio" name="title" value="นาย" onchange="updatePreview()"><span>นาย</span></label>
-        <label class="chip-opt"><input type="radio" name="title" value="นาง" onchange="updatePreview()"><span>นาง</span></label>
-        <label class="chip-opt"><input type="radio" name="title" value="นางสาว" onchange="updatePreview()"><span>นางสาว</span></label>
-      </div>
-    </div>
-    <div class="row">
-      <div class="fld"><label>ชื่อ *</label><input id="f-fname" placeholder="ชื่อจริง" oninput="updatePreview()"></div>
-      <div class="fld"><label>นามสกุล *</label><input id="f-lname" placeholder="นามสกุล" oninput="updatePreview()"></div>
-      <div class="fld" style="max-width:85px"><label>อายุ *</label><input id="f-age" type="number" placeholder="ปี" oninput="updatePreview()"></div>
-    </div>
-    <div class="row">
-      <div class="fld"><label>สัญชาติ *</label><input id="f-nation" value="ไทย" oninput="updatePreview()"></div>
-      <div class="fld"><label>ศาสนา</label><input id="f-religion" value="พุทธ" oninput="updatePreview()"></div>
-    </div>
-    <div class="fld full">
-      <label>เลขประจำตัวประชาชน (13 หลัก) *</label>
-      <input id="f-idcard" inputmode="numeric" maxlength="13" placeholder="1234567890123" oninput="this.value=this.value.replace(/\D/g,'').slice(0,13); updatePreview()">
-    </div>
-    <div class="row">
-      <div class="fld"><label>โรคประจำตัว</label><input id="f-disease" value="ไม่มี" oninput="updatePreview()"></div>
-      <div class="fld" style="max-width:100px"><label>กรุ๊ปเลือด</label><input id="f-blood" placeholder="O" oninput="updatePreview()"></div>
-    </div>
-  </div>
-
-  <div class="form-panel">
-    <h3>2. ที่อยู่ตามภูมิลำเนา</h3>
-    <div class="row">
-      <div class="fld"><label>บ้านเลขที่ *</label><input id="f-houseNo" oninput="updatePreview()"></div>
-      <div class="fld" style="max-width:85px"><label>หมู่ที่</label><input id="f-moo" oninput="updatePreview()"></div>
-    </div>
-    <div class="row">
-      <div class="fld"><label>ซอย</label><input id="f-soi" oninput="updatePreview()"></div>
-      <div class="fld"><label>ถนน</label><input id="f-road" oninput="updatePreview()"></div>
-    </div>
-    <div class="row">
-      <div class="fld"><label>แขวง/ตำบล *</label><input id="f-tambon" oninput="updatePreview()"></div>
-      <div class="fld"><label>เขต/อำเภอ *</label><input id="f-amphoe" oninput="updatePreview()"></div>
-    </div>
-    <div class="fld full"><label>จังหวัด *</label><input id="f-province" oninput="updatePreview()"></div>
-  </div>
-
-  <div class="form-panel">
-    <h3>3. ช่องทางติดต่อและบุคคลติดต่อฉุกเฉิน</h3>
-    <div class="row">
-      <div class="fld"><label>โทรศัพท์ (บ้าน)</label><input id="f-homePhone" inputmode="numeric" oninput="updatePreview()"></div>
-      <div class="fld"><label>มือถือ *</label><input id="f-mobile" inputmode="numeric" placeholder="08xxxxxxxx" oninput="updatePreview()"></div>
-    </div>
-    <div class="fld full"><label>E-mail</label><input id="f-email" type="email" oninput="updatePreview()"></div>
-    <div class="fld full" style="margin-top:4px;font-size:12px;color:#555;font-weight:600">บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน *</div>
-    <div class="row">
-      <div class="fld"><label>ชื่อ</label><input id="f-ecFname" oninput="updatePreview()"></div>
-      <div class="fld"><label>นามสกุล</label><input id="f-ecLname" oninput="updatePreview()"></div>
-    </div>
-    <div class="fld full"><label>โทรศัพท์</label><input id="f-ecPhone" inputmode="numeric" oninput="updatePreview()"></div>
-  </div>
-
-  <div class="form-panel">
-    <h3>4. รายละเอียดการขอเข้าพื้นที่</h3>
-    <div class="fld full" style="max-width:120px"><label>จำนวนวัน *</label><input id="f-days" type="number" min="1" placeholder="2" oninput="updatePreview()"></div>
-    <div class="fld full"><label>ตั้งแต่วันที่ *</label></div>
-    <div class="date-row" style="margin-bottom:8px">
-      <input id="f-startDay" type="number" min="1" max="31" placeholder="วัน" oninput="updatePreview()">
-      <select id="f-startMonth" onchange="updatePreview()"><option value="">เลือกเดือน</option></select>
-      <input id="f-startYear" type="number" placeholder="พ.ศ." oninput="updatePreview()">
-    </div>
-    <div class="fld full"><label>ถึงวันที่ *</label></div>
-    <div class="date-row">
-      <input id="f-endDay" type="number" min="1" max="31" placeholder="วัน" oninput="updatePreview()">
-      <select id="f-endMonth" onchange="updatePreview()"><option value="">เลือกเดือน</option></select>
-      <input id="f-endYear" type="number" placeholder="พ.ศ." oninput="updatePreview()">
-    </div>
-  </div>
-
-  <div class="form-panel">
-    <h3>5. การทำประกันภัยอุบัติเหตุ</h3>
-    <div class="fld full">
-      <div class="chip-group">
-        <label class="chip-opt"><input type="radio" name="insurance" value="yes" onchange="toggleInsurance(); updatePreview()"><span>✅ ทำประกันภัย</span></label>
-        <label class="chip-opt"><input type="radio" name="insurance" value="no" onchange="toggleInsurance(); updatePreview()"><span>ไม่ได้ทำประกัน</span></label>
-      </div>
-    </div>
-    <div id="insBox" class="ins-box">
-      <div class="row" style="margin-bottom:0">
-        <div class="fld"><label>บริษัทประกัน *</label><input id="f-insCo" oninput="updatePreview()"></div>
-        <div class="fld"><label>เบอร์โทร</label><input id="f-insPhone" inputmode="numeric" oninput="updatePreview()"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-panel">
-    <h3>✍️ ชื่อผู้ลงนาม</h3>
-    <div class="fld full"><input id="f-signName" placeholder="ระบบดึงชื่อให้อัตโนมัติ" oninput="document.getElementById('f-signName').dataset.touched='1'; updatePreview()"></div>
-  </div>
+<div class="hdr">
+  <img class="logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/64?text=🏕'" alt="โลโก้เที่ยวนี่เหอะ">
+  <h1>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ<br>เส้นทางเดินป่าเขาช้างเผือก</h1>
+  <p>อุทยานแห่งชาติทองผาภูมิ · ประจำปีงบประมาณ พ.ศ. 2569</p>
+  <p style="margin-top:2px;opacity:.7">จัดทำโดยเพจ เที่ยวนี่เหอะ 🏕️</p>
 </div>
 
-<!-- ส่วนแสดงผลจำลองหน้า A4 แบบเรียลไทม์ -->
-<div class="preview-container">
-  <div id="a4Page">
+<div class="main">
+
+  <!-- วันที่กรอกแบบฟอร์ม -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">📅</div>
+      <div><h2>วันที่กรอกแบบฟอร์มนี้</h2><p>วันที่ที่คุณกำลังกรอกฟอร์มอยู่ตอนนี้</p></div>
+    </div>
+    <div class="date-row">
+      <div class="fld"><label>วัน <span class="req">*</span></label><input id="f-formDay" type="number" min="1" max="31" placeholder="14" oninput="checkForm()"></div>
+      <div class="fld"><label>เดือน <span class="req">*</span></label>
+        <select id="f-formMonth" onchange="checkForm()">
+          <option value="">เลือกเดือน</option>
+        </select>
+      </div>
+      <div class="fld"><label>พ.ศ. <span class="req">*</span></label><input id="f-formYear" type="number" placeholder="2569" oninput="checkForm()"></div>
+    </div>
+  </div>
+
+  <!-- ข้อมูลผู้ขออนุญาต -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">1</div>
+      <div><h2>ข้อมูลผู้ขออนุญาต</h2><p>ข้อมูลส่วนตัวตามบัตรประชาชน</p></div>
+    </div>
+
+    <div class="fld full">
+      <label>คำนำหน้า <span class="req">*</span></label>
+      <div class="chip-group">
+        <label class="chip-opt"><input type="radio" name="title" value="นาย" onchange="checkForm()"><span>นาย</span></label>
+        <label class="chip-opt"><input type="radio" name="title" value="นาง" onchange="checkForm()"><span>นาง</span></label>
+        <label class="chip-opt"><input type="radio" name="title" value="นางสาว" onchange="checkForm()"><span>นางสาว</span></label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>ชื่อ <span class="req">*</span></label><input id="f-fname" placeholder="ชื่อจริง" oninput="checkForm()"></div>
+      <div class="fld"><label>นามสกุล <span class="req">*</span></label><input id="f-lname" placeholder="นามสกุล" oninput="checkForm()"></div>
+      <div class="fld" style="max-width:100px"><label>อายุ <span class="req">*</span></label><input id="f-age" type="number" placeholder="ปี" oninput="checkForm()"></div>
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>สัญชาติ <span class="req">*</span></label><input id="f-nation" placeholder="ไทย" oninput="checkForm()"></div>
+      <div class="fld"><label>ศาสนา</label><input id="f-religion" placeholder="พุทธ"></div>
+    </div>
+
+    <div class="fld full">
+      <label>เลขประจำตัวประชาชน (13 หลัก) <span class="req">*</span></label>
+      <input id="f-idcard" inputmode="numeric" maxlength="13" placeholder="1234567890123" oninput="this.value=this.value.replace(/\D/g,'').slice(0,13); checkForm()">
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>โรคประจำตัว</label><input id="f-disease" placeholder="ไม่มี" value="ไม่มี"></div>
+      <div class="fld" style="max-width:120px"><label>กรุ๊ปเลือด</label><input id="f-blood" placeholder="เช่น O, A, B, AB"></div>
+    </div>
+  </div>
+
+  <!-- ที่อยู่ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">2</div>
+      <div><h2>ที่อยู่ตามภูมิลำเนา</h2><p>ที่อยู่ปัจจุบันตามบัตรประชาชน</p></div>
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>บ้านเลขที่ <span class="req">*</span></label><input id="f-houseNo" oninput="checkForm()"></div>
+      <div class="fld" style="max-width:100px"><label>หมู่ที่</label><input id="f-moo"></div>
+    </div>
+    <div class="row">
+      <div class="fld"><label>ซอย</label><input id="f-soi"></div>
+      <div class="fld"><label>ถนน</label><input id="f-road"></div>
+    </div>
+    <div class="row">
+      <div class="fld"><label>แขวง/ตำบล <span class="req">*</span></label><input id="f-tambon" oninput="checkForm()"></div>
+      <div class="fld"><label>เขต/อำเภอ <span class="req">*</span></label><input id="f-amphoe" oninput="checkForm()"></div>
+    </div>
+    <div class="fld full"><label>จังหวัด <span class="req">*</span></label><input id="f-province" oninput="checkForm()"></div>
+  </div>
+
+  <!-- ช่องทางติดต่อ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">3</div>
+      <div><h2>ช่องทางติดต่อ</h2><p>ไว้ใช้ติดต่อกรณีฉุกเฉินระหว่างทริป</p></div>
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>โทรศัพท์ (บ้าน)</label><input id="f-homePhone" inputmode="numeric" placeholder="ถ้ามี"></div>
+      <div class="fld"><label>มือถือ <span class="req">*</span></label><input id="f-mobile" inputmode="numeric" placeholder="08xxxxxxxx" oninput="checkForm()"></div>
+    </div>
+    <div class="fld full"><label>E-mail</label><input id="f-email" type="email" placeholder="you@email.com"></div>
+
+    <div class="fld full" style="margin-top:6px;font-size:12.5px;color:var(--sub);font-weight:600">บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน <span class="req">*</span></div>
+    <div class="row">
+      <div class="fld"><label>ชื่อ</label><input id="f-ecFname" oninput="checkForm()"></div>
+      <div class="fld"><label>นามสกุล</label><input id="f-ecLname" oninput="checkForm()"></div>
+    </div>
+    <div class="fld full"><label>โทรศัพท์</label><input id="f-ecPhone" inputmode="numeric" oninput="checkForm()"></div>
+  </div>
+
+  <!-- รายละเอียดการขอเข้าพื้นที่ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">4</div>
+      <div><h2>รายละเอียดการขอเข้าพื้นที่</h2><p>ช่วงวันที่จะเดินป่าศึกษาธรรมชาติ</p></div>
+    </div>
+
+    <div class="fld full" style="max-width:140px"><label>จำนวนวัน <span class="req">*</span></label><input id="f-days" type="number" min="1" placeholder="เช่น 2" oninput="checkForm()"></div>
+
+    <div class="fld full"><label>ตั้งแต่วันที่ <span class="req">*</span></label></div>
+    <div class="date-row" style="margin-bottom:13px">
+      <input id="f-startDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+      <select id="f-startMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
+      <input id="f-startYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
+    </div>
+
+    <div class="fld full"><label>ถึงวันที่ <span class="req">*</span></label></div>
+    <div class="date-row">
+      <input id="f-endDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+      <select id="f-endMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
+      <input id="f-endYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
+    </div>
+  </div>
+
+  <!-- ประกันภัย -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">5</div>
+      <div><h2>การทำประกันภัยอุบัติเหตุ</h2><p>สำหรับการเข้าศึกษาธรรมชาติครั้งนี้</p></div>
+    </div>
+
+    <div class="fld full">
+      <div class="chip-group">
+        <label class="chip-opt"><input type="radio" name="insurance" value="yes" onchange="toggleInsurance(); checkForm()"><span>✅ ทำประกันภัยอุบัติเหตุ</span></label>
+        <label class="chip-opt"><input type="radio" name="insurance" value="no" onchange="toggleInsurance(); checkForm()"><span>ไม่ได้ทำประกันภัย</span></label>
+      </div>
+    </div>
+
+    <div id="insBox" class="ins-box">
+      <div class="row" style="margin-bottom:0">
+        <div class="fld"><label>บริษัทประกัน <span class="req">*</span></label><input id="f-insCo" oninput="checkForm()"></div>
+        <div class="fld"><label>เบอร์โทรบริษัท</label><input id="f-insPhone" inputmode="numeric"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ลงชื่อ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">✍️</div>
+      <div><h2>ชื่อผู้ลงนาม</h2><p>ชื่อ-นามสกุลที่จะพิมพ์กำกับใต้ลายเซ็นในเอกสาร</p></div>
+    </div>
+    <div class="fld full">
+      <input id="f-signName" placeholder="จะเติมให้อัตโนมัติจากชื่อ-นามสกุลด้านบน">
+      <p class="hint">พิมพ์ชื่อเองก่อนแคปหน้าจอ แล้วเซ็นด้วยลายมือทับตอนพิมพ์ออกมาก็ได้ครับ</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="sticky-bar">
+  <button id="submitBtn" class="btn-submit" disabled onclick="showResult()">📄 กรอกข้อมูลให้ครบก่อนนะครับ</button>
+</div>
+
+<!-- ============================================================
+     RESULT VIEW — เอกสารที่กรอกแล้ว แสดงเต็มจอให้กดแคปหน้าจอเก็บไว้เอง
+     ============================================================ -->
+<div id="resultWrap">
+  <div class="result-bar">
+    <button class="back-btn" onclick="closeResult()">‹ กลับไปแก้ไข</button>
+    <div class="result-hint">📸 แคปหน้าจอเก็บไว้ได้เลยครับ<br>(เลื่อนดูให้ครบก่อนแคปนะครับ)</div>
+  </div>
+  <div id="pdfPage"></div>
+</div>
+
+<template id="pdfPageTemplate">
     <div class="doc-title">แบบคำขออนุญาตเข้าศึกษา กิจกรรมเส้นทางเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก</div>
     <div class="doc-sub">ประจำปีงบประมาณ พ.ศ. ๒๕๖๙</div>
+    <div style="text-align:center;font-size:10px;color:#888;margin-bottom:5px">จัดทำแบบฟอร์มโดยเพจ เที่ยวนี่เหอะ</div>
 
     <div class="doc-date">
-      วันที่ <span id="p-formDay" class="blank blank-short"></span>
+      วันที่ <span id="p-formDay" class="blank"></span>
       เดือน <span id="p-formMonth" class="blank"></span>
-      พ.ศ. <span id="p-formYear" class="blank blank-short"></span>
+      พ.ศ. <span id="p-formYear" class="blank"></span>
     </div>
 
     <div class="doc-line">เรื่อง&nbsp;&nbsp;&nbsp;ขออนุญาตเข้าศึกษาธรรมชาติระยะไกลเขาช้างเผือก</div>
-    <div class="doc-line" style="margin-bottom:8px">เรียน&nbsp;&nbsp;&nbsp;หัวหน้าอุทยานแห่งชาติทองผาภูมิ</div>
+    <div class="doc-line" style="margin-bottom:5px">เรียน&nbsp;&nbsp;&nbsp;หัวหน้าอุทยานแห่งชาติทองผาภูมิ</div>
 
     <div class="doc-line doc-indent">
-      ข้าพเจ้า <span id="p-cb นาย" class="cb"></span>นาย 
-      <span id="p-cb นาง" class="cb"></span>นาง 
-      <span id="p-cb นางสาว" class="cb"></span>นางสาว 
-      <span id="p-fname" class="blank"></span> 
-      นามสกุล <span id="p-lname" class="blank"></span> 
-      อายุ <span id="p-age" class="blank blank-short"></span> ปี
+      ข้าพเจ้า <span id="p-titleFname" class="blank"></span>
+      นามสกุล <span id="p-lname" class="blank"></span>
+      อายุ <span id="p-age" class="blank"></span> ปี
     </div>
     <div class="doc-line">
-      สัญชาติ <span id="p-nation" class="blank"></span> 
-      ศาสนา <span id="p-religion" class="blank"></span> 
-      เลขประจำตัวประชาชน (๑๓ ตัว) <span id="p-idcard" class="blank" style="min-width:145px"></span>
+      สัญชาติ <span id="p-nation" class="blank"></span> ศาสนา <span id="p-religion" class="blank"></span>
+      เลขประจำตัวประชาชน (๑๓ ตัว) <span id="p-idcard" class="blank"></span>
     </div>
     <div class="doc-line">
-      โรคประจำตัว <span id="p-disease" class="blank"></span> 
-      กรุ๊ปเลือด <span id="p-blood" class="blank blank-short"></span> 
-      มีภูมิลำเนาอยู่บ้านเลขที่ <span id="p-houseNo" class="blank blank-short"></span>
+      โรคประจำตัว <span id="p-disease" class="blank"></span> กรุ๊ปเลือด <span id="p-blood" class="blank"></span>
+      มีภูมิลำเนาอยู่บ้านเลขที่ <span id="p-houseNo" class="blank"></span>
     </div>
     <div class="doc-line">
-      หมู่ที่ <span id="p-moo" class="blank blank-short"></span> 
-      ซอย <span id="p-soi" class="blank"></span> 
-      ถนน <span id="p-road" class="blank"></span> 
-      แขวง/ตำบล <span id="p-tambon" class="blank"></span>
+      หมู่ที่ <span id="p-moo" class="blank"></span> ซอย <span id="p-soi" class="blank"></span>
+      ถนน <span id="p-road" class="blank"></span> แขวง/ตำบล <span id="p-tambon" class="blank"></span>
     </div>
     <div class="doc-line">
-      เขต/อำเภอ <span id="p-amphoe" class="blank"></span> 
-      จังหวัด <span id="p-province" class="blank"></span> 
+      เขต/อำเภอ <span id="p-amphoe" class="blank"></span> จังหวัด <span id="p-province" class="blank"></span>
       โทรศัพท์(บ้าน) <span id="p-homePhone" class="blank"></span>
     </div>
     <div class="doc-line">
-      (มือถือ) <span id="p-mobile" class="blank"></span> 
-      E-mail <span id="p-email" class="blank" style="min-width:220px"></span>
+      (มือถือ) <span id="p-mobile" class="blank"></span> E-mail <span id="p-email" class="blank"></span>
     </div>
-    <div class="doc-line" style="margin-bottom:8px">
-      บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน ชื่อ <span id="p-ecFname" class="blank"></span> 
-      นามสกุล <span id="p-ecLname" class="blank"></span> 
-      โทรศัพท์ <span id="p-ecPhone" class="blank"></span>
+    <div class="doc-line" style="margin-bottom:5px">
+      บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน ชื่อ <span id="p-ecFname" class="blank"></span>
+      นามสกุล <span id="p-ecLname" class="blank"></span> โทรศัพท์ <span id="p-ecPhone" class="blank"></span>
     </div>
 
     <div class="doc-line">
       โดยข้าพเจ้า มีความประสงค์ขออนุญาตเข้าศึกษาธรรมชาติระยะไกล เขาช้างเผือก พื้นที่อุทยานแห่งชาติทองผาภูมิ จังหวัดกาญจนบุรี ดังนี้
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
-      ๑. ขออนุญาตเข้าพื้นที่เพื่อศึกษาธรรมชาติฯ มีกำหนด <span id="p-days" class="blank blank-short"></span> วัน 
-      ตั้งแต่วันที่ <span id="p-startDay" class="blank blank-short"></span> 
-      เดือน <span id="p-startMonth" class="blank"></span> 
-      พ.ศ. <span id="p-startYear" class="blank blank-short"></span> 
-      ถึงวันที่ <span id="p-endDay" class="blank blank-short"></span> 
-      เดือน <span id="p-endMonth" class="blank"></span> 
-      พ.ศ. <span id="p-endYear" class="blank blank-short"></span>
+    <div class="doc-line doc-indent" style="margin-top:0">
+      ๑. ขออนุญาตเข้าพื้นที่เพื่อศึกษาธรรมชาติฯ มีกำหนด <span id="p-days" class="blank"></span> วัน
+      ตั้งแต่วันที่ <span id="p-startDay" class="blank"></span>
+      เดือน <span id="p-startMonth" class="blank"></span>
+      พ.ศ. <span id="p-startYear" class="blank"></span>
+      ถึงวันที่ <span id="p-endDay" class="blank"></span>
+      เดือน <span id="p-endMonth" class="blank"></span>
+      พ.ศ. <span id="p-endYear" class="blank"></span>
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
-      ๒. ได้ศึกษากิจกรรมการเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก และรับทราบเป็นอย่างดีแล้ว และขอรับรองว่าข้าพเจ้ามีสภาพร่างกายที่แข็งแรง ไม่เป็นโรคต้องห้ามตามกฎหมายหรือโรคที่เป็นอันตรายต่อการเดินศึกษาธรรมชาติ แต่อย่างใด
+    <div class="doc-line doc-indent" style="margin-top:0">
+      ๒. ได้ศึกษากิจกรรมการเดินป่าศึกษาธรรมชาติระยะไกลเขาช้างเผือก และรับทราบเป็นอย่างดีแล้ว
+      และขอรับรองว่าข้าพเจ้ามีสภาพร่างกายที่แข็งแรง ไม่เป็นโรคต้องห้ามตามกฏหมายหรือโรคที่เป็นอันตรายต่อการเดินศึกษาธรรมชาติ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
-      ๓. ปฏิบัติตามกฎหมาย ระเบียบและข้อบังคับ ตามพระราชบัญญัติอุทยานแห่งชาติ พ.ศ. ๒๕๖๒ และคำสั่งของพนักงานเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ ที่ได้กำหนดไว้อย่างเคร่งครัดต่อไป
+    <div class="doc-line doc-indent" style="margin-top:0">
+      ๓. ปฏิบัติตามกฎหมาย ระเบียบและข้อบังคับ ตามพระราชบัญญัติอุทยานแห่งชาติ พ.ศ.๒๕๖๒
+      และคำสั่งของพนักงานเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ ที่ได้กำหนดไว้อย่างเคร่งครัดต่อไป
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">
-      ๔. ในการเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้ หากได้รับอันตรายหรืออุบัติเหตุ ข้าพเจ้าจะไม่ขอดำเนินคดี หรือฟ้องร้องเพื่อเรียกร้องค่าเสียหายจากเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ หรือหน่วยงานของรัฐ แต่อย่างใด
+    <div class="doc-line doc-indent" style="margin-top:0">
+      ๔. ในการเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้ หากได้รับอันตรายหรืออุบัติเหตุ
+      ข้าพเจ้าจะไม่ขอดำเนินคดี หรือฟ้องร้องเพื่อเรียกร้องค่าเสียหายจากเจ้าหน้าที่อุทยานแห่งชาติทองผาภูมิ หรือหน่วยงานของรัฐ แต่อย่างใด
     </div>
 
-    <div class="doc-line doc-indent" style="margin-top:3px">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
-    <div class="doc-line" style="margin-left:40px"><span id="p-cbYes" class="cb"></span>ทำประกันภัยอุบัติเหตุ กับบริษัท <span id="p-insCo" class="blank" style="min-width:180px"></span> เบอร์โทร <span id="p-insPhone" class="blank"></span></div>
-    <div class="doc-line" style="margin-left:40px"><span id="p-cbNo" class="cb"></span>ไม่ได้ทำประกันภัยอุบัติเหตุ</div>
+    <div class="doc-line doc-indent" style="margin-top:0">๕. การเข้าศึกษาธรรมชาติพื้นที่อุทยานแห่งชาติทองผาภูมิครั้งนี้</div>
+    <div class="doc-line" style="margin-left:34px"><span id="p-cbYes" class="cb"></span>ทำประกันภัยอุบัติเหตุ กับบริษัท <span id="p-insCo" class="blank"></span> เบอร์โทร <span id="p-insPhone" class="blank"></span></div>
+    <div class="doc-line" style="margin-left:34px"><span id="p-cbNo" class="cb"></span>ไม่ได้ทำประกันภัยอุบัติเหตุ</div>
 
     <div class="sign-block">
-      <div class="line">(ลงชื่อ)....................................................................ผู้ขออนุญาต</div>
-      <div class="line" style="margin-top:2px">( <span id="p-signName"></span> )</div>
+      <div class="line">(ลงชื่อ) ......................................... ผู้ขออนุญาต</div>
+      <div class="line">( <span id="p-signName"></span> )</div>
     </div>
 
-    <div style="border-top: 1px dashed #666; margin: 12px 0 8px;"></div>
+    <div class="divider"></div>
     <div class="staff-hd">สำหรับเจ้าหน้าที่</div>
 
     <div class="doc-line doc-indent">๑. ตรวจสอบแล้ว ปรากฏว่า ☐ บุคคลเดียว</div>
-    <div class="doc-line" style="margin-left:40px">☐ กลุ่มคณะ ชื่อกลุ่ม...................................................................................................... จำนวน............................. คน</div>
-    <div class="doc-line" style="margin-left:40px"><strong>เห็นควร</strong> ☐ อนุญาต</div>
-    <div class="doc-line" style="margin-left:85px">☐ ไม่อนุญาต เนื่องจาก................................................................................................................................</div>
-    <div class="doc-line doc-indent" style="margin-top:6px">๒.เจ้าหน้าที่ดูแลความปลอดภัย ชื่อ............................................................................................ ตำแหน่ง.......................................................................</div>
+    <div class="doc-line" style="margin-left:34px">☐ กลุ่มคณะ ชื่อกลุ่ม.......................................... จำนวน.............. คน</div>
+    <div class="doc-line" style="margin-left:34px"><strong>เห็นควร</strong> ☐ อนุญาต</div>
+    <div class="doc-line" style="margin-left:75px">☐ ไม่อนุญาต เนื่องจาก......................................................</div>
+    <div class="doc-line doc-indent" style="margin-top:6px">๒. เจ้าหน้าที่ดูแลความปลอดภัย ชื่อ.......................................... ตำแหน่ง..........................</div>
 
     <div class="staff-row">
       <div class="col">
-        <div>(ลงชื่อ)....................................................................จนท. ตรวจสอบข้อมูล</div>
-        <div style="margin-top:2px">(...................................................................................)</div>
+        <div>(ลงชื่อ)........................จนท. ตรวจสอบข้อมูล</div>
+        <div style="margin-top:4px">(....................................)</div>
       </div>
       <div class="col">
-        <div>(ลงชื่อ)....................................................................ผู้อนุญาต</div>
-        <div style="margin-top:2px">(...................................................................................)</div>
+        <div>(ลงชื่อ) ........................ ผู้อนุญาต</div>
+        <div style="margin-top:4px">(....................................)</div>
       </div>
     </div>
-  </div>
-</div>
-
-<div class="sticky-bar">
-  <button id="submitBtn" class="btn-submit" disabled onclick="downloadImage()">🖼️ กรอกข้อมูลให้ครบก่อนนะครับ</button>
-</div>
+</template>
 
 <script>
 const THAI_MONTHS = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
@@ -374,11 +521,15 @@ function fillMonthSelect(id) {
   });
 }
 ['f-formMonth', 'f-startMonth', 'f-endMonth'].forEach(fillMonthSelect);
-document.getElementById('f-formYear').value = new Date().getFullYear() + 543;
+
+// เติมปี พ.ศ. ปัจจุบันไว้ล่วงหน้าให้เป็นค่าเริ่มต้น (แก้ไขเองได้)
+const currentBEYear = new Date().getFullYear() + 543;
+document.getElementById('f-formYear').value = currentBEYear;
 
 function toggleInsurance() {
   const yes = document.querySelector('input[name="insurance"][value="yes"]').checked;
-  document.getElementById('insBox').classList.toggle('show', yes);
+  const box = document.getElementById('insBox');
+  box.classList.toggle('show', yes);
   if (!yes) {
     document.getElementById('f-insCo').value = '';
     document.getElementById('f-insPhone').value = '';
@@ -387,7 +538,7 @@ function toggleInsurance() {
 
 function val(id) { return document.getElementById(id).value.trim(); }
 
-function updatePreview() {
+function checkForm() {
   const titleChecked = document.querySelector('input[name="title"]:checked');
   const insChecked = document.querySelector('input[name="insurance"]:checked');
   const insOk = insChecked && (insChecked.value === 'no' || (insChecked.value === 'yes' && val('f-insCo')));
@@ -402,110 +553,94 @@ function updatePreview() {
   const allFilled = required.every(id => val(id) !== '');
   const monthsOk = val('f-formMonth') && val('f-startMonth') && val('f-endMonth');
   const idOk = val('f-idcard').length === 13;
+
   const ok = allFilled && monthsOk && idOk && titleChecked && insOk;
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = !ok;
   btn.classList.toggle('ready', ok);
-  btn.innerText = ok ? '🖼️ บันทึกเป็นรูปภาพ (PNG)' : '🖼️ กรอกข้อมูลให้ครบก่อนนะครับ';
+  btn.innerText = ok ? '📄 ดูเอกสารที่กรอกแล้ว (แคปหน้าจอเก็บไว้)' : '📄 กรอกข้อมูลให้ครบก่อนนะครับ';
 
-  // อัปเดตข้อมูลลงในหน้ากระดาษ A4 จำลองทันที
-  document.getElementById('p-formDay').textContent = val('f-formDay');
-  document.getElementById('p-formMonth').textContent = val('f-formMonth');
-  document.getElementById('p-formYear').textContent = val('f-formYear');
-
-  ['นาย', 'นาง', 'นางสาว'].forEach(t => {
-    document.getElementById('p-cb ' + t).textContent = (titleChecked && titleChecked.value === t) ? '☑ ' : '☐ ';
-  });
-
-  document.getElementById('p-fname').textContent = val('f-fname');
-  document.getElementById('p-lname').textContent = val('f-lname');
-  document.getElementById('p-age').textContent = val('f-age');
-  document.getElementById('p-nation').textContent = val('f-nation');
-  document.getElementById('p-religion').textContent = val('f-religion') || '-';
-  
-  const id = val('f-idcard');
-  if(id.length === 13) {
-    document.getElementById('p-idcard').textContent = id[0] + '-' + id.slice(1,5) + '-' + id.slice(5,10) + '-' + id.slice(10,12) + '-' + id[12];
-  } else {
-    document.getElementById('p-idcard').textContent = id;
-  }
-
-  document.getElementById('p-disease').textContent = val('f-disease') || '-';
-  document.getElementById('p-blood').textContent = val('f-blood') || '-';
-  document.getElementById('p-houseNo').textContent = val('f-houseNo');
-  document.getElementById('p-moo').textContent = val('f-moo') || '-';
-  document.getElementById('p-soi').textContent = val('f-soi') || '-';
-  document.getElementById('p-road').textContent = val('f-road') || '-';
-  document.getElementById('p-tambon').textContent = val('f-tambon');
-  document.getElementById('p-amphoe').textContent = val('f-amphoe');
-  document.getElementById('p-province').textContent = val('f-province');
-  document.getElementById('p-homePhone').textContent = val('f-homePhone') || '-';
-  document.getElementById('p-mobile').textContent = val('f-mobile');
-  document.getElementById('p-email').textContent = val('f-email') || '-';
-  document.getElementById('p-ecFname').textContent = val('f-ecFname');
-  document.getElementById('p-ecLname').textContent = val('f-ecLname');
-  document.getElementById('p-ecPhone').textContent = val('f-ecPhone');
-
-  document.getElementById('p-days').textContent = val('f-days');
-  document.getElementById('p-startDay').textContent = val('f-startDay');
-  document.getElementById('p-startMonth').textContent = val('f-startMonth');
-  document.getElementById('p-startYear').textContent = val('f-startYear');
-  document.getElementById('p-endDay').textContent = val('f-endDay');
-  document.getElementById('p-endMonth').textContent = val('f-endMonth');
-  document.getElementById('p-endYear').textContent = val('f-endYear');
-
-  document.getElementById('p-cbYes').textContent = insChecked && insChecked.value === 'yes' ? '☑ ' : '☐ ';
-  document.getElementById('p-cbNo').textContent = insChecked && insChecked.value === 'no' ? '☑ ' : '☐ ';
-  document.getElementById('p-insCo').textContent = insChecked && insChecked.value === 'yes' ? val('f-insCo') : '-';
-  document.getElementById('p-insPhone').textContent = insChecked && insChecked.value === 'yes' ? (val('f-insPhone') || '-') : '-';
-
+  // เติมชื่อผู้ลงนามอัตโนมัติ ถ้าผู้ใช้ยังไม่เคยแก้เอง
   const signInput = document.getElementById('f-signName');
   if (!signInput.dataset.touched && titleChecked && val('f-fname') && val('f-lname')) {
     signInput.value = titleChecked.value + val('f-fname') + ' ' + val('f-lname');
   }
-  document.getElementById('p-signName').textContent = val('f-signName') || (titleChecked ? titleChecked.value + val('f-fname') + ' ' + val('f-lname') : '');
+}
+document.getElementById('f-signName').addEventListener('input', function () { this.dataset.touched = '1'; });
+
+function formatIdCard(id) {
+  const digits = id.replace(/\D/g, '');
+  if (digits.length !== 13) return id;
+  return digits[0] + '-' + digits.slice(1, 5) + '-' + digits.slice(5, 10) + '-' + digits.slice(10, 12) + '-' + digits.slice(12);
 }
 
-async function downloadImage() {
+function dashOr(v) { return v ? v : '-'; }
+
+function showResult() {
   const btn = document.getElementById('submitBtn');
   if (btn.disabled) return;
 
-  btn.disabled = true;
-  const originalText = btn.innerText;
-  btn.innerText = '⌛ กำลังแปลงภาพ...';
+  const titleChecked = document.querySelector('input[name="title"]:checked').value;
+  const insChecked = document.querySelector('input[name="insurance"]:checked').value;
 
-  try {
-    const target = document.getElementById('a4Page');
-    const canvas = await html2canvas(target, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: '#ffffff'
-    });
+  // โคลนเนื้อหาจาก <template> มาใส่ใน #pdfPage ทุกครั้งที่เปิดดู (กันข้อมูลค้างจากรอบก่อน)
+  const template = document.getElementById('pdfPageTemplate');
+  const pdfPage = document.getElementById('pdfPage');
+  pdfPage.innerHTML = '';
+  pdfPage.appendChild(template.content.cloneNode(true));
 
-    const link = document.createElement('a');
-    link.download = 'คำขออนุญาตเข้าศึกษาธรรมชาติ_' + val('f-fname') + val('f-lname') + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+  // เติมข้อมูลลงในเอกสารที่เพิ่งโคลนมา
+  pdfPage.querySelector('#p-formDay').textContent = val('f-formDay');
+  pdfPage.querySelector('#p-formMonth').textContent = val('f-formMonth');
+  pdfPage.querySelector('#p-formYear').textContent = val('f-formYear');
 
-    Swal.fire({
-      icon: 'success',
-      title: 'บันทึกรูปภาพสำเร็จ! 🎉',
-      text: 'ดาวน์โหลดรูปภาพกระดาษ A4 เรียบร้อยแล้วครับ',
-      confirmButtonColor: '#2f6f4f'
-    });
-  } catch (error) {
-    console.error(error);
-    Swal.fire({
-      icon: 'error',
-      title: 'เกิดข้อผิดพลาด',
-      text: 'ไม่สามารถสร้างรูปภาพได้ กรุณาลองใหม่อีกครั้ง',
-      confirmButtonColor: '#2f6f4f'
-    });
-  } finally {
-    btn.disabled = false;
-    btn.innerText = originalText;
-  }
+  pdfPage.querySelector('#p-titleFname').textContent = titleChecked + ' ' + val('f-fname');
+  pdfPage.querySelector('#p-lname').textContent = val('f-lname');
+
+  pdfPage.querySelector('#p-age').textContent = val('f-age');
+  pdfPage.querySelector('#p-nation').textContent = val('f-nation');
+  pdfPage.querySelector('#p-religion').textContent = dashOr(val('f-religion'));
+  pdfPage.querySelector('#p-idcard').textContent = formatIdCard(val('f-idcard'));
+  pdfPage.querySelector('#p-disease').textContent = dashOr(val('f-disease'));
+  pdfPage.querySelector('#p-blood').textContent = dashOr(val('f-blood'));
+  pdfPage.querySelector('#p-houseNo').textContent = val('f-houseNo');
+  pdfPage.querySelector('#p-moo').textContent = dashOr(val('f-moo'));
+  pdfPage.querySelector('#p-soi').textContent = dashOr(val('f-soi'));
+  pdfPage.querySelector('#p-road').textContent = dashOr(val('f-road'));
+  pdfPage.querySelector('#p-tambon').textContent = val('f-tambon');
+  pdfPage.querySelector('#p-amphoe').textContent = val('f-amphoe');
+  pdfPage.querySelector('#p-province').textContent = val('f-province');
+  pdfPage.querySelector('#p-homePhone').textContent = dashOr(val('f-homePhone'));
+  pdfPage.querySelector('#p-mobile').textContent = val('f-mobile');
+  pdfPage.querySelector('#p-email').textContent = dashOr(val('f-email'));
+  pdfPage.querySelector('#p-ecFname').textContent = val('f-ecFname');
+  pdfPage.querySelector('#p-ecLname').textContent = val('f-ecLname');
+  pdfPage.querySelector('#p-ecPhone').textContent = val('f-ecPhone');
+
+  pdfPage.querySelector('#p-days').textContent = val('f-days');
+  pdfPage.querySelector('#p-startDay').textContent = val('f-startDay');
+  pdfPage.querySelector('#p-startMonth').textContent = val('f-startMonth');
+  pdfPage.querySelector('#p-startYear').textContent = val('f-startYear');
+  pdfPage.querySelector('#p-endDay').textContent = val('f-endDay');
+  pdfPage.querySelector('#p-endMonth').textContent = val('f-endMonth');
+  pdfPage.querySelector('#p-endYear').textContent = val('f-endYear');
+
+  pdfPage.querySelector('#p-cbYes').textContent = insChecked === 'yes' ? '☑ ' : '☐ ';
+  pdfPage.querySelector('#p-cbNo').textContent = insChecked === 'no' ? '☑ ' : '☐ ';
+  pdfPage.querySelector('#p-insCo').textContent = insChecked === 'yes' ? val('f-insCo') : '-';
+  pdfPage.querySelector('#p-insPhone').textContent = insChecked === 'yes' ? dashOr(val('f-insPhone')) : '-';
+
+  pdfPage.querySelector('#p-signName').textContent = val('f-signName') || (titleChecked + val('f-fname') + ' ' + val('f-lname'));
+
+  document.getElementById('resultWrap').classList.add('show');
+  document.getElementById('resultWrap').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeResult() {
+  document.getElementById('resultWrap').classList.remove('show');
+  document.body.style.overflow = '';
 }
 </script>
 
