@@ -148,7 +148,16 @@ body {
 /* ============================================================
    PDF TEMPLATE (ซ่อนไว้ ใช้แค่ตอน render เป็นรูปสำหรับสร้าง PDF)
    ============================================================ */
-#pdfWrap { position: fixed; top: 0; left: -9999px; z-index: -1; }
+#pdfWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #ffffff;
+  display: none;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#pdfWrap.capturing { display: flex; justify-content: center; align-items: flex-start; padding: 20px 0; }
 #pdfPage {
   width: 794px;
   padding: 42px 55px 36px;
@@ -582,13 +591,30 @@ async function generatePDF() {
   document.getElementById('p-signName').textContent = val('f-signName') || (titleChecked + val('f-fname') + ' ' + val('f-lname'));
 
   try {
+    const wrap = document.getElementById('pdfWrap');
     const target = document.getElementById('pdfPage');
+
+    // แสดง pdfPage บนจอจริงชั่วคราว (คลุมเต็มจอ) ก่อน capture
+    // เพราะมือถือบางรุ่น (โดยเฉพาะ Safari) รับภาพ element ที่ซ่อนไว้นอกจอไม่แม่นยำ
+    wrap.classList.add('capturing');
+    document.body.style.overflow = 'hidden';
+
+    // รอให้เบราว์เซอร์วาดเฟรมจริงก่อนค่อย capture กันปัญหาจับภาพไม่ครบ
+    await new Promise(r => requestAnimationFrame(r));
+    await new Promise(r => requestAnimationFrame(r));
 
     const canvas = await html2canvas(target, {
       scale: 2.2,
       useCORS: true,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      width: target.offsetWidth,
+      height: target.offsetHeight,
+      windowWidth: target.offsetWidth,
+      windowHeight: target.offsetHeight
     });
+
+    wrap.classList.remove('capturing');
+    document.body.style.overflow = '';
 
     const imgData = canvas.toDataURL('image/jpeg', 0.95);
 
@@ -633,6 +659,8 @@ async function generatePDF() {
       confirmButtonColor: '#2f6f4f'
     });
   } finally {
+    document.getElementById('pdfWrap').classList.remove('capturing');
+    document.body.style.overflow = '';
     btn.disabled = false;
     btn.innerText = originalText;
   }
