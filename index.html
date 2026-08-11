@@ -73,6 +73,59 @@ body {
 }
 #loginPage.hidden { display: none; }
 
+/* ============================================================
+   LOADING SCREEN — โลโก้ + วงแหวนหมุนรอบๆ ตอนกำลังโหลดข้อมูล
+   ============================================================ */
+#loadingScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, .12), transparent 65%), var(--bg);
+}
+#loadingScreen.show { display: flex; }
+.loading-ring-wrap {
+  position: relative;
+  width: 116px;
+  height: 116px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid rgba(56, 189, 248, .15);
+  border-top-color: var(--blue);
+  border-right-color: var(--blue2);
+  animation: loadingSpin 1s linear infinite;
+}
+.loading-ring::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-bottom-color: rgba(56, 189, 248, .35);
+  animation: loadingSpin 1.6s linear infinite reverse;
+}
+.loading-logo {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(56, 189, 248, .5);
+  box-shadow: 0 0 26px rgba(56, 189, 248, .4);
+}
+@keyframes loadingSpin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 13px; color: var(--sub); font-weight: 600; letter-spacing: .3px; animation: loadingPulse 1.4s ease-in-out infinite; }
+@keyframes loadingPulse { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
+
 .login-logo { text-align: center; margin-bottom: 28px; }
 .login-logo img {
   width: 90px;
@@ -1039,6 +1092,17 @@ body {
 </div>
 
 <!-- ============================================================
+     LOADING SCREEN — โชว์ตอนกำลังดึงข้อมูลจากหลังบ้าน
+     ============================================================ -->
+<div id="loadingScreen">
+  <div class="loading-ring-wrap">
+    <div class="loading-ring"></div>
+    <img class="loading-logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/88?text=🏕'" alt="กำลังโหลด">
+  </div>
+  <p class="loading-text">กำลังโหลดข้อมูล...</p>
+</div>
+
+<!-- ============================================================
      APP SHELL
      ============================================================ -->
 <div id="appShell">
@@ -1707,6 +1771,7 @@ function doLogin() {
 
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('appShell').classList.add('show');
+  document.getElementById('loadingScreen').classList.add('show');
   document.getElementById('f-phone').value = phone;
   document.getElementById('f-nick').value = nick;
   fetchData();
@@ -1725,6 +1790,7 @@ window.addEventListener('DOMContentLoaded', () => {
     currentUser = JSON.parse(saved);
     document.getElementById('loginPage').classList.add('hidden');
     document.getElementById('appShell').classList.add('show');
+    document.getElementById('loadingScreen').classList.add('show');
     document.getElementById('f-phone').value = currentUser.phone;
     document.getElementById('f-nick').value = currentUser.nick;
     fetchData();
@@ -1738,8 +1804,10 @@ window.addEventListener('DOMContentLoaded', () => {
    ================================================================ */
 function fetchData() {
   const cb = 'cb_' + Date.now();
+  let finished = false;
 
   window[cb] = (res) => {
+    finished = true;
     allBookings = res.bookings || [];
     allEquipRentals = res.rentals || [];
 
@@ -1769,10 +1837,23 @@ function fetchData() {
       setupCarouselAutoScroll('upcoming', upcomingEl, 2000);
     }
 
+    document.getElementById('loadingScreen').classList.remove('show');
     delete window[cb];
   };
 
-  appendScript(QUERY_URL + '&callback=' + cb);
+  const script = document.createElement('script');
+  script.src = QUERY_URL + '&callback=' + cb;
+  script.onerror = () => {
+    if (finished) return;
+    document.getElementById('loadingScreen').classList.remove('show');
+    Swal.fire({
+      icon: 'error',
+      title: 'โหลดข้อมูลไม่สำเร็จ',
+      text: 'กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองรีเฟรชหน้าเว็บอีกครั้งครับ',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+  };
+  document.body.appendChild(script);
 }
 
 // showLoading: true = ล้างกริดเบาะเป็นข้อความ "กำลังโหลด" ก่อนยิง request (ใช้ตอนเข้าหน้าจองครั้งแรก)
