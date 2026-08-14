@@ -1,3181 +1,778 @@
 
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="utf-8" />
-<title>เที่ยวนี่เหอะ 🚐✨</title>
+<title>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ เขาช้างเผือก</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-
-<!-- ============================================================
-     PWA — เพิ่มลงหน้าจอโฮมแบบมีไอคอนแอปตัวเอง (Add to Home Screen)
-     ============================================================ -->
-<link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#0284c7" />
-<meta name="apple-mobile-web-app-title" content="เที่ยวนี่เหอะ" />
-<!-- iOS Safari ไม่อ่าน manifest.json ต้องใส่ meta/tag พวกนี้เพิ่มเอง -->
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<link rel="apple-touch-icon" href="เที่ย นี่เหอะ.png" />
-<link rel="icon" href="เที่ย นี่เหอะ.png" />
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
 /* ============================================================
-   RESET & THEME TOKENS
+   RESET & THEME
    ============================================================ */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 :root {
-  --bg: #060b13;
-  --bg2: #0c1524;
-  --bg3: #111d2e;
-  --blue: #38bdf8;
-  --blue2: #0284c7;
-  --green: #10b981;
-  --red: #ef4444;
-  --yellow: #f59e0b;
-  --text: #f1f5f9;
-  --muted: #64748b;
-  --sub: #94a3b8;
-  --border: rgba(255, 255, 255, 0.07);
-  --card: rgba(255, 255, 255, 0.03);
+  --paper: #fbf9f3;
+  --ink: #1f2b23;
+  --sub: #5b6b60;
+  --muted: #93a196;
+  --accent: #2f6f4f;
+  --accent-dk: #1f4d36;
+  --accent-lt: #e6efe8;
+  --border: #dcd6c4;
+  --card: #ffffff;
+  --red: #b3431e;
 }
 
 body {
-  font-family: 'TH Sarabun New', 'THSarabunNew', 'TH Sarabun PSK', 'THSarabunPSK', 'Sarabun', sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  font-family: 'Sarabun', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
   min-height: 100vh;
-  overflow-x: hidden;
+  padding-bottom: 110px;
 }
 
-#pastList.expanded .past-extra { display: block !important; }
-#bookingHistoryList.expanded .hist-extra { display: block !important; }
+/* ============================================================
+   HEADER
+   ============================================================ */
+.hdr {
+  background: linear-gradient(160deg, var(--accent-dk), var(--accent));
+  color: #fff;
+  padding: 28px 20px 26px;
+  text-align: center;
+  border-radius: 0 0 28px 28px;
+  box-shadow: 0 10px 30px rgba(31, 77, 54, .25);
+}
+.hdr .ico { font-size: 34px; margin-bottom: 8px; }
+.hdr .logo {
+  width: 64px; height: 64px; border-radius: 50%;
+  object-fit: cover; margin: 0 auto 10px;
+  border: 3px solid rgba(255,255,255,.75);
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  display: block;
+}
+.hdr h1 { font-size: 19px; font-weight: 700; line-height: 1.4; }
+.hdr p { font-size: 12.5px; opacity: .85; margin-top: 6px; }
+
+.main { max-width: 560px; margin: 0 auto; padding: 20px 16px 0; }
 
 /* ============================================================
-   LOGIN PAGE
+   SECTIONS
    ============================================================ */
-#loginPage {
+.sec {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 14px rgba(31, 43, 35, .04);
+}
+.sec-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.sec-num {
+  width: 30px; height: 30px; border-radius: 10px; flex-shrink: 0;
+  background: var(--accent-lt); color: var(--accent-dk);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 14px;
+}
+.sec-hd h2 { font-size: 15.5px; font-weight: 700; color: var(--ink); }
+.sec-hd p { font-size: 11px; color: var(--sub); margin-top: 1px; }
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; }
+.fld { margin-bottom: 13px; flex: 1; min-width: 120px; }
+.fld.full { flex-basis: 100%; }
+.fld label { display: block; font-size: 12.5px; color: var(--sub); font-weight: 600; margin-bottom: 6px; }
+.fld label .req { color: var(--red); }
+.fld input, .fld select {
+  width: 100%;
+  height: 46px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 0 13px;
+  font-size: 14.5px;
+  font-family: inherit;
+  color: var(--ink);
+  outline: none;
+  background: #fff;
+  transition: .15s;
+}
+.fld input:focus, .fld select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(47,111,79,.12); }
+.fld input::placeholder { color: var(--muted); }
+.hint { font-size: 10.5px; color: var(--muted); margin-top: 4px; }
+
+/* คำนำหน้า/ตัวเลือก radio แบบชิป */
+.chip-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip-opt { position: relative; }
+.chip-opt input { position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer; margin: 0; }
+.chip-opt span {
+  display: flex; align-items: center; justify-content: center;
+  height: 42px; padding: 0 16px;
+  border: 1.5px solid var(--border); border-radius: 999px;
+  font-size: 13.5px; color: var(--sub); font-weight: 600;
+  transition: .15s;
+}
+.chip-opt input:checked + span { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.ins-box { margin-top: 4px; padding: 14px; background: var(--accent-lt); border-radius: 12px; display: none; }
+.ins-box.show { display: block; }
+
+.date-row { display: grid; grid-template-columns: 70px 1.4fr 90px; gap: 8px; }
+
+/* ============================================================
+   STICKY SUBMIT BAR
+   ============================================================ */
+.sticky-bar {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: rgba(251, 249, 243, .92);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border);
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom, 0));
+  display: flex; justify-content: center; z-index: 50;
+}
+.btn-submit {
+  width: 100%; max-width: 528px; height: 52px;
+  border: none; border-radius: 14px;
+  background: #cbd5c9; color: #6b7a70;
+  font-size: 15px; font-weight: 700; font-family: inherit;
+  cursor: not-allowed; transition: .2s;
+}
+.btn-submit.ready {
+  background: linear-gradient(135deg, var(--accent-dk), var(--accent));
+  color: #fff; cursor: pointer;
+  box-shadow: 0 8px 22px rgba(47, 111, 79, .32);
+}
+
+/* ============================================================
+   RESULT VIEW — เอาข้อมูลไปแปะทับบนรูปสแกนต้นฉบับจริง (ไม่ได้พิมพ์ขึ้นมาใหม่)
+   ผู้ใช้เลื่อน/ซูมดูแล้วแคปหน้าจอเก็บไว้เอง
+   ============================================================ */
+#resultWrap {
   position: fixed;
   inset: 0;
   z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, .12), transparent 65%), var(--bg);
-}
-#loginPage.hidden { display: none; }
-
-/* ============================================================
-   LOADING SCREEN — โลโก้ + วงแหวนหมุนรอบๆ ตอนกำลังโหลดข้อมูล
-   ============================================================ */
-#loadingScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 9998;
+  background: #333;
   display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 22px;
-  background: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, .12), transparent 65%), var(--bg);
-}
-#loadingScreen.show { display: flex; }
-.loading-ring-wrap {
-  position: relative;
-  width: 116px;
-  height: 116px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.loading-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 4px solid rgba(56, 189, 248, .15);
-  border-top-color: var(--blue);
-  border-right-color: var(--blue2);
-  animation: loadingSpin 1s linear infinite;
-}
-.loading-ring::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 4px solid transparent;
-  border-bottom-color: rgba(56, 189, 248, .35);
-  animation: loadingSpin 1.6s linear infinite reverse;
-}
-.loading-logo {
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(56, 189, 248, .5);
-  box-shadow: 0 0 26px rgba(56, 189, 248, .4);
-}
-@keyframes loadingSpin { to { transform: rotate(360deg); } }
-.loading-text { font-size: 13px; color: var(--sub); font-weight: 600; letter-spacing: .3px; animation: loadingPulse 1.4s ease-in-out infinite; }
-@keyframes loadingPulse { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
-
-.login-logo { text-align: center; margin-bottom: 28px; }
-.login-logo img {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  border: 3px solid var(--blue);
-  box-shadow: 0 0 28px rgba(56, 189, 248, .35);
-  object-fit: cover;
-  display: block;
-  margin: 0 auto 14px;
-}
-.login-logo h1 { font-size: 30px; font-weight: 800; color: var(--blue); }
-.login-logo p { font-size: 13px; color: var(--sub); margin-top: 4px; }
-
-.login-card {
-  width: 100%;
-  max-width: 360px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 24px;
-  padding: 28px 22px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.login-card .inp-wrap { width: 100%; max-width: 100%; }
-.login-card .btn-login { width: 100%; }
-.login-card h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-.login-card > p { font-size: 13px; color: var(--sub); margin-bottom: 22px; line-height: 1.6; }
-
-.inp-wrap { position: relative; margin-bottom: 14px; }
-.inp-pre { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
-.inp {
-  width: 100%;
-  height: 50px;
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  color: #fff;
-  font-size: 15px;
-  font-family: inherit;
-  outline: none;
-  transition: .2s;
-  padding: 0 14px 0 46px;
-}
-.inp:focus { border-color: var(--blue); }
-.inp::placeholder { color: var(--muted); }
-
-.btn-login {
-  width: 100%;
-  height: 50px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--blue2), var(--blue));
-  color: #fff;
-  font-size: 15px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  box-shadow: 0 6px 20px rgba(2, 132, 199, .3);
-  margin-top: 4px;
-}
-.btn-login:disabled { background: #1e293b; color: #475569; box-shadow: none; cursor: not-allowed; }
-.login-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; }
-
-/* ============================================================
-   APP SHELL / HEADER / BOTTOM NAV
-   ============================================================ */
-#appShell { display: block; }
-
-.hdr {
-  position: sticky;
-  top: 0;
-  z-index: 500;
-  background: rgba(6, 11, 19, .92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; }
-.hdr-brand h1 { font-size: 16px; font-weight: 800; color: var(--blue); }
-.hdr-brand span { font-size: 8px; color: #fff; opacity: .7; display: block; }
-.hdr-btn {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-}
-
-.bnav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(6, 11, 19, .94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  z-index: 500;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-}
-.bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0 12px; cursor: pointer; gap: 4px; }
-.bnav-item .ico { font-size: 22px; }
-.bnav-item .lbl { font-size: 10px; font-weight: 600; color: var(--muted); }
-.bnav-item.active .lbl { color: var(--blue); }
-.bnav-item.active .ico { filter: drop-shadow(0 0 6px rgba(56, 189, 248, .6)); }
-
-/* ============================================================
-   PAGE / LAYOUT UTILITIES
-   ============================================================ */
-.view-page { display: none; }
-.view-page.active-page { display: block; animation: fadeUp .3s ease; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-.main { max-width: 480px; margin: 0 auto; padding: 16px 16px 100px; }
-.divider { height: 1px; background: var(--border); margin: 20px 0; }
-
-/* ============================================================
-   HOME TAB
-   ============================================================ */
-.greet-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  background: linear-gradient(135deg, rgba(2, 132, 199, .15), rgba(56, 189, 248, .08));
-  border: 1px solid rgba(56, 189, 248, .15);
-  border-radius: 18px;
-  padding: 14px 14px 14px 16px;
-  margin-bottom: 20px;
-}
-.greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; }
-.greet-bar .left p { font-size: 12px; color: var(--sub); margin-top: 2px; }
-.greet-actions { display: flex; gap: 10px; flex-shrink: 0; }
-.qa-mini {
-  width: 66px;
-  height: 66px;
-  border-radius: 18px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  cursor: pointer;
-  animation: qaBeat 1.8s ease-in-out infinite;
-  transition: transform .15s;
-}
-.qa-mini:active { transform: scale(.92); }
-.qa-mini .qa-mini-ico { font-size: 27px; }
-.qa-mini .qa-mini-label { font-size: 9.5px; font-weight: 800; color: rgba(0, 0, 0, .75); line-height: 1; }
-.qa-trip-mini { background: linear-gradient(145deg, #ffe066, #ffc400); box-shadow: 0 5px 14px rgba(255, 196, 0, .4); }
-.qa-rent-mini { background: linear-gradient(145deg, #34e89e, #0bb96f); box-shadow: 0 5px 14px rgba(11, 185, 111, .4); }
-@keyframes qaBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-.sec-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-.sec-hdr h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
-
-#upcomingList::-webkit-scrollbar { display: none; }
-#upcomingList { scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-#upcomingList .trip-hcard { flex: 0 0 86%; min-height: auto; scroll-snap-align: start; scroll-snap-stop: always; }
-
-.stat-bar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(135deg, rgba(56, 189, 248, .08), rgba(16, 185, 129, .05));
-  border: 1px solid rgba(56, 189, 248, .12);
-  border-radius: 16px;
-  padding: 14px 16px;
-  margin-top: 20px;
-}
-.stat-bar .ico { font-size: 24px; }
-.stat-bar .txt h4 { font-size: 13px; color: #fff; font-weight: 700; }
-.stat-bar .txt p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-
-/* ============================================================
-   TRIP CARD — "Expedition Ticket" premium design
-   ============================================================ */
-.trip-list { display: flex; flex-direction: column; gap: 16px; }
-
-.trip-hcard {
-  position: relative;
-  display: block;
-  background: linear-gradient(165deg, #18140d, #0e0c08);
-  border: 1px solid rgba(212, 175, 55, .22);
-  border-radius: 22px;
-  overflow: hidden;
-  cursor: pointer;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .04);
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-.trip-hcard:hover { transform: translateY(-3px); border-color: rgba(212, 175, 55, .55); box-shadow: 0 16px 36px rgba(0, 0, 0, .55); }
-.trip-hcard:active { transform: scale(.985); }
-
-.lux-photo { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #0e0c08; }
-.lux-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
-.trip-hcard:hover .lux-photo img { transform: scale(1.05); }
-.lux-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14, 12, 8, 0) 42%, rgba(14, 12, 8, .95) 100%); }
-
-.lux-status {
-  position: absolute; top: 12px; left: 12px; z-index: 2;
-  padding: 5px 12px; border-radius: 999px;
-  font-size: 11px; font-weight: 800; letter-spacing: .2px;
-  border: 1px solid rgba(255, 255, 255, .25);
-  backdrop-filter: blur(6px);
-  white-space: nowrap;
-}
-.lux-status.open { background: rgba(16, 185, 129, .88); color: #04150e; }
-.lux-status.almost { background: linear-gradient(135deg, #f4d160, #c9971f); color: #241800; animation: hb .9s infinite; }
-.lux-status.full { background: rgba(239, 68, 68, .9); color: #fff; }
-.lux-status.soon { background: rgba(255, 255, 255, .14); color: #f1d488; border-color: rgba(241, 212, 136, .5); }
-.lux-status.done { background: rgba(255, 255, 255, .12); color: #d8cdae; }
-
-.lux-price {
-  position: absolute; right: 12px; bottom: 12px; z-index: 2;
-  background: linear-gradient(135deg, #f6e2a0, #c9971f);
-  color: #241800; font-weight: 800; font-size: 14px;
-  padding: 6px 13px; border-radius: 13px 13px 13px 4px;
-  box-shadow: 0 5px 12px rgba(201, 151, 31, .4);
-}
-
-.lux-locked-ov {
-  position: absolute; inset: 0; z-index: 3;
-  background: rgba(10, 8, 5, .62); backdrop-filter: blur(2px);
-  display: flex; align-items: center; justify-content: center; font-size: 30px;
-}
-
-/* เส้นปรุตั๋ว — องค์ประกอบซิกเนเจอร์ของการ์ด ให้ความรู้สึกเหมือนตั๋วเดินทางใบพรีเมียม */
-.lux-stub { position: relative; border-top: 1.5px dashed rgba(212, 175, 55, .35); }
-.lux-stub::before, .lux-stub::after {
-  content: ''; position: absolute; top: -8px; width: 16px; height: 16px; border-radius: 50%; background: var(--bg);
-}
-.lux-stub::before { left: -8px; }
-.lux-stub::after { right: -8px; }
-
-.lux-body { padding: 16px 16px 14px; }
-.lux-title { font-size: 17.5px; font-weight: 800; color: #f6efe0; line-height: 1.35; letter-spacing: .2px; margin-bottom: 6px; }
-.lux-loc { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #b8ab8c; margin-bottom: 12px; }
-.lux-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 12px; border-top: 1px solid rgba(212, 175, 55, .14); flex-wrap: wrap; }
-.lux-meta-row2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 7px; flex-wrap: wrap; }
-.lux-date { font-size: 11px; color: #cbbf9e; display: flex; align-items: center; gap: 5px; }
-.lux-days { font-size: 10.5px; color: #8d8168; display: flex; align-items: center; gap: 5px; }
-.lux-seats { font-size: 13px; font-weight: 800; }
-.lux-seats.ok { color: #5fd1a0; }
-.lux-seats.low { color: #f1c14a; }
-.lux-seats.full { color: #ef6a6a; }
-.lux-cta { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; color: #f1d488; }
-
-/* การ์ดขนาดย่อ — ใช้ในหน้า "ทริปทั้งหมด"/ผลค้นหา ที่มีรายการเยอะ ให้ไล่ดูได้ไวขึ้น */
-.trip-hcard.compact .lux-photo { aspect-ratio: 16 / 7; }
-.trip-hcard.compact .lux-status { font-size: 10px; padding: 4px 10px; top: 10px; left: 10px; }
-.trip-hcard.compact .lux-price { font-size: 12px; padding: 5px 10px; right: 10px; bottom: 10px; }
-.trip-hcard.compact .lux-body { padding: 12px 14px 11px; }
-.trip-hcard.compact .lux-title { font-size: 15px; margin-bottom: 4px; }
-.trip-hcard.compact .lux-loc { font-size: 11px; margin-bottom: 8px; }
-.trip-hcard.compact .lux-meta-row { padding-top: 8px; }
-.trip-hcard.compact .lux-meta-row2 { margin-top: 5px; }
-.trip-hcard.compact .lux-days { font-size: 10px; }
-.trip-hcard.compact .lux-seats { font-size: 12px; }
-.trip-hcard.compact .lux-cta { font-size: 11px; }
-
-/* ============================================================
-   PAST TRIPS GRID
-   ============================================================ */
-.past-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.past-card { border-radius: 14px; overflow: hidden; position: relative; cursor: pointer; aspect-ratio: 3 / 4; }
-.past-card img { width: 100%; height: 100%; object-fit: cover; filter: brightness(.65); }
-.past-card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 8px; background: linear-gradient(to top, rgba(0, 0, 0, .85), transparent); }
-.past-card-info h5 { font-size: 10px; font-weight: 700; color: #fff; line-height: 1.3; }
-.past-card-info p { font-size: 9px; color: var(--sub); }
-.past-card-rating { position: absolute; top: 6px; right: 6px; font-size: 9px; background: rgba(0, 0, 0, .6); color: #fbbf24; padding: 2px 5px; border-radius: 5px; font-weight: 700; }
-
-/* ============================================================
-   SEARCH
-   ============================================================ */
-.search-wrap { position: relative; margin-bottom: 18px; }
-.search-wrap input {
-  width: 100%;
-  height: 46px;
-  padding: 0 16px 0 44px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  color: #fff;
-  font-size: 14px;
-  font-family: inherit;
-  outline: none;
-  transition: .2s;
-}
-.search-wrap input:focus { border-color: var(--blue); }
-.s-ico { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 15px; color: var(--muted); }
-
-/* ============================================================
-   MY TRIPS TAB
-   ============================================================ */
-.my-profile {
-  background: linear-gradient(135deg, rgba(2, 132, 199, .18), rgba(16, 185, 129, .1));
-  border: 1px solid rgba(56, 189, 248, .18);
-  border-radius: 22px;
-  padding: 20px;
-  margin-bottom: 22px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.my-ava-col { display: flex; flex-direction: column; align-items: center; gap: 6px; flex-shrink: 0; }
-.my-ava {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--blue2), var(--blue));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  flex-shrink: 0;
-  box-shadow: 0 0 20px rgba(56, 189, 248, .35);
-}
-.my-ava-hint { font-size: 9px; color: var(--blue); text-align: center; line-height: 1.3; max-width: 76px; }
-.my-info h3 { font-size: 17px; font-weight: 700; color: #fff; }
-.my-info p { font-size: 12px; color: var(--sub); margin-top: 3px; }
-.my-stats { display: flex; gap: 18px; margin-top: 10px; }
-.my-stat h4 { font-size: 20px; font-weight: 800; color: var(--blue); }
-.my-stat p { font-size: 10px; color: var(--sub); }
-
-.h-item { display: flex; align-items: center; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 10px; cursor: pointer; transition: border-color .15s, transform .15s; }
-.h-item:hover { border-color: var(--blue); transform: translateY(-1px); }
-.h-item:active { transform: scale(.99); }
-.h-item img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
-.h-item .hi { flex: 1; }
-.h-item .hi h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-.h-item .hi p { font-size: 11px; color: var(--sub); }
-.h-seat { text-align: right; flex-shrink: 0; }
-.h-seat .snum { font-size: 18px; font-weight: 800; color: var(--blue); }
-.h-seat p { font-size: 10px; color: var(--muted); }
-.h-arr { color: var(--blue); font-size: 18px; flex-shrink: 0; padding-left: 2px; }
-
-.empty-st { text-align: center; padding: 50px 20px; color: var(--muted); }
-.empty-st .ico { font-size: 48px; margin-bottom: 12px; }
-
-.btn-logout {
-  width: 100%;
-  height: 46px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  margin-top: 8px;
-}
-.btn-logout:hover { background: rgba(239, 68, 68, .1); color: var(--red); border-color: rgba(239, 68, 68, .3); }
-
-/* ============================================================
-   NOTIF / INFO TAB
-   ============================================================ */
-.notif-item { display: flex; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 14px; margin-bottom: 10px; }
-.notif-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--blue); flex-shrink: 0; margin-top: 4px; }
-.notif-dot.read { background: var(--muted); }
-.notif-info h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-.notif-info p { font-size: 12px; color: var(--sub); line-height: 1.5; }
-.notif-info .time { font-size: 10px; color: var(--muted); margin-top: 6px; }
-
-.chip { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-.chip-blue { background: rgba(56, 189, 248, .12); color: var(--blue); }
-.chip-green { background: rgba(16, 185, 129, .12); color: var(--green); }
-.chip-yellow { background: rgba(245, 158, 11, .12); color: var(--yellow); }
-
-/* ============================================================
-   TRIP DETAIL MODAL (bottom sheet)
-   ============================================================ */
-.modal-bg {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.78);
-  backdrop-filter: blur(8px);
-  z-index: 800;
-  display: none;
-  align-items: center;
-  justify-content: center;
-}
-.modal-bg.show { display: flex; }
-.modal-sheet {
-  width: 90%;
-  max-width: 480px;
-  max-height: 90vh;
-  background: var(--bg2);
-  border-radius: 28px;
-  overflow-y: auto;
-  padding-bottom: 32px;
-  animation: fadeIn .3s ease;
-  position: relative;
-}
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-.modal-x {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, .5);
-  border: none;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  backdrop-filter: blur(8px);
-}
-.close-pill { display: block; width: 40px; height: 4px; background: rgba(255, 255, 255, .2); border-radius: 4px; margin: 14px auto 0; }
-.modal-img { width: 100%; height: 220px; object-fit: cover; }
-.modal-body { padding: 18px; }
-.modal-body h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-.modal-date { font-size: 13px; color: var(--blue); margin-bottom: 14px; }
-.modal-price {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, .15), rgba(56, 189, 248, .1));
-  border: 1px solid rgba(255, 255, 255, .08);
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 16px;
-}
-.modal-payment { background: rgba(245, 158, 11, .08); border: 1px solid rgba(245, 158, 11, .2); border-radius: 14px; padding: 10px 14px; font-size: 12px; color: #fbbf24; margin-bottom: 16px; }
-.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.modal-card { background: rgba(255, 255, 255, .04); border: 1px solid var(--border); border-radius: 14px; padding: 12px; }
-.modal-card span { display: block; font-size: 11px; color: var(--sub); margin-bottom: 6px; }
-.modal-card strong { font-size: 14px; color: #fff; }
-.modal-hl {
-  background: linear-gradient(180deg, rgba(56, 189, 248, .08), rgba(56, 189, 248, .03));
-  border: 1px solid rgba(56, 189, 248, .12);
-  border-radius: 16px;
-  padding: 14px;
-  font-size: 13px;
-  line-height: 1.7;
-  color: #e2e8f0;
-  margin-bottom: 16px;
-}
-.modal-seat-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255, 255, 255, .03);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-}
-.avail { font-size: 13px; font-weight: 700; }
-.avail.ok { color: var(--green); }
-.avail.low { color: var(--yellow); }
-.avail.full { color: var(--red); }
-
-/* "จองที่นั่ง" CTA button — shared by the trip-detail modal (this is the
-   effective/final style; it originally existed twice in the source and the
-   later rule always won in the cascade, so it's merged into one here). */
-.btn-book {
-  display: block;
-  width: 85%;
-  max-width: 320px;
-  height: 48px;
-  margin: -24px auto 16px auto;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(145deg, #ff4747, #d91f2f);
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(255, 71, 71, 0.25);
-  animation: hb 0.9s infinite;
-  position: relative;
-  z-index: 10;
-}
-.btn-book:disabled { background: #1e293b; color: #475569; box-shadow: none; cursor: not-allowed; animation: none; }
-
-/* ============================================================
-   BOOKING PAGE
-   ============================================================ */
-#bookingPage2 { position: fixed; inset: 0; z-index: 900; background: var(--bg); overflow-y: auto; display: none; }
-#bookingPage2.show { display: block; animation: fadeUp .25s ease; }
-.bk-hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: rgba(6, 11, 19, .92);
-  backdrop-filter: blur(14px);
-  z-index: 10;
-}
-.btn-back { background: none; border: none; color: var(--blue); font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; }
-.bk-body { max-width: 480px; margin: 0 auto; padding: 16px 16px 120px; }
-
-.ig { margin-bottom: 16px; }
-.ig label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--sub); font-weight: 500; margin-bottom: 8px; }
-.ig input {
-  width: 100%;
-  height: 48px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
-  color: #fff;
-  font-size: 14px;
-  font-family: inherit;
-  padding: 0 16px;
-  outline: none;
-  transition: all 0.3s ease;
-}
-.ig input:disabled { color: var(--muted); cursor: not-allowed; }
-.ig input:focus { border-color: var(--blue); background: rgba(56, 189, 248, 0.05); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1); }
-
-.form-sec { font-size: 14px; color: var(--blue); font-weight: 700; margin: 24px 0 16px; display: flex; align-items: center; gap: 8px; }
-
-/* หัวข้อฟอร์มกรอกข้อมูลผู้จอง แบบใหม่ */
-.form-sec-header { display: flex; align-items: center; gap: 12px; margin: 22px 0 18px; }
-.form-sec-ico {
-  width: 40px; height: 40px; flex-shrink: 0;
-  border-radius: 13px;
-  background: linear-gradient(135deg, var(--blue2), var(--blue));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 19px;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, .35);
-}
-.form-sec-title { font-size: 15px; font-weight: 800; color: #fff; }
-.form-sec-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
-
-/* เลือกจุดขึ้นรถ — ใช้ dropdown เพื่อรองรับตัวเลือกหลายจุดแบบไม่กินพื้นที่ */
-.pickup-select {
-  width: 100%;
-  height: 48px;
-  background: rgba(0, 0, 0, .2);
-  border: 1px solid rgba(255, 255, 255, .1);
-  border-radius: 14px;
-  color: #fff;
-  font-size: 14px;
-  font-family: inherit;
-  padding: 0 40px 0 14px;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 8l5 5 5-5' stroke='%2338bdf8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  cursor: pointer;
-}
-.pickup-select:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1); }
-.pickup-select option { background: var(--bg3); color: #fff; }
-.pickup-other-input {
-  width: 100%;
-  height: 46px;
-  margin-top: 10px;
-  background: rgba(0, 0, 0, .2);
-  border: 1px solid rgba(56, 189, 248, .3);
-  border-radius: 12px;
-  color: #fff;
-  font-size: 13.5px;
-  font-family: inherit;
-  padding: 0 14px;
-  outline: none;
-}
-.pickup-other-input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1); }
-#formFieldsBox2 {
-  display: none;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 20px;
-  backdrop-filter: blur(10px);
-  margin-top: 10px;
-}
-#formFieldsBox2.show { display: block; animation: fadeUp .3s ease; }
-
-.sticky-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(6, 11, 19, .88);
-  backdrop-filter: blur(16px);
-  padding: 14px 16px 28px;
-  border-top: 1px solid var(--border);
-  z-index: 20;
-  display: flex;
-  justify-content: center;
-}
-.btn-confirm {
-  width: 100%;
-  max-width: 440px;
-  height: 50px;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  font-family: inherit;
-  cursor: pointer;
-  background: #131c2a;
-  color: #334155;
-  transition: .25s;
-}
-.btn-confirm.ready { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 6px 20px rgba(2, 132, 199, .3); }
-
-/* ============================================================
-   SEAT MAP / VAN GRID
-   ============================================================ */
-.van-block { margin-bottom: 20px; }
-.van-block-title {
-  font-size: 14px;
-  color: var(--blue);
-  margin-bottom: 8px;
-  font-weight: 700;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(10, 30, 50, .95), rgba(8, 20, 35, .98));
-  padding: 12px;
-  border-radius: 18px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
-}
-.van-grid-header { display: flex; justify-content: space-between; padding: 0 10px; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: var(--blue); opacity: .88; }
-.van-grid-seats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  padding: 10px;
-  background: linear-gradient(180deg, rgba(16, 28, 45, .98), rgba(10, 18, 32, .98));
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, .03);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 6px 18px rgba(0, 0, 0, .22);
-  position: relative;
-  overflow: hidden;
-}
-.van-grid-seats::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at top, rgba(56, 189, 248, .06), transparent 60%); pointer-events: none; }
-
-.seat { aspect-ratio: 1 / 1; border-radius: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 700; transition: .18s; transform: scale(.94); cursor: pointer; overflow: hidden; }
-.seat span:first-child { font-size: 9px; margin-bottom: 2px; opacity: .95; }
-.seat span:last-child { font-size: 15px; line-height: 1.1; }
-
-.seat.driver { background: linear-gradient(145deg, #243247, #1a2435); color: #5f718b; border: 2px dashed rgba(255, 255, 255, .14); cursor: default; pointer-events: none; }
-.seat.spacer { visibility: hidden; pointer-events: none; }
-.seat.empty { background: linear-gradient(145deg, #19c37d, #13a86c); color: #fff; box-shadow: 0 5px 0 #0d7f52, 0 8px 14px rgba(25, 195, 125, .14); }
-.seat.booked { background: linear-gradient(145deg, #ff4747, #d91f2f); color: #fff; box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, .14); cursor: not-allowed; }
-.seat.selected { background: linear-gradient(145deg, #ffd84d, #f7b500); color: #000; transform: scale(.98); box-shadow: 0 0 12px rgba(255, 216, 77, .45), 0 5px 0 #b57b00; animation: hb .9s infinite; }
-.seat.hidden-seat { background: linear-gradient(145deg, rgba(18, 28, 40, .96), rgba(8, 12, 20, .98)); color: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .03); pointer-events: none; }
-
-/* เบาะที่ "มีคนอื่นกำลังเลือกอยู่" (locked ชั่วคราวโดยยังไม่จองจริง) — สีส้ม */
-.seat.locking {
-  background: linear-gradient(145deg, #fb923c, #ea580c);
-  color: #fff;
-  box-shadow: 0 5px 0 #9a3412, 0 8px 14px rgba(249, 115, 22, .22);
-  cursor: not-allowed;
-  pointer-events: none;
-  animation: lockingPulse 1.2s infinite;
-}
-@keyframes lockingPulse {
-  0%, 100% { transform: scale(.94); }
-  50% { transform: scale(.98); box-shadow: 0 5px 0 #9a3412, 0 0 17px rgba(249, 115, 22, .5); }
-}
-
-@keyframes hb { 0%, 100% { transform: scale(.98); } 50% { transform: scale(1.02); } }
-
-/* ไฮไลต์เบาะเมื่อกดเข้ามาดูจากประวัติการจอง ให้หาที่นั่งตัวเองเจอไว */
-.seat.seat-highlight-pulse {
-  box-shadow: 0 0 0 3px #38bdf8, 0 0 20px rgba(56, 189, 248, .8);
-  animation: seatHighlightPulse 1s ease-in-out infinite;
-  z-index: 2;
-}
-@keyframes seatHighlightPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-}
-
-.seat-legend { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0 20px; padding: 10px; border-radius: 16px; background: linear-gradient(180deg, rgba(12, 21, 36, .95), rgba(6, 11, 19, .98)); border: 1px solid var(--border); flex-wrap: wrap; }
-.leg-item { font-size: 12px; font-weight: 600; color: #e2e8f0; }
-.seat-map-img { width: 100%; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
-
-/* ============================================================
-   SEAT LOCK COUNTDOWN (5-นาที ก่อนถูกปลดล็อกอัตโนมัติ)
-   ============================================================ */
-.seat-lock-timer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 12px 0 16px;
-  padding: 13px 15px;
-  border-radius: 15px;
-  background: rgba(245, 158, 11, .08);
-  border: 1px solid rgba(245, 158, 11, .28);
-}
-.seat-lock-timer strong { display: block; color: #fbbf24; font-size: 13px; }
-.seat-lock-timer p { color: var(--sub); font-size: 10px; margin-top: 3px; }
-.seat-lock-time { min-width: 68px; padding: 7px 9px; border-radius: 10px; background: rgba(245, 158, 11, .14); color: #fbbf24; font-size: 20px; font-weight: 800; text-align: center; }
-.seat-lock-time.warning { color: #fff; background: rgba(239, 68, 68, .8); animation: lockWarning .8s infinite; }
-@keyframes lockWarning { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-/* ============================================================
-   PAYMENT MODAL
-   ============================================================ */
-.pay-modal {
-  display: none;
-  position: fixed;
-  z-index: 3000;
-  inset: 0;
-  background: rgba(4, 7, 12, .88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 16px;
-  padding-bottom: calc(40px + env(safe-area-inset-bottom));
-  align-items: flex-start;
-  justify-content: center;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
 }
-.pay-modal.show { display: flex; }
-.pay-box {
-  background: var(--bg2);
-  width: 100%;
-  max-width: 360px;
-  border-radius: 20px;
-  padding: 24px 20px;
-  text-align: center;
-  border: 1px solid var(--border);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, .5);
-  position: relative;
-  margin: auto;
-  height: auto;
-  max-height: none;
-}
-.pay-x { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, .08); border: none; color: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.pay-box h3 { font-size: 22px; color: var(--yellow); margin-bottom: 4px; }
-.pay-box .sub { font-size: 13px; color: var(--red); }
-.qr-img { width: 180px; border-radius: 12px; border: 4px solid #fff; margin: 16px auto; display: block; box-shadow: 0 6px 15px rgba(0, 0, 0, .3); }
-.chk-row { display: flex; align-items: flex-start; gap: 10px; text-align: left; color: #cbd5e1; font-size: 12px; margin: 16px 0; background: rgba(255, 255, 255, .02); padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .04); }
-.chk-row input { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
-.btn-pay-ok { width: 100%; height: 48px; border-radius: 10px; border: none; background: var(--green); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
-.btn-pay-ok:disabled { background: #1e293b; color: #475569; cursor: not-allowed; }
-
-/* Slip upload */
-.slip-upload { margin: 14px 0 16px; text-align: left; }
-.slip-title { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-.slip-title .req { color: var(--red); }
-.slip-drop {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  padding: 13px;
-  background: var(--bg3);
-  border: 1.5px dashed rgba(255, 255, 255, .14);
-  border-radius: 14px;
-  cursor: pointer;
-  transition: .2s;
-}
-.slip-drop.has-file { border-style: solid; border-color: rgba(16, 185, 129, .5); background: rgba(16, 185, 129, .07); }
-.slip-drop input[type=file] { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
-.slip-ico { width: 42px; height: 42px; border-radius: 12px; background: rgba(56, 189, 248, .12); display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; }
-.slip-drop.has-file .slip-ico { background: rgba(16, 185, 129, .15); }
-.slip-txt { flex: 1; min-width: 0; }
-.slip-name { color: #fff; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.slip-sub { color: var(--muted); font-size: 10px; margin-top: 3px; }
-.slip-preview { display: none; width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; border-radius: 12px; border: 1px solid var(--border); background: #05080e; }
-.slip-preview.show { display: block; }
-
-/* ============================================================
-   SUCCESS PAGE
-   ============================================================ */
-#successPage2 { position: fixed; inset: 0; z-index: 1100; background: var(--bg); display: none; overflow-y: auto; }
-#successPage2.show { display: block; animation: fadeUp .3s ease; }
-.succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px; text-align: center; }
-.succ-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 20px; box-shadow: 0 0 24px rgba(16, 185, 129, .45); }
-.receipt { background: #fff; color: #1e293b; border-radius: 18px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0, 0, 0, .3); margin: 20px 0; }
-.r-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 500; }
-.r-row span { color: #64748b; font-weight: 400; }
-.r-seat-box { background: #f0fdf4; border: 1px dashed #bbf7d0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 14px; }
-.r-seat-box p { font-size: 11px; color: #16a34a; font-weight: 600; }
-.r-seat-box h4 { font-size: 38px; color: #15803d; font-weight: 800; }
-.btn-home { width: 100%; height: 50px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
-
-/* ============================================================
-   DRAWER (สาระแนะนำ)
-   ============================================================ */
-.drawer {
-  position: fixed;
+#resultWrap.show { display: block; }
+.result-bar {
+  position: sticky;
   top: 0;
-  right: -100%;
-  width: 85%;
-  max-width: 340px;
-  height: 100%;
-  background: #090f1a;
-  z-index: 600;
-  transition: .4s cubic-bezier(.4, 0, .2, 1);
-  padding: 24px 16px;
-  overflow-y: auto;
-  box-shadow: -10px 0 30px rgba(0, 0, 0, .5);
-  border-left: 1px solid var(--border);
-}
-.drawer.open { right: 0; }
-.ov { position: fixed; inset: 0; background: rgba(0, 0, 0, .65); z-index: 599; display: none; backdrop-filter: blur(5px); }
-.info-block { background: rgba(255, 255, 255, .02); padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 3px solid var(--yellow); font-size: 12px; line-height: 1.5; }
-.mem-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 10px; }
-.mem-grid img { width: 100%; border-radius: 12px; border: 1px solid var(--border); }
-
-/* ============================================================
-   EQUIPMENT RENTAL PAGE (เช่าอุปกรณ์)
-   ============================================================ */
-#equipPage { position: fixed; inset: 0; z-index: 950; background: var(--bg); overflow-y: auto; display: none; }
-#equipPage.show { display: block; animation: fadeUp .25s ease; }
-
-.eq-sec-title { font-size: 14px; color: var(--blue); font-weight: 700; margin: 22px 0 12px; display: flex; align-items: center; gap: 8px; }
-
-.eq-trip-card {
+  left: 0;
+  z-index: 10;
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--bg2);
-  border: 1.5px solid var(--border);
-  border-radius: 16px;
-  padding: 12px 14px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: .15s;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--accent-dk);
+  color: #fff;
 }
-.eq-trip-card.selected { border-color: var(--blue); background: rgba(56, 189, 248, .08); }
-.eq-trip-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--muted); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.eq-trip-card.selected .eq-trip-radio { border-color: var(--blue); }
-.eq-trip-radio::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--blue); display: none; }
-.eq-trip-card.selected .eq-trip-radio::after { display: block; }
-.eq-trip-info h4 { font-size: 13px; color: #fff; font-weight: 700; }
-.eq-trip-info p { font-size: 11px; color: var(--sub); margin-top: 2px; }
-
-.eq-item-card { display: flex; gap: 12px; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 12px; margin-bottom: 12px; }
-.eq-item-img { width: 74px; height: 74px; border-radius: 14px; overflow: hidden; flex-shrink: 0; background: #fff; display: flex; align-items: center; justify-content: center; }
-.eq-item-img img { width: 100%; height: 100%; object-fit: contain; }
-.eq-item-info { flex: 1; min-width: 0; }
-.eq-item-info h4 { font-size: 14px; color: #fff; font-weight: 700; }
-.eq-item-info p.model { font-size: 11px; color: var(--sub); margin-top: 2px; }
-.eq-item-info p.price { font-size: 12px; color: var(--blue); font-weight: 700; margin-top: 4px; }
-.eq-stepper { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-.eq-step-btn { width: 30px; height: 30px; border-radius: 10px; border: none; background: var(--bg3); color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.eq-step-val { min-width: 22px; text-align: center; font-size: 15px; font-weight: 800; color: #fff; }
-
-.eq-summary-card {
-  background: linear-gradient(180deg, rgba(56, 189, 248, .1), rgba(56, 189, 248, .03));
-  border: 1px solid rgba(56, 189, 248, .18);
-  border-radius: 18px;
-  padding: 14px 16px;
-  margin: 18px 0 100px;
-}
-.eq-summary-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--sub); padding: 4px 0; }
-.eq-summary-row.total { font-size: 15px; font-weight: 800; color: #fff; border-top: 1px solid var(--border); margin-top: 8px; padding-top: 10px; }
-.eq-summary-row.total span:last-child { color: var(--blue); }
-
-.eq-note { font-size: 11px; color: #fbbf24; background: rgba(245, 158, 11, .08); border: 1px solid rgba(245, 158, 11, .25); border-radius: 12px; padding: 10px 12px; margin-top: 10px; line-height: 1.6; }
-
-/* ใบเสร็จค่าเช่าอุปกรณ์ */
-#equipReceiptPage { position: fixed; inset: 0; z-index: 1150; background: var(--bg); display: none; overflow-y: auto; }
-#equipReceiptPage.show { display: block; animation: fadeUp .3s ease; }
-.r-item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; color: #334155; }
-.r-item-row:last-of-type { border-bottom: none; }
-.r-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #15803d; padding-top: 10px; margin-top: 6px; }
-
-/* ============================================================
-   FLOATING ADMIN TAB — แถบลอยจางๆ ริมจอ กดแล้วค่อยกางเป็นปุ่ม
-   ============================================================ */
-.admin-tab {
-  position: fixed;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 52px;
-  padding: 0 9px;
-  background: rgba(56, 189, 248, .1);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(56, 189, 248, .18);
-  border-right: none;
-  border-radius: 16px 0 0 16px;
-  cursor: pointer;
-  opacity: .6;
-  transition: opacity .25s ease, padding .25s ease, background .25s ease;
-  overflow: hidden;
-  white-space: nowrap;
-}
-.admin-tab:active { opacity: .8; }
-.admin-tab .admin-tab-dots { font-size: 13px; color: var(--blue); letter-spacing: -1px; flex-shrink: 0; }
-.admin-tab .admin-tab-label {
-  font-size: 11.5px;
+.result-bar .back-btn {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
   font-weight: 700;
-  color: var(--blue);
-  max-width: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-width .25s ease, opacity .2s ease .05s;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
 }
-.admin-tab.expanded {
-  opacity: 1;
-  padding: 0 14px 0 10px;
-  background: rgba(56, 189, 248, .16);
-  border-color: rgba(56, 189, 248, .35);
-  box-shadow: -4px 0 16px rgba(2, 132, 199, .25);
+.result-hint {
+  font-size: 12px;
+  text-align: right;
+  line-height: 1.4;
+  opacity: .95;
 }
-.admin-tab.expanded .admin-tab-label { max-width: 120px; opacity: 1; }
 
+#calibBar {
+  position: sticky;
+  top: 45px;
+  z-index: 9;
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #1a1a1a;
+}
+.calib-btn {
+  flex: 1;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.calib-btn.primary { background: #2f6f4f; border-color: #2f6f4f; }
+#calibOutput {
+  width: 100%;
+  height: 140px;
+  box-sizing: border-box;
+  padding: 10px;
+  font-family: monospace;
+  font-size: 11px;
+  background: #111;
+  color: #7fffb0;
+  border: none;
+  border-top: 2px solid #2f6f4f;
+}
+
+/* ตอนเปิดโหมดปรับตำแหน่ง — ทำให้แต่ละช่องลากได้ และมองเห็นง่ายขึ้น */
+.ov.calib-on {
+  outline: 1px dashed rgba(255,0,0,.7);
+  background: rgba(255,255,0,.35);
+  cursor: grab;
+  touch-action: none;
+  padding: 1px 3px;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.ov.calib-on:active { cursor: grabbing; background: rgba(255,140,0,.5); }
+.ov.calib-empty::after {
+  content: attr(data-fieldname);
+  color: #b00;
+  font-size: inherit;
+}
+
+/* กรอบรูปภาพ — กว้างเท่าจอมือถือพอดี ล็อกอัตราส่วนภาพ (1206:1658) ไว้เสมอ
+   ไม่ต้องเลื่อนซ้าย-ขวาอีกต่อไป เลื่อนขึ้น-ลงอย่างเดียวพอ */
+#formImageWrap {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #fff;
+}
+#formImageWrap img { display: block; width: 100%; height: auto; }
+
+.ov {
+  position: absolute;
+  font-family: 'TH Sarabun PSK', 'THSarabunPSK', 'TH Sarabun New', 'THSarabunNew', 'Sarabun', sans-serif;
+  font-weight: 700;
+  color: #16326b;
+  white-space: nowrap;
+  line-height: 1;
+}
 </style>
 </head>
 <body>
 
-<!-- ============================================================
-     LOGIN PAGE
-     ============================================================ -->
-<div id="loginPage">
-  <div class="login-logo">
-    <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/90?text=🏕'" alt="Logo">
-    <h1>หารเฉลี่ยเที่ยวนี่เหอะ</h1>
-    <p>ออกไปเที่ยวให้โลกจำ 🏔️</p>
-  </div>
-  <div class="login-card">
-    <h2>👋 ยินดีต้อนรับโว้ยย!</h2>
-    <p>ใส่เบอร์มือถือของคุณเพื่อเข้าระบบ<br>จดจำอัตโนมัติ ไม่ต้องล็อกอินซ้ำ</p>
-    <div class="inp-wrap">
-      <span class="inp-pre">🇹🇭</span>
-      <input id="loginPhone" class="inp" type="tel" placeholder="063xxxxxxx" maxlength="10" oninput="checkReady()">
-    </div>
-    <div class="inp-wrap">
-      <span class="inp-pre">👤</span>
-      <input id="loginNick" class="inp" placeholder="ชื่อเล่น (แสดงในแอป)" oninput="checkReady()">
-    </div>
-    <button id="loginBtn" class="btn-login" disabled onclick="doLogin()">เข้าสู่ระบบ →</button>
-    <p class="login-note">🔒 ใช้เบอร์ดึงประวัติการจองของคุณเท่านั้น</p>
-  </div>
+<div class="hdr">
+  <img class="logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/64?text=🏕'" alt="โลโก้เที่ยวนี่เหอะ">
+  <h1>แบบคำขออนุญาตเข้าศึกษาธรรมชาติ<br>เส้นทางเดินป่าเขาช้างเผือก</h1>
+  <p>อุทยานแห่งชาติทองผาภูมิ · ประจำปีงบประมาณ พ.ศ. 2569</p>
+  <p style="margin-top:2px;opacity:.7">จัดทำโดยเพจ เที่ยวนี่เหอะ 🏕️</p>
 </div>
 
-<!-- ============================================================
-     LOADING SCREEN — โชว์ตอนกำลังดึงข้อมูลจากหลังบ้าน
-     ============================================================ -->
-<div id="loadingScreen">
-  <div class="loading-ring-wrap">
-    <div class="loading-ring"></div>
-    <img class="loading-logo" src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/88?text=🏕'" alt="กำลังโหลด">
-  </div>
-  <p class="loading-text">กำลังโหลดข้อมูล...</p>
-</div>
+<div class="main">
 
-<!-- ============================================================
-     APP SHELL
-     ============================================================ -->
-<div id="appShell">
-  <div class="hdr">
-    <div class="hdr-brand" onclick="switchTab('home')">
-      <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/44?text=🏕'" alt="Logo">
-      <div>
-        <h1>เที่ยวนี่เหอะ</h1>
-        <span>ออกไปเที่ยวให้โลกจำ 🏔️</span>
-      </div>
+  <!-- วันที่กรอกแบบฟอร์ม -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">📅</div>
+      <div><h2>วันที่กรอกแบบฟอร์มนี้</h2><p>วันที่ที่คุณกำลังกรอกฟอร์มอยู่ตอนนี้</p></div>
     </div>
-    <div style="display:flex;gap:8px;margin-left:auto">
-      <button onclick="openDrawer()" style="display:flex;align-items:center;gap:5px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);color:var(--blue);padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">📋 สาระแนะนำ</button>
-      <button onclick="document.getElementById('adminPopup').style.display='flex'" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;color:#fff;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 3px 10px rgba(2,132,199,.3)">👤 ติดต่อ</button>
-    </div>
-  </div>
-
-  <div id="tab-home" class="view-page active-page"><div class="main" id="homeContent"></div></div>
-
-  <div id="tab-trips" class="view-page">
-    <div class="main">
-      <div class="search-wrap">
-        <span class="s-ico">🔍</span>
-        <input id="searchInput" placeholder="ค้นหาชื่อทริป..." oninput="searchTrips()">
-      </div>
-      <div id="tripListFull" class="trip-list">
-        <p style="text-align:center;color:var(--blue);padding:30px">⌛ กำลังโหลด...</p>
-      </div>
-    </div>
-  </div>
-
-  <div id="tab-mytrips" class="view-page"><div class="main" id="myContent"></div></div>
-  <div id="tab-notif" class="view-page"><div class="main" id="notifContent"></div></div>
-
-  <div class="bnav">
-    <div class="bnav-item active" id="nav-home" onclick="switchTab('home')"><div class="ico">🏠</div><div class="lbl">หน้าหลัก</div></div>
-    <div class="bnav-item" id="nav-trips" onclick="switchTab('trips')"><div class="ico">🎒</div><div class="lbl">ทริปทั้งหมด</div></div>
-    <div class="bnav-item" id="nav-mytrips" onclick="switchTab('mytrips')"><div class="ico">🪪</div><div class="lbl">โปรไฟล์</div></div>
-    <div class="bnav-item" id="nav-notif" onclick="switchTab('notif')"><div class="ico">🔔</div><div class="lbl">เผื่อจำเป็น</div></div>
-  </div>
-</div>
-
-<!-- ============================================================
-     TRIP DETAIL BOTTOM SHEET
-     ============================================================ -->
-<div id="modalBg" class="modal-bg" onclick="if(event.target===this) closeModal()">
-  <div class="modal-sheet">
-    <button class="modal-x" onclick="closeModal()">✕</button>
-    <img id="md-img" class="modal-img" src="" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80'">
-
-    <button id="md-bookBtn" class="btn-book" onclick="goToBook()">จองที่นั่ง ❤️</button>
-
-    <div class="modal-body">
-      <h2 id="md-name"></h2>
-      <div id="md-date" class="modal-date"></div>
-      <div id="md-price" class="modal-price"></div>
-      <div class="modal-grid">
-        <div class="modal-card"><span>⏳ จำนวนวัน</span><strong id="md-days">-</strong></div>
-        <div class="modal-card"><span>🥾 ระยะเดิน</span><strong id="md-dist">-</strong></div>
-        <div class="modal-card"><span>🔥 ความยาก</span><strong id="md-level">-</strong></div>
-        <div class="modal-card"><span>🚐 การเดินทาง</span><strong>รถตู้ VIP</strong></div>
-      </div>
-      <div id="md-hl" class="modal-hl"></div>
-      <div id="md-payment" class="modal-payment"></div>
-      <div class="modal-seat-row">
-        <div>
-          <p style="font-size:11px;color:var(--sub);margin-bottom:4px">ที่นั่งคงเหลือ</p>
-          <div id="md-avail" class="avail ok">-</div>
-        </div>
-        <div id="md-status" class="chip chip-green">เปิดจอง</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ============================================================
-     BOOKING PAGE
-     ============================================================ -->
-<div id="bookingPage2">
-  <div class="bk-hdr">
-    <button class="btn-back" onclick="closeBook()">⬅ ย้อนกลับ</button>
-    <span class="chip chip-green" style="font-size:11px">ขั้นตอนที่ 2: จองที่นั่ง</span>
-  </div>
-
-  <div class="bk-body">
-    <div style="text-align:center;margin-bottom:20px">
-      <h2 style="font-size:20px;font-weight:700;color:#fff">จองที่นั่งรถตู้ 🚐✨</h2>
-      <p style="font-size:12px;color:var(--yellow);margin-top:4px">เลือกทำเลดีๆ ก่อนตกรถนะจ๊ะ ⚡</p>
-    </div>
-
-    <div class="ig"><label>⛺ ชื่อทริปขนตูดลุก</label><input id="b-trip" disabled></div>
-    <div class="ig"><label>📅 วันที่จัดทริป</label><input id="b-date" disabled></div>
-
-    <label style="font-size:13px;color:var(--sub);font-weight:500;display:block;margin-bottom:8px">🚌 เลือกที่นั่งที่คุณต้องการ</label>
-    <img src="IMG_0444.jpeg" class="seat-map-img" onerror="this.style.display='none'">
-
-    <div class="seat-legend">
-      <div class="leg-item">🟢 ว่าง</div>
-      <div class="leg-item">🟠 กำลังเลือก</div>
-      <div class="leg-item">🔴 ถูกจอง</div>
-      <div class="leg-item">🟡 ของคุณ</div>
-      <div class="leg-item">⚫ งดจอง</div>
-    </div>
-
-    <div class="van-block">
-      <div class="van-block-title">🚐 คันที่ 1 (ตู้ A)</div>
-      <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
-      <div id="vanGridA" class="van-grid-seats"></div>
-    </div>
-    <div class="van-block">
-      <div class="van-block-title">🚐 คันที่ 2 (ตู้ B)</div>
-      <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
-      <div id="vanGridB" class="van-grid-seats"></div>
-    </div>
-    <div class="van-block">
-      <div class="van-block-title">🚐 คันที่ 3 (ตู้ C)</div>
-      <div class="van-grid-header"><span>⬅ ด้านหน้า</span><span>ด้านหลัง ➡</span></div>
-      <div id="vanGridC" class="van-grid-seats"></div>
-    </div>
-
-    <div id="formFieldsBox2">
-      <div class="form-sec-header">
-        <div class="form-sec-ico">📝</div>
-        <div>
-          <div class="form-sec-title">กรอกข้อมูลผู้จอง</div>
-          <div class="form-sec-sub">ใช้ยืนยันตัวตนตอนขึ้นรถ กรอกให้ครบนะครับ</div>
-        </div>
-      </div>
-
-      <div class="ig">
-        <label>🤦 ชื่อ-นามสกุลจริง</label>
-        <input id="f-name" placeholder="ระบุชื่อ-นามสกุลจริง..." oninput="checkBook()">
-      </div>
-      <div class="ig">
-        <label>🏷️ ชื่อเล่น</label>
-        <input id="f-nick" placeholder="ชื่อเล่น" oninput="checkBook()">
-      </div>
-      <div class="ig">
-        <label>📞 เบอร์โทรศัพท์</label>
-        <input id="f-phone" type="tel" oninput="checkBook()">
-      </div>
-      <div class="ig">
-        <label>💬 ชื่อ LINE</label>
-        <input id="f-line" placeholder="ชื่อไลน์อ่ะ เข้าใจมั้ย!!" oninput="checkBook()">
-      </div>
-
-      <div class="ig">
-        <label>🚏 จุดขึ้นรถ</label>
-
-        <select id="f-pickup-select" class="pickup-select" onchange="handlePickupSelect()">
-          <option value="ลานจอด BTS หมอชิต">ลานจอด BTS หมอชิต</option>
-          <option value="สี่แยกสแควร์หลักสี่">สี่แยกสแควร์หลักสี่</option>
-          <option value="ศาลาหน้าดอนเมือง">ศาลาหน้าดอนเมือง</option>
-          <option value="หน้าโลตัสรังสิต">หน้าโลตัสรังสิต</option>
-          <option value="หน้าโลตัสอยุธยา">หน้าโลตัสอยุธยา</option>
-          <option value="__other__">📍 แวะรับจุดอื่น (ระบุเอง)</option>
+    <div class="date-row">
+      <div class="fld"><label>วัน <span class="req">*</span></label><input id="f-formDay" type="number" min="1" max="31" placeholder="14" oninput="checkForm()"></div>
+      <div class="fld"><label>เดือน <span class="req">*</span></label>
+        <select id="f-formMonth" onchange="checkForm()">
+          <option value="">เลือกเดือน</option>
         </select>
-
-        <input
-          id="f-pickup-other"
-          class="pickup-other-input"
-          placeholder="ระบุจุดที่ต้องการให้แวะรับ เช่น ปั๊ม ปตท. สายไหม..."
-          style="display:none"
-          oninput="document.getElementById('f-pickup').value=this.value.trim(); checkBook()"
-        >
-        <input type="hidden" id="f-pickup" value="ลานจอด BTS หมอชิต">
       </div>
-
-      <input type="hidden" id="f-seat">
-      <input type="hidden" id="f-dateraw">
+      <div class="fld"><label>พ.ศ. <span class="req">*</span></label><input id="f-formYear" type="number" placeholder="2569" oninput="checkForm()"></div>
     </div>
   </div>
 
-  <div class="sticky-bar">
-    <button id="confirmBtn" class="btn-confirm" disabled onclick="openPay()">🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง</button>
-  </div>
-</div>
-
-<!-- ============================================================
-     PAYMENT MODAL
-     ============================================================ -->
-<div id="payModal" class="pay-modal">
-  <div class="pay-box">
-    <button class="pay-x" onclick="closePay()">✕</button>
-    <span class="chip chip-green" style="font-size:11px;position:absolute;top:16px;left:16px">ขั้นตอนที่ 3: ชำระเงิน</span>
-    <h3 style="margin-top:22px">💰 ชำระเงินค่ามัดจำทริป 💰</h3>
-    <p class="sub">(สแกน QR หรือบันทึกภาพเพื่อชำระเงิน)</p>
-    <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
-
-    <div id="seatLockTimerBox" class="seat-lock-timer">
-      <div>
-        <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
-        <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
-      </div>
-      <div id="seatLockTimer" class="seat-lock-time">05:00</div>
+  <!-- ข้อมูลผู้ขออนุญาต -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">1</div>
+      <div><h2>ข้อมูลผู้ขออนุญาต</h2><p>ข้อมูลส่วนตัวตามบัตรประชาชน</p></div>
     </div>
 
-    <div class="slip-upload">
-      <div class="slip-title">🧾 แนบสลิปการโอนเงิน <span class="req">*</span></div>
-      <div class="slip-drop" id="slipDrop">
-        <div class="slip-ico">🧾</div>
-        <div class="slip-txt">
-          <div class="slip-name" id="slipName">แตะเพื่อเลือกรูปสลิป</div>
-          <div class="slip-sub">JPG, PNG หรือ WEBP ไม่เกิน 5MB</div>
-        </div>
-        <input type="file" id="slipFile" accept="image/jpeg,image/png,image/webp" onchange="handleSlipFile(this)">
-      </div>
-      <img id="slipPreview" class="slip-preview" alt="ตัวอย่างสลิป">
-    </div>
-
-    <button id="payOkBtn" class="btn-pay-ok" disabled onclick="submitBook()">🧾 กรุณาแนบสลิปก่อน</button>
-    <p onclick="closePay()" style="font-size:13px;color:var(--muted);margin-top:14px;cursor:pointer">ย้อนกลับไปแก้ไข</p>
-  </div>
-</div>
-
-<!-- ============================================================
-     SUCCESS PAGE
-     ============================================================ -->
-<div id="successPage2">
-  <div class="succ-body">
-    <div class="succ-ico">✓</div>
-    <h2 style="font-size:26px;font-weight:700;color:#fff">จองสำเร็จ! 🎉</h2>
-    <div class="receipt" id="r-receipt-card">
-      <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="r-name">-</strong></div>
-      <div class="r-row">⛺ <span>ทริป:</span> <strong id="r-trip">-</strong></div>
-      <div class="r-row">📅 <span>วันที่:</span> <strong id="r-date">-</strong></div>
-      <div class="r-row">🚏 <span>จุดขึ้นรถ:</span> <strong id="r-pickup">-</strong></div>
-      <div class="r-seat-box">
-        <p>หมายเลขที่นั่งของคุณ</p>
-        <h4 id="r-seat">-</h4>
-      </div>
-    </div>
-    <p style="font-size:16px;color:var(--red);line-height:1.5;margin-bottom:16px">
-      ทักไลน์แอดมินส่งหลักฐานการจองเพื่อให้แอดมินดึงเข้ากลุ่ม
-      <br><span style="font-size:16px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
-    </p>
-    <a href="https://line.me/ti/p/~tiaewneehur" target="_blank" rel="noopener noreferrer"
-       style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:#06C755;color:#fff;padding:14px;border-radius:14px;font-size:15px;font-weight:700;margin-bottom:12px;box-shadow:0 6px 18px rgba(6,199,85,.3)">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:22px;height:22px"> ทักไลน์แอดมินเลย
-    </a>
-    <button class="btn-home" onclick="backHome()">กลับสู่หน้าหลัก 🏠</button>
-  </div>
-</div>
-
-<!-- ============================================================
-     DRAWER (สาระความรู้ / ข้อแนะนำ)
-     ============================================================ -->
-<div id="ov" class="ov" onclick="closeDrawer()"></div>
-<div id="drawer" class="drawer">
-  <h3 style="color:var(--yellow);font-size:15px;margin-bottom:12px">💡 สาระความรู้ & ข้อแนะนำ</h3>
-  <div class="info-block"><strong>🚌 การเลือกที่นั่ง:</strong> แถวหน้าสุดเหมาะสำหรับผู้ที่เมารถง่าย แถวหลังสุดจะได้รับความสะเทือนมากกว่าปกติเล็กน้อย</div>
-  <div class="info-block"><strong>🎒 สัมภาระเดินทาง:</strong> แนะนำกระเป๋าขนาดพอดี ของมีค่าและยาประจำตัวควรพกติดตัวไว้ตลอดเวลาครับ</div>
-  <div class="info-block"><strong>⏰ การรักษาเวลา:</strong> กรุณามาถึงจุดนัดพบก่อนเวลาออกเดินทางอย่างน้อย 15 นาที อย่าให้ตาม เพราะจะโดนด่า</div>
-
-  <h3 style="color:var(--blue);font-size:14px;margin-top:20px;margin-bottom:10px;font-weight:700">🗺️ ข้อมูลดูแลร่างกายเวลาเดินป่า</h3>
-  <img src="IMG_4778.jpeg" style="width:100%;border-radius:16px;border:1px solid var(--border)" onerror="this.style.display='none'">
-
-  <h3 style="color:var(--blue);font-size:14px;margin-top:20px;margin-bottom:10px;font-weight:700">✨ ภาพความทรงจำตลอด 17 ป่า</h3>
-  <div class="mem-grid">
-    <img src="1.jpg" onerror="this.style.display='none'">
-    <img src="2.jpg" onerror="this.style.display='none'">
-    <img src="3.jpg" onerror="this.style.display='none'">
-    <img src="4.jpg" onerror="this.style.display='none'">
-    <img src="5.jpg" onerror="this.style.display='none'">
-    <img src="6.jpg" onerror="this.style.display='none'">
-    <img src="7.jpg" onerror="this.style.display='none'">
-    <img src="8.jpg" onerror="this.style.display='none'">
-    <img src="9.jpg" onerror="this.style.display='none'">
-    <img src="10.jpg" onerror="this.style.display='none'">
-    <img src="11.jpg" onerror="this.style.display='none'">
-    <img src="12.jpg" onerror="this.style.display='none'">
-    <img src="13.jpg" onerror="this.style.display='none'">
-    <img src="14.jpg" onerror="this.style.display='none'">
-    <img src="15.jpg" onerror="this.style.display='none'">
-    <img src="16.jpg" onerror="this.style.display='none'">
-    <img src="17.jpg" onerror="this.style.display='none'">
-    <img src="18.jpg" onerror="this.style.display='none'">
-  </div>
-</div>
-
-<!-- ============================================================
-     ADMIN CONTACT POPUP
-     ============================================================ -->
-<div id="adminPopup" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px);z-index:2000;align-items:center;justify-content:center" onclick="if(event.target===this) this.style.display='none'">
-  <div style="width:90%;max-width:480px;background:#0c1524;border-radius:28px;padding:28px 20px 40px;border:1px solid rgba(255,255,255,.07);position:relative;overflow-y:auto;max-height:90vh">
-    <button onclick="document.getElementById('adminPopup').style.display='none'" style="position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:18px;cursor:pointer">✕</button>
-
-    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-      <img src="admin.jpg" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #38bdf8" onerror="this.src='https://via.placeholder.com/64?text=👤'">
-      <div>
-        <h3 style="font-size:17px;color:#fff">แอดมินไอซ์</h3>
-        <p style="font-size:12px;color:#38bdf8;font-weight:600">เจ้าของเพจ "เที่ยวนี่เหอะ"</p>
+    <div class="fld full">
+      <label>คำนำหน้า <span class="req">*</span></label>
+      <div class="chip-group">
+        <label class="chip-opt"><input type="radio" name="title" value="นาย" onchange="checkForm()"><span>นาย</span></label>
+        <label class="chip-opt"><input type="radio" name="title" value="นาง" onchange="checkForm()"><span>นาง</span></label>
+        <label class="chip-opt"><input type="radio" name="title" value="นางสาว" onchange="checkForm()"><span>นางสาว</span></label>
       </div>
     </div>
 
-    <p style="font-size:13px;line-height:1.8;color:#cbd5e1;margin-bottom:20px">จากคนธรรมดาที่เริ่มต้นจากการชอบเดินป่า วันนี้ผมแค่อยากชวนทุกคนออกไปเห็นโลกอีกมุม เห็นหมอกตอนเช้า เห็นดาวตอนกลางคืน และได้เจอมิตรภาพดีๆ ระหว่างทาง 🌿</p>
+    <div class="row">
+      <div class="fld"><label>ชื่อ <span class="req">*</span></label><input id="f-fname" placeholder="ชื่อจริง" oninput="checkForm()"></div>
+      <div class="fld"><label>นามสกุล <span class="req">*</span></label><input id="f-lname" placeholder="นามสกุล" oninput="checkForm()"></div>
+      <div class="fld" style="max-width:100px"><label>อายุ <span class="req">*</span></label><input id="f-age" type="number" placeholder="ปี" oninput="checkForm()"></div>
+    </div>
 
-    <div style="margin-top:18px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.07);background:#0b1220">
-      <img src="team.jpg" onerror="this.src='https://via.placeholder.com/480x280?text=TEAM'" style="width:100%;display:block">
-      <div style="padding:16px">
-        <h3 style="color:#fff;font-size:18px;margin-bottom:8px">🔥 ทีมงานเที่ยวนี่เหอะ</h3>
-        <p style="color:#cbd5e1;font-size:13px;line-height:1.7">ทีมงานสายลุยที่พร้อมพาทุกคนออกเดินทาง ตั้งแต่ขึ้นรถ ยันถึงยอดเขา ⛰️</p>
+    <div class="row">
+      <div class="fld"><label>สัญชาติ <span class="req">*</span></label><input id="f-nation" placeholder="ไทย" oninput="checkForm()"></div>
+      <div class="fld"><label>ศาสนา</label><input id="f-religion" placeholder="พุทธ"></div>
+    </div>
+
+    <div class="fld full">
+      <label>เลขประจำตัวประชาชน (13 หลัก) <span class="req">*</span></label>
+      <input id="f-idcard" inputmode="numeric" maxlength="13" placeholder="1234567890123" oninput="this.value=this.value.replace(/\D/g,'').slice(0,13); checkForm()">
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>โรคประจำตัว</label><input id="f-disease" placeholder="ไม่มี" value="ไม่มี"></div>
+      <div class="fld" style="max-width:120px"><label>กรุ๊ปเลือด</label><input id="f-blood" placeholder="เช่น O, A, B, AB"></div>
+    </div>
+  </div>
+
+  <!-- ที่อยู่ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">2</div>
+      <div><h2>ที่อยู่ตามภูมิลำเนา</h2><p>ที่อยู่ปัจจุบันตามบัตรประชาชน</p></div>
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>บ้านเลขที่ <span class="req">*</span></label><input id="f-houseNo" oninput="checkForm()"></div>
+      <div class="fld" style="max-width:100px"><label>หมู่ที่</label><input id="f-moo"></div>
+    </div>
+    <div class="row">
+      <div class="fld"><label>ซอย</label><input id="f-soi"></div>
+      <div class="fld"><label>ถนน</label><input id="f-road"></div>
+    </div>
+    <div class="row">
+      <div class="fld"><label>แขวง/ตำบล <span class="req">*</span></label><input id="f-tambon" oninput="checkForm()"></div>
+      <div class="fld"><label>เขต/อำเภอ <span class="req">*</span></label><input id="f-amphoe" oninput="checkForm()"></div>
+    </div>
+    <div class="fld full"><label>จังหวัด <span class="req">*</span></label><input id="f-province" oninput="checkForm()"></div>
+  </div>
+
+  <!-- ช่องทางติดต่อ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">3</div>
+      <div><h2>ช่องทางติดต่อ</h2><p>ไว้ใช้ติดต่อกรณีฉุกเฉินระหว่างทริป</p></div>
+    </div>
+
+    <div class="row">
+      <div class="fld"><label>โทรศัพท์ (บ้าน)</label><input id="f-homePhone" inputmode="numeric" placeholder="ถ้ามี"></div>
+      <div class="fld"><label>มือถือ <span class="req">*</span></label><input id="f-mobile" inputmode="numeric" placeholder="08xxxxxxxx" oninput="checkForm()"></div>
+    </div>
+    <div class="fld full"><label>E-mail</label><input id="f-email" type="email" placeholder="you@email.com"></div>
+
+    <div class="fld full" style="margin-top:6px;font-size:12.5px;color:var(--sub);font-weight:600">บุคคลที่สามารถติดต่อได้กรณีเร่งด่วน <span class="req">*</span></div>
+    <div class="row">
+      <div class="fld"><label>ชื่อ</label><input id="f-ecFname" oninput="checkForm()"></div>
+      <div class="fld"><label>นามสกุล</label><input id="f-ecLname" oninput="checkForm()"></div>
+    </div>
+    <div class="fld full"><label>โทรศัพท์</label><input id="f-ecPhone" inputmode="numeric" oninput="checkForm()"></div>
+  </div>
+
+  <!-- รายละเอียดการขอเข้าพื้นที่ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">4</div>
+      <div><h2>รายละเอียดการขอเข้าพื้นที่</h2><p>ช่วงวันที่จะเดินป่าศึกษาธรรมชาติ</p></div>
+    </div>
+
+    <div class="fld full" style="max-width:140px"><label>จำนวนวัน <span class="req">*</span></label><input id="f-days" type="number" min="1" placeholder="เช่น 2" oninput="checkForm()"></div>
+
+    <div class="fld full"><label>ตั้งแต่วันที่ <span class="req">*</span></label></div>
+    <div class="date-row" style="margin-bottom:13px">
+      <input id="f-startDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+      <select id="f-startMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
+      <input id="f-startYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
+    </div>
+
+    <div class="fld full"><label>ถึงวันที่ <span class="req">*</span></label></div>
+    <div class="date-row">
+      <input id="f-endDay" type="number" min="1" max="31" placeholder="วัน" oninput="checkForm()">
+      <select id="f-endMonth" onchange="checkForm()"><option value="">เลือกเดือน</option></select>
+      <input id="f-endYear" type="number" placeholder="พ.ศ." oninput="checkForm()">
+    </div>
+  </div>
+
+  <!-- ประกันภัย -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">5</div>
+      <div><h2>การทำประกันภัยอุบัติเหตุ</h2><p>สำหรับการเข้าศึกษาธรรมชาติครั้งนี้</p></div>
+    </div>
+
+    <div class="fld full">
+      <div class="chip-group">
+        <label class="chip-opt"><input type="radio" name="insurance" value="yes" onchange="toggleInsurance(); checkForm()"><span>✅ ทำประกันภัยอุบัติเหตุ</span></label>
+        <label class="chip-opt"><input type="radio" name="insurance" value="no" onchange="toggleInsurance(); checkForm()"><span>ไม่ได้ทำประกันภัย</span></label>
       </div>
     </div>
 
-    <div style="display:flex;flex-direction:column;gap:10px;margin-top:20px">
-      <a href="https://line.me/ti/p/~tiaewneehur" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;background:#06C755;color:#fff;padding:12px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:18px;height:18px"> LINE</a>
-      <a href="https://www.facebook.com/tiawneehur" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;background:#1877F2;color:#fff;padding:12px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" style="width:18px;height:18px"> Facebook</a>
-      <a href="https://www.instagram.com/tiaewneehur" target="_blank" style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;padding:12px;border-radius:999px;font-size:13px;font-weight:600"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" style="width:18px;height:18px"> Instagram</a>
+    <div id="insBox" class="ins-box">
+      <div class="row" style="margin-bottom:0">
+        <div class="fld"><label>บริษัทประกัน <span class="req">*</span></label><input id="f-insCo" oninput="checkForm()"></div>
+        <div class="fld"><label>เบอร์โทรบริษัท</label><input id="f-insPhone" inputmode="numeric"></div>
+      </div>
     </div>
   </div>
+
+  <!-- ลงชื่อ -->
+  <div class="sec">
+    <div class="sec-hd">
+      <div class="sec-num">✍️</div>
+      <div><h2>ชื่อผู้ลงนาม</h2><p>ชื่อ-นามสกุลที่จะพิมพ์กำกับใต้ลายเซ็นในเอกสาร</p></div>
+    </div>
+    <div class="fld full">
+      <input id="f-signName" placeholder="จะเติมให้อัตโนมัติจากชื่อ-นามสกุลด้านบน">
+      <p class="hint">พิมพ์ชื่อเองก่อนแคปหน้าจอ แล้วเซ็นด้วยลายมือทับตอนพิมพ์ออกมาก็ได้ครับ</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="sticky-bar">
+  <button id="submitBtn" class="btn-submit" disabled onclick="showResult()">📄 กรอกข้อมูลให้ครบก่อนนะครับ</button>
 </div>
 
 <!-- ============================================================
-     EQUIPMENT RENTAL PAGE (เช่าอุปกรณ์)
+     RESULT VIEW — เอกสารที่กรอกแล้ว แสดงเต็มจอให้กดแคปหน้าจอเก็บไว้เอง
      ============================================================ -->
-<div id="equipPage">
-  <div class="bk-hdr">
-    <button class="btn-back" onclick="closeEquipRent()">⬅ ย้อนกลับ</button>
-    <span class="chip chip-green" style="font-size:11px">เช่าอุปกรณ์แคมป์</span>
+<div id="resultWrap">
+  <div class="result-bar">
+    <button class="back-btn" onclick="closeResult()">‹ กลับไปแก้ไข</button>
+    <div class="result-hint">📸 แคปหน้าจอเก็บไว้ได้เลยครับ<br>(เลื่อน/ซูมดูให้ครบก่อนแคปนะครับ)</div>
   </div>
 
-  <div class="bk-body">
-    <div style="text-align:center;margin-bottom:6px">
-      <h2 style="font-size:20px;font-weight:700;color:#fff">🏕️ เช่าอุปกรณ์แคมป์</h2>
-      <p style="font-size:12px;color:var(--yellow);margin-top:4px">เลือกทริปที่จะไป แล้วเลือกของที่อยากเช่าได้เลยครับ</p>
-    </div>
-
-    <div class="eq-sec-title">🎒 เลือกทริปที่จะไป</div>
-    <div id="eqTripList"></div>
-
-    <div class="eq-sec-title">🧺 เลือกอุปกรณ์ที่ต้องการเช่า</div>
-    <div id="eqItemList"></div>
-
-    <div id="eqSummaryBox" class="eq-summary-card" style="display:none">
-      <div id="eqSummaryRows"></div>
-      <div class="eq-summary-row total"><span>ยอดรวมที่ต้องจ่าย</span><span id="eqTotalPrice">0 บาท</span></div>
-      <div class="eq-note">⚠️ ทางแอดมินจะเรียกเก็บเงินค่าเช่าอุปกรณ์นี้ในกลุ่มอีกครั้งครับ ไม่ต้องโอนตอนนี้</div>
-    </div>
+  <div id="calibBar">
+    <button id="calibToggleBtn" class="calib-btn" onclick="toggleCalibMode()">🔧 โหมดปรับตำแหน่ง</button>
+    <button id="calibExportBtn" class="calib-btn primary" style="display:none" onclick="exportCalibCoords()">📋 คัดลอกตำแหน่งทั้งหมด</button>
   </div>
+  <textarea id="calibOutput" style="display:none"></textarea>
 
-  <div class="sticky-bar">
-    <button id="eqConfirmBtn" class="btn-confirm" disabled onclick="confirmEquipRent()">🚀 กรุณาเลือกทริปก่อนครับ</button>
+  <div id="formImageWrap">
+    <img src="IMG_0527.jpeg" alt="แบบฟอร์มต้นฉบับ">
+
+    <!-- วันที่กรอกฟอร์ม -->
+    <span id="p-formDay"   class="ov" data-fieldname="p-formDay" style="left:55.07%; top:14.99%; font-size:1.35vw;"></span>
+    <span id="p-formMonth" class="ov" data-fieldname="p-formMonth" style="left:65.83%; top:15.33%; font-size:1.35vw;"></span>
+    <span id="p-formYear"  class="ov" data-fieldname="p-formYear" style="left:82.14%; top:15.23%; font-size:1.35vw;"></span>
+
+    <!-- ข้าพเจ้า (checkbox คำนำหน้า / ชื่อ / นามสกุล / อายุ) -->
+    <span id="p-cbNai"    class="ov" data-fieldname="p-cbNai" style="left:27.78%; top:23.83%; font-size:1.35vw;"></span>
+    <span id="p-cbNang"   class="ov" data-fieldname="p-cbNang" style="left:30.38%; top:23.80%; font-size:1.35vw;"></span>
+    <span id="p-cbNangsao" class="ov" data-fieldname="p-cbNangsao" style="left:35.42%; top:23.67%; font-size:1.35vw;"></span>
+    <span id="p-fname"    class="ov" data-fieldname="p-fname" style="left:50.23%; top:23.58%; font-size:1.47vw;"></span>
+    <span id="p-lname"    class="ov" data-fieldname="p-lname" style="left:68.89%; top:23.45%; font-size:1.47vw;"></span>
+    <span id="p-age"      class="ov" data-fieldname="p-age" style="left:85.30%; top:23.45%; font-size:1.35vw;"></span>
+
+    <!-- สัญชาติ / ศาสนา / เลขบัตร -->
+    <span id="p-nation"   class="ov" data-fieldname="p-nation" style="left:22.50%; top:25.85%; font-size:1.47vw;"></span>
+    <span id="p-religion" class="ov" data-fieldname="p-religion" style="left:36.66%; top:25.36%; font-size:1.47vw;"></span>
+    <span id="p-idcard"   class="ov" data-fieldname="p-idcard" style="left:67.68%; top:25.74%; font-size:1.3vw;"></span>
+
+    <!-- โรคประจำตัว / กรุ๊ปเลือด / บ้านเลขที่ -->
+    <span id="p-disease" class="ov" data-fieldname="p-disease" style="left:28.30%; top:27.50%; font-size:1.47vw;"></span>
+    <span id="p-blood"   class="ov" data-fieldname="p-blood" style="left:57.34%; top:27.52%; font-size:1.47vw;"></span>
+    <span id="p-houseNo" class="ov" data-fieldname="p-houseNo" style="left:81.15%; top:27.72%; font-size:1.35vw;"></span>
+
+    <!-- หมู่ที่ / ซอย / ถนน / ตำบล -->
+    <span id="p-moo"    class="ov" data-fieldname="p-moo" style="left:21.90%; top:29.62%; font-size:1.47vw;"></span>
+    <span id="p-soi"    class="ov" data-fieldname="p-soi" style="left:32.50%; top:29.85%; font-size:1.47vw;"></span>
+    <span id="p-road"   class="ov" data-fieldname="p-road" style="left:57.50%; top:29.85%; font-size:1.47vw;"></span>
+    <span id="p-tambon" class="ov" data-fieldname="p-tambon" style="left:76.19%; top:29.77%; font-size:1.35vw;"></span>
+
+    <!-- เขต/อำเภอ / จังหวัด / โทรบ้าน -->
+    <span id="p-amphoe"    class="ov" data-fieldname="p-amphoe" style="left:24.50%; top:31.85%; font-size:1.47vw;"></span>
+    <span id="p-province"  class="ov" data-fieldname="p-province" style="left:50.50%; top:31.85%; font-size:1.47vw;"></span>
+    <span id="p-homePhone" class="ov" data-fieldname="p-homePhone" style="left:81.50%; top:31.85%; font-size:1.35vw;"></span>
+
+    <!-- มือถือ / อีเมล -->
+    <span id="p-mobile" class="ov" data-fieldname="p-mobile" style="left:23.50%; top:34.05%; font-size:1.47vw;"></span>
+    <span id="p-email"  class="ov" data-fieldname="p-email" style="left:46.96%; top:33.98%; font-size:1.25vw;"></span>
+
+    <!-- ผู้ติดต่อฉุกเฉิน -->
+    <span id="p-ecFname" class="ov" data-fieldname="p-ecFname" style="left:45.70%; top:36.07%; font-size:1.47vw;"></span>
+    <span id="p-ecLname" class="ov" data-fieldname="p-ecLname" style="left:64.30%; top:35.92%; font-size:1.47vw;"></span>
+    <span id="p-ecPhone" class="ov" data-fieldname="p-ecPhone" style="left:80.09%; top:36.06%; font-size:1.3vw;"></span>
+
+    <!-- ข้อ ๑ จำนวนวัน + ช่วงวันที่ -->
+    <span id="p-days"       class="ov" data-fieldname="p-days" style="left:62.38%; top:42.31%; font-size:1.47vw;"></span>
+    <span id="p-startDay"   class="ov" data-fieldname="p-startDay" style="left:23.50%; top:44.59%; font-size:1.35vw;"></span>
+    <span id="p-startMonth" class="ov" data-fieldname="p-startMonth" style="left:33.15%; top:44.65%; font-size:1.2vw;"></span>
+    <span id="p-startYear"  class="ov" data-fieldname="p-startYear" style="left:47.71%; top:44.65%; font-size:0.95vw;"></span>
+    <span id="p-endDay"     class="ov" data-fieldname="p-endDay" style="left:59.75%; top:44.63%; font-size:1.2vw;"></span>
+    <span id="p-endMonth"   class="ov" data-fieldname="p-endMonth" style="left:69.19%; top:44.77%; font-size:1.1vw;"></span>
+    <span id="p-endYear"    class="ov" data-fieldname="p-endYear" style="left:83.94%; top:44.85%; font-size:1.15vw;"></span>
+
+    <!-- ข้อ ๕ ประกันภัย -->
+    <span id="p-cbIns1"   class="ov" data-fieldname="p-cbIns1" style="left:25.30%; top:65.47%; font-size:1.4vw;"></span>
+    <span id="p-insCo"    class="ov" data-fieldname="p-insCo" style="left:53.36%; top:65.35%; font-size:1.4vw;"></span>
+    <span id="p-insPhone" class="ov" data-fieldname="p-insPhone" style="left:74.67%; top:65.41%; font-size:1.25vw;"></span>
+    <span id="p-cbIns2"   class="ov" data-fieldname="p-cbIns2" style="left:27.47%; top:67.52%; font-size:1.4vw;"></span>
+
+    <!-- ชื่อผู้ลงนามพิมพ์ใต้ลายเซ็น -->
+    <span id="p-signName1" class="ov" data-fieldname="p-signName1" style="left:61.34%; top:70.38%; font-size:1.16vw; font-style:italic;"></span>
+    <span id="p-signName2" class="ov" data-fieldname="p-signName2" style="left:60.61%; top:72.42%; font-size:1.3vw; font-weight:600;"></span>
   </div>
-</div>
-
-<!-- EQUIPMENT RENTAL RECEIPT -->
-<div id="equipReceiptPage">
-  <div class="succ-body">
-    <div class="succ-ico">✓</div>
-    <h2 style="font-size:24px;font-weight:700;color:#fff">ใบเสร็จค่าเช่าอุปกรณ์</h2>
-    <div class="receipt" id="eqr-receipt-card">
-      <div class="r-row">⛺ <span>ทริป:</span> <strong id="eqr-trip">-</strong></div>
-      <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="eqr-name">-</strong></div>
-      <div class="r-row">🪑 <span>เบาะ:</span> <strong id="eqr-seat">-</strong></div>
-      <div style="height:1px;background:#e2e8f0;margin:12px 0"></div>
-      <div id="eqr-items"></div>
-      <div class="r-total-row"><span>ยอดรวม</span><span id="eqr-total">0 บาท</span></div>
-    </div>
-    <p style="font-size:15px;color:var(--red);line-height:1.6;margin-bottom:20px">
-      ⚠️ ทางแอดมินจะเรียกเก็บเงินค่าเช่าอุปกรณ์นี้ในกลุ่มอีกครั้งครับ ไม่ต้องโอนตอนนี้
-      <br><span style="font-size:13px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
-    </p>
-    <button class="btn-home" onclick="closeEquipReceipt()">กลับสู่หน้าหลัก 🏠</button>
-  </div>
-</div>
-
-<!-- ============================================================
-     FLOATING ADMIN TAB (มุมขวาจอ — กดครั้งแรกกาง / กดซ้ำเพื่อเข้าหน้าแอดมิน)
-     ============================================================ -->
-<div id="adminTab" class="admin-tab" onclick="toggleAdminTab(event)">
-  <span class="admin-tab-dots">⋮</span>
-  <span class="admin-tab-label">สำหรับแอดมิน</span>
 </div>
 
 <script>
-/* ================================================================
-   CONFIG / CONSTANTS
-   ================================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbxjiCzVeaBJKeON5w5fKJjf8GQSSXUOXa9OaYF6-gdTWZc9DuhDzHyv6OVaT67iX9fV/exec";
-const QUERY_URL = API_URL + "?action=read";
+const THAI_MONTHS = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 
-// ทริปที่ปิดรับจองชั่วคราว (ยังไม่เปิดจอง)
-const CLOSED_TRIPS = ["ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69"];
-
-// โครงเบาะต่อรถ 1 คัน: 'driver' = คนขับ, 'spacer' = ช่องว่าง/ทางเดิน,
-// ตัวเลข/ข้อความอื่น = หมายเลขเบาะ (ต่อกับ prefix ตู้ เช่น A3, B7)
-const BUS_GRID_STRUCTURE = ['driver', 3, 6, 9, 'spacer', 2, 5, 8, 'เบาะซ้าย', 1, 4, 7];
-
-const SEAT_LOCK_MINUTES = 5;
-const SEAT_LOCK_DURATION = SEAT_LOCK_MINUTES * 60 * 1000;
-
-// รายละเอียดแต่ละทริป: คีย์ = ชื่อทริป (ต้องตรงกับข้อมูลจาก backend เป๊ะๆ)
-const TRIP_DETAILS = {
-  "แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69": {
-    days: "3 วัน 2 คืน", distance: "ประมาณ 14-15 กม.", level: "🟡 ปานกลาง", price: "2900 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ไม่รู้ เดี๋ยวไปดูก่อนเดี๋ยวมาบอก จุ๊ฟๆ",
-    image: "แม่ละเมา.jpg", loc: "จ.ตาก"
-  },
-  "โบลาเวน 6-8 มิ.ย.69": {
-    days: "3 วัน 2 คืน", distance: "ประมาณ 8-10 กม.", level: "🟡 ปานกลาง", price: "3650 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "มึงเจอฝนแน่ๆ 50%",
-    image: "โบลาเวน.jpg", loc: "สปป.ลาว"
-  },
-  "ดอยผาเวียง 13-14 มิ.ย.69": {
-    days: "2 วัน 1 คืน", distance: "13-15 กม.", level: "🟡 ปานกลาง", price: "3,400 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "🌄 ป่าอาจไม่แมส…แต่ธรรมชาติของจริง",
-    image: "ดอยผาเวียง.jpg", loc: "จ.เชียงใหม่"
-  },
-  "ดอยห้วยทู่ 4-5 ก.ค.69": {
-    days: "2 วัน 1 คืน", distance: "6-7 กม.", level: "🟡 ปานกลาง", price: "2,510 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ได้พบน้อทากุเป็นจำนวนมากมายก่ายกอง",
-    image: "ดอยห้วยทู่.jpg", loc: "จ.ตาก"
-  },
-  "ดอยทูเลจอวาเล 30-1 พ.ย.69": {
-    days: "3 วัน 2 คืน", distance: "20+ กม.", level: "🟡 ปานกลาง", price: "2,950 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทะเลหมอกลอยต่ำ ดาวเต็มท้องฟ้า แสงทองกระทบทุ่งหญ้า",
-    image: "ดอยทูเลจอวาเล.jpg", loc: "จ.ตาก"
-  },
-  "เปรโต๊ะ 19-21 มิ.ย.69": {
-    days: "3 วัน 2 คืน", distance: "15-20 กม.", level: "🟡 ปานกลาง", price: "2,900 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
-    image: "เปรโต๊ะ.jpg", loc: "จ.ตาก"
-  },
-  "ดอยหลวงตาก 27-28 มิ.ย.69": {
-    days: "2 วัน 1 คืน", distance: "22 กม.", level: "🟡 ปานกลาง", price: "2,900 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ต้นสนเดียวดาย วิวเขาสวย",
-    image: "ดอยหลวงตาก.jpg", loc: "จ.ตาก"
-  },
-  "เปรโต๊ะ 17-19 ก.ค.69": {
-    days: "3 วัน 2 คืน", distance: "15-20 กม.", level: "🟡 ปานกลาง", price: "2,900 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "วิวเขาสวย อาจจะเจอฝนฟ้าปิด 50%",
-    image: "เปรโต๊ะ.jpg", loc: "จ.ตาก"
-  },
-  "น้ำตกสายรุ้งละอองดาว 25-26 ก.ค.69": {
-    days: "2 วัน 1 คืน", distance: "9-10 กม.", level: "🟡 ปานกลาง", price: "2,660 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "น้ำตก ลอยคอตามน้ำ",
-    image: "สายรุ้งละอองดาว.jpg", loc: "จ.ระนอง"
-  },
-  "น้ำตกห้วยน้ำเย็น 8-9 ส.ค.69": {
-    days: "2 วัน 1 คืน", distance: "8-10 กม.", level: "🟢 ง่าย", price: "2,580 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "น้ำตกในป่าลึก ธรรมชาติแท้",
-    image: "ห้วยน้ำเย็น.jpg", loc: "จ.เชียงใหม่"
-  },
-  "เขาหลัก 14-16 ส.ค.69": {
-    days: "3 วัน 2 คืน", distance: "30-35 กม.", level: "🔴 ยาก", price: "3,600 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "สัมผัสธรรมชาติป่าใต้ที่จริงใจ",
-    image: "เขาหลัก.jpg", loc: "จ.พัทลุง"
-  },
-  "ภูสอยดาว 22-23 ส.ค.69": {
-    days: "2 วัน 1 คืน", distance: "13-16 กม.", level: "🟡 ปานกลาง", price: "1,800 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "⛰️ ลานสนสามใบ น้ำตกสายทิพย์ ดาวเต็มฟ้า",
-    image: "ภูสอยดาว.jpg", loc: "จ.อุตรดิตถ์"
-  },
-  "ป่าบงเปียง 29-30 ส.ค.69": {
-    days: "2 วัน 1 คืน", distance: "ไม่เดิน", level: "-", price: "2,550 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทุ่งนาขั้นบันได สายหมอกยามเช้า",
-    image: "ป่าบงเปียง.jpg", loc: "จ.เชียงใหม่"
-  },
-  "ป่าบงเปียง(ตู้4) 29-30 ส.ค.69": {
-    days: "2 วัน 1 คืน", distance: "ไม่เดิน", level: "-", price: "2,550 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทุ่งนาขั้นบันได สายหมอกยามเช้า",
-    image: "ป่าบงเปียง.jpg", loc: "จ.เชียงใหม่"
-  },
-  "หว่าวาโจ 18-20 ก.ย.69": {
-    days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2,950 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง พายุแน่นอนรอบนี้",
-    image: "หว่าวาโจ.jpg", loc: "จ.แม่ฮ่องสอน"
-  },
-  "หว่าวาโจ V.2 6-8 พ.ย.69": {
-    days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2,950 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง ทุ่งดอกบัวตอง",
-    image: "หว่าวาโจ.jpg", loc: "จ.แม่ฮ่องสอน"
-  },
-  "ภูเขาควาย 8-11 ต.ค.69": {
-    days: "4 วัน 3 คืน", distance: "30-35 กม.", level: "🔴 ยาก", price: "4,290 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก ทุ่งหญ้าสีเขียว",
-    image: "ภูเขาควาย.jpg", loc: "จ.สปป.ลาว"
-  },
-  "เลอกวาเดาะ 17-18 ต.ค.69": {
-    days: "2 วัน 1 คืน", distance: "3-4 กม.", level: "🟡 ปานกลาง", price: "2,000 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง",
-    image: "เลอกวาเดาะ.jpg", loc: "จ.ตาก"
-  },
-  "นุรึโจ-ตะโกหล่อโจ 5-7 ก.ย.69": {
-    days: "3 วัน 2 คืน", distance: " 22 กม.", level: "🔴 ยาก", price: "2800 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทากชุม ทุ่งหญ้าสีเขียว มองดูสันเขาถ้าฟ้าเปิด",
-    image: "นุรึโจ.jpg", loc: "จ.ตาก"
-  },
-  "เส่ซูโจ๊ะ-ดอยหมากพริก 23-25 ต.ค.69": {
-    days: "3 วัน 2 คืน", distance: "7-8 กม.", level: "🟡 ปานกลาง", price: "3,310 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
-    image: "ดอยหมากพริก.jpg", loc: "จ.แม่ฮ่องสอน"
-  },
-  "ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69": {
-    days: "3 วัน 2 คืน", distance: "25 กม.", level: "🔴 ยาก", price: "2000-3000 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
-    image: "ดอยลังกาหลวง.jpg", loc: "จ.เชียงใหม่"
-  },
-  "เขาหลวงสุโขทัย 12-13 ก.ย.69": {
-    days: "2 วัน 1 คืน", distance: " 3- 4 กม.", level: "🔴 ยาก", price: "1570 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวสวย ทดสอบควมถึก",
-    image: "เขาหลวงสุโขทัย.jpg", loc: "จ.สุโขทัย"
-  },
-  "พือหน่อยเล 26-27 ก.ย.69": {
-    days: "2 วัน 1 คืน", distance: " 6 กม.", level: "🟡 ปานกลาง ", price: "2350 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "น้ำตกสวย อลังการ",
-    image: "พือหน่อยเล.jpg", loc: "จ.ตาก"
-         
-  "นุรึโจ-ตะโกหล่อโจ 5-7 ก.ย.69": {
-    days: "3 วัน 2 คืน", distance: " 22 กม.", level: "🔴 ยาก", price: "2800 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทากชุม ทุ่งหญ้าสีเขียว มองดูสันเขาถ้าฟ้าเปิด",
-    image: "นุรึโจ.jpg", loc: "จ.ตาก"
-  },
-};
-
-// รูปแยกต่างหาก (เผื่อบางทริปในอนาคตอยากใช้รูปคนละใบกับ TRIP_DETAILS.image)
-const TRIP_IMAGES = Object.fromEntries(
-  Object.entries(TRIP_DETAILS).map(([name, info]) => [name, info.image])
-);
-
-// ทริปที่ผ่านมาแล้ว (โชว์ในหน้าแรก สำหรับให้คะแนนความยาก)
-const PAST_TRIPS = [
-  { name: "แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69", rounds: 1, people: 20, rating: 4.9, img: "แม่ละเมา.jpg" },
-  { name: "โบลาเวน 6-8 มิ.ย.69", rounds: 1, people: 28, rating: 2.5, img: "โบลาเวน.jpg" },
-  { name: "ดอยผาเวียง 13-14 มิ.ย.69", rounds: 1, people: 10, rating: 4.9, img: "ดอยผาเวียง.jpg" },
-  { name: "เปรโต๊ะ 19-21 มิ.ย.69", rounds: 1, people: 30, rating: 4.0, img: "เปรโต๊ะ.jpg" },
-  { name: "ดอยหลวงตาก 27-28 มิ.ย.69", rounds: 1, people: 20, rating: 4.0, img: "ดอยหลวงตาก.jpg" },
-  { name: "ดอยห้วยทู่ 4-5 ก.ค.69", rounds: 1, people: 20, rating: 4.6, img: "ดอยห้วยทู่.jpg" },
-  { name: "เปรโต๊ะ 19-21 มิ.ย.69", rounds: 2, people: 30, rating: 4, img: "เปรโต๊ะ.jpg" },
-];
-
-// อุปกรณ์แคมป์ให้เช่า (ราคาต่อทริป) — รูปดึงจากหน้าสินค้าจริงของ Decathlon
-const EQUIP_ITEMS = {
-  tent: {
-    label: "เต็นท์",
-    brand: "Decathlon Quechua MH100",
-    price: 300,
-    unit: "หลัง/ทริป",
-    img: "https://contents.mediadecathlon.com/p2754515/k$0c5138baa6a18029208375492aa8e649/picture.jpg?format=auto&f=800x0"
-  },
-  sleepingBag: {
-    label: "ถุงนอน",
-    brand: "Decathlon Quechua Arpenaz 20°",
-    price: 100,
-    unit: "ใบ/ทริป",
-    img: "https://contents.mediadecathlon.com/p2455218/k$ccb8b375884f01d6a31a25868874a4cc/camping-sleeping-bag-arpenaz-20-quechua-8648438.jpg"
-  },
-  sleepingPad: {
-    label: "แผ่นรองนอน",
-    brand: "Decathlon Forclaz Trek100",
-    price: 100,
-    unit: "แผ่น/ทริป",
-    img: "https://www.decathlon.com/cdn/shop/files/8492712-product_image-p2422856.jpg?v=1701346667"
-  }
-};
-
-/* ================================================================
-   GLOBAL STATE
-   ================================================================ */
-let currentUser = null;      // { phone, nick }
-let allBookings = [];        // ข้อมูลการจองทั้งหมดจาก backend
-let allEquipRentals = [];    // ข้อมูลการเช่าอุปกรณ์ทั้งหมดจาก backend (คนละชีทกับ bookings)
-let cacheTrips = [];         // รายการทริป (unique trip+date) ที่สรุปจาก allBookings
-let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
-let selectedSeat = null;     // เบาะที่ผู้ใช้เลือกอยู่ตอนนี้
-let highlightSeatId = null;  // เบาะที่ต้องสกรอลไปหา+ไฮไลต์ตอนเปิดหน้าเลือกเบาะ (มาจากประวัติการจอง)
-let selectedSlipFile = null; // ไฟล์สลิปที่แนบไว้
-
-let eqSelectedTripKey = null;                                  // ทริป (trip_date_seat) ที่เลือกเช่าอุปกรณ์ให้
-let eqQty = { tent: 0, sleepingBag: 0, sleepingPad: 0 };        // จำนวนที่เลือกเช่าของแต่ละชิ้น
-
-let seatRefreshTimer = null;    // interval สำหรับ poll ข้อมูลเบาะทุก 5 วิ
-let seatCountdownTimer = null;  // interval สำหรับนับถอยหลังตัวเลข
-let seatLockExpiresAt = 0;      // timestamp ที่ล็อกเบาะจะหมดอายุ
-let latestSeatRequestId = 0;    // ใช้กันข้อมูลเก่ามาทับข้อมูลใหม่ (race condition)
-
-// session id เฉพาะแท็บ/เครื่องนี้ ใช้แยกว่า "เบาะที่กำลังเลือกอยู่" เป็นของเราเองหรือคนอื่น
-const MY_SESSION_ID =
-  sessionStorage.getItem('tnh_session_id') ||
-  ('SESSION-' + Date.now() + '-' + Math.random().toString(36).substring(2, 10));
-sessionStorage.setItem('tnh_session_id', MY_SESSION_ID);
-
-/* ================================================================
-   SEAT LOCK COUNTDOWN
-   ================================================================ */
-
-// resetTime = true  -> บังคับรีเซ็ตเวลาเป็น 5:00 ใหม่ (ใช้ตอนล็อกเบาะสำเร็จ)
-// resetTime = false -> รีเซ็ตเฉพาะกรณีหมดเวลาไปแล้ว/ยังไม่เคยเริ่ม (ใช้ตอนเปิดหน้าชำระเงิน)
-function startSeatCountdown(resetTime = false) {
-  clearInterval(seatCountdownTimer);
-
-  if (resetTime || !seatLockExpiresAt || seatLockExpiresAt <= Date.now()) {
-    seatLockExpiresAt = Date.now() + SEAT_LOCK_DURATION;
-  }
-
-  const box = document.getElementById('seatLockTimerBox');
-  const timer = document.getElementById('seatLockTimer');
-  if (box) box.style.display = 'flex';
-  if (timer) timer.classList.remove('warning');
-
-  updateSeatCountdown();
-  seatCountdownTimer = setInterval(updateSeatCountdown, 1000);
-}
-
-function updateSeatCountdown() {
-  const timer = document.getElementById('seatLockTimer');
-  if (!timer) return;
-
-  const remaining = seatLockExpiresAt - Date.now();
-
-  if (remaining <= 0) {
-    clearInterval(seatCountdownTimer);
-    seatCountdownTimer = null;
-    timer.textContent = '00:00';
-    timer.classList.add('warning');
-    handleSeatLockExpired();
-    return;
-  }
-
-  const totalSeconds = Math.ceil(remaining / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  timer.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
-  timer.classList.toggle('warning', remaining <= 60 * 1000);
-}
-
-function stopSeatCountdown() {
-  clearInterval(seatCountdownTimer);
-  seatCountdownTimer = null;
-  seatLockExpiresAt = 0;
-
-  const box = document.getElementById('seatLockTimerBox');
-  const timer = document.getElementById('seatLockTimer');
-  if (box) box.style.display = 'none';
-  if (timer) {
-    timer.textContent = '05:00';
-    timer.classList.remove('warning');
-  }
-}
-
-function handleSeatLockExpired() {
-  seatLockExpiresAt = 0;
-  selectedSeat = null;
-  document.getElementById('f-seat').value = '';
-  document.getElementById('formFieldsBox2').classList.remove('show');
-  checkBook();
-
-  const date = document.getElementById('f-dateraw').value;
-  loadSeats(date);
-
-  Swal.fire({
-    icon: 'warning',
-    title: 'หมดเวลาล็อกเบาะแล้ว',
-    text: 'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
-    background: '#0c1524',
-    color: '#f1f5f9',
-    confirmButtonColor: '#0284c7'
+function fillMonthSelect(id) {
+  const sel = document.getElementById(id);
+  THAI_MONTHS.forEach(m => {
+    const opt = document.createElement('option');
+    opt.value = m;
+    opt.textContent = m;
+    sel.appendChild(opt);
   });
 }
+['f-formMonth', 'f-startMonth', 'f-endMonth'].forEach(fillMonthSelect);
 
-/* ================================================================
-   LOGIN
-   ================================================================ */
-function checkReady() {
-  const p = document.getElementById('loginPhone').value.trim();
-  const n = document.getElementById('loginNick').value.trim();
-  document.getElementById('loginBtn').disabled = !(p.length >= 9 && n.length > 0);
-}
+// เติมปี พ.ศ. ปัจจุบันไว้ล่วงหน้าให้เป็นค่าเริ่มต้น (แก้ไขเองได้)
+const currentBEYear = new Date().getFullYear() + 543;
+document.getElementById('f-formYear').value = currentBEYear;
 
-function doLogin() {
-  const phone = document.getElementById('loginPhone').value.trim();
-  const nick = document.getElementById('loginNick').value.trim();
-  currentUser = { phone, nick };
-  localStorage.setItem('tnhUser', JSON.stringify(currentUser));
-
-  document.getElementById('loginPage').classList.add('hidden');
-  document.getElementById('appShell').classList.add('show');
-  document.getElementById('loadingScreen').classList.add('show');
-  document.getElementById('f-phone').value = phone;
-  document.getElementById('f-nick').value = nick;
-  fetchData();
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-  ['input', 'change', 'keyup', 'paste'].forEach(ev => {
-    document.getElementById('loginPhone').addEventListener(ev, checkReady);
-    document.getElementById('loginNick').addEventListener(ev, checkReady);
-  });
-
-  const saved = localStorage.getItem('tnhUser');
-  if (!saved) return;
-
-  try {
-    currentUser = JSON.parse(saved);
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('appShell').classList.add('show');
-    document.getElementById('loadingScreen').classList.add('show');
-    document.getElementById('f-phone').value = currentUser.phone;
-    document.getElementById('f-nick').value = currentUser.nick;
-    fetchData();
-  } catch (e) {
-    localStorage.removeItem('tnhUser');
+function toggleInsurance() {
+  const yes = document.querySelector('input[name="insurance"][value="yes"]').checked;
+  const box = document.getElementById('insBox');
+  box.classList.toggle('show', yes);
+  if (!yes) {
+    document.getElementById('f-insCo').value = '';
+    document.getElementById('f-insPhone').value = '';
   }
-});
-
-/* ================================================================
-   DATA FETCH (JSONP ไป Google Apps Script)
-   ================================================================ */
-function fetchData() {
-  const cb = 'cb_' + Date.now();
-  let finished = false;
-
-  window[cb] = (res) => {
-    finished = true;
-    allBookings = res.bookings || [];
-    allEquipRentals = res.rentals || [];
-
-    const seen = {};
-    cacheTrips = [];
-    allBookings.forEach(b => {
-      if (!b.trip || !b.date) return;
-      const key = b.trip + '_' + b.date;
-      if (!seen[key]) {
-        seen[key] = 1;
-        cacheTrips.push({ trip: b.trip, date: b.date });
-      }
-    });
-
-    renderHome();
-    renderTripList(cacheTrips);
-    renderMyTrips();
-    renderNotif();
-
-    const today = new Date(new Date().setHours(0, 0, 0, 0));
-    const upcomingEl = document.getElementById('upcomingList');
-    if (upcomingEl) {
-      const upcoming = cacheTrips.filter(t => new Date(t.date) >= today);
-      upcomingEl.innerHTML = upcoming.map(t => cardHTML(t)).join('')
-        || '<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
-
-      setupCarouselAutoScroll('upcoming', upcomingEl, 2000);
-    }
-
-    document.getElementById('loadingScreen').classList.remove('show');
-    delete window[cb];
-  };
-
-  const script = document.createElement('script');
-  script.src = QUERY_URL + '&callback=' + cb;
-  script.onerror = () => {
-    if (finished) return;
-    document.getElementById('loadingScreen').classList.remove('show');
-    Swal.fire({
-      icon: 'error',
-      title: 'โหลดข้อมูลไม่สำเร็จ',
-      text: 'กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองรีเฟรชหน้าเว็บอีกครั้งครับ',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-  };
-  document.body.appendChild(script);
 }
 
-// showLoading: true = ล้างกริดเบาะเป็นข้อความ "กำลังโหลด" ก่อนยิง request (ใช้ตอนเข้าหน้าจองครั้งแรก)
-//              false = แค่ยิง request เงียบๆ ไม่ล้างกริด (ใช้ตอน auto-refresh ทุก 5 วิ กันจอกระพริบ)
-function loadSeats(date, showLoading = false) {
-  const requestId = ++latestSeatRequestId;
+function val(id) { return document.getElementById(id).value.trim(); }
 
-  if (!date) return;
+function checkForm() {
+  const titleChecked = document.querySelector('input[name="title"]:checked');
+  const insChecked = document.querySelector('input[name="insurance"]:checked');
+  const insOk = insChecked && (insChecked.value === 'no' || (insChecked.value === 'yes' && val('f-insCo')));
 
-  const trip = document.getElementById('b-trip').value.trim();
-  if (!trip) return;
+  const required = [
+    'f-formDay', 'f-formYear', 'f-fname', 'f-lname', 'f-age', 'f-nation', 'f-idcard',
+    'f-houseNo', 'f-tambon', 'f-amphoe', 'f-province', 'f-mobile',
+    'f-ecFname', 'f-ecLname', 'f-ecPhone',
+    'f-days', 'f-startDay', 'f-startYear', 'f-endDay', 'f-endYear'
+  ];
 
-  if (showLoading) {
-    ['A', 'B', 'C'].forEach(prefix => {
-      const grid = document.getElementById('vanGrid' + prefix);
-      if (grid) {
-        grid.innerHTML = `
-          <div style="grid-column:1 / -1;display:flex;align-items:center;justify-content:center;height:20px;color:var(--blue);font-size:12px;">
-            ⌛ กำลังดึงข้อมูลจากหลังบ้าน...
-          </div>
-        `;
-      }
-    });
+  const allFilled = required.every(id => val(id) !== '');
+  const monthsOk = val('f-formMonth') && val('f-startMonth') && val('f-endMonth');
+  const idOk = val('f-idcard').length === 13;
+
+  const ok = allFilled && monthsOk && idOk && titleChecked && insOk;
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = !ok;
+  btn.classList.toggle('ready', ok);
+  btn.innerText = ok ? '📄 ดูเอกสารที่กรอกแล้ว (แคปหน้าจอเก็บไว้)' : '📄 กรอกข้อมูลให้ครบก่อนนะครับ';
+
+  // เติมชื่อผู้ลงนามอัตโนมัติ ถ้าผู้ใช้ยังไม่เคยแก้เอง
+  const signInput = document.getElementById('f-signName');
+  if (!signInput.dataset.touched && titleChecked && val('f-fname') && val('f-lname')) {
+    signInput.value = titleChecked.value + val('f-fname') + ' ' + val('f-lname');
+  }
+}
+document.getElementById('f-signName').addEventListener('input', function () { this.dataset.touched = '1'; });
+
+function formatIdCard(id) {
+  const digits = id.replace(/\D/g, '');
+  if (digits.length !== 13) return id;
+  return digits[0] + '-' + digits.slice(1, 5) + '-' + digits.slice(5, 10) + '-' + digits.slice(10, 12) + '-' + digits.slice(12);
+}
+
+function dashOr(v) { return v ? v : '-'; }
+
+function showResult() {
+  const btn = document.getElementById('submitBtn');
+  if (btn.disabled) return;
+
+  const titleChecked = document.querySelector('input[name="title"]:checked').value;
+  const insChecked = document.querySelector('input[name="insurance"]:checked').value;
+
+  function setOv(id, text) {
+    document.getElementById(id).textContent = text;
   }
 
-  const callback = 'cbs_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
+  setOv('p-formDay', val('f-formDay'));
+  setOv('p-formMonth', val('f-formMonth'));
+  setOv('p-formYear', val('f-formYear'));
 
-  window[callback] = function (res) {
-    // ถ้ามีการเปลี่ยนทริป/วันที่ไปแล้วระหว่างรอข้อมูล ไม่ให้นำข้อมูลเก่ามาทับข้อมูลปัจจุบัน
-    if (requestId !== latestSeatRequestId) {
-      delete window[callback];
-      return;
-    }
-    renderVansWithData(res.bookings || [], res.locks || []);
-    delete window[callback];
-  };
+  // ติ๊กถูกทับกล่องสี่เหลี่ยม ☐ ที่พิมพ์ไว้ในภาพต้นฉบับ ตรงตำแหน่งคำนำหน้าที่เลือก
+  setOv('p-cbNai', titleChecked === 'นาย' ? '✓' : '');
+  setOv('p-cbNang', titleChecked === 'นาง' ? '✓' : '');
+  setOv('p-cbNangsao', titleChecked === 'นางสาว' ? '✓' : '');
 
-  appendScript(QUERY_URL + '&date=' + encodeURIComponent(date) + '&trip=' + encodeURIComponent(trip) + '&callback=' + callback);
-}
+  setOv('p-fname', val('f-fname'));
+  setOv('p-lname', val('f-lname'));
+  setOv('p-age', val('f-age'));
 
-function appendScript(src) {
-  const s = document.createElement('script');
-  s.src = src;
-  document.body.appendChild(s);
-}
+  setOv('p-nation', val('f-nation'));
+  setOv('p-religion', dashOr(val('f-religion')));
+  setOv('p-idcard', formatIdCard(val('f-idcard')));
 
-/*
- * เลื่อนแคโรเซลอัตโนมัติแบบ "รู้จังหวะคน" — ถ้าผู้ใช้กำลังปัด/สกรอลเองอยู่
- * จะหยุดเลื่อนอัตโนมัติชั่วคราวทันที แล้วค่อยเริ่มเลื่อนต่อหลังจากผู้ใช้ปล่อยนิ้วไปสักพัก
- * ป้องกันปัญหาเลื่อนอัตโนมัติไปชนกับตอนผู้ใช้ปัดเอง จนการ์ดค้างอยู่ครึ่งใบ
- * (ตัว CSS scroll-snap จะจัดให้ลงล็อกเต็มการ์ดเองทุกครั้งที่ปล่อยนิ้ว)
- */
-window._carouselControllers = window._carouselControllers || {};
+  setOv('p-disease', dashOr(val('f-disease')));
+  setOv('p-blood', dashOr(val('f-blood')));
+  setOv('p-houseNo', val('f-houseNo'));
 
-function setupCarouselAutoScroll(key, el, intervalMs) {
-  if (window._carouselControllers[key]) {
-    window._carouselControllers[key].destroy();
-    window._carouselControllers[key] = null;
-  }
-  if (!el) return;
+  setOv('p-moo', dashOr(val('f-moo')));
+  setOv('p-soi', dashOr(val('f-soi')));
+  setOv('p-road', dashOr(val('f-road')));
+  setOv('p-tambon', val('f-tambon'));
 
-  let timer = null;
-  let resumeTimer = null;
-  let isProgrammatic = false;
+  setOv('p-amphoe', val('f-amphoe'));
+  setOv('p-province', val('f-province'));
+  setOv('p-homePhone', dashOr(val('f-homePhone')));
 
-  function tick() {
-    if (el.children.length < 2) return;
-    const cardW = el.children[0].offsetWidth + 12;
-    const maxScroll = el.scrollWidth - el.clientWidth;
-    isProgrammatic = true;
-    el.scrollLeft = el.scrollLeft >= maxScroll - 5 ? 0 : el.scrollLeft + cardW;
-  }
+  setOv('p-mobile', val('f-mobile'));
+  setOv('p-email', dashOr(val('f-email')));
 
-  function start() {
-    clearInterval(timer);
-    timer = setInterval(tick, intervalMs);
-  }
+  setOv('p-ecFname', val('f-ecFname'));
+  setOv('p-ecLname', val('f-ecLname'));
+  setOv('p-ecPhone', val('f-ecPhone'));
 
-  function pauseThenResume() {
-    clearInterval(timer);
-    clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(start, intervalMs + 2000);
-  }
+  setOv('p-days', val('f-days'));
+  setOv('p-startDay', val('f-startDay'));
+  setOv('p-startMonth', val('f-startMonth'));
+  setOv('p-startYear', val('f-startYear'));
+  setOv('p-endDay', val('f-endDay'));
+  setOv('p-endMonth', val('f-endMonth'));
+  setOv('p-endYear', val('f-endYear'));
 
-  function onScroll() {
-    if (isProgrammatic) { isProgrammatic = false; return; }
-    pauseThenResume();
-  }
+  // ติ๊กถูกทับกล่องประกันภัยตามที่เลือก
+  setOv('p-cbIns1', insChecked === 'yes' ? '✓' : '');
+  setOv('p-cbIns2', insChecked === 'no' ? '✓' : '');
+  setOv('p-insCo', insChecked === 'yes' ? val('f-insCo') : '');
+  setOv('p-insPhone', insChecked === 'yes' ? dashOr(val('f-insPhone')) : '');
 
-  el.addEventListener('scroll', onScroll, { passive: true });
-  start();
+  const signNameVal = val('f-signName') || (titleChecked + val('f-fname') + ' ' + val('f-lname'));
+  setOv('p-signName1', signNameVal);
+  setOv('p-signName2', signNameVal);
 
-  window._carouselControllers[key] = {
-    destroy() {
-      clearInterval(timer);
-      clearTimeout(resumeTimer);
-      el.removeEventListener('scroll', onScroll);
-    }
-  };
-}
-
-/* ================================================================
-   HOME TAB
-   ================================================================ */
-function renderHome() {
-  const h = new Date().getHours();
-  const greeting = h < 12 ? '🌅 อรุณสวัสดิ์' : h < 17 ? '☀️ สวัสดีตอนบ่าย' : '🌙 สวัสดีตอนเย็น';
-  const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
-  const myTripCount = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone)).length;
-
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const closedTrips = cacheTrips.filter(t => CLOSED_TRIPS.includes(t.trip));
-  const pastTrips = cacheTrips.filter(t => new Date(t.date) < today);
-
-  document.getElementById('homeContent').innerHTML = `
-    <div class="greet-bar">
-      <div class="left">
-        <h2>${greeting}, ${currentUser.nick}! 👋</h2>
-        <p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${myTripCount} ทริป</strong></p>
-      </div>
-      <div class="greet-actions">
-        <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
-          <div class="qa-mini-ico">🎒</div>
-          <div class="qa-mini-label">จองทริป</div>
-        </div>
-        <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
-          <div class="qa-mini-ico">🏕️</div>
-          <div class="qa-mini-label">เช่าของ</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec-hdr">
-      <h3>🏕️ ทริปที่เปิดจอง</h3>
-      <span onclick="switchTab('trips')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>
-    </div>
-    <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none">
-      <p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p>
-    </div>
-
-    <div class="divider"></div>
-    <div class="sec-hdr">
-      <h3>⚠️ จะเปิดจองเร็วๆ นี้</h3>
-      <span onclick="togglePastList(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>
-    </div>
-    <div class="trip-list" id="closedList">
-      ${closedTrips.map(t => cardHTML(t)).join('') || '<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}
-    </div>
-
-    <div class="divider"></div>
-    <div class="sec-hdr">
-      <h3>📅 ทริปที่ผ่านมา</h3>
-      <span onclick="togglePastList(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>
-    </div>
-    <div class="trip-list" id="pastList" style="opacity:.7">
-      ${pastTrips.map((t, i) => `<div class="${i >= 2 ? 'past-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">${cardHTML(t)}</div>`).join('')
-        || '<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}
-    </div>
-
-    <div class="divider"></div>
-    <div class="sec-hdr"><h3>🌟 ให้ระดับความยาก</h3></div>
-    <div class="past-grid">
-      ${PAST_TRIPS.map(p => `
-        <div class="past-card">
-          <img src="${p.img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=60'}">
-          <div class="past-card-rating">⭐ ${p.rating}</div>
-          <div class="past-card-info"><h5>${p.name}</h5><p>👥 ${p.people} คน · ${p.rounds} รอบ</p></div>
-        </div>
-      `).join('')}
-    </div>
-
-    <div class="stat-bar">
-      <div class="ico">👥</div>
-      <div class="txt"><h4>ยอดรวมผู้เดินทางกว่า 300+ คน</h4><p>ขอบคุณทุกความไว้วางใจจากเที่ยวนี่เหอะ 💙</p></div>
-    </div>
-
-    <a href="https://tiaewneehur.github.io/STAFF.TIAEWNEEHUR/" target="_blank" rel="noopener noreferrer"
-       style="text-decoration:none;display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,rgba(2,132,199,.18),rgba(56,189,248,.08));border:1px solid rgba(56,189,248,.22);border-radius:22px;padding:18px;margin-top:18px;color:#fff;box-shadow:0 8px 24px rgba(2,132,199,.12);transition:.2s"
-       onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(56,189,248,.5)'"
-       onmouseout="this.style.transform='translateY(0)';this.style.borderColor='rgba(56,189,248,.22)'">
-      <div style="display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 18px rgba(56,189,248,.3)">🎒</div>
-        <div>
-          <div style="font-size:15px;font-weight:800;color:#fff">สมัครเป็น STAFF</div>
-          <div style="font-size:11px;color:var(--sub);margin-top:3px">ร่วมลุยป่าและดูแลลูกทริปไปกับเที่ยวนี่เหอะ</div>
-        </div>
-      </div>
-      <div style="width:34px;height:34px;border-radius:50%;background:rgba(56,189,248,.12);color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">›</div>
-    </a>
-
-    <a href="permission-form.html"
-       style="text-decoration:none;display:flex;align-items:center;justify-content:space-between;gap:14px;background:linear-gradient(135deg,rgba(16,185,129,.18),rgba(16,185,129,.06));border:1px solid rgba(16,185,129,.22);border-radius:22px;padding:18px;margin-top:12px;color:#fff;box-shadow:0 8px 24px rgba(16,185,129,.1);transition:.2s"
-       onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='rgba(16,185,129,.5)'"
-       onmouseout="this.style.transform='translateY(0)';this.style.borderColor='rgba(16,185,129,.22)'">
-      <div style="display:flex;align-items:center;gap:14px">
-        <div style="width:48px;height:48px;border-radius:15px;background:linear-gradient(135deg,#1f4d36,#2f6f4f);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 18px rgba(16,185,129,.3)">📝</div>
-        <div>
-          <div style="font-size:15px;font-weight:800;color:#fff">กรอกแบบฟอร์มขออนุญาต เขาช้างเผือก</div>
-          <div style="font-size:11px;color:var(--sub);margin-top:3px">กรอกข้อมูล → โหลดเป็น PDF → ส่งให้แอดมิน</div>
-        </div>
-      </div>
-      <div style="width:34px;height:34px;border-radius:50%;background:rgba(16,185,129,.14);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">›</div>
-    </a>
-  `;
-}
-
-// สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับลิสต์ทริปที่ผ่านมา
-function togglePastList(triggerEl) {
-  const expanded = document.getElementById('pastList').classList.toggle('expanded');
-  triggerEl.innerText = expanded ? 'ย่อ ‹' : 'ดูทั้งหมด ›';
-}
-
-// สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับประวัติความบ้าในหน้าโปรไฟล์
-function toggleBookingHistory(triggerEl) {
-  const expanded = document.getElementById('bookingHistoryList').classList.toggle('expanded');
-  triggerEl.innerText = expanded ? 'ย่อ ‹' : 'ดูทั้งหมด ›';
-}
-
-/* ================================================================
-   TRIP CARD (ใช้ร่วมกันหลายหน้า)
-   ================================================================ */
-function cardHTML(item, compact = false) {
-  const info = TRIP_DETAILS[item.trip] || {};
-  const img = TRIP_IMAGES[item.trip] || 'default.jpg';
-  const fmtDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-  const locked = CLOSED_TRIPS.includes(item.trip);
-  const isPast = new Date(item.date) < new Date(new Date().setHours(0, 0, 0, 0));
-
-  const totalSeats = BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').length * 3;
-  const bookedCount = allBookings.filter(b => b.seat && b.trip === item.trip && b.date === item.date).length;
-  const avail = totalSeats - bookedCount;
-
-  // ป้ายสถานะมุมภาพ (ข้อความ/เงื่อนไขเดิมทุกอย่าง เปลี่ยนแค่การจัดสไตล์)
-  let statusClass = 'open';
-  let statusText = 'เปิดจอง';
-  if (locked) {
-    statusClass = 'soon'; statusText = '⚠️ เร็วๆนี้';
-  } else if (isPast) {
-    statusClass = 'done'; statusText = '✅ ไปมาแล้วเว้ย!!';
-  } else if (avail <= 0) {
-    statusClass = 'full'; statusText = '🔴 เต็มแล้ว';
-  } else if (avail <= 5) {
-    statusClass = 'almost'; statusText = '🔥 ใกล้เต็ม!';
-  }
-
-  let seatsClass = 'ok';
-  let seatsText = `🟢 ว่าง ${avail} ที่`;
-  if (locked) {
-    seatsClass = 'full'; seatsText = '⚠️ ยังไม่เปิด';
-  } else if (isPast) {
-    seatsText = '✅ ไปมาแล้วเว้ย!!';
-  } else if (avail <= 0) {
-    seatsClass = 'full'; seatsText = '🔴 เต็มแล้ว';
-  } else if (avail <= 5) {
-    seatsClass = 'low'; seatsText = `🔥 ว่าง ${avail} ที่`;
-  }
-
-  return `
-    <div class="trip-hcard${compact ? ' compact' : ''}" onclick="openModal('${item.trip}','${item.date}')">
-      <div class="lux-photo">
-        <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&q=70'}">
-        <span class="lux-status ${statusClass}">${statusText}</span>
-        <span class="lux-price">฿${info.price || '-'}</span>
-        ${locked ? '<div class="lux-locked-ov">🔒</div>' : ''}
-      </div>
-      <div class="lux-stub"></div>
-      <div class="lux-body">
-        <h4 class="lux-title">${item.trip}</h4>
-        <div class="lux-loc">📍 ${info.loc || 'ประเทศไทย'}</div>
-        <div class="lux-meta-row">
-          <span class="lux-date">🗓️ ${fmtDate}</span>
-          <span class="lux-seats ${seatsClass}">${seatsText}</span>
-        </div>
-        <div class="lux-meta-row2">
-          <span class="lux-days">⏳ ${info.days || '-'}</span>
-          <span class="lux-cta">ดูรายละเอียด <span>›</span></span>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-/* ================================================================
-   TRIPS TAB (ค้นหา / รายการทั้งหมด)
-   ================================================================ */
-function renderTripList(list) {
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const upcoming = list.filter(t => new Date(t.date) >= today);
-  const past = list.filter(t => new Date(t.date) < today);
-
-  document.getElementById('tripListFull').innerHTML = `
-    <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
-    <div class="trip-list">${upcoming.map(t => cardHTML(t, true)).join('') || '<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>'}</div>
-    <div class="divider"></div>
-    <div class="sec-hdr"><h3>📅 ทริปที่ผ่านมา</h3></div>
-    <div class="trip-list" style="opacity:.7">${past.map(t => cardHTML(t, true)).join('') || '<p style="text-align:center;color:var(--muted);padding:20px">-</p>'}</div>
-  `;
-}
-
-function searchTrips() {
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  renderTripList(cacheTrips.filter(t => t.trip.toLowerCase().includes(q)));
-}
-
-/* ================================================================
-   MY TRIPS TAB
-   ================================================================ */
-function renderMyTrips() {
-  const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
-  const myBookings = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone));
-
-  const seen = {};
-  const uniqueBookings = [];
-  myBookings.forEach(b => {
-    const key = b.trip + '_' + b.date + '_' + b.seat;
-    if (!seen[key]) {
-      seen[key] = 1;
-      uniqueBookings.push(b);
-    }
-  });
-
-  const myEquipRentals = allEquipRentals.filter(r => norm(r.phone) === norm(currentUser.phone));
-
-  const provinceCount = [...new Set(uniqueBookings.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
-
-  document.getElementById('myContent').innerHTML = `
-    <div class="my-profile">
-      <div class="my-ava-col">
-        <div class="my-ava" onclick="document.getElementById('fileInput').click()" style="cursor:pointer;overflow:hidden;border-radius:50%;width:58px;height:58px;padding:0;flex-shrink:0">
-          <img id="userAvatar" src="https://via.placeholder.com/150?text=👤" style="width:100%;height:100%;object-fit:cover">
-          <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAvatar(this)">
-        </div>
-        <p class="my-ava-hint">📷 แตะเพื่อเปลี่ยนรูปได้</p>
-      </div>
-      <div class="my-info" style="flex:1">
-        <h3>${currentUser.nick}</h3>
-        <p>📞 ${currentUser.phone}</p>
-        <div class="my-stats">
-          <div class="my-stat"><h4>${uniqueBookings.length}</h4><p>ทริปทั้งหมด</p></div>
-          <div class="my-stat"><h4>${provinceCount}</h4><p>จังหวัด</p></div>
-          <div class="my-stat"><h4>${"⭐".repeat(Math.min(uniqueBookings.length, 5))}</h4><p>ระดับสายลุยกับเพจ</p></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sec-hdr">
-      <h3>📋 ประวัติความบ้า</h3>
-      ${uniqueBookings.length > 2 ? `<span onclick="toggleBookingHistory(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
-    </div>
-    <div id="bookingHistoryList">
-    ${uniqueBookings.length === 0
-      ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>'
-      : uniqueBookings.map((b, i) => {
-          const img = TRIP_IMAGES[b.trip] || 'default.jpg';
-          const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-          const isPast = new Date(b.date) < new Date();
-          return `
-            <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
-              <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
-                <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
-                <div class="hi">
-                  <h4>${b.trip}</h4>
-                  <p>📅 ${fmtDate}</p>
-                  <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
-                </div>
-                <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
-                <div class="h-arr">›</div>
-              </div>
-            </div>
-          `;
-        }).join('')}
-    </div>
-
-    <div class="sec-hdr" style="margin-top:24px"><h3>🎒 ประวัติการเช่าอุปกรณ์</h3></div>
-    ${myEquipRentals.length === 0
-      ? '<div class="empty-st" style="padding:34px 20px"><div class="ico" style="font-size:38px">🏕️</div><p>ยังไม่มีประวัติการเช่าอุปกรณ์ครับ</p></div>'
-      : myEquipRentals.map(r => {
-          const img = TRIP_IMAGES[r.trip] || 'default.jpg';
-          const fmtDate = new Date(r.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-          return `
-            <div class="h-item" style="cursor:default">
-              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
-              <div class="hi">
-                <h4>${r.trip}</h4>
-                <p>📅 ${fmtDate}</p>
-                <p style="margin-top:4px;color:var(--sub);font-size:11px">${r.itemsSummary || '-'}</p>
-              </div>
-              <div class="h-seat"><div class="snum" style="font-size:15px">฿${Number(r.total || 0).toLocaleString()}</div><p>ยอดรวม</p></div>
-            </div>
-          `;
-        }).join('')}
-
-    <div style="height:1px;background:var(--border);margin:20px 0"></div>
-    <button class="btn-logout" onclick="logOut()">🚪 ออกจากระบบ</button>
-  `;
-
-  const savedAvatar = localStorage.getItem('userAvatar');
-  const avatarEl = document.getElementById('userAvatar');
-  if (savedAvatar && avatarEl) avatarEl.src = savedAvatar;
-}
-
-// เปิดหน้าผังเบาะของทริปที่เคยจองไว้ (จากการ์ดในประวัติความบ้า) แล้วสกรอลไปหา+ไฮไลต์เบาะของตัวเองให้เจอไว
-function viewMyBookingSeat(trip, dateStr, seat) {
-  const fmtDate = new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-  pendingTrip = { name: trip, date: fmtDate, raw: dateStr };
-  highlightSeatId = seat || null;
-  goToBook();
-}
-
-/* ================================================================
-   NOTIF TAB (สาระ / เตรียมตัวเดินป่า)
-   ================================================================ */
-const HIKING_GEAR_SLIDES = [
-  "เดินป่า - 1.jpg", "เดินป่า - 2.jpg", "เดินป่า - 3.jpg", "เดินป่า - 4.jpg",
-  "เดินป่า - 5.jpg", "เดินป่า - 6.jpg", "เดินป่า - 7.jpg", "เดินป่า - 8.jpg"
-];
-
-const PREP_CHECKLIST = [
-  { t: "📋 ศึกษาข้อมูลเส้นทาง!", m: "* ระยะทางทั้งหมด<br>* ระดับความยาก<br>* ระยะเวลาเดิน<br>* ความสูงสะสม (Elevation Gain)<br>* จุดกางเต็นท์<br>* แหล่งน้ำ<br>* จุดรับสัญญาณโทรศัพท์<br>* สภาพอากาศล่าสุด<br>* ฤดูกาลที่เหมาะสม<br>* กฎของอุทยานหรือพื้นที่" },
-  { t: "❤️ เตรียมร่างกาย!", m: "* พักผ่อนให้เพียงพอ<br>* ฝึกเดินหรือวิ่งก่อนเดินจริง<br>* ซ้อมแบกเป้<br>* ยืดกล้ามเนื้อ<br>* ดื่มน้ำให้เพียงพอ<br>* งดแอลกอฮอล์ก่อนเดิน" },
-  { t: "‍👩‍👧 แจ้งคนใกล้ตัว!", m: "* แจ้งเส้นทาง<br>* แจ้งวันเข้า-ออก<br>* แจ้งผู้ร่วมเดินทาง<br>* ส่งพิกัดหรือแผนที่<br>* แจ้งเบอร์ติดต่อฉุกเฉิน" },
-  { t: "🎒 อุปกรณ์แบกสัมภาระ!", m: "* เป้เดินป่า<br>* Rain Cover คลุมเป้<br>* Dry Bag<br>* ถุงซิปล็อกกันน้ำ<br>* กระเป๋าคาดอก<br>* กระเป๋าคาดเอว" },
-  { t: "👕 เสื้อผ้า!", m: "เสื้อ<br>* เสื้อแห้งไว<br>* เสื้อแขนยาวกันแดด<br>* เสื้อกันหนาว<br>* เสื้อสำรอง<br>* เสื้อใส่นอน<br>กางเกง<br>* กางเกงเดินป่า<br>* กางเกงสำรอง<br>* กางเกงใส่นอน<br>ชุดชั้นใน<br>* กางเกงใน<br>* สปอร์ตบราสำหรับผู้หญิง<br>ถุงเท้า<br>* ถุงเท้าเดินป่า<br>* ถุงเท้าสำรอง" },
-  { t: "👟 รองเท้า!", m: "* รองเท้าเดินป่า<br>* รองเท้าแตะ<br>* เชือกรองเท้าสำรอง<br>* แผ่นรองพื้นรองเท้า (ถ้าจำเป็น)" },
-  { t: "🌧 อุปกรณ์กันฝน!", m: "* เสื้อกันฝน<br>* กางเกงกันฝน<br>* Poncho<br>* ถุงคลุมเป้<br>* ถุงกันน้ำใส่มือถือ" },
-  { t: "🏕 อุปกรณ์แคมป์!", m: "* เต็นท์<br>* ฟลายชีท<br>* สมอบก<br>* เชือก<br>* Ground Sheet<br>* ถุงนอน<br>* แผ่นรองนอน<br>* หมอนลม" },
-  { t: "🍳 อุปกรณ์ทำอาหาร!", m: "* เตาแก๊ส<br>* แก๊สกระป๋อง<br>* หม้อ<br>* กระทะ<br>* ช้อน<br>* ส้อม<br>* มีด<br>* เขียงพับ<br>* แก้วน้ำ<br>* ถ้วย<br>* ไฟแช็ก<br>* ไม้ขีดกันน้ำ" },
-  { t: "💧 น้ำ!", m: "* ขวดน้ำ<br>* ถุงน้ำ (Hydration)<br>* เครื่องกรองน้ำ<br>* เม็ดฆ่าเชื้อ<br>* ถุงน้ำสำรอง" },
-  { t: "🔦 อุปกรณ์ส่องสว่าง!", m: "* ไฟฉายคาดหัว<br>* ไฟฉายมือถือ<br>* แบตเตอรี่สำรอง<br>* โคมไฟแคมป์" },
-  { t: "🔋 อุปกรณ์ไฟฟ้า!", m: "* Power Bank<br>* สายชาร์จ<br>* Adapter<br>* สายชาร์จสำรอง<br>* นาฬิกา GPS<br>* GPS Handheld<br>* โทรศัพท์มือถือ" },
-  { t: "🩹 ชุดปฐมพยาบาล!", m: "* พลาสเตอร์<br>* ผ้าก๊อซ<br>* ผ้ายืดพันแผล<br>* เทปพันแผล<br>* เบตาดีน<br>* แอลกอฮอล์<br>* สำลี<br>* ยาประจำตัว<br>* ยาแก้ปวด<br>* ยาแก้แพ้<br>* ยาแก้ท้องเสีย<br>* ยาแก้เมารถ<br>* ยาดม<br>* ยาหม่อง" },
-  { t: "🦟 ป้องกันแมลง!", m: "* สเปรย์กันทาก<br>* ครีมกันแมลง<br>* แหนบคีบเห็บ" },
-  { t: "🧼 ของใช้ส่วนตัว!", m: "* แปรงสีฟัน<br>* ยาสีฟัน<br>* สบู่<br>* แชมพู<br>* ผ้าเช็ดตัว<br>* กระดาษชำระ<br>* ทิชชู่เปียก" },
-  { t: "🔥 ความปลอดภัย!", m: "* ไฟแช็กสำรอง<br>* เชือกอเนกประสงค์<br>* มีดพกอเนกประสงค์<br>* เทปผ้า<br>* Emergency Blanket<br>* Emergency Bivy<br>* Fire Starter<br>* นกหวีดฉุกเฉิน" },
-  { t: "📄 เอกสารสำคัญ!", m: "* บัตรประชาชน<br>* เงินสด<br>* ใบจองอุทยาน<br>* ใบอนุญาต (ถ้ามี)<br>* ประกันการเดินทาง<br>* เบอร์โทรฉุกเฉิน" },
-  { t: "⚠️ ก่อนออกเดินทุกครั้ง อย่าลืมเช็ก 10 ข้อนี้!", m: "1. เป้ไม่หนักเกิน 20–25% ของน้ำหนักตัว<br>2. ชาร์จอุปกรณ์ไฟฟ้าเต็ม<br>3. โหลดแผนที่ออฟไลน์<br>4. เช็กพยากรณ์อากาศ<br>5. แจ้งคนที่บ้าน<br>6. เช็กรองเท้าและเชือกผูก<br>7. เตรียมน้ำและอาหารให้เพียงพอ<br>8. พกชุดปฐมพยาบาล<br>9. ทดสอบไฟฉายและแบตเตอรี่<br>10. เคารพธรรมชาติ และเก็บขยะกลับทุกชิ้น" },
-];
-
-function renderNotif() {
-  const slidesHTML = HIKING_GEAR_SLIDES.map(src => `
-    <div style="flex:0 0 82%;scroll-snap-align:start;scroll-snap-stop:always">
-      <img src="${src}" style="width:100%;border-radius:18px;display:block" onerror="this.style.display='none'">
-    </div>
-  `).join('');
-
-  const listHTML = PREP_CHECKLIST.map(n => `
-    <div class="notif-item">
-      <div class="notif-dot"></div>
-      <div class="notif-info"><h4>${n.t}</h4><p>${n.m}</p></div>
-    </div>
-  `).join('');
-
-  document.getElementById('notifContent').innerHTML = `
-    <div style="margin-bottom:12px"><h3 style="font-size:16px;font-weight:700;color:#fff">🥾 ของจำเป็นในการเดินป่า</h3></div>
-    <div id="gearSlider" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:8px;-ms-overflow-style:none;scrollbar-width:none;margin-bottom:24px">
-      ${slidesHTML}
-    </div>
-    <div style="margin-bottom:16px"><h3 style="font-size:16px;font-weight:700;color:#fff">🔔 การเตรียมตัวก่อนเดินป่า</h3></div>
-    ${listHTML}
-  `;
-
-  const slider = document.getElementById('gearSlider');
-  setupCarouselAutoScroll('gear', slider, 2500);
-}
-
-/* ================================================================
-   BOTTOM NAV TABS
-   ================================================================ */
-const TABS = ['home', 'trips', 'mytrips', 'notif'];
-
-function switchTab(id) {
-  TABS.forEach(t => {
-    document.getElementById('tab-' + t).classList.toggle('active-page', t === id);
-    document.getElementById('nav-' + t).classList.toggle('active', t === id);
-  });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/* ================================================================
-   TRIP DETAIL MODAL
-   ================================================================ */
-function openModal(name, dateStr) {
-  const info = TRIP_DETAILS[name] || { days: '-', distance: '-', level: '-', price: '-', highlight: '-', image: 'default.jpg' };
-  const img = TRIP_IMAGES[name] || info.image || 'default.jpg';
-  const locked = CLOSED_TRIPS.includes(name);
-
-  const seatIds = ['A', 'B', 'C'].flatMap(prefix =>
-    BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').map(n => prefix + n)
-  );
-  const takenSeats = allBookings.filter(b => b.seat && b.trip === name && b.date === dateStr).map(b => String(b.seat));
-  const emptySeats = seatIds.filter(id => !takenSeats.includes(id));
-  const avail = emptySeats.length;
-  const fmtDate = new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
-
-  document.getElementById('md-img').src = img;
-  document.getElementById('md-name').innerText = name;
-  document.getElementById('md-date').innerText = '📅 ' + fmtDate;
-  document.getElementById('md-price').innerText = '💸 ค่าใช้จ่ายประมาณ ' + info.price;
-  document.getElementById('md-payment').innerText = info.paymentNote ? '💰 ' + info.paymentNote : '';
-  document.getElementById('md-days').innerText = info.days;
-  document.getElementById('md-dist').innerText = info.distance;
-  document.getElementById('md-level').innerText = info.level;
-  document.getElementById('md-hl').innerText = info.highlight;
-
-  const availEl = document.getElementById('md-avail');
-  const statusEl = document.getElementById('md-status');
-  const bookBtn = document.getElementById('md-bookBtn');
-
-  bookBtn.disabled = false;
-  bookBtn.onclick = () => goToBook();
-  bookBtn.style.background = 'linear-gradient(145deg, #ff4747, #d91f2f)';
-
-  if (locked) {
-    availEl.innerText = 'ยังไม่เปิดจอง';
-    availEl.className = 'avail full';
-    statusEl.innerText = 'เร็วๆ นี้';
-    statusEl.className = 'chip chip-yellow';
-    bookBtn.disabled = true;
-    bookBtn.innerText = '⚠️ ยังไม่เปิดจองครับ';
-  } else if (avail <= 0) {
-    availEl.innerHTML = `
-      <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);padding:12px;border-radius:12px;text-align:center;">
-        <div style="color:#ef4444;font-weight:800;font-size:14px;">🔴 ที่นั่งเต็มแล้วครับ</div>
-        <div style="color:#94a3b8;font-size:11px;margin-top:2px;">กดปุ่มด้านล่างเพื่อดูผังเบาะได้ครับ</div>
-      </div>
-    `;
-    statusEl.innerText = 'เต็มแล้ว';
-    statusEl.className = 'chip';
-    statusEl.style.cssText = 'background:rgba(239,68,68,.2);color:var(--red)';
-    bookBtn.innerText = '🔴 ที่นั่งเต็มแล้วครับ 👀 กดดูผังเบาะ';
-    bookBtn.style.background = '#475569';
-  } else {
-    availEl.innerText = `เหลือ ${avail} ที่ — ${emptySeats.slice(0, 5).join(', ')}${emptySeats.length > 5 ? '...' : ''}`;
-    availEl.className = 'avail ' + (avail <= 5 ? 'low' : 'ok');
-    statusEl.innerText = 'เปิดจอง';
-    statusEl.className = 'chip chip-green';
-    bookBtn.innerText = 'จองที่นั่ง 🚐';
-  }
-
-  pendingTrip = { name, date: fmtDate, raw: dateStr };
-  document.getElementById('modalBg').classList.add('show');
+  document.getElementById('resultWrap').classList.add('show');
+  document.getElementById('resultWrap').scrollTop = 0;
+  document.getElementById('resultWrap').scrollLeft = 0;
   document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-  document.getElementById('modalBg').classList.remove('show');
+function closeResult() {
+  document.getElementById('resultWrap').classList.remove('show');
   document.body.style.overflow = '';
 }
 
 /* ================================================================
-   BOOKING PAGE
+   โหมดปรับตำแหน่ง (CALIBRATION MODE)
+   ให้ผู้ใช้ลากแต่ละช่องด้วยนิ้ว/เมาส์ไปวางตรงตำแหน่งจริงบนจอตัวเอง
+   แล้วกด "คัดลอกตำแหน่งทั้งหมด" เพื่อได้พิกัดที่แม่นยำส่งกลับมาให้ปรับโค้ดจริง
    ================================================================ */
-function goToBook() {
-  closeModal();
+let calibOn = false;
 
-  const cleanDate = new Date(pendingTrip.raw);
-  const yyyy = cleanDate.getFullYear();
-  const mm = String(cleanDate.getMonth() + 1).padStart(2, '0');
-  const dd = String(cleanDate.getDate()).padStart(2, '0');
-  const formattedDate = `${yyyy}-${mm}-${dd}`;
+function toggleCalibMode() {
+  calibOn = !calibOn;
 
-  document.getElementById('b-trip').value = pendingTrip.name;
-  document.getElementById('b-date').value = pendingTrip.date;
-  document.getElementById('f-dateraw').value = formattedDate;
-  document.getElementById('f-phone').value = currentUser.phone;
-  document.getElementById('f-nick').value = currentUser.nick;
+  const wrap = document.getElementById('formImageWrap');
+  const toggleBtn = document.getElementById('calibToggleBtn');
+  const exportBtn = document.getElementById('calibExportBtn');
 
-  selectedSeat = null;
-  document.getElementById('f-seat').value = '';
-  document.getElementById('formFieldsBox2').classList.remove('show');
-  document.getElementById('bookingPage2').classList.add('show');
-  document.body.style.overflow = 'hidden'; // กันไม่ให้หน้าเพจข้างหลังเลื่อน/โผล่ตอนคีย์บอร์ดเด้ง (เช่นตอนพิมพ์ชื่อ LINE)
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  wrap.querySelectorAll('.ov').forEach(el => {
+    el.classList.toggle('calib-on', calibOn);
 
-  resetPickupSelector(); // รีเซ็ตจุดขึ้นรถกลับเป็นค่าเริ่มต้นทุกครั้งที่เข้าหน้านี้ใหม่
-
-  loadSeats(formattedDate, true);
-
-  clearInterval(seatRefreshTimer);
-  seatRefreshTimer = setInterval(() => {
-    const page = document.getElementById('bookingPage2');
-    if (page && page.classList.contains('show')) {
-      loadSeats(document.getElementById('f-dateraw').value);
-    }
-  }, 5000);
-
-  checkBook();
-}
-
-function closeBook() {
-  document.getElementById('bookingPage2').classList.remove('show');
-  document.body.style.overflow = '';
-  clearInterval(seatRefreshTimer);
-  seatRefreshTimer = null;
-  stopSeatCountdown();
-}
-
-// จัดการตอนเลือกจุดขึ้นรถจาก dropdown — ถ้าเลือก "จุดอื่น" ให้โผล่ช่องพิมพ์ระบุเอง
-function handlePickupSelect() {
-  const select = document.getElementById('f-pickup-select');
-  const otherInput = document.getElementById('f-pickup-other');
-  const hiddenInput = document.getElementById('f-pickup');
-  if (!select || !otherInput || !hiddenInput) return;
-
-  if (select.value === '__other__') {
-    otherInput.style.display = 'block';
-    hiddenInput.value = otherInput.value.trim();
-    otherInput.focus();
-  } else {
-    otherInput.style.display = 'none';
-    otherInput.value = '';
-    hiddenInput.value = select.value;
-  }
-
-  checkBook();
-}
-
-// รีเซ็ตตัวเลือกจุดขึ้นรถกลับเป็นค่าเริ่มต้น (ใช้ตอนเปิดหน้าจองใหม่ทุกครั้ง)
-function resetPickupSelector() {
-  const select = document.getElementById('f-pickup-select');
-  const otherInput = document.getElementById('f-pickup-other');
-  const hiddenInput = document.getElementById('f-pickup');
-  if (!select || !otherInput || !hiddenInput) return;
-
-  select.selectedIndex = 0;
-  otherInput.style.display = 'none';
-  otherInput.value = '';
-  hiddenInput.value = select.value;
-}
-
-/* ================================================================
-   SEAT MAP RENDERING
-   ================================================================ */
-function renderVansWithData(bookedList, lockList = []) {
-  const bookedMapping = {};
-  bookedList.forEach(booking => {
-    const seat = String(booking.seat || '').trim();
-    if (seat) bookedMapping[seat] = booking.nickname || 'เต็ม';
-  });
-
-  // เบาะที่ "คนอื่น" (ไม่ใช่เรา) กำลังล็อกอยู่ชั่วคราว และยังไม่ถูกจองจริง
-  const lockedMapping = {};
-  lockList.forEach(lock => {
-    const seat = String(lock.seat || '').trim();
-    const isMine = String(lock.session_id || '') === String(MY_SESSION_ID);
-    if (seat && !isMine && !bookedMapping[seat]) lockedMapping[seat] = true;
-  });
-
-  let highlightEl = null;
-
-  ['A', 'B', 'C'].forEach(prefix => {
-    const grid = document.getElementById('vanGrid' + prefix);
-    if (!grid) return;
-
-    grid.innerHTML = '';
-
-    BUS_GRID_STRUCTURE.forEach(n => {
-      const cell = document.createElement('div');
-
-      if (n === 'driver') {
-        cell.className = 'seat driver';
-        cell.innerHTML = '<span style="font-size:22px">👨‍✈️</span><span style="font-size:15px">คนขับ</span>';
-        grid.appendChild(cell);
-        return;
+    // ถ้าช่องนี้ว่างเปล่า (เช่น checkbox ที่ไม่ได้เลือก) ให้โชว์ชื่อช่องแทน จะได้ลากได้เหมือนกัน
+    if (calibOn) {
+      if (!el.textContent.trim()) {
+        el.classList.add('calib-empty');
+        el.dataset.wasEmpty = '1';
       }
-
-      if (n === 'spacer') {
-        cell.className = 'seat spacer';
-        grid.appendChild(cell);
-        return;
-      }
-
-      const id = prefix + n;
-      cell.className = 'seat';
-
-      if (bookedMapping[id]) {
-        if (bookedMapping[id] === 'งดจอง') {
-          cell.classList.add('hidden-seat');
-        } else {
-          cell.classList.add('booked');
-          cell.innerHTML = `<span style="font-size:9px">${id}</span><div style="font-size:12px;text-align:center">${bookedMapping[id]}</div>`;
-        }
-      } else if (lockedMapping[id]) {
-        // 🟠 มีคนอื่นกำลังเลือกเบาะนี้อยู่ (ล็อกชั่วคราว)
-        cell.classList.add('locking');
-        cell.innerHTML = `<span style="font-size:9px">${id}</span><div style="font-size:10px;text-align:center">⏳ มีคนเลือก</div>`;
-      } else {
-        cell.classList.add('empty');
-        if (id === selectedSeat) cell.classList.add('selected');
-        cell.innerHTML = `<span style="font-size:10px">เบาะ</span><span style="font-size:15px">${id}</span>`;
-        cell.onclick = () => pickSeat(cell, id);
-      }
-
-      if (highlightSeatId && id === highlightSeatId) highlightEl = cell;
-
-      grid.appendChild(cell);
-    });
-  });
-
-  // สกรอลไปหา + ไฮไลต์เบาะที่มาจากประวัติการจอง (ทำครั้งเดียวตอนโหลดครั้งแรก ไม่ทำซ้ำตอน auto-refresh)
-  if (highlightEl) {
-    const targetEl = highlightEl;
-    setTimeout(() => {
-      targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      targetEl.classList.add('seat-highlight-pulse');
-      setTimeout(() => targetEl.classList.remove('seat-highlight-pulse'), 3500);
-    }, 150);
-    highlightSeatId = null;
-  }
-}
-
-async function pickSeat(el, id) {
-  const trip = document.getElementById('b-trip').value.trim();
-  const date = document.getElementById('f-dateraw').value.trim();
-
-  if (!trip || !date) {
-    Swal.fire({
-      icon: 'error', title: 'ข้อมูลทริปไม่ครบ', text: 'กรุณากลับไปเลือกทริปใหม่',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-    return;
-  }
-
-  const previousSeat = selectedSeat; // จำเบาะเดิมไว้ เผื่อล็อกไม่สำเร็จ
-
-  // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
-  selectedSeat = id;
-  document.querySelectorAll('.seat.selected').forEach(seat => seat.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('f-seat').value = id;
-  document.getElementById('formFieldsBox2').classList.add('show');
-  checkBook();
-
-  setTimeout(() => {
-    document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
-
-  function revertToPreviousSeat() {
-    selectedSeat = previousSeat;
-    el.classList.remove('selected');
-    document.getElementById('f-seat').value = previousSeat || '';
-
-    if (previousSeat) {
-      const previousEl = [...document.querySelectorAll('.seat')].find(seat => seat.textContent.includes(previousSeat));
-      if (previousEl) previousEl.classList.add('selected');
     } else {
-      document.getElementById('formFieldsBox2').classList.remove('show');
+      if (el.dataset.wasEmpty === '1') {
+        el.classList.remove('calib-empty');
+        delete el.dataset.wasEmpty;
+      }
     }
-    checkBook();
-  }
+  });
 
-  try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: new URLSearchParams({ action: 'lockSeat', date, trip, seat: id, session_id: MY_SESSION_ID })
-    });
-    const result = await response.json();
+  toggleBtn.textContent = calibOn ? '✅ ปิดโหมดปรับตำแหน่ง' : '🔧 โหมดปรับตำแหน่ง';
+  exportBtn.style.display = calibOn ? 'block' : 'none';
 
-    if (!result.ok) {
-      revertToPreviousSeat();
-      Swal.fire({
-        icon: 'warning',
-        title: 'เบาะนี้ไม่ว่างแล้ว',
-        text: result.error === 'seat_booked' ? 'เบาะนี้ถูกจองไปแล้ว กรุณาเลือกเบาะอื่น' : 'มีคนอื่นกำลังเลือกเบาะนี้ กรุณาเลือกเบาะอื่น',
-        background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-      });
-      loadSeats(date);
-      return;
-    }
-
-    // ล็อกเบาะสำเร็จ -> เริ่มนับเวลาใหม่ 5 นาที
-    startSeatCountdown(true);
-
-  } catch (error) {
-    revertToPreviousSeat();
-    Swal.fire({
-      icon: 'error', title: 'ล็อกเบาะไม่สำเร็จ', text: 'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-    loadSeats(date);
-  } finally {
-    el.style.pointerEvents = '';
-  }
+  if (calibOn) attachDragHandlers();
 }
 
-function checkBook() {
-  const ok = ['f-name', 'f-nick', 'f-phone', 'f-line', 'f-seat', 'f-pickup'].every(id => document.getElementById(id).value.trim() !== '');
-  const btn = document.getElementById('confirmBtn');
-  btn.disabled = !ok;
-  btn.classList.toggle('ready', ok);
-  btn.innerText = ok ? '👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨' : '🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง';
-}
+function attachDragHandlers() {
+  const wrap = document.getElementById('formImageWrap');
 
-/* ================================================================
-   SLIP UPLOAD
-   ================================================================ */
-function handleSlipFile(input) {
-  const drop = document.getElementById('slipDrop');
-  const nameEl = document.getElementById('slipName');
-  const preview = document.getElementById('slipPreview');
-  const button = document.getElementById('payOkBtn');
+  wrap.querySelectorAll('.ov').forEach(el => {
+    if (el.dataset.dragBound === '1') return;
+    el.dataset.dragBound = '1';
 
-  if (!input.files || !input.files[0]) {
-    resetSlipUpload();
-    return;
-  }
+    let startX, startY, startLeftPct, startTopPct;
 
-  const file = input.files[0];
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    el.addEventListener('pointerdown', (e) => {
+      if (!calibOn) return;
+      e.preventDefault();
+      el.setPointerCapture(e.pointerId);
 
-  if (!allowedTypes.includes(file.type)) {
-    input.value = '';
-    Swal.fire({
-      icon: 'warning', title: 'ไฟล์ไม่ถูกต้อง', text: 'กรุณาแนบสลิปชนิด JPG, PNG หรือ WEBP',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+      const wrapRect = wrap.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      startLeftPct = parseFloat(el.style.left);
+      startTopPct = parseFloat(el.style.top);
+
+      function onMove(ev) {
+        const dxPct = ((ev.clientX - startX) / wrapRect.width) * 100;
+        const dyPct = ((ev.clientY - startY) / wrapRect.height) * 100;
+        el.style.left = (startLeftPct + dxPct).toFixed(2) + '%';
+        el.style.top = (startTopPct + dyPct).toFixed(2) + '%';
+      }
+
+      function onUp(ev) {
+        el.removeEventListener('pointermove', onMove);
+        el.removeEventListener('pointerup', onUp);
+      }
+
+      el.addEventListener('pointermove', onMove);
+      el.addEventListener('pointerup', onUp);
     });
-    resetSlipUpload();
-    return;
-  }
-
-  const maxSize = 5 * 1024 * 1024;
-  if (file.size > maxSize) {
-    input.value = '';
-    Swal.fire({
-      icon: 'warning', title: 'ไฟล์ใหญ่เกินไป', text: 'กรุณาใช้รูปสลิปขนาดไม่เกิน 5MB',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-    resetSlipUpload();
-    return;
-  }
-
-  selectedSlipFile = file;
-  drop.classList.add('has-file');
-  nameEl.textContent = '✅ ' + file.name;
-
-  const reader = new FileReader();
-  reader.onload = (event) => {
-    preview.src = event.target.result;
-    preview.classList.add('show');
-  };
-  reader.readAsDataURL(file);
-
-  button.disabled = false;
-  button.textContent = '✔️ ส่งสลิปและยืนยันการจอง';
-}
-
-function resetSlipUpload() {
-  selectedSlipFile = null;
-
-  const input = document.getElementById('slipFile');
-  const drop = document.getElementById('slipDrop');
-  const nameEl = document.getElementById('slipName');
-  const preview = document.getElementById('slipPreview');
-  const button = document.getElementById('payOkBtn');
-
-  if (input) input.value = '';
-  if (drop) drop.classList.remove('has-file');
-  if (nameEl) nameEl.textContent = 'แตะเพื่อเลือกรูปสลิป';
-  if (preview) {
-    preview.src = '';
-    preview.classList.remove('show');
-  }
-  if (button) {
-    button.disabled = true;
-    button.textContent = '🧾 กรุณาแนบสลิปก่อน';
-  }
-}
-
-function slipFileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result || '');
-      const commaIndex = result.indexOf(',');
-      resolve({
-        name: file.name,
-        mimeType: file.type || 'image/jpeg',
-        data: commaIndex >= 0 ? result.substring(commaIndex + 1) : result
-      });
-    };
-    reader.onerror = () => reject(new Error('ไม่สามารถอ่านรูปสลิปได้'));
-    reader.readAsDataURL(file);
   });
 }
 
-/* ================================================================
-   PAYMENT
-   ================================================================ */
-function openPay() {
-  if (!selectedSeat) {
-    Swal.fire({
-      icon: 'warning', title: 'ยังไม่ได้เลือกที่นั่ง', text: 'กรุณาเลือกที่นั่งก่อนชำระเงิน',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-    return;
-  }
+function exportCalibCoords() {
+  const wrap = document.getElementById('formImageWrap');
+  const lines = [];
 
-  resetSlipUpload();
-  startSeatCountdown(); // ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ
-  document.getElementById('payModal').classList.add('show');
-}
+  wrap.querySelectorAll('.ov').forEach(el => {
+    const id = el.id;
+    const left = parseFloat(el.style.left).toFixed(2);
+    const top = parseFloat(el.style.top).toFixed(2);
+    const fontSize = el.style.fontSize || '';
+    lines.push(`${id} | left:${left}% top:${top}% ${fontSize}`);
+  });
 
-function closePay() {
-  document.getElementById('payModal').classList.remove('show');
-  // หยุดแค่ตัวนับเวลาที่แสดงผลชั่วคราว แต่ไม่รีเซ็ตเวลาหมดอายุของการล็อกเบาะ
-  clearInterval(seatCountdownTimer);
-  seatCountdownTimer = null;
-}
-
-async function submitBook() {
-  const btn = document.getElementById('payOkBtn');
-
-  if (!selectedSlipFile) {
-    Swal.fire({
-      icon: 'warning', title: 'ยังไม่ได้แนบสลิป', text: 'กรุณาแนบรูปสลิปก่อนยืนยันการจอง',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-    return;
-  }
-
-  btn.innerHTML = '⌛ กำลังส่งข้อมูลและสลิป...';
-  btn.disabled = true;
+  const output = lines.join('\n');
+  const textarea = document.getElementById('calibOutput');
+  textarea.value = output;
+  textarea.style.display = 'block';
+  textarea.focus();
+  textarea.select();
 
   try {
-    const slipData = await slipFileToBase64(selectedSlipFile);
-    const bookingId = 'BOOK-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7).toUpperCase();
-
-    const payload = {
-      date: document.getElementById('f-dateraw').value,
-      trip: document.getElementById('b-trip').value,
-      seat: document.getElementById('f-seat').value,
-      name: document.getElementById('f-name').value.trim(),
-      nickname: document.getElementById('f-nick').value.trim(),
-      phone: document.getElementById('f-phone').value.trim(),
-      line: document.getElementById('f-line').value.trim(),
-      pickup: document.getElementById('f-pickup').value.trim(),
-      confirm: 'true',
-      bookingId: bookingId,
-      session_id: MY_SESSION_ID,
-      slipBase64: slipData.data,
-      slipName: slipData.name,
-      slipMime: slipData.mimeType
-    };
-
-    // ส่งผ่านฟอร์ม + iframe ที่ซ่อนไว้ (ใช้ textarea เพราะ Base64 ยาวมาก)
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = API_URL;
-    form.target = '_ifr_booking';
-    form.acceptCharset = 'UTF-8';
-    form.style.display = 'none';
-
-    Object.entries(payload).forEach(([key, value]) => {
-      const field = document.createElement('textarea');
-      field.name = key;
-      field.value = value == null ? '' : String(value);
-      field.style.display = 'none';
-      form.appendChild(field);
-    });
-
-    let iframe = document.getElementById('_ifr_booking');
-    if (!iframe) {
-      iframe = document.createElement('iframe');
-      iframe.name = '_ifr_booking';
-      iframe.id = '_ifr_booking';
-      iframe.style.display = 'none';
-      document.body.appendChild(iframe);
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-
-    // รอหลังบ้านบันทึกรูปและข้อมูลก่อนแสดงหน้าสำเร็จ
-    setTimeout(() => {
-      clearInterval(seatRefreshTimer);
-      seatRefreshTimer = null;
-      stopSeatCountdown();
-      closePay();
-
-      document.getElementById('r-name').innerText = payload.name;
-      document.getElementById('r-trip').innerText = payload.trip;
-      document.getElementById('r-date').innerText = new Date(payload.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-      document.getElementById('r-pickup').innerText = payload.pickup;
-      document.getElementById('r-seat').innerText = payload.seat;
-
-      document.getElementById('successPage2').classList.add('show');
-      allBookings.push({ ...payload, paymentStatus: 'รอตรวจสอบสลิป' });
-      renderMyTrips();
-
-      if (form.parentNode) form.remove();
-      selectedSlipFile = null;
-    }, 8000);
-
-  } catch (error) {
-    btn.disabled = false;
-    btn.textContent = '✔️ ส่งสลิปและยืนยันการจอง';
-    Swal.fire({
-      icon: 'error', title: 'ส่งสลิปไม่สำเร็จ', text: error.message || 'กรุณาลองใหม่อีกครั้ง',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
+    document.execCommand('copy');
+  } catch (e) {
+    // เผื่อ copy อัตโนมัติไม่ได้ ผู้ใช้เลือกข้อความเองแล้ว copy ได้จาก textarea ที่โชว์อยู่
   }
-}
 
-function backHome() {
-  document.getElementById('successPage2').classList.remove('show');
-  document.getElementById('bookingPage2').classList.remove('show');
-  switchTab('home');
-  renderHome();
-}
-
-/* ================================================================
-   LOGOUT
-   ================================================================ */
-function logOut() {
   Swal.fire({
-    title: 'ออกจากระบบ?', text: 'ต้องล็อกอินด้วยเบอร์ใหม่อีกครั้ง', icon: 'warning',
-    showCancelButton: true, confirmButtonText: 'ออกเลย', cancelButtonText: 'ยกเลิก',
-    background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#ef4444'
-  }).then(r => {
-    if (r.isConfirmed) {
-      localStorage.removeItem('tnhUser');
-      location.reload();
-    }
+    icon: 'success',
+    title: 'คัดลอกตำแหน่งแล้ว!',
+    text: 'วางส่งกลับมาในแชทได้เลยครับ (หรือดูข้อความในกล่องสีเขียวด้านล่างแล้วก็อปเอง)',
+    confirmButtonColor: '#2f6f4f'
   });
 }
-
-/* ================================================================
-   DRAWER
-   ================================================================ */
-function openDrawer() {
-  document.getElementById('drawer').classList.add('open');
-  document.getElementById('ov').style.display = 'block';
-}
-
-function closeDrawer() {
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('ov').style.display = 'none';
-}
-
-/* ================================================================
-   FLOATING ADMIN TAB
-   ================================================================ */
-// กดครั้งแรก -> กางออกมาเป็นปุ่ม "สำหรับแอดมิน"
-// กดซ้ำตอนกางอยู่ -> เด้งไปหน้าแอดมิน
-// ถ้าไม่แตะซ้ำภายในไม่กี่วิ หรือกดที่อื่นในจอ -> หุบกลับอัตโนมัติ
-let adminTabExpanded = false;
-let adminTabCollapseTimer = null;
-
-function toggleAdminTab(e) {
-  e.stopPropagation();
-  const tab = document.getElementById('adminTab');
-
-  if (!adminTabExpanded) {
-    tab.classList.add('expanded');
-    adminTabExpanded = true;
-
-    clearTimeout(adminTabCollapseTimer);
-    adminTabCollapseTimer = setTimeout(collapseAdminTab, 4000);
-    return;
-  }
-
-  // กางอยู่แล้ว กดซ้ำ = ไปหน้าแอดมิน (แก้ path ตรงนี้ถ้าไฟล์แอดมินอยู่คนละที่)
-  window.location.href = 'admin.html';
-}
-
-function collapseAdminTab() {
-  const tab = document.getElementById('adminTab');
-  if (tab) tab.classList.remove('expanded');
-  adminTabExpanded = false;
-  clearTimeout(adminTabCollapseTimer);
-}
-
-document.addEventListener('click', (e) => {
-  if (!adminTabExpanded) return;
-  const tab = document.getElementById('adminTab');
-  if (tab && !tab.contains(e.target)) collapseAdminTab();
-});
-
-/* ================================================================
-   PROFILE AVATAR UPLOAD
-   ================================================================ */
-function uploadAvatar(input) {
-  if (!input.files || !input.files[0]) return;
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = document.getElementById('userAvatar');
-    if (img) img.src = e.target.result;
-    localStorage.setItem('userAvatar', e.target.result);
-    renderHome(); // อัปเดตรูปในหน้าหลักด้วย
-  };
-  reader.readAsDataURL(input.files[0]);
-}
-
-/* ================================================================
-   EQUIPMENT RENTAL (เช่าอุปกรณ์)
-   ================================================================ */
-
-// ทริปทั้งหมดที่ผู้ใช้คนนี้เคยจองไว้ (unique ตามทริป+วันที่+เบาะ) ใช้เป็นตัวเลือกตอนเช่าอุปกรณ์
-function getMyUniqueBookings() {
-  const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
-  const today = new Date(new Date().setHours(0, 0, 0, 0));
-  const mine = allBookings.filter(b => b.trip && b.date && norm(b.phone) === norm(currentUser.phone) && new Date(b.date) >= today);
-
-  const seen = {};
-  const list = [];
-  mine.forEach(b => {
-    const key = b.trip + '_' + b.date + '_' + (b.seat || '');
-    if (!seen[key]) {
-      seen[key] = 1;
-      list.push(b);
-    }
-  });
-  return list;
-}
-
-function openEquipRent() {
-  eqSelectedTripKey = null;
-  eqQty = { tent: 0, sleepingBag: 0, sleepingPad: 0 };
-
-  renderEqTripList();
-  renderEqItemList();
-  updateEqSummary();
-
-  document.getElementById('equipPage').classList.add('show');
-  window.scrollTo({ top: 0, behavior: 'instant' });
-}
-
-function closeEquipRent() {
-  document.getElementById('equipPage').classList.remove('show');
-}
-
-function renderEqTripList() {
-  const box = document.getElementById('eqTripList');
-  const myBookings = getMyUniqueBookings();
-
-  if (myBookings.length === 0) {
-    box.innerHTML = `
-      <p style="text-align:center;color:var(--muted);padding:24px;background:var(--bg2);border:1px solid var(--border);border-radius:16px">
-        ยังไม่มีทริปที่จองไว้ครับ 🥲<br>กรุณาจองทริปก่อน ถึงจะเช่าอุปกรณ์ให้ทริปนั้นได้ครับ
-      </p>
-    `;
-    return;
-  }
-
-  box.innerHTML = myBookings.map(b => {
-    const key = b.trip + '_' + b.date + '_' + (b.seat || '');
-    const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-    const selected = key === eqSelectedTripKey;
-    return `
-      <div class="eq-trip-card ${selected ? 'selected' : ''}" onclick="selectEqTrip('${key}')">
-        <div class="eq-trip-radio"></div>
-        <div class="eq-trip-info">
-          <h4>${b.trip}</h4>
-          <p>📅 ${fmtDate} · 🪑 เบาะ ${b.seat || '-'}</p>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function selectEqTrip(key) {
-  eqSelectedTripKey = key;
-  renderEqTripList();
-  updateEqSummary();
-}
-
-function renderEqItemList() {
-  const box = document.getElementById('eqItemList');
-  box.innerHTML = Object.entries(EQUIP_ITEMS).map(([key, item]) => `
-    <div class="eq-item-card">
-      <div class="eq-item-img"><img src="${item.img}" onerror="this.style.display='none'"></div>
-      <div class="eq-item-info">
-        <h4>${item.label}</h4>
-        <p class="model">${item.brand}</p>
-        <p class="price">฿${item.price} / ${item.unit}</p>
-        <div class="eq-stepper">
-          <button class="eq-step-btn" onclick="changeEqQty('${key}', -1)">−</button>
-          <div class="eq-step-val" id="eqQtyVal-${key}">0</div>
-          <button class="eq-step-btn" onclick="changeEqQty('${key}', 1)">+</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function changeEqQty(key, delta) {
-  const next = Math.max(0, Math.min(10, (eqQty[key] || 0) + delta));
-  eqQty[key] = next;
-  document.getElementById('eqQtyVal-' + key).textContent = next;
-  updateEqSummary();
-}
-
-function getEqSelectedRows() {
-  return Object.entries(EQUIP_ITEMS)
-    .filter(([key]) => eqQty[key] > 0)
-    .map(([key, item]) => ({ key, item, qty: eqQty[key], subtotal: item.price * eqQty[key] }));
-}
-
-function updateEqSummary() {
-  const rows = getEqSelectedRows();
-  const total = rows.reduce((sum, r) => sum + r.subtotal, 0);
-
-  const summaryBox = document.getElementById('eqSummaryBox');
-  const rowsBox = document.getElementById('eqSummaryRows');
-  const totalEl = document.getElementById('eqTotalPrice');
-  const confirmBtn = document.getElementById('eqConfirmBtn');
-
-  if (rows.length === 0) {
-    summaryBox.style.display = 'none';
-  } else {
-    summaryBox.style.display = 'block';
-    rowsBox.innerHTML = rows.map(r => `<div class="eq-summary-row"><span>${r.item.label} x${r.qty}</span><span>${r.subtotal.toLocaleString()} บาท</span></div>`).join('');
-    totalEl.textContent = total.toLocaleString() + ' บาท';
-  }
-
-  const ready = Boolean(eqSelectedTripKey) && rows.length > 0;
-  confirmBtn.disabled = !ready;
-  confirmBtn.classList.toggle('ready', ready);
-  confirmBtn.innerText = ready
-    ? `👉 ยืนยันเช่าอุปกรณ์ (${total.toLocaleString()} บาท) ✨`
-    : (!eqSelectedTripKey ? '🚀 กรุณาเลือกทริปก่อนครับ' : '🚀 กรุณาเลือกอุปกรณ์อย่างน้อย 1 ชิ้น');
-}
-
-function confirmEquipRent() {
-  const booking = getMyUniqueBookings().find(b => (b.trip + '_' + b.date + '_' + (b.seat || '')) === eqSelectedTripKey);
-  if (!booking) return;
-
-  const rows = getEqSelectedRows();
-  const total = rows.reduce((sum, r) => sum + r.subtotal, 0);
-
-  const btn = document.getElementById('eqConfirmBtn');
-  const originalText = btn.innerText;
-  btn.disabled = true;
-  btn.innerText = '⌛ กำลังบันทึกข้อมูล...';
-
-  const rentId = 'RENT-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7).toUpperCase();
-
-  /*
-   * ส่ง action:'rentEquip' แยกจาก action:'read'/booking ปกติ
-   * ฝั่ง Google Apps Script (backend) ต้องเช็ค action นี้แล้วเขียนลง "ชีทใหม่" (เช่น EquipRentals)
-   * ไม่ปนกับชีท bookings เดิม — ดูตัวอย่างโค้ด Apps Script ที่ต้องเพิ่ม ในคำอธิบายท้ายข้อความ
-   */
-  const payload = {
-    action: 'rentEquip',
-    rentId: rentId,
-    trip: booking.trip,
-    date: booking.date,
-    seat: booking.seat || '',
-    name: booking.name || currentUser.nick,
-    nickname: currentUser.nick,
-    phone: currentUser.phone,
-    tent: String(eqQty.tent || 0),
-    sleepingBag: String(eqQty.sleepingBag || 0),
-    sleepingPad: String(eqQty.sleepingPad || 0),
-    itemsSummary: rows.map(r => `${r.item.label} x${r.qty}`).join(', '),
-    total: String(total),
-    session_id: MY_SESSION_ID
-  };
-
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = API_URL;
-  form.target = '_ifr_equiprent';
-  form.acceptCharset = 'UTF-8';
-  form.style.display = 'none';
-
-  Object.entries(payload).forEach(([key, value]) => {
-    const field = document.createElement('textarea');
-    field.name = key;
-    field.value = value == null ? '' : String(value);
-    field.style.display = 'none';
-    form.appendChild(field);
-  });
-
-  let iframe = document.getElementById('_ifr_equiprent');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.name = '_ifr_equiprent';
-    iframe.id = '_ifr_equiprent';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-
-  document.body.appendChild(form);
-  form.submit();
-
-  // รอหลังบ้านบันทึกข้อมูลสักครู่ก่อนแสดงใบเสร็จ (เหมือนตอนจองที่นั่ง)
-  setTimeout(() => {
-    document.getElementById('eqr-trip').innerText = booking.trip;
-    document.getElementById('eqr-name').innerText = booking.name || currentUser.nick;
-    document.getElementById('eqr-seat').innerText = booking.seat || '-';
-    document.getElementById('eqr-items').innerHTML = rows.map(r =>
-      `<div class="r-item-row"><span>${r.item.label} (${r.item.brand}) x${r.qty}</span><span>${r.subtotal.toLocaleString()} บาท</span></div>`
-    ).join('');
-    document.getElementById('eqr-total').innerText = total.toLocaleString() + ' บาท';
-
-    document.getElementById('equipReceiptPage').classList.add('show');
-
-    if (form.parentNode) form.remove();
-
-    btn.disabled = false;
-    btn.innerText = originalText;
-  }, 2500);
-}
-
-function closeEquipReceipt() {
-  document.getElementById('equipReceiptPage').classList.remove('show');
-  document.getElementById('equipPage').classList.remove('show');
-  switchTab('home');
-}
-
 </script>
+
 </body>
 </html>
