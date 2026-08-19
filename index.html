@@ -249,6 +249,8 @@ body {
 .bnav-item .lbl { font-size: 10px; font-weight: 600; color: var(--muted); }
 .bnav-item.active .lbl { color: var(--blue); }
 .bnav-item.active .ico { filter: drop-shadow(0 0 6px rgba(56, 189, 248, .6)); }
+.nav-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; display: none; border: 1.5px solid var(--muted); }
+.bnav-item.active .nav-avatar { border-color: var(--blue); }
 
 /* ============================================================
    PAGE / LAYOUT UTILITIES
@@ -1163,7 +1165,13 @@ body {
   <div class="bnav">
     <div class="bnav-item active" id="nav-home" onclick="switchTab('home')"><div class="ico">🏠</div><div class="lbl">หน้าหลัก</div></div>
     <div class="bnav-item" id="nav-trips" onclick="switchTab('trips')"><div class="ico">🎒</div><div class="lbl">ทริปทั้งหมด</div></div>
-    <div class="bnav-item" id="nav-mytrips" onclick="switchTab('mytrips')"><div class="ico">🪪</div><div class="lbl">โปรไฟล์</div></div>
+    <div class="bnav-item" id="nav-mytrips" onclick="switchTab('mytrips')">
+      <div class="ico">
+        <img id="navProfilePic" class="nav-avatar" src="" alt="">
+        <span id="navProfileEmoji">🪪</span>
+      </div>
+      <div class="lbl">โปรไฟล์</div>
+    </div>
     <div class="bnav-item" id="nav-notif" onclick="switchTab('notif')"><div class="ico">🔔</div><div class="lbl">เผื่อจำเป็น</div></div>
   </div>
 </div>
@@ -2031,7 +2039,24 @@ function enterApp() {
   document.getElementById('loadingScreen').classList.add('show');
   document.getElementById('f-phone').value = currentUser.phone;
   document.getElementById('f-nick').value = currentUser.nick;
+  updateNavAvatar();
   fetchData();
+}
+
+// อัปเดตไอคอนโปรไฟล์ในเมนูด้านล่างให้เป็นรูปโปรไฟล์ LINE จริง (แทนอิโมจิ 🪪)
+function updateNavAvatar() {
+  const img = document.getElementById('navProfilePic');
+  const emoji = document.getElementById('navProfileEmoji');
+  if (!img) return;
+
+  if (currentUser && currentUser.linePicture) {
+    img.src = currentUser.linePicture;
+    img.style.display = 'block';
+    if (emoji) emoji.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    if (emoji) emoji.style.display = 'block';
+  }
 }
 
 async function initLiff() {
@@ -2492,11 +2517,9 @@ function renderMyTrips() {
   document.getElementById('myContent').innerHTML = `
     <div class="my-profile">
       <div class="my-ava-col">
-        <div class="my-ava" onclick="document.getElementById('fileInput').click()" style="cursor:pointer;overflow:hidden;border-radius:50%;width:58px;height:58px;padding:0;flex-shrink:0">
-          <img id="userAvatar" src="https://via.placeholder.com/150?text=👤" style="width:100%;height:100%;object-fit:cover">
-          <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAvatar(this)">
+        <div class="my-ava" style="overflow:hidden;border-radius:50%;width:58px;height:58px;padding:0;flex-shrink:0">
+          <img id="userAvatar" src="${currentUser.linePicture || 'https://via.placeholder.com/150?text=👤'}" style="width:100%;height:100%;object-fit:cover">
         </div>
-        <p class="my-ava-hint">📷 แตะเพื่อเปลี่ยนรูปได้</p>
       </div>
       <div class="my-info" style="flex:1">
         <h3>${currentUser.nick}</h3>
@@ -2559,14 +2582,6 @@ function renderMyTrips() {
     <div style="height:1px;background:var(--border);margin:20px 0"></div>
     <button class="btn-logout" onclick="logOut()">🚪 ออกจากระบบ</button>
   `;
-
-  const savedAvatar = localStorage.getItem('userAvatar');
-  const avatarEl = document.getElementById('userAvatar');
-  if (savedAvatar) {
-    if (avatarEl) avatarEl.src = savedAvatar;
-  } else if (currentUser.linePicture && avatarEl) {
-    avatarEl.src = currentUser.linePicture;
-  }
 }
 
 // เปิดหน้าผังเบาะของทริปที่เคยจองไว้ (จากการ์ดในประวัติความบ้า) แล้วสกรอลไปหา+ไฮไลต์เบาะของตัวเองให้เจอไว
@@ -3246,22 +3261,6 @@ document.addEventListener('click', (e) => {
   const tab = document.getElementById('adminTab');
   if (tab && !tab.contains(e.target)) collapseAdminTab();
 });
-
-/* ================================================================
-   PROFILE AVATAR UPLOAD
-   ================================================================ */
-function uploadAvatar(input) {
-  if (!input.files || !input.files[0]) return;
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const img = document.getElementById('userAvatar');
-    if (img) img.src = e.target.result;
-    localStorage.setItem('userAvatar', e.target.result);
-    renderHome(); // อัปเดตรูปในหน้าหลักด้วย
-  };
-  reader.readAsDataURL(input.files[0]);
-}
 
 /* ================================================================
    EQUIPMENT RENTAL (เช่าอุปกรณ์)
