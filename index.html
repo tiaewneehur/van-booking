@@ -2098,25 +2098,53 @@ async function initLiff() {
     }
   }
 
+  // กันไม่ให้ค้างที่หน้า "กำลังเชื่อมต่อ" ตลอดไป เผื่อ LIFF ไม่ตอบสนอง/สิทธิ์ถูกยกเลิก
+  const stuckTimer = setTimeout(() => {
+    showLineLoginRetry('⚠️ เชื่อมต่อ LINE ช้ากว่าปกติ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
+  }, 8000);
+
   try {
     await liff.init({ liffId: LIFF_ID });
   } catch (err) {
     console.error('LIFF init error', err);
-    document.getElementById('lineLoginLoading').textContent = '⚠️ เชื่อมต่อ LINE ไม่สำเร็จ กรุณารีเฟรชหน้าเว็บ';
-    document.getElementById('lineLoginBtn').style.display = 'block';
+    clearTimeout(stuckTimer);
+    showLineLoginRetry('⚠️ เชื่อมต่อ LINE ไม่สำเร็จ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
     return;
   }
 
-  if (liff.isLoggedIn()) {
-    await afterLineLogin();
-  } else if (liff.isInClient()) {
-    // เปิดจากในแอป LINE โดยตรง -> ล็อกอินอัตโนมัติไม่ต้องกดปุ่ม
-    liff.login();
-  } else {
-    // เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่มให้กด
-    document.getElementById('lineLoginLoading').style.display = 'none';
-    document.getElementById('lineLoginBtn').style.display = 'block';
+  try {
+    if (liff.isLoggedIn()) {
+      await afterLineLogin();
+    } else if (liff.isInClient()) {
+      // เปิดจากในแอป LINE โดยตรง -> ล็อกอินอัตโนมัติไม่ต้องกดปุ่ม
+      liff.login();
+    } else {
+      // เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่มให้กด
+      showLineLoginRetry(null);
+    }
+  } catch (err) {
+    console.error('LIFF login flow error', err);
+    showLineLoginRetry('⚠️ เข้าสู่ระบบ LINE ไม่สำเร็จ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
+  } finally {
+    clearTimeout(stuckTimer);
   }
+}
+
+// โชว์ปุ่ม "เข้าสู่ระบบด้วย LINE" ให้กดใหม่เสมอเมื่อขั้นตอนใดๆล้มเหลว
+// message = null -> ซ่อนข้อความสถานะ โชว์แค่ปุ่ม (กรณีเปิดจากเบราว์เซอร์ปกติ ยังไม่เคยล็อกอิน)
+// message = ข้อความ -> โชว์ทั้งข้อความแจ้งเตือนและปุ่ม (กรณีเชื่อมต่อ/ดึงข้อมูลล้มเหลว)
+function showLineLoginRetry(message) {
+  const loading = document.getElementById('lineLoginLoading');
+  const btn = document.getElementById('lineLoginBtn');
+  if (loading) {
+    if (message) {
+      loading.textContent = message;
+      loading.style.display = 'block';
+    } else {
+      loading.style.display = 'none';
+    }
+  }
+  if (btn) btn.style.display = 'block';
 }
 
 function loginWithLine() {
@@ -2152,12 +2180,12 @@ async function afterLineLogin() {
     checkReady();
   } catch (err) {
     console.error('getProfile error', err);
-    Swal.fire({
-      icon: 'error', title: 'ดึงข้อมูล LINE ไม่สำเร็จ', text: 'กรุณารีเฟรชหน้าเว็บแล้วลองใหม่ครับ',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
+    // token อาจใช้ไม่ได้แล้ว (เช่นผู้ใช้ไปยกเลิกสิทธิ์การเชื่อมต่อแอปนี้ใน LINE) -> เคลียร์ session แล้วให้กดเข้าสู่ระบบใหม่
+    try { if (liff.isLoggedIn()) liff.logout(); } catch (e) {}
+    showLineLoginRetry('⚠️ เชื่อมต่อ LINE ไม่สำเร็จ (อาจเป็นเพราะสิทธิ์การเชื่อมต่อถูกยกเลิก) กรุณากดปุ่มด้านล่างเพื่อเข้าสู่ระบบใหม่');
   }
 }
+
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('loginPhone').addEventListener('input', checkReady);
