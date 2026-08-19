@@ -1123,8 +1123,12 @@ body {
           <div class="status">✅ เข้าสู่ระบบด้วย LINE แล้ว</div>
         </div>
       </div>
-      <h2>ใส่เบอร์โทรของคุณ 📞</h2>
+      <h2>ใส่ข้อมูลของคุณ 📞</h2>
       <p>ใช้ผูกกับประวัติการจองของคุณเท่านั้น</p>
+      <div class="inp-wrap">
+        <span class="inp-pre">🏷️</span>
+        <input id="loginNick" class="inp" type="text" placeholder="ชื่อเล่น (แสดงในแอป)" maxlength="30" oninput="checkReady()">
+      </div>
       <div class="inp-wrap">
         <span class="inp-pre">🇹🇭</span>
         <input id="loginPhone" class="inp" type="tel" placeholder="063xxxxxxx" maxlength="10" oninput="checkReady()">
@@ -2032,16 +2036,18 @@ let lineProfile = null; // { userId, displayName, pictureUrl }
 
 function checkReady() {
   const p = document.getElementById('loginPhone').value.trim();
-  document.getElementById('loginBtn').disabled = !(p.length >= 9);
+  const n = document.getElementById('loginNick').value.trim();
+  document.getElementById('loginBtn').disabled = !(p.length >= 9 && n.length > 0);
 }
 
 function doLogin() {
   const phone = document.getElementById('loginPhone').value.trim();
-  const nick = (lineProfile && lineProfile.displayName) || 'ผู้ใช้ LINE';
+  const nick = document.getElementById('loginNick').value.trim() || (lineProfile && lineProfile.displayName) || 'ผู้ใช้ LINE';
 
   currentUser = {
     phone,
     nick,
+    lineName: (lineProfile && lineProfile.displayName) || nick,
     lineUserId: lineProfile ? lineProfile.userId : null,
     linePicture: lineProfile ? lineProfile.pictureUrl : null
   };
@@ -2134,6 +2140,10 @@ async function afterLineLogin() {
     document.getElementById('lineNamePreview').textContent = lineProfile.displayName;
     if (lineProfile.pictureUrl) document.getElementById('linePicPreview').src = lineProfile.pictureUrl;
 
+    // เสนอชื่อ LINE เป็นค่าเริ่มต้นของช่องชื่อเล่น แต่ยังแก้ไขเองได้
+    const nickInput = document.getElementById('loginNick');
+    if (nickInput && !nickInput.value) nickInput.value = lineProfile.displayName;
+
     // ถ้าเคยกรอกเบอร์ไว้แล้วสำหรับ LINE user นี้ในเครื่องนี้ ให้กรอกให้อัตโนมัติ
     const savedPhone = localStorage.getItem('tnhPhone_' + lineProfile.userId);
     if (savedPhone) {
@@ -2151,6 +2161,7 @@ async function afterLineLogin() {
 
 window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('loginPhone').addEventListener('input', checkReady);
+  document.getElementById('loginNick').addEventListener('input', checkReady);
   initLiff();
 });
 
@@ -2769,6 +2780,7 @@ function goToBook() {
   document.getElementById('f-dateraw').value = formattedDate;
   document.getElementById('f-phone').value = currentUser.phone;
   document.getElementById('f-nick').value = currentUser.nick;
+  document.getElementById('f-line').value = currentUser.lineName || currentUser.nick;
 
   selectedSeat = null;
   document.getElementById('f-seat').value = '';
