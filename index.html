@@ -1173,7 +1173,7 @@ body {
       <p>ใช้ผูกกับประวัติการจองของคุณเท่านั้น</p>
       <div class="inp-wrap">
         <span class="inp-pre">🏷️</span>
-        <input id="loginNick" class="inp" type="text" placeholder="ชื่อเล่น (แสดงในแอป)" maxlength="30" oninput="checkReady()">
+        <input id="loginNick" class="inp" type="text" placeholder="พิมพ์ชื่อเล่นเพื่อแสดงบนผังเบาะ" maxlength="30" oninput="checkReady()">
       </div>
       <div class="inp-wrap">
         <span class="inp-pre">🇹🇭</span>
@@ -2213,10 +2213,6 @@ async function afterLineLogin() {
     document.getElementById('phoneStep').style.display = 'block';
     document.getElementById('lineNamePreview').textContent = lineProfile.displayName;
     if (lineProfile.pictureUrl) document.getElementById('linePicPreview').src = lineProfile.pictureUrl;
-
-    // เสนอชื่อ LINE เป็นค่าเริ่มต้นของช่องชื่อเล่น แต่ยังแก้ไขเองได้
-    const nickInput = document.getElementById('loginNick');
-    if (nickInput && !nickInput.value) nickInput.value = lineProfile.displayName;
 
     // ถ้าเคยกรอกเบอร์ไว้แล้วสำหรับ LINE user นี้ในเครื่องนี้ ให้กรอกให้อัตโนมัติ
     const savedPhone = localStorage.getItem('tnhPhone_' + lineProfile.userId);
