@@ -56,7 +56,7 @@ body {
 }
 
 #pastList.expanded .past-extra { display: block !important; }
-#bookingHistoryList.expanded .hist-extra { display: block !important; }
+.expanded .hist-extra { display: block !important; }
 
 /* ============================================================
    LOGIN PAGE
@@ -544,6 +544,35 @@ body {
 .h-seat { text-align: right; flex-shrink: 0; }
 .h-seat .snum { font-size: 18px; font-weight: 800; color: var(--blue); }
 .h-seat p { font-size: 10px; color: var(--muted); }
+
+/* mini-seat: กราฟิกเบาะขนาดย่อ โชว์เลขที่นั่งของตัวเอง ใช้ในประวัติความบ้า */
+.mini-seat {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, #ffd84d, #f7b500);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 5px 0 #b57b00, 0 8px 16px rgba(247, 181, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .45);
+}
+.mini-seat::before {
+  content: '';
+  position: absolute;
+  top: -7px;
+  width: 24px;
+  height: 11px;
+  border-radius: 7px 7px 0 0;
+  background: linear-gradient(145deg, #ffd84d, #f7b500);
+}
+.mini-seat .mini-seat-label { font-size: 8px; font-weight: 800; color: rgba(36, 24, 0, .65); letter-spacing: .2px; }
+.mini-seat .mini-seat-num { font-size: 15px; font-weight: 900; color: #241800; line-height: 1.15; max-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.hist-group-title { font-size: 13px; font-weight: 700; color: var(--sub); margin: 18px 0 10px; display: flex; align-items: center; gap: 6px; }
+.hist-group-title:first-child { margin-top: 0; }
 .h-arr { color: var(--blue); font-size: 18px; flex-shrink: 0; padding-left: 2px; }
 
 .empty-st { text-align: center; padding: 50px 20px; color: var(--muted); }
@@ -2509,8 +2538,8 @@ function togglePastList(triggerEl) {
 }
 
 // สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับประวัติความบ้าในหน้าโปรไฟล์
-function toggleBookingHistory(triggerEl) {
-  const expanded = document.getElementById('bookingHistoryList').classList.toggle('expanded');
+function toggleBookingHistory(triggerEl, listId) {
+  const expanded = document.getElementById(listId).classList.toggle('expanded');
   triggerEl.innerText = expanded ? 'ย่อ ‹' : 'ดูทั้งหมด ›';
 }
 
@@ -2641,31 +2670,49 @@ function renderMyTrips() {
 
     <div class="sec-hdr">
       <h3>📋 ประวัติความบ้า</h3>
-      ${uniqueBookings.length > 2 ? `<span onclick="toggleBookingHistory(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
     </div>
-    <div id="bookingHistoryList">
-    ${uniqueBookings.length === 0
-      ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>'
-      : uniqueBookings.map((b, i) => {
-          const img = TRIP_IMAGES[b.trip] || 'default.jpg';
-          const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-          const isPast = new Date(b.date) < new Date();
-          return `
-            <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
-              <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
-                <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
-                <div class="hi">
-                  <h4>${b.trip}</h4>
-                  <p>📅 ${fmtDate}</p>
-                  <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
-                </div>
-                <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
-                <div class="h-arr">›</div>
+    ${uniqueBookings.length === 0 ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>' : (() => {
+      const todayCut = new Date(new Date().setHours(0, 0, 0, 0));
+      const upcoming = uniqueBookings.filter(b => new Date(b.date) >= todayCut).sort((a, b) => new Date(a.date) - new Date(b.date));
+      const past = uniqueBookings.filter(b => new Date(b.date) < todayCut).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      const historyItemHTML = (b, i) => {
+        const img = TRIP_IMAGES[b.trip] || 'default.jpg';
+        const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+        const isPast = new Date(b.date) < todayCut;
+        return `
+          <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
+            <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
+              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
+              <div class="hi">
+                <h4>${b.trip}</h4>
+                <p>📅 ${fmtDate}</p>
+                <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
               </div>
+              <div class="mini-seat">
+                <span class="mini-seat-label">ที่นั่ง</span>
+                <span class="mini-seat-num">${b.seat || '-'}</span>
+              </div>
+              <div class="h-arr">›</div>
             </div>
-          `;
-        }).join('')}
-    </div>
+          </div>
+        `;
+      };
+
+      return `
+        ${upcoming.length ? `
+          <div class="hist-group-title">🗓️ กำลังจะไป (${upcoming.length})</div>
+          <div id="bookingUpcomingList">${upcoming.map(historyItemHTML).join('')}</div>
+          ${upcoming.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingUpcomingList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600;display:inline-block;margin-top:4px">ดูทั้งหมด ›</span>` : ''}
+        ` : ''}
+
+        ${past.length ? `
+          <div class="hist-group-title">✅ ไปแล้ว (${past.length})</div>
+          <div id="bookingHistoryList">${past.map(historyItemHTML).join('')}</div>
+          ${past.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingHistoryList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600;display:inline-block;margin-top:4px">ดูทั้งหมด ›</span>` : ''}
+        ` : ''}
+      `;
+    })()}
 
     <div class="sec-hdr" style="margin-top:24px"><h3>🎒 ประวัติการเช่าอุปกรณ์</h3></div>
     ${myEquipRentals.length === 0
