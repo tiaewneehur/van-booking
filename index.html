@@ -214,6 +214,52 @@ body {
 .line-profile-card .name { font-size: 14px; color: #fff; font-weight: 700; }
 .line-profile-card .status { font-size: 11px; color: var(--green); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
 
+/* Welcome card polish */
+.login-card {
+  position: relative;
+  overflow: hidden;
+  padding-top: 34px;
+}
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 18%; right: 18%;
+  height: 3px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  opacity: .8;
+}
+#lineLoginStep h2 {
+  font-size: 21px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.wave-emoji {
+  display: inline-block;
+  animation: waveHand 2.2s ease-in-out infinite;
+  transform-origin: 70% 70%;
+}
+@keyframes waveHand {
+  0%, 55%, 100% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+}
+.login-card > p { font-size: 13.5px; line-height: 1.7; }
+.login-note-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: 999px;
+  margin-top: 18px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
 /* ============================================================
    APP SHELL / HEADER / BOTTOM NAV
    ============================================================ */
@@ -1103,7 +1149,7 @@ body {
 
     <!-- STEP 1: เข้าสู่ระบบด้วย LINE -->
     <div id="lineLoginStep">
-      <h2>👋 ยินดีต้อนรับโว้ยย!</h2>
+      <h2><span class="wave-emoji">👋</span> ยินดีต้อนรับโว้ยย!</h2>
       <p>กดปุ่มด้านล่างเพื่อเข้าสู่ระบบด้วย LINE<br>ปลอดภัย ไม่ต้องจำรหัสผ่าน</p>
       <button id="lineLoginBtn" class="btn-login" style="background:#06C755;display:none" onclick="loginWithLine()">
         <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">
@@ -1136,7 +1182,7 @@ body {
       <button id="loginBtn" class="btn-login" disabled onclick="doLogin()">เข้าสู่ระบบ →</button>
     </div>
 
-    <p class="login-note">🔒 ใช้เบอร์ดึงประวัติการจองของคุณเท่านั้น</p>
+    <p class="login-note-pill">🔒 ใช้เบอร์ดึงประวัติการจองของคุณเท่านั้น</p>
   </div>
 </div>
 
