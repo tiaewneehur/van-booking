@@ -545,33 +545,44 @@ body {
 .h-seat .snum { font-size: 18px; font-weight: 800; color: var(--blue); }
 .h-seat p { font-size: 10px; color: var(--muted); }
 
-/* mini-seat: กราฟิกเบาะขนาดย่อ โชว์เลขที่นั่งของตัวเอง ใช้ในประวัติความบ้า */
+/* mini-seat: ป้ายเบาะสไตล์ boarding-pass โทนทองเข้าธีมเดียวกับป้ายราคาการ์ดทริป */
 .mini-seat {
   position: relative;
-  width: 54px;
+  min-width: 56px;
   height: 54px;
+  padding: 0 10px;
   border-radius: 14px;
-  background: linear-gradient(145deg, #ffd84d, #f7b500);
+  background: linear-gradient(160deg, #1a2233, #0d131f);
+  border: 1px solid rgba(212, 175, 55, .4);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 5px 0 #b57b00, 0 8px 16px rgba(247, 181, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .45);
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .05);
 }
 .mini-seat::before {
   content: '';
   position: absolute;
-  top: -7px;
-  width: 24px;
-  height: 11px;
-  border-radius: 7px 7px 0 0;
-  background: linear-gradient(145deg, #ffd84d, #f7b500);
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #f6e2a0, #c9971f, transparent);
 }
-.mini-seat .mini-seat-label { font-size: 8px; font-weight: 800; color: rgba(36, 24, 0, .65); letter-spacing: .2px; }
-.mini-seat .mini-seat-num { font-size: 15px; font-weight: 900; color: #241800; line-height: 1.15; max-width: 48px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-seat .mini-seat-label { font-size: 7px; font-weight: 800; letter-spacing: .5px; color: rgba(246, 226, 160, .6); margin-bottom: 2px; }
+.mini-seat .mini-seat-num {
+  font-size: 16px;
+  font-weight: 900;
+  color: #f6e2a0;
+  line-height: 1.1;
+  max-width: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 0 14px rgba(246, 226, 160, .35);
+}
 
-.hist-group-title { font-size: 13px; font-weight: 700; color: var(--sub); margin: 18px 0 10px; display: flex; align-items: center; gap: 6px; }
+.hist-group-title { font-size: 13px; font-weight: 700; color: var(--sub); margin: 18px 0 10px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .hist-group-title:first-child { margin-top: 0; }
 .h-arr { color: var(--blue); font-size: 18px; flex-shrink: 0; padding-left: 2px; }
 
@@ -2701,15 +2712,19 @@ function renderMyTrips() {
 
       return `
         ${upcoming.length ? `
-          <div class="hist-group-title">🗓️ กำลังจะไป (${upcoming.length})</div>
+          <div class="hist-group-title">
+            <span>🗓️ กำลังจะไป (${upcoming.length})</span>
+            ${upcoming.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingUpcomingList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
+          </div>
           <div id="bookingUpcomingList">${upcoming.map(historyItemHTML).join('')}</div>
-          ${upcoming.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingUpcomingList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600;display:inline-block;margin-top:4px">ดูทั้งหมด ›</span>` : ''}
         ` : ''}
 
         ${past.length ? `
-          <div class="hist-group-title">✅ ไปแล้ว (${past.length})</div>
+          <div class="hist-group-title">
+            <span>✅ ไปแล้ว (${past.length})</span>
+            ${past.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingHistoryList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
+          </div>
           <div id="bookingHistoryList">${past.map(historyItemHTML).join('')}</div>
-          ${past.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingHistoryList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600;display:inline-block;margin-top:4px">ดูทั้งหมด ›</span>` : ''}
         ` : ''}
       `;
     })()}
