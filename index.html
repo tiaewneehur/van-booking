@@ -194,6 +194,35 @@ body {
 .btn-login:disabled { background: #1e293b; color: #475569; box-shadow: none; cursor: not-allowed; }
 .login-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; }
 
+/* LINE login page polish */
+.login-logo img { animation: loginLogoIn .5s cubic-bezier(.2,.8,.2,1); }
+@keyframes loginLogoIn { from { opacity: 0; transform: scale(.8) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.login-card { animation: fadeUp .4s ease .1s both; }
+.line-login-icon-wrap {
+  width: 68px; height: 68px; border-radius: 20px;
+  background: linear-gradient(145deg, #06C755, #04a648);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  box-shadow: 0 10px 26px rgba(6, 199, 85, .35), inset 0 1px 0 rgba(255,255,255,.25);
+}
+.line-login-icon-wrap img { width: 34px; height: 34px; filter: brightness(0) invert(1); }
+#lineLoginStep h2, #phoneStep h2 { letter-spacing: .2px; }
+.btn-login[style*="06C755"] img { filter: brightness(0) invert(1); }
+.btn-login[style*="06C755"]:active { transform: scale(.98); }
+.line-profile-card {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(6, 199, 85, .08);
+  border: 1px solid rgba(6, 199, 85, .28);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 22px;
+  width: 100%;
+  animation: fadeUp .35s ease;
+}
+.line-profile-card img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid #06C755; flex-shrink: 0; }
+.line-profile-card .name { font-size: 14px; color: #fff; font-weight: 700; }
+.line-profile-card .status { font-size: 11px; color: var(--green); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+
 /* ============================================================
    APP SHELL / HEADER / BOTTOM NAV
    ============================================================ */
@@ -245,7 +274,7 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0 12px; cursor: pointer; gap: 4px; }
-.bnav-item .ico { font-size: 22px; }
+.bnav-item .ico { font-size: 22px; height: 24px; display: flex; align-items: center; justify-content: center; }
 .bnav-item .lbl { font-size: 10px; font-weight: 600; color: var(--muted); }
 .bnav-item.active .lbl { color: var(--blue); }
 .bnav-item.active .ico { filter: drop-shadow(0 0 6px rgba(56, 189, 248, .6)); }
@@ -1083,8 +1112,11 @@ body {
 
     <!-- STEP 1: เข้าสู่ระบบด้วย LINE -->
     <div id="lineLoginStep">
-      <h2>👋 ยินดีต้อนรับโว้ยย!</h2>
-      <p>กดปุ่มด้านล่างเพื่อเข้าสู่ระบบด้วย LINE<br>ปลอดภัย ไม่ต้องจำรหัสผ่าน</p>
+      <div class="line-login-icon-wrap">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" alt="LINE">
+      </div>
+      <h2>ยินดีต้อนรับ 👋</h2>
+      <p>เข้าสู่ระบบด้วย LINE เพื่อเริ่มจองทริปกับเรา<br>ปลอดภัย รวดเร็ว ไม่ต้องจำรหัสผ่าน</p>
       <button id="lineLoginBtn" class="btn-login" style="background:#06C755;display:none" onclick="loginWithLine()">
         <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:20px;height:20px">
@@ -1096,14 +1128,14 @@ body {
 
     <!-- STEP 2: กรอกเบอร์โทร (โผล่หลังล็อกอิน LINE สำเร็จ) -->
     <div id="phoneStep" style="display:none;width:100%">
-      <div id="lineProfilePreview" style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:16px">
-        <img id="linePicPreview" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #06C755">
+      <div class="line-profile-card">
+        <img id="linePicPreview" src="">
         <div style="text-align:left">
-          <div style="font-size:13px;color:#fff;font-weight:700" id="lineNamePreview">-</div>
-          <div style="font-size:11px;color:var(--green)">✅ เข้าสู่ระบบด้วย LINE แล้ว</div>
+          <div class="name" id="lineNamePreview">-</div>
+          <div class="status">✅ เข้าสู่ระบบด้วย LINE แล้ว</div>
         </div>
       </div>
-      <h2>📞 ใส่เบอร์โทรของคุณ</h2>
+      <h2>ใส่เบอร์โทรของคุณ 📞</h2>
       <p>ใช้ผูกกับประวัติการจองของคุณเท่านั้น</p>
       <div class="inp-wrap">
         <span class="inp-pre">🇹🇭</span>
