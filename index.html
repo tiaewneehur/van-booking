@@ -2058,13 +2058,19 @@ function handleSeatLockExpired() {
   document.getElementById('formFieldsBox2').classList.remove('show');
   checkBook();
 
+  // ถ้าหน้าชำระเงินเปิดค้างอยู่ตอนที่นั่งหมดเวลา ต้องปิดทันที กันไม่ให้ส่งจองด้วยที่นั่งว่างเปล่า
+  const payModalWasOpen = document.getElementById('payModal').classList.contains('show');
+  document.getElementById('payModal').classList.remove('show');
+
   const date = document.getElementById('f-dateraw').value;
   loadSeats(date);
 
   Swal.fire({
     icon: 'warning',
     title: 'หมดเวลาล็อกเบาะแล้ว',
-    text: 'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
+    text: payModalWasOpen
+      ? 'ที่นั่งของคุณถูกปลดล็อกอัตโนมัติระหว่างที่คุณกำลังชำระเงิน กรุณาเลือกเบาะใหม่แล้วทำรายการอีกครั้งครับ'
+      : 'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
     background: '#0c1524',
     color: '#f1f5f9',
     confirmButtonColor: '#0284c7'
@@ -2852,6 +2858,14 @@ function goToBook() {
   document.getElementById('f-nick').value = currentUser.nick;
   document.getElementById('f-line').value = currentUser.lineName || currentUser.nick;
 
+  // ดึงชื่อ-นามสกุลจริงจากประวัติการจองครั้งล่าสุดที่ผูกกับเบอร์นี้ (ถ้ามี) มาใส่ให้อัตโนมัติ
+  // คนใหม่ที่ยังไม่เคยจอง (ไม่เจอประวัติ) จะเจอช่องว่างให้กรอกเองตามปกติ
+  const normPhoneForName = (p) => String(p || '').replace(/\D/g, '').slice(-9);
+  const myPastBooking = allBookings
+    .filter(b => b.name && normPhoneForName(b.phone) === normPhoneForName(currentUser.phone))
+    .slice(-1)[0];
+  document.getElementById('f-name').value = myPastBooking ? myPastBooking.name : '';
+
   selectedSeat = null;
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
@@ -3196,6 +3210,18 @@ function closePay() {
 
 async function submitBook() {
   const btn = document.getElementById('payOkBtn');
+
+  // กันเหนียวขั้นสุดท้าย: ห้ามส่งจองถ้าไม่มีที่นั่งที่ล็อกไว้จริงในตอนนี้
+  // (เผื่อกรณีที่นั่งหมดเวลาไปแล้วระหว่างที่หน้าชำระเงินยังเปิดค้างอยู่)
+  const seatValueAtSubmit = document.getElementById('f-seat').value.trim();
+  if (!selectedSeat || !seatValueAtSubmit) {
+    closePay();
+    Swal.fire({
+      icon: 'warning', title: 'ที่นั่งของคุณถูกปลดล็อกไปแล้ว', text: 'กรุณาเลือกเบาะใหม่แล้วทำรายการอีกครั้งครับ',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+    return;
+  }
 
   if (!selectedSlipFile) {
     Swal.fire({
