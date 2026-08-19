@@ -19,6 +19,7 @@
 <link rel="icon" href="เที่ย นี่เหอะ.png" />
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <style>
 /* ============================================================
    RESET & THEME TOKENS
@@ -586,6 +587,7 @@ body {
   line-height: 1.7;
   color: #e2e8f0;
   margin-bottom: 16px;
+  white-space: pre-line;
 }
 .modal-seat-row {
   display: flex;
@@ -1076,17 +1078,38 @@ body {
     <p>ออกไปเที่ยวให้โลกจำ 🏔️</p>
   </div>
   <div class="login-card">
-    <h2>👋 ยินดีต้อนรับโว้ยย!</h2>
-    <p>ใส่เบอร์มือถือของคุณเพื่อเข้าระบบ<br>จดจำอัตโนมัติ ไม่ต้องล็อกอินซ้ำ</p>
-    <div class="inp-wrap">
-      <span class="inp-pre">🇹🇭</span>
-      <input id="loginPhone" class="inp" type="tel" placeholder="063xxxxxxx" maxlength="10" oninput="checkReady()">
+
+    <!-- STEP 1: เข้าสู่ระบบด้วย LINE -->
+    <div id="lineLoginStep">
+      <h2>👋 ยินดีต้อนรับโว้ยย!</h2>
+      <p>กดปุ่มด้านล่างเพื่อเข้าสู่ระบบด้วย LINE<br>ปลอดภัย ไม่ต้องจำรหัสผ่าน</p>
+      <button id="lineLoginBtn" class="btn-login" style="background:#06C755;display:none" onclick="loginWithLine()">
+        <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:20px;height:20px">
+          เข้าสู่ระบบด้วย LINE
+        </span>
+      </button>
+      <p id="lineLoginLoading" class="login-note">⌛ กำลังเชื่อมต่อกับ LINE...</p>
     </div>
-    <div class="inp-wrap">
-      <span class="inp-pre">👤</span>
-      <input id="loginNick" class="inp" placeholder="ชื่อเล่น (แสดงในแอป)" oninput="checkReady()">
+
+    <!-- STEP 2: กรอกเบอร์โทร (โผล่หลังล็อกอิน LINE สำเร็จ) -->
+    <div id="phoneStep" style="display:none;width:100%">
+      <div id="lineProfilePreview" style="display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:16px">
+        <img id="linePicPreview" src="" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid #06C755">
+        <div style="text-align:left">
+          <div style="font-size:13px;color:#fff;font-weight:700" id="lineNamePreview">-</div>
+          <div style="font-size:11px;color:var(--green)">✅ เข้าสู่ระบบด้วย LINE แล้ว</div>
+        </div>
+      </div>
+      <h2>📞 ใส่เบอร์โทรของคุณ</h2>
+      <p>ใช้ผูกกับประวัติการจองของคุณเท่านั้น</p>
+      <div class="inp-wrap">
+        <span class="inp-pre">🇹🇭</span>
+        <input id="loginPhone" class="inp" type="tel" placeholder="063xxxxxxx" maxlength="10" oninput="checkReady()">
+      </div>
+      <button id="loginBtn" class="btn-login" disabled onclick="doLogin()">เข้าสู่ระบบ →</button>
     </div>
-    <button id="loginBtn" class="btn-login" disabled onclick="doLogin()">เข้าสู่ระบบ →</button>
+
     <p class="login-note">🔒 ใช้เบอร์ดึงประวัติการจองของคุณเท่านั้น</p>
   </div>
 </div>
@@ -1485,6 +1508,9 @@ body {
 const API_URL = "https://script.google.com/macros/s/AKfycbxjiCzVeaBJKeON5w5fKJjf8GQSSXUOXa9OaYF6-gdTWZc9DuhDzHyv6OVaT67iX9fV/exec";
 const QUERY_URL = API_URL + "?action=read";
 
+// 🔑 ใส่ LIFF ID ที่ได้จาก LINE Developers Console (แท็บ LIFF ของ Channel ที่สร้างไว้)
+const LIFF_ID = "2011163254-XvDOgKSh";
+
 // ทริปที่ปิดรับจองชั่วคราว (ยังไม่เปิดจอง)
 const CLOSED_TRIPS = [""];
 
@@ -1552,7 +1578,7 @@ const TRIP_DETAILS = {
     paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "สัมผัสธรรมชาติป่าใต้ที่จริงใจ",
     image: "เขาหลัก.jpg", loc: "จ.พัทลุง"
   },
-    "ภูสอยดาว 22-23 ส.ค.69": {
+  "ภูสอยดาว 22-23 ส.ค.69": {
     days: "2 วัน 1 คืน", distance: "13-16 กม.", level: "🟡 ปานกลาง", price: "1,800 บาท",
     paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
     highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
@@ -1968,48 +1994,119 @@ function handleSeatLockExpired() {
 }
 
 /* ================================================================
-   LOGIN
+   LOGIN (LINE Login ผ่าน LIFF SDK)
+   - เปิดจากในแอป LINE (isInClient) -> ล็อกอินอัตโนมัติ ไม่ต้องกดปุ่ม
+   - เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่ม "เข้าสู่ระบบด้วย LINE"
+   - หลังล็อกอิน LINE สำเร็จ -> ดึงชื่อ/รูปจาก LINE มาใช้อัตโนมัติ
+     แล้วให้กรอกเบอร์โทรอีกครั้งเดียว (ใช้จับคู่ประวัติการจองในระบบหลังบ้านเดิม)
    ================================================================ */
+let lineProfile = null; // { userId, displayName, pictureUrl }
+
 function checkReady() {
   const p = document.getElementById('loginPhone').value.trim();
-  const n = document.getElementById('loginNick').value.trim();
-  document.getElementById('loginBtn').disabled = !(p.length >= 9 && n.length > 0);
+  document.getElementById('loginBtn').disabled = !(p.length >= 9);
 }
 
 function doLogin() {
   const phone = document.getElementById('loginPhone').value.trim();
-  const nick = document.getElementById('loginNick').value.trim();
-  currentUser = { phone, nick };
-  localStorage.setItem('tnhUser', JSON.stringify(currentUser));
+  const nick = (lineProfile && lineProfile.displayName) || 'ผู้ใช้ LINE';
 
+  currentUser = {
+    phone,
+    nick,
+    lineUserId: lineProfile ? lineProfile.userId : null,
+    linePicture: lineProfile ? lineProfile.pictureUrl : null
+  };
+  localStorage.setItem('tnhUser', JSON.stringify(currentUser));
+  if (lineProfile && lineProfile.userId) {
+    localStorage.setItem('tnhPhone_' + lineProfile.userId, phone);
+  }
+
+  enterApp();
+}
+
+function enterApp() {
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('appShell').classList.add('show');
   document.getElementById('loadingScreen').classList.add('show');
-  document.getElementById('f-phone').value = phone;
-  document.getElementById('f-nick').value = nick;
+  document.getElementById('f-phone').value = currentUser.phone;
+  document.getElementById('f-nick').value = currentUser.nick;
   fetchData();
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  ['input', 'change', 'keyup', 'paste'].forEach(ev => {
-    document.getElementById('loginPhone').addEventListener(ev, checkReady);
-    document.getElementById('loginNick').addEventListener(ev, checkReady);
-  });
-
+async function initLiff() {
+  // ถ้าเคยล็อกอินสมบูรณ์ไว้แล้วในเครื่องนี้ ข้ามไปหน้าแอปได้เลยโดยไม่ต้องรอ LIFF
   const saved = localStorage.getItem('tnhUser');
-  if (!saved) return;
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      enterApp();
+      return;
+    } catch (e) {
+      localStorage.removeItem('tnhUser');
+    }
+  }
 
   try {
-    currentUser = JSON.parse(saved);
-    document.getElementById('loginPage').classList.add('hidden');
-    document.getElementById('appShell').classList.add('show');
-    document.getElementById('loadingScreen').classList.add('show');
-    document.getElementById('f-phone').value = currentUser.phone;
-    document.getElementById('f-nick').value = currentUser.nick;
-    fetchData();
-  } catch (e) {
-    localStorage.removeItem('tnhUser');
+    await liff.init({ liffId: LIFF_ID });
+  } catch (err) {
+    console.error('LIFF init error', err);
+    document.getElementById('lineLoginLoading').textContent = '⚠️ เชื่อมต่อ LINE ไม่สำเร็จ กรุณารีเฟรชหน้าเว็บ';
+    document.getElementById('lineLoginBtn').style.display = 'block';
+    return;
   }
+
+  if (liff.isLoggedIn()) {
+    await afterLineLogin();
+  } else if (liff.isInClient()) {
+    // เปิดจากในแอป LINE โดยตรง -> ล็อกอินอัตโนมัติไม่ต้องกดปุ่ม
+    liff.login();
+  } else {
+    // เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่มให้กด
+    document.getElementById('lineLoginLoading').style.display = 'none';
+    document.getElementById('lineLoginBtn').style.display = 'block';
+  }
+}
+
+function loginWithLine() {
+  document.getElementById('lineLoginBtn').style.display = 'none';
+  document.getElementById('lineLoginLoading').style.display = 'block';
+  document.getElementById('lineLoginLoading').textContent = '⌛ กำลังพาไปเข้าสู่ระบบ LINE...';
+  liff.login({ redirectUri: window.location.href });
+}
+
+async function afterLineLogin() {
+  try {
+    const profile = await liff.getProfile();
+    lineProfile = {
+      userId: profile.userId,
+      displayName: profile.displayName,
+      pictureUrl: profile.pictureUrl || ''
+    };
+
+    document.getElementById('lineLoginStep').style.display = 'none';
+    document.getElementById('phoneStep').style.display = 'block';
+    document.getElementById('lineNamePreview').textContent = lineProfile.displayName;
+    if (lineProfile.pictureUrl) document.getElementById('linePicPreview').src = lineProfile.pictureUrl;
+
+    // ถ้าเคยกรอกเบอร์ไว้แล้วสำหรับ LINE user นี้ในเครื่องนี้ ให้กรอกให้อัตโนมัติ
+    const savedPhone = localStorage.getItem('tnhPhone_' + lineProfile.userId);
+    if (savedPhone) {
+      document.getElementById('loginPhone').value = savedPhone;
+    }
+    checkReady();
+  } catch (err) {
+    console.error('getProfile error', err);
+    Swal.fire({
+      icon: 'error', title: 'ดึงข้อมูล LINE ไม่สำเร็จ', text: 'กรุณารีเฟรชหน้าเว็บแล้วลองใหม่ครับ',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('loginPhone').addEventListener('input', checkReady);
+  initLiff();
 });
 
 /* ================================================================
@@ -2465,7 +2562,11 @@ function renderMyTrips() {
 
   const savedAvatar = localStorage.getItem('userAvatar');
   const avatarEl = document.getElementById('userAvatar');
-  if (savedAvatar && avatarEl) avatarEl.src = savedAvatar;
+  if (savedAvatar) {
+    if (avatarEl) avatarEl.src = savedAvatar;
+  } else if (currentUser.linePicture && avatarEl) {
+    avatarEl.src = currentUser.linePicture;
+  }
 }
 
 // เปิดหน้าผังเบาะของทริปที่เคยจองไว้ (จากการ์ดในประวัติความบ้า) แล้วสกรอลไปหา+ไฮไลต์เบาะของตัวเองให้เจอไว
@@ -3088,6 +3189,7 @@ function logOut() {
   }).then(r => {
     if (r.isConfirmed) {
       localStorage.removeItem('tnhUser');
+      try { if (typeof liff !== 'undefined' && liff.isLoggedIn && liff.isLoggedIn()) liff.logout(); } catch (e) {}
       location.reload();
     }
   });
