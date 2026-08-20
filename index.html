@@ -425,15 +425,24 @@ body {
   0%, 100% { box-shadow: 0 10px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .04), 0 0 0 rgba(255, 90, 0, 0); }
   50% { box-shadow: 0 10px 28px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .04), 0 0 26px rgba(255, 90, 0, .55); }
 }
-.fire-licks { position: absolute; left: 0; right: 0; bottom: -9px; display: flex; justify-content: space-evenly; z-index: 2; pointer-events: none; }
-.fire-licks span { font-size: 19px; display: inline-block; filter: drop-shadow(0 0 6px rgba(255, 120, 0, .75)); animation: flicker .75s ease-in-out infinite alternate; }
-.fire-licks span:nth-child(2) { font-size: 25px; animation-delay: .12s; }
-.fire-licks span:nth-child(3) { animation-delay: .28s; }
-.fire-licks span:nth-child(4) { font-size: 21px; animation-delay: .42s; }
-.fire-licks span:nth-child(5) { animation-delay: .18s; }
-@keyframes flicker {
-  0% { transform: translateY(0) scale(1) rotate(-4deg); opacity: .8; }
-  100% { transform: translateY(-5px) scale(1.18) rotate(4deg); opacity: 1; }
+.fire-licks { position: absolute; left: 0; right: 0; bottom: -12px; height: 30px; display: flex; justify-content: space-evenly; align-items: flex-end; z-index: 2; pointer-events: none; }
+.flame {
+  width: 15px;
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+  background: radial-gradient(circle at 50% 100%, #fff3b0 0%, #ffd23f 28%, #ff8c1a 58%, #ff3d00 88%, transparent 100%);
+  filter: drop-shadow(0 0 7px rgba(255, 110, 0, .8));
+  transform-origin: bottom center;
+  animation: flameDance .55s ease-in-out infinite alternate;
+}
+.flame:nth-child(1) { height: 15px; animation-delay: .05s; animation-duration: .5s; }
+.flame:nth-child(2) { height: 25px; animation-delay: .18s; animation-duration: .62s; }
+.flame:nth-child(3) { height: 20px; animation-delay: .3s; animation-duration: .48s; }
+.flame:nth-child(4) { height: 23px; animation-delay: .1s; animation-duration: .58s; }
+.flame:nth-child(5) { height: 14px; animation-delay: .25s; animation-duration: .53s; }
+@keyframes flameDance {
+  0% { transform: scaleY(1) scaleX(1) skewX(-5deg); }
+  50% { transform: scaleY(1.18) scaleX(.88) skewX(4deg); }
+  100% { transform: scaleY(.88) scaleX(1.08) skewX(-7deg); }
 }
 
 .lux-photo { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #0e0c08; }
@@ -2644,7 +2653,7 @@ function cardHTML(item, compact = false) {
         <span class="lux-status ${statusClass}">${statusText}</span>
         <span class="lux-price">฿${info.price || '-'}</span>
         ${locked ? '<div class="lux-locked-ov">🔒</div>' : ''}
-        ${isOnFire ? '<div class="fire-licks"><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span><span>🔥</span></div>' : ''}
+        ${isOnFire ? '<div class="fire-licks"><div class="flame"></div><div class="flame"></div><div class="flame"></div><div class="flame"></div><div class="flame"></div></div>' : ''}
       </div>
       <div class="lux-stub"></div>
       <div class="lux-body">
