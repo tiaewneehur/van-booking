@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -20,7 +21,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
 <style>
 /* ============================================================
    RESET & THEME TOKENS
@@ -54,14 +54,6 @@ body {
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
-}
-
-/* Twemoji — บังคับให้อิโมจิหน้าตาเหมือนกันทุกเครื่อง/ทุก OS แทนอิโมจิของแต่ละระบบ */
-img.twemoji-icon {
-  height: 1em;
-  width: 1em;
-  margin: 0 .05em 0 .1em;
-  vertical-align: -0.12em;
 }
 
 #pastList.expanded .past-extra { display: block !important; }
@@ -1712,32 +1704,6 @@ img.twemoji-icon {
 </div>
 
 <script>
-/* ================================================================
-   EMOJI CONSISTENCY (Twemoji)
-   บังคับให้อิโมจิทุกตัวในแอปหน้าตาเหมือนกันทุกเครื่อง/ทุก OS
-   (ไม่งั้น iPhone/Android/Samsung จะเรนเดอร์อิโมจิคนละชุดกัน)
-   ================================================================ */
-function applyTwemoji(node) {
-  if (typeof twemoji === 'undefined') return;
-  twemoji.parse(node || document.body, {
-    folder: 'svg',
-    ext: '.svg',
-    className: 'twemoji-icon'
-  });
-}
-
-// รันครั้งแรกตอนโหลดหน้า
-window.addEventListener('DOMContentLoaded', () => applyTwemoji());
-
-// เฝ้าดูทุกครั้งที่แอป render เนื้อหาใหม่ (เปลี่ยนแท็บ, โหลดข้อมูล, เปิดโมดัล ฯลฯ)
-// แล้วแปลงอิโมจิที่เพิ่งเกิดขึ้นใหม่ให้เป็นชุดเดียวกันโดยอัตโนมัติ ไม่ต้องเรียกเองทีละจุด
-let twemojiDebounce = null;
-const twemojiObserver = new MutationObserver(() => {
-  clearTimeout(twemojiDebounce);
-  twemojiDebounce = setTimeout(() => applyTwemoji(), 120);
-});
-twemojiObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
-
 /* ================================================================
    CONFIG / CONSTANTS
    ================================================================ */
