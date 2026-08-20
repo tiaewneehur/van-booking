@@ -2460,7 +2460,16 @@ function setupCarouselAutoScroll(key, el, intervalMs) {
    ================================================================ */
 function renderHome() {
   const h = new Date().getHours();
-  const greeting = h < 12 ? '🌅 อรุณสวัสดิ์' : h < 17 ? '☀️ สวัสดีตอนบ่าย' : '🌙 สวัสดีตอนเย็น';
+  const greeting =
+    h < 5 ? '😴 สวัสดีตอนดึกๆ หลับบ้างเห๊อะ' :
+    h < 7 ? '🌄 อรุณสวัสดิ์' :
+    h < 9 ? '🌅 สวัสดีตอนเช้า' :
+    h < 12 ? '🌤️ สวัสดีตอนสายๆ' :
+    h < 13 ? '🌞 สวัสดีตอนเที่ยง' :
+    h < 17 ? '☀️ สวัสดีตอนบ่าย' :
+    h < 19 ? '🌙 สวัสดีตอนเย็น' :
+    h < 21 ? '🌆 สวัสดีตอนหัวค่ำ' :
+    '😴 สวัสดีตอนดึกๆ หลับบ้างเห๊อะ';
   const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
   const myTripCount = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone)).length;
 
