@@ -19,7 +19,6 @@
 <link rel="icon" href="เที่ย นี่เหอะ.png" />
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <style>
 /* ============================================================
    RESET & THEME TOKENS
@@ -56,7 +55,7 @@ body {
 }
 
 #pastList.expanded .past-extra { display: block !important; }
-.expanded .hist-extra { display: block !important; }
+#bookingHistoryList.expanded .hist-extra { display: block !important; }
 
 /* ============================================================
    LOGIN PAGE
@@ -194,72 +193,6 @@ body {
 .btn-login:disabled { background: #1e293b; color: #475569; box-shadow: none; cursor: not-allowed; }
 .login-note { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; }
 
-/* LINE login page polish */
-.login-logo img { animation: loginLogoIn .5s cubic-bezier(.2,.8,.2,1); }
-@keyframes loginLogoIn { from { opacity: 0; transform: scale(.8) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-.login-card { animation: fadeUp .4s ease .1s both; }
-#lineLoginStep h2, #phoneStep h2 { letter-spacing: .2px; }
-.btn-login[style*="06C755"]:active { transform: scale(.98); }
-.line-profile-card {
-  display: flex; align-items: center; gap: 12px;
-  background: rgba(6, 199, 85, .08);
-  border: 1px solid rgba(6, 199, 85, .28);
-  border-radius: 16px;
-  padding: 12px 14px;
-  margin-bottom: 22px;
-  width: 100%;
-  animation: fadeUp .35s ease;
-}
-.line-profile-card img { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; border: 2px solid #06C755; flex-shrink: 0; }
-.line-profile-card .name { font-size: 14px; color: #fff; font-weight: 700; }
-.line-profile-card .status { font-size: 11px; color: var(--green); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
-
-/* Welcome card polish */
-.login-card {
-  position: relative;
-  overflow: hidden;
-  padding-top: 34px;
-}
-.login-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 18%; right: 18%;
-  height: 3px;
-  border-radius: 0 0 6px 6px;
-  background: linear-gradient(90deg, transparent, var(--blue), transparent);
-  opacity: .8;
-}
-#lineLoginStep h2 {
-  font-size: 21px;
-  font-weight: 800;
-  margin-bottom: 10px;
-}
-.wave-emoji {
-  display: inline-block;
-  animation: waveHand 2.2s ease-in-out infinite;
-  transform-origin: 70% 70%;
-}
-@keyframes waveHand {
-  0%, 55%, 100% { transform: rotate(0deg); }
-  10% { transform: rotate(14deg); }
-  20% { transform: rotate(-8deg); }
-  30% { transform: rotate(14deg); }
-  40% { transform: rotate(-4deg); }
-}
-.login-card > p { font-size: 13.5px; line-height: 1.7; }
-.login-note-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, .04);
-  border: 1px solid var(--border);
-  padding: 8px 16px;
-  border-radius: 999px;
-  margin-top: 18px;
-  font-size: 11px;
-  color: var(--muted);
-}
-
 /* ============================================================
    APP SHELL / HEADER / BOTTOM NAV
    ============================================================ */
@@ -311,12 +244,10 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 .bnav-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0 12px; cursor: pointer; gap: 4px; }
-.bnav-item .ico { font-size: 22px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.bnav-item .ico { font-size: 22px; }
 .bnav-item .lbl { font-size: 10px; font-weight: 600; color: var(--muted); }
 .bnav-item.active .lbl { color: var(--blue); }
 .bnav-item.active .ico { filter: drop-shadow(0 0 6px rgba(56, 189, 248, .6)); }
-.nav-avatar { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; display: none; border: 1.5px solid var(--muted); }
-.bnav-item.active .nav-avatar { border-color: var(--blue); }
 
 /* ============================================================
    PAGE / LAYOUT UTILITIES
@@ -335,15 +266,31 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: linear-gradient(135deg, rgba(2, 132, 199, .15), rgba(56, 189, 248, .08));
-  border: 1px solid rgba(56, 189, 248, .15);
+  position: relative;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(4, 20, 12, .62), rgba(4, 20, 12, .8)),
+    url('https://images.unsplash.com/photo-1756155017513-6fceb5ace3ba?w=900&q=60&auto=format&fit=crop') center/cover no-repeat;
+  border: 1px solid rgba(56, 189, 248, .18);
   border-radius: 18px;
-  padding: 14px 14px 14px 16px;
-  margin-bottom: 20px;
+  padding: 16px;
+  margin-bottom: 14px;
 }
-.greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; }
-.greet-bar .left p { font-size: 12px; color: var(--sub); margin-top: 2px; }
-.greet-actions { display: flex; gap: 10px; flex-shrink: 0; }
+.greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; text-shadow: 0 2px 8px rgba(0, 0, 0, .55); }
+.greet-bar .left p { font-size: 12px; color: #dbe8e0; margin-top: 2px; text-shadow: 0 1px 6px rgba(0, 0, 0, .55); }
+.greet-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, .75);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .45);
+}
+.greet-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.qa-shortcuts { display: flex; gap: 10px; margin-bottom: 20px; }
+.qa-shortcuts .qa-mini { flex: 1; width: auto; }
+.qa-mytrip-mini { background: linear-gradient(145deg, #7dd3fc, #0284c7); box-shadow: 0 5px 14px rgba(2, 132, 199, .4); }
 .qa-mini {
   width: 66px;
   height: 66px;
@@ -544,46 +491,6 @@ body {
 .h-seat { text-align: right; flex-shrink: 0; }
 .h-seat .snum { font-size: 18px; font-weight: 800; color: var(--blue); }
 .h-seat p { font-size: 10px; color: var(--muted); }
-
-/* mini-seat: ป้ายเบาะสไตล์ boarding-pass โทนทองเข้าธีมเดียวกับป้ายราคาการ์ดทริป */
-.mini-seat {
-  position: relative;
-  min-width: 56px;
-  height: 54px;
-  padding: 0 10px;
-  border-radius: 14px;
-  background: linear-gradient(160deg, #1a2233, #0d131f);
-  border: 1px solid rgba(212, 175, 55, .4);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .05);
-}
-.mini-seat::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #f6e2a0, #c9971f, transparent);
-}
-.mini-seat .mini-seat-label { font-size: 7px; font-weight: 800; letter-spacing: .5px; color: rgba(246, 226, 160, .6); margin-bottom: 2px; }
-.mini-seat .mini-seat-num {
-  font-size: 16px;
-  font-weight: 900;
-  color: #f6e2a0;
-  line-height: 1.1;
-  max-width: 64px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-shadow: 0 0 14px rgba(246, 226, 160, .35);
-}
-
-.hist-group-title { font-size: 13px; font-weight: 700; color: var(--sub); margin: 18px 0 10px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-.hist-group-title:first-child { margin-top: 0; }
 .h-arr { color: var(--blue); font-size: 18px; flex-shrink: 0; padding-left: 2px; }
 
 .empty-st { text-align: center; padding: 50px 20px; color: var(--muted); }
@@ -695,7 +602,6 @@ body {
   line-height: 1.7;
   color: #e2e8f0;
   margin-bottom: 16px;
-  white-space: pre-line;
 }
 .modal-seat-row {
   display: flex;
@@ -1186,43 +1092,18 @@ body {
     <p>ออกไปเที่ยวให้โลกจำ 🏔️</p>
   </div>
   <div class="login-card">
-
-    <!-- STEP 1: เข้าสู่ระบบด้วย LINE -->
-    <div id="lineLoginStep">
-      <h2><span class="wave-emoji">👋</span> ยินดีต้อนรับโว้ยย!</h2>
-      <p>กดปุ่มด้านล่างเพื่อเข้าสู่ระบบด้วย LINE<br>ปลอดภัย ไม่ต้องจำรหัสผ่าน</p>
-      <button id="lineLoginBtn" class="btn-login" style="background:#06C755;display:none" onclick="loginWithLine()">
-        <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:20px;height:20px">
-          เข้าสู่ระบบด้วย LINE
-        </span>
-      </button>
-      <p id="lineLoginLoading" class="login-note">⌛ กำลังเชื่อมต่อกับ LINE...</p>
+    <h2>👋 ยินดีต้อนรับโว้ยย!</h2>
+    <p>ใส่เบอร์มือถือของคุณเพื่อเข้าระบบ<br>จดจำอัตโนมัติ ไม่ต้องล็อกอินซ้ำ</p>
+    <div class="inp-wrap">
+      <span class="inp-pre">🇹🇭</span>
+      <input id="loginPhone" class="inp" type="tel" placeholder="063xxxxxxx" maxlength="10" oninput="checkReady()">
     </div>
-
-    <!-- STEP 2: กรอกเบอร์โทร (โผล่หลังล็อกอิน LINE สำเร็จ) -->
-    <div id="phoneStep" style="display:none;width:100%">
-      <div class="line-profile-card">
-        <img id="linePicPreview" src="">
-        <div style="text-align:left">
-          <div class="name" id="lineNamePreview">-</div>
-          <div class="status">✅ เข้าสู่ระบบด้วย LINE แล้ว</div>
-        </div>
-      </div>
-      <h2>ใส่ข้อมูลของคุณ 📞</h2>
-      <p>ใช้ผูกกับประวัติการจองของคุณเท่านั้น</p>
-      <div class="inp-wrap">
-        <span class="inp-pre">🏷️</span>
-        <input id="loginNick" class="inp" type="text" placeholder="พิมพ์ชื่อเล่นเพื่อแสดงบนผังเบาะ" maxlength="30" oninput="checkReady()">
-      </div>
-      <div class="inp-wrap">
-        <span class="inp-pre">🇹🇭</span>
-        <input id="loginPhone" class="inp" type="tel" placeholder="063xxxxxxx" maxlength="10" oninput="checkReady()">
-      </div>
-      <button id="loginBtn" class="btn-login" disabled onclick="doLogin()">เข้าสู่ระบบ →</button>
+    <div class="inp-wrap">
+      <span class="inp-pre">👤</span>
+      <input id="loginNick" class="inp" placeholder="ชื่อเล่น (แสดงในแอป)" oninput="checkReady()">
     </div>
-
-    <p class="login-note-pill">🔒 ใช้เบอร์ดึงประวัติการจองของคุณเท่านั้น</p>
+    <button id="loginBtn" class="btn-login" disabled onclick="doLogin()">เข้าสู่ระบบ →</button>
+    <p class="login-note">🔒 ใช้เบอร์ดึงประวัติการจองของคุณเท่านั้น</p>
   </div>
 </div>
 
@@ -1275,13 +1156,7 @@ body {
   <div class="bnav">
     <div class="bnav-item active" id="nav-home" onclick="switchTab('home')"><div class="ico">🏠</div><div class="lbl">หน้าหลัก</div></div>
     <div class="bnav-item" id="nav-trips" onclick="switchTab('trips')"><div class="ico">🎒</div><div class="lbl">ทริปทั้งหมด</div></div>
-    <div class="bnav-item" id="nav-mytrips" onclick="switchTab('mytrips')">
-      <div class="ico">
-        <img id="navProfilePic" class="nav-avatar" src="" alt="">
-        <span id="navProfileEmoji">🪪</span>
-      </div>
-      <div class="lbl">โปรไฟล์</div>
-    </div>
+    <div class="bnav-item" id="nav-mytrips" onclick="switchTab('mytrips')"><div class="ico">🪪</div><div class="lbl">โปรไฟล์</div></div>
     <div class="bnav-item" id="nav-notif" onclick="switchTab('notif')"><div class="ico">🔔</div><div class="lbl">เผื่อจำเป็น</div></div>
   </div>
 </div>
@@ -1626,11 +1501,8 @@ body {
 const API_URL = "https://script.google.com/macros/s/AKfycbxjiCzVeaBJKeON5w5fKJjf8GQSSXUOXa9OaYF6-gdTWZc9DuhDzHyv6OVaT67iX9fV/exec";
 const QUERY_URL = API_URL + "?action=read";
 
-// 🔑 ใส่ LIFF ID ที่ได้จาก LINE Developers Console (แท็บ LIFF ของ Channel ที่สร้างไว้)
-const LIFF_ID = "2011163254-XvDOgKSh";
-
 // ทริปที่ปิดรับจองชั่วคราว (ยังไม่เปิดจอง)
-const CLOSED_TRIPS = [""];
+const CLOSED_TRIPS = ["ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69"];
 
 // โครงเบาะต่อรถ 1 คัน: 'driver' = คนขับ, 'spacer' = ช่องว่าง/ทางเดิน,
 // ตัวเลข/ข้อความอื่น = หมายเลขเบาะ (ต่อกับ prefix ตู้ เช่น A3, B7)
@@ -1642,12 +1514,12 @@ const SEAT_LOCK_DURATION = SEAT_LOCK_MINUTES * 60 * 1000;
 // รายละเอียดแต่ละทริป: คีย์ = ชื่อทริป (ต้องตรงกับข้อมูลจาก backend เป๊ะๆ)
 const TRIP_DETAILS = {
   "แม่ละเมา อุ้มเปี้ยม 30-1 มิ.ย.69": {
-    days: "3 วัน 2 คืน", distance: "ประมาณ 14-15 กม.", level: "🟡 ปานกลาง", price: "2,900 บาท",
+    days: "3 วัน 2 คืน", distance: "ประมาณ 14-15 กม.", level: "🟡 ปานกลาง", price: "2900 บาท",
     paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ไม่รู้ เดี๋ยวไปดูก่อนเดี๋ยวมาบอก จุ๊ฟๆ",
     image: "แม่ละเมา.jpg", loc: "จ.ตาก"
   },
   "โบลาเวน 6-8 มิ.ย.69": {
-    days: "3 วัน 2 คืน", distance: "ประมาณ 8-10 กม.", level: "🟡 ปานกลาง", price: "3,650 บาท",
+    days: "3 วัน 2 คืน", distance: "ประมาณ 8-10 กม.", level: "🟡 ปานกลาง", price: "3650 บาท",
     paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "มึงเจอฝนแน่ๆ 50%",
     image: "โบลาเวน.jpg", loc: "สปป.ลาว"
   },
@@ -1698,34 +1570,12 @@ const TRIP_DETAILS = {
   },
   "ภูสอยดาว 22-23 ส.ค.69": {
     days: "2 วัน 1 คืน", distance: "13-16 กม.", level: "🟡 ปานกลาง", price: "1,800 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน",
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ ภูสอยดาว
-📆 วันที่ 22-23 ส.ค.69
-⏰ วันเดินทาง 21 ส.ค.69 
-⏳ ล้อหมุน 21:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 1 มื้อเย็น 1 มื้อ ชาบู
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "⛰️ ลานสนสามใบ น้ำตกสายทิพย์ ดาวเต็มฟ้า",
     image: "ภูสอยดาว.jpg", loc: "จ.อุตรดิตถ์"
   },
   "ป่าบงเปียง 29-30 ส.ค.69": {
     days: "2 วัน 1 คืน", distance: "ไม่เดิน", level: "-", price: "2,550 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ ป่าบงเปียง
-📆 วันที่ 29-30 ส.ค.69
-⏰ วันเดินทาง 28 ส.ค.69 
-⏳ ล้อหมุน 21:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 2 มื้อเย็น/เช้า จากโฮมสเตย์
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทุ่งนาขั้นบันได สายหมอกยามเช้า",
     image: "ป่าบงเปียง.jpg", loc: "จ.เชียงใหม่"
   },
   "ป่าบงเปียง(ตู้4) 29-30 ส.ค.69": {
@@ -1735,234 +1585,48 @@ const TRIP_DETAILS = {
   },
   "หว่าวาโจ 18-20 ก.ย.69": {
     days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2,950 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ หว่าวาโจ
-📆 วันที่ 18-20 ก.ย.69
-⏰ วันเดินทาง 17 ก.ย.69 
-⏳ ล้อหมุน 20:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 3 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันที่ 2 ดูแลตัวเอง
-    - มื้อเที่ยงวันที่ 2 ✅
-    - มื้อเย็นวันที่ 2 ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง พายุแน่นอนรอบนี้",
     image: "หว่าวาโจ.jpg", loc: "จ.แม่ฮ่องสอน"
   },
   "หว่าวาโจ V.2 6-8 พ.ย.69": {
     days: "3 วัน 2 คืน", distance: "9-11 กม.", level: "🟢 ง่าย", price: "2,950 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ หว่าวาโจ
-📆 วันที่ 6-8 พ.ย.69
-⏰ วันเดินทาง 5 พ.ย.69 
-⏳ ล้อหมุน 20:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 3 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันที่ 2 ดูแลตัวเอง
-    - มื้อเที่ยงวันที่ 2 ✅
-    - มื้อเย็นวันที่ 2 ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง ทุ่งดอกบัวตอง",
     image: "หว่าวาโจ.jpg", loc: "จ.แม่ฮ่องสอน"
   },
   "ภูเขาควาย 8-11 ต.ค.69": {
     days: "4 วัน 3 คืน", distance: "30-35 กม.", level: "🔴 ยาก", price: "4,290 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ ภูเขาควาย
-📆 วันที่ 8-11 ต.ค.69
-⏰ วันเดินทาง 7 ต.ค.69 
-⏳ ล้อหมุน 20:30 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 5 มื้อ 
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันที่ 2 ดูแลตัวเอง
-    - มื้อเที่ยงวันที่ 2 ✅
-    - มื้อเย็นวันที่ 2 ✅
-    - มื้อเช้าวันที่ 3 ดูแลตัวเอง
-    - มื้อเที่ยงวันที่ 3 ✅
-    - มื้อเย็นวันที่ 3 ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 ต้องมีพาสปอร์ตทุกคน
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก ทุ่งหญ้าสีเขียว",
     image: "ภูเขาควาย.jpg", loc: "จ.สปป.ลาว"
   },
   "เลอกวาเดาะ 17-18 ต.ค.69": {
     days: "2 วัน 1 คืน", distance: "3-4 กม.", level: "🟡 ปานกลาง", price: "2,000 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ เลอกวาเดาะ
-📆 วันที่ 17-18 ต.ค.69
-⏰ วันเดินทาง 16 ต.ค.69 
-⏳ ล้อหมุน 21:00 น. ลานจอด BTSหมอชิต
-⏳ ล้อหมุน 20:00 น. หน้าเซ็นทรัลขอนแก่น
-รายละเอียด
-🔸 อาหาร 1 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอกโคตรปัง",
     image: "เลอกวาเดาะ.jpg", loc: "จ.ตาก"
   },
   "นุรึโจ-ตะโกหล่อโจ 5-7 ก.ย.69": {
-    days: "3 วัน 2 คืน", distance: " 22 กม.", level: "🔴 ยาก", price: "2,800 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ นุรึโจ-ตะโกหล่อโจ
-📆 วันที่ 5-7 ก.ย.69
-⏰ วันเดินทาง 4 ก.ย.69 
-⏳ ล้อหมุน 21:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 3 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันที่ 2 ดูแลตัวเอง
-    - มื้อเที่ยงวันที่ 2 ✅
-    - มื้อเย็นวันที่ 2 ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    days: "3 วัน 2 คืน", distance: " 22 กม.", level: "🔴 ยาก", price: "2800 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "ทากชุม ทุ่งหญ้าสีเขียว มองดูสันเขาถ้าฟ้าเปิด",
     image: "นุรึโจ.jpg", loc: "จ.ตาก"
   },
   "เส่ซูโจ๊ะ-ดอยหมากพริก 23-25 ต.ค.69": {
     days: "3 วัน 2 คืน", distance: "7-8 กม.", level: "🟡 ปานกลาง", price: "3,310 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ เส่ซูโจ๊ะ-ดอยหมากพริก
-📆 วันที่ 23-25 ต.ค.69
-⏰ วันเดินทาง 22 ต.ค.69 
-⏳ ล้อหมุน 20:30 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 3 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันที่ 2 ดูแลตัวเอง
-    - มื้อเที่ยงวันที่ 2 ✅
-    - มื้อเย็นวันที่ 2 ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
     image: "ดอยหมากพริก.jpg", loc: "จ.แม่ฮ่องสอน"
   },
   "ลังกาหลวง-ลังกาน้อย 5-7 ธ.ค.69": {
-    days: "3 วัน 2 คืน", distance: "25 กม.", level: "🔴 ยาก", price: "2,850 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ ลังกาหลวง-ลังกาน้อย
-📆 วันที่ 5-7 ธ.ค.69
-⏰ วันเดินทาง 4 ธ.ค.69 
-⏳ ล้อหมุน 20:30 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 3 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันที่ 2 ดูแลตัวเอง
-    - มื้อเที่ยงวันที่ 2 ✅
-    - มื้อเย็นวันที่ 2 ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    days: "3 วัน 2 คืน", distance: "25 กม.", level: "🔴 ยาก", price: "2000-3000 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวหมอก แสงเย็นสวยถ้าฟ้าเปิด",
     image: "ดอยลังกาหลวง.jpg", loc: "จ.เชียงใหม่"
   },
   "เขาหลวงสุโขทัย 12-13 ก.ย.69": {
-    days: "2 วัน 1 คืน", distance: " 3- 4 กม.", level: "🔴 ยาก", price: "1,570 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ เขาหลวงสุโขทัย
-📆 วันที่ 12-13 ก.ย.69
-⏰ วันเดินทาง 11 ก.ย.69 
-⏳ ล้อหมุน 23:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 1 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    days: "2 วัน 1 คืน", distance: " 3- 4 กม.", level: "🔴 ยาก", price: "1570 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "☁️ วิวสวย ทดสอบควมถึก",
     image: "เขาหลวงสุโขทัย.jpg", loc: "จ.สุโขทัย"
   },
   "พือหน่อยเล 26-27 ก.ย.69": {
-    days: "2 วัน 1 คืน", distance: " 6 กม.", level: "🟡 ปานกลาง ", price: "2,350 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ พือหน่อยเล
-📆 วันที่ 26-27 ก.ย.69
-⏰ วันเดินทาง 25 ก.ย.69 
-⏳ ล้อหมุน 21:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 1 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
+    days: "2 วัน 1 คืน", distance: " 6 กม.", level: "🟡 ปานกลาง ", price: "2350 บาท",
+    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", highlight: "น้ำตกสวย อลังการ",
     image: "พือหน่อยเล.jpg", loc: "จ.ตาก"
-  },
-  "พือหน่อยเล 3-4 ต.ค.69": {
-    days: "2 วัน 1 คืน", distance: " 6 กม.", level: "🟡 ปานกลาง ", price: "2,350 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ พือหน่อยเล
-📆 วันที่ 3-4 ต.ค.69
-⏰ วันเดินทาง 2 ต.ค.69 
-⏳ ล้อหมุน 21:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 1 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 หากวันไปใครไม่ได้กินข้าวเย็น ผมแวะ ปั้ม ปตท.59 สามารถ กินได้เลย แวะ 30 นาที
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
-    image: "พือหน่อยเล.jpg", loc: "จ.ตาก"
-  },     
-    "ฟอร์มทีมเขาช้างเผือก 14-15 พ.ย.69": {
-    days: "2 วัน 1 คืน", distance: " 8 กม.", level: "🟡 ปานกลาง", price: "1,850 บาท",
-    paymentNote: "ชำระส่วนที่เหลือก่อนเดินทาง 15 วัน", 
-    highlight: `✅ ทริปหารเฉลี่ย เพจ เที่ยวนี่เหอะ
-🏕️ เขาช้างเผือก
-📆 วันที่ 14-15 พ.ย.69
-⏰ วันเดินทาง 13 พ.ย.69 
-⏳ ล้อหมุน 21:00 น. ลานจอด BTSหมอชิต
-รายละเอียด
-🔸 อาหาร 1 มื้อ
-    - มื้อเย็นวันแรก ✅
-    - มื้อเช้าวันกลับ ดูแลตัวเอง
-🔸 มื้อเช้าดูเเลตัวเองด้วยมาม่า
-🔸 ขี้เกลียดตื่นมาทำจ้าาา
-🔸 ช่วยกันจองจะได้ไปกันชัวร์ๆ
-🔸 แวะรับระหว่างทางได้
-🔸 นึกได้เดี๋ยวบอกอีก`,
-    image: "เขาช้างเผือก.jpg", loc: "จ.กาญจนบุรี"
   },
 };
 
@@ -2098,19 +1762,13 @@ function handleSeatLockExpired() {
   document.getElementById('formFieldsBox2').classList.remove('show');
   checkBook();
 
-  // ถ้าหน้าชำระเงินเปิดค้างอยู่ตอนที่นั่งหมดเวลา ต้องปิดทันที กันไม่ให้ส่งจองด้วยที่นั่งว่างเปล่า
-  const payModalWasOpen = document.getElementById('payModal').classList.contains('show');
-  document.getElementById('payModal').classList.remove('show');
-
   const date = document.getElementById('f-dateraw').value;
   loadSeats(date);
 
   Swal.fire({
     icon: 'warning',
     title: 'หมดเวลาล็อกเบาะแล้ว',
-    text: payModalWasOpen
-      ? 'ที่นั่งของคุณถูกปลดล็อกอัตโนมัติระหว่างที่คุณกำลังชำระเงิน กรุณาเลือกเบาะใหม่แล้วทำรายการอีกครั้งครับ'
-      : 'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
+    text: 'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
     background: '#0c1524',
     color: '#f1f5f9',
     confirmButtonColor: '#0284c7'
@@ -2118,14 +1776,8 @@ function handleSeatLockExpired() {
 }
 
 /* ================================================================
-   LOGIN (LINE Login ผ่าน LIFF SDK)
-   - เปิดจากในแอป LINE (isInClient) -> ล็อกอินอัตโนมัติ ไม่ต้องกดปุ่ม
-   - เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่ม "เข้าสู่ระบบด้วย LINE"
-   - หลังล็อกอิน LINE สำเร็จ -> ดึงชื่อ/รูปจาก LINE มาใช้อัตโนมัติ
-     แล้วให้กรอกเบอร์โทรอีกครั้งเดียว (ใช้จับคู่ประวัติการจองในระบบหลังบ้านเดิม)
+   LOGIN
    ================================================================ */
-let lineProfile = null; // { userId, displayName, pictureUrl }
-
 function checkReady() {
   const p = document.getElementById('loginPhone').value.trim();
   const n = document.getElementById('loginNick').value.trim();
@@ -2134,151 +1786,38 @@ function checkReady() {
 
 function doLogin() {
   const phone = document.getElementById('loginPhone').value.trim();
-  const nick = document.getElementById('loginNick').value.trim() || (lineProfile && lineProfile.displayName) || 'ผู้ใช้ LINE';
-
-  currentUser = {
-    phone,
-    nick,
-    lineName: (lineProfile && lineProfile.displayName) || nick,
-    lineUserId: lineProfile ? lineProfile.userId : null,
-    linePicture: lineProfile ? lineProfile.pictureUrl : null
-  };
+  const nick = document.getElementById('loginNick').value.trim();
+  currentUser = { phone, nick };
   localStorage.setItem('tnhUser', JSON.stringify(currentUser));
-  if (lineProfile && lineProfile.userId) {
-    localStorage.setItem('tnhPhone_' + lineProfile.userId, phone);
-  }
 
-  enterApp();
-}
-
-function enterApp() {
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('appShell').classList.add('show');
   document.getElementById('loadingScreen').classList.add('show');
-  document.getElementById('f-phone').value = currentUser.phone;
-  document.getElementById('f-nick').value = currentUser.nick;
-  updateNavAvatar();
+  document.getElementById('f-phone').value = phone;
+  document.getElementById('f-nick').value = nick;
   fetchData();
 }
 
-// อัปเดตไอคอนโปรไฟล์ในเมนูด้านล่างให้เป็นรูปโปรไฟล์ LINE จริง (แทนอิโมจิ 🪪)
-function updateNavAvatar() {
-  const img = document.getElementById('navProfilePic');
-  const emoji = document.getElementById('navProfileEmoji');
-  if (!img) return;
-
-  if (currentUser && currentUser.linePicture) {
-    img.src = currentUser.linePicture;
-    img.style.display = 'block';
-    if (emoji) emoji.style.display = 'none';
-  } else {
-    img.style.display = 'none';
-    if (emoji) emoji.style.display = 'block';
-  }
-}
-
-async function initLiff() {
-  // ถ้าเคยล็อกอินสมบูรณ์ไว้แล้วในเครื่องนี้ ข้ามไปหน้าแอปได้เลยโดยไม่ต้องรอ LIFF
-  const saved = localStorage.getItem('tnhUser');
-  if (saved) {
-    try {
-      currentUser = JSON.parse(saved);
-      enterApp();
-      return;
-    } catch (e) {
-      localStorage.removeItem('tnhUser');
-    }
-  }
-
-  // กันไม่ให้ค้างที่หน้า "กำลังเชื่อมต่อ" ตลอดไป เผื่อ LIFF ไม่ตอบสนอง/สิทธิ์ถูกยกเลิก
-  const stuckTimer = setTimeout(() => {
-    showLineLoginRetry('⚠️ เชื่อมต่อ LINE ช้ากว่าปกติ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
-  }, 8000);
-
-  try {
-    await liff.init({ liffId: LIFF_ID });
-  } catch (err) {
-    console.error('LIFF init error', err);
-    clearTimeout(stuckTimer);
-    showLineLoginRetry('⚠️ เชื่อมต่อ LINE ไม่สำเร็จ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
-    return;
-  }
-
-  try {
-    if (liff.isLoggedIn()) {
-      await afterLineLogin();
-    } else if (liff.isInClient()) {
-      // เปิดจากในแอป LINE โดยตรง -> ล็อกอินอัตโนมัติไม่ต้องกดปุ่ม
-      liff.login();
-    } else {
-      // เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่มให้กด
-      showLineLoginRetry(null);
-    }
-  } catch (err) {
-    console.error('LIFF login flow error', err);
-    showLineLoginRetry('⚠️ เข้าสู่ระบบ LINE ไม่สำเร็จ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
-  } finally {
-    clearTimeout(stuckTimer);
-  }
-}
-
-// โชว์ปุ่ม "เข้าสู่ระบบด้วย LINE" ให้กดใหม่เสมอเมื่อขั้นตอนใดๆล้มเหลว
-// message = null -> ซ่อนข้อความสถานะ โชว์แค่ปุ่ม (กรณีเปิดจากเบราว์เซอร์ปกติ ยังไม่เคยล็อกอิน)
-// message = ข้อความ -> โชว์ทั้งข้อความแจ้งเตือนและปุ่ม (กรณีเชื่อมต่อ/ดึงข้อมูลล้มเหลว)
-function showLineLoginRetry(message) {
-  const loading = document.getElementById('lineLoginLoading');
-  const btn = document.getElementById('lineLoginBtn');
-  if (loading) {
-    if (message) {
-      loading.textContent = message;
-      loading.style.display = 'block';
-    } else {
-      loading.style.display = 'none';
-    }
-  }
-  if (btn) btn.style.display = 'block';
-}
-
-function loginWithLine() {
-  document.getElementById('lineLoginBtn').style.display = 'none';
-  document.getElementById('lineLoginLoading').style.display = 'block';
-  document.getElementById('lineLoginLoading').textContent = '⌛ กำลังพาไปเข้าสู่ระบบ LINE...';
-  liff.login({ redirectUri: window.location.href });
-}
-
-async function afterLineLogin() {
-  try {
-    const profile = await liff.getProfile();
-    lineProfile = {
-      userId: profile.userId,
-      displayName: profile.displayName,
-      pictureUrl: profile.pictureUrl || ''
-    };
-
-    document.getElementById('lineLoginStep').style.display = 'none';
-    document.getElementById('phoneStep').style.display = 'block';
-    document.getElementById('lineNamePreview').textContent = lineProfile.displayName;
-    if (lineProfile.pictureUrl) document.getElementById('linePicPreview').src = lineProfile.pictureUrl;
-
-    // ถ้าเคยกรอกเบอร์ไว้แล้วสำหรับ LINE user นี้ในเครื่องนี้ ให้กรอกให้อัตโนมัติ
-    const savedPhone = localStorage.getItem('tnhPhone_' + lineProfile.userId);
-    if (savedPhone) {
-      document.getElementById('loginPhone').value = savedPhone;
-    }
-    checkReady();
-  } catch (err) {
-    console.error('getProfile error', err);
-    // token อาจใช้ไม่ได้แล้ว (เช่นผู้ใช้ไปยกเลิกสิทธิ์การเชื่อมต่อแอปนี้ใน LINE) -> เคลียร์ session แล้วให้กดเข้าสู่ระบบใหม่
-    try { if (liff.isLoggedIn()) liff.logout(); } catch (e) {}
-    showLineLoginRetry('⚠️ เชื่อมต่อ LINE ไม่สำเร็จ (อาจเป็นเพราะสิทธิ์การเชื่อมต่อถูกยกเลิก) กรุณากดปุ่มด้านล่างเพื่อเข้าสู่ระบบใหม่');
-  }
-}
-
-
 window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('loginPhone').addEventListener('input', checkReady);
-  document.getElementById('loginNick').addEventListener('input', checkReady);
-  initLiff();
+  ['input', 'change', 'keyup', 'paste'].forEach(ev => {
+    document.getElementById('loginPhone').addEventListener(ev, checkReady);
+    document.getElementById('loginNick').addEventListener(ev, checkReady);
+  });
+
+  const saved = localStorage.getItem('tnhUser');
+  if (!saved) return;
+
+  try {
+    currentUser = JSON.parse(saved);
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('appShell').classList.add('show');
+    document.getElementById('loadingScreen').classList.add('show');
+    document.getElementById('f-phone').value = currentUser.phone;
+    document.getElementById('f-nick').value = currentUser.nick;
+    fetchData();
+  } catch (e) {
+    localStorage.removeItem('tnhUser');
+  }
 });
 
 /* ================================================================
@@ -2454,17 +1993,25 @@ function renderHome() {
     <div class="greet-bar">
       <div class="left">
         <h2>${greeting}, ${currentUser.nick}! 👋</h2>
-        <p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${myTripCount} ทริป</strong></p>
+        <p>คุณมีประวัติทริปทั้งหมด <strong style="color:#7dd3fc">${myTripCount} ทริป</strong></p>
       </div>
-      <div class="greet-actions">
-        <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
-          <div class="qa-mini-ico">🎒</div>
-          <div class="qa-mini-label">จองทริป</div>
-        </div>
-        <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
-          <div class="qa-mini-ico">🏕️</div>
-          <div class="qa-mini-label">เช่าของ</div>
-        </div>
+      <div class="greet-avatar">
+        <img src="${localStorage.getItem('userAvatar') || 'https://via.placeholder.com/100?text=👤'}" alt="">
+      </div>
+    </div>
+
+    <div class="qa-shortcuts">
+      <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
+        <div class="qa-mini-ico">🎒</div>
+        <div class="qa-mini-label">จองทริป</div>
+      </div>
+      <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
+        <div class="qa-mini-ico">🏕️</div>
+        <div class="qa-mini-label">เช่าของ</div>
+      </div>
+      <div class="qa-mini qa-mytrip-mini" onclick="switchTab('mytrips')">
+        <div class="qa-mini-ico">🧳</div>
+        <div class="qa-mini-label">ทริปของคุณ</div>
       </div>
     </div>
 
@@ -2549,8 +2096,8 @@ function togglePastList(triggerEl) {
 }
 
 // สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับประวัติความบ้าในหน้าโปรไฟล์
-function toggleBookingHistory(triggerEl, listId) {
-  const expanded = document.getElementById(listId).classList.toggle('expanded');
+function toggleBookingHistory(triggerEl) {
+  const expanded = document.getElementById('bookingHistoryList').classList.toggle('expanded');
   triggerEl.innerText = expanded ? 'ย่อ ‹' : 'ดูทั้งหมด ›';
 }
 
@@ -2664,9 +2211,11 @@ function renderMyTrips() {
   document.getElementById('myContent').innerHTML = `
     <div class="my-profile">
       <div class="my-ava-col">
-        <div class="my-ava" style="overflow:hidden;border-radius:50%;width:58px;height:58px;padding:0;flex-shrink:0">
-          <img id="userAvatar" src="${currentUser.linePicture || 'https://via.placeholder.com/150?text=👤'}" style="width:100%;height:100%;object-fit:cover">
+        <div class="my-ava" onclick="document.getElementById('fileInput').click()" style="cursor:pointer;overflow:hidden;border-radius:50%;width:58px;height:58px;padding:0;flex-shrink:0">
+          <img id="userAvatar" src="https://via.placeholder.com/150?text=👤" style="width:100%;height:100%;object-fit:cover">
+          <input type="file" id="fileInput" hidden accept="image/*" onchange="uploadAvatar(this)">
         </div>
+        <p class="my-ava-hint">📷 แตะเพื่อเปลี่ยนรูปได้</p>
       </div>
       <div class="my-info" style="flex:1">
         <h3>${currentUser.nick}</h3>
@@ -2681,53 +2230,31 @@ function renderMyTrips() {
 
     <div class="sec-hdr">
       <h3>📋 ประวัติความบ้า</h3>
+      ${uniqueBookings.length > 2 ? `<span onclick="toggleBookingHistory(this)" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
     </div>
-    ${uniqueBookings.length === 0 ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>' : (() => {
-      const todayCut = new Date(new Date().setHours(0, 0, 0, 0));
-      const upcoming = uniqueBookings.filter(b => new Date(b.date) >= todayCut).sort((a, b) => new Date(a.date) - new Date(b.date));
-      const past = uniqueBookings.filter(b => new Date(b.date) < todayCut).sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      const historyItemHTML = (b, i) => {
-        const img = TRIP_IMAGES[b.trip] || 'default.jpg';
-        const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-        const isPast = new Date(b.date) < todayCut;
-        return `
-          <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
-            <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
-              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
-              <div class="hi">
-                <h4>${b.trip}</h4>
-                <p>📅 ${fmtDate}</p>
-                <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
+    <div id="bookingHistoryList">
+    ${uniqueBookings.length === 0
+      ? '<div class="empty-st"><div class="ico">🏕️</div><p>ยังไม่มีประวัติการจองครับ<br>ไปเลือกทริปแล้วออกเดินทางกันเลย!</p></div>'
+      : uniqueBookings.map((b, i) => {
+          const img = TRIP_IMAGES[b.trip] || 'default.jpg';
+          const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+          const isPast = new Date(b.date) < new Date();
+          return `
+            <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
+              <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
+                <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
+                <div class="hi">
+                  <h4>${b.trip}</h4>
+                  <p>📅 ${fmtDate}</p>
+                  <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
+                </div>
+                <div class="h-seat"><div class="snum">${b.seat || '-'}</div><p>ที่นั่ง</p></div>
+                <div class="h-arr">›</div>
               </div>
-              <div class="mini-seat">
-                <span class="mini-seat-label">ที่นั่ง</span>
-                <span class="mini-seat-num">${b.seat || '-'}</span>
-              </div>
-              <div class="h-arr">›</div>
             </div>
-          </div>
-        `;
-      };
-
-      return `
-        ${upcoming.length ? `
-          <div class="hist-group-title">
-            <span>🗓️ กำลังจะไป (${upcoming.length})</span>
-            ${upcoming.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingUpcomingList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
-          </div>
-          <div id="bookingUpcomingList">${upcoming.map(historyItemHTML).join('')}</div>
-        ` : ''}
-
-        ${past.length ? `
-          <div class="hist-group-title">
-            <span>✅ ไปแล้ว (${past.length})</span>
-            ${past.length > 2 ? `<span onclick="toggleBookingHistory(this,'bookingHistoryList')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>` : ''}
-          </div>
-          <div id="bookingHistoryList">${past.map(historyItemHTML).join('')}</div>
-        ` : ''}
-      `;
-    })()}
+          `;
+        }).join('')}
+    </div>
 
     <div class="sec-hdr" style="margin-top:24px"><h3>🎒 ประวัติการเช่าอุปกรณ์</h3></div>
     ${myEquipRentals.length === 0
@@ -2751,6 +2278,10 @@ function renderMyTrips() {
     <div style="height:1px;background:var(--border);margin:20px 0"></div>
     <button class="btn-logout" onclick="logOut()">🚪 ออกจากระบบ</button>
   `;
+
+  const savedAvatar = localStorage.getItem('userAvatar');
+  const avatarEl = document.getElementById('userAvatar');
+  if (savedAvatar && avatarEl) avatarEl.src = savedAvatar;
 }
 
 // เปิดหน้าผังเบาะของทริปที่เคยจองไว้ (จากการ์ดในประวัติความบ้า) แล้วสกรอลไปหา+ไฮไลต์เบาะของตัวเองให้เจอไว
@@ -2918,15 +2449,6 @@ function goToBook() {
   document.getElementById('f-dateraw').value = formattedDate;
   document.getElementById('f-phone').value = currentUser.phone;
   document.getElementById('f-nick').value = currentUser.nick;
-  document.getElementById('f-line').value = currentUser.lineName || currentUser.nick;
-
-  // ดึงชื่อ-นามสกุลจริงจากประวัติการจองครั้งล่าสุดที่ผูกกับเบอร์นี้ (ถ้ามี) มาใส่ให้อัตโนมัติ
-  // คนใหม่ที่ยังไม่เคยจอง (ไม่เจอประวัติ) จะเจอช่องว่างให้กรอกเองตามปกติ
-  const normPhoneForName = (p) => String(p || '').replace(/\D/g, '').slice(-9);
-  const myPastBooking = allBookings
-    .filter(b => b.name && normPhoneForName(b.phone) === normPhoneForName(currentUser.phone))
-    .slice(-1)[0];
-  document.getElementById('f-name').value = myPastBooking ? myPastBooking.name : '';
 
   selectedSeat = null;
   document.getElementById('f-seat').value = '';
@@ -3273,18 +2795,6 @@ function closePay() {
 async function submitBook() {
   const btn = document.getElementById('payOkBtn');
 
-  // กันเหนียวขั้นสุดท้าย: ห้ามส่งจองถ้าไม่มีที่นั่งที่ล็อกไว้จริงในตอนนี้
-  // (เผื่อกรณีที่นั่งหมดเวลาไปแล้วระหว่างที่หน้าชำระเงินยังเปิดค้างอยู่)
-  const seatValueAtSubmit = document.getElementById('f-seat').value.trim();
-  if (!selectedSeat || !seatValueAtSubmit) {
-    closePay();
-    Swal.fire({
-      icon: 'warning', title: 'ที่นั่งของคุณถูกปลดล็อกไปแล้ว', text: 'กรุณาเลือกเบาะใหม่แล้วทำรายการอีกครั้งครับ',
-      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
-    });
-    return;
-  }
-
   if (!selectedSlipFile) {
     Swal.fire({
       icon: 'warning', title: 'ยังไม่ได้แนบสลิป', text: 'กรุณาแนบรูปสลิปก่อนยืนยันการจอง',
@@ -3394,7 +2904,6 @@ function logOut() {
   }).then(r => {
     if (r.isConfirmed) {
       localStorage.removeItem('tnhUser');
-      try { if (typeof liff !== 'undefined' && liff.isLoggedIn && liff.isLoggedIn()) liff.logout(); } catch (e) {}
       location.reload();
     }
   });
@@ -3451,6 +2960,22 @@ document.addEventListener('click', (e) => {
   const tab = document.getElementById('adminTab');
   if (tab && !tab.contains(e.target)) collapseAdminTab();
 });
+
+/* ================================================================
+   PROFILE AVATAR UPLOAD
+   ================================================================ */
+function uploadAvatar(input) {
+  if (!input.files || !input.files[0]) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = document.getElementById('userAvatar');
+    if (img) img.src = e.target.result;
+    localStorage.setItem('userAvatar', e.target.result);
+    renderHome(); // อัปเดตรูปในหน้าหลักด้วย
+  };
+  reader.readAsDataURL(input.files[0]);
+}
 
 /* ================================================================
    EQUIPMENT RENTAL (เช่าอุปกรณ์)
