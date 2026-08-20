@@ -1191,6 +1191,37 @@ body {
 .r-total-row { display: flex; justify-content: space-between; font-size: 16px; font-weight: 800; color: #15803d; padding-top: 10px; margin-top: 6px; }
 
 /* ============================================================
+   REVIEW PAGE (รีวิว & แชร์ทริป)
+   ============================================================ */
+#reviewPage { position: fixed; inset: 0; z-index: 960; background: var(--bg); overflow-y: auto; display: none; }
+#reviewPage.show { display: block; animation: fadeUp .25s ease; }
+
+.review-summary-card {
+  text-align: center;
+  background: linear-gradient(135deg, rgba(245, 158, 11, .14), rgba(245, 158, 11, .04));
+  border: 1px solid rgba(245, 158, 11, .28);
+  border-radius: 20px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+.review-summary-card .avg { font-size: 42px; font-weight: 900; color: #f7b500; line-height: 1; }
+.review-summary-card .stars { font-size: 20px; margin: 6px 0; letter-spacing: 2px; color: #f7b500; }
+.review-summary-card .count { font-size: 12px; color: var(--sub); }
+
+.star-picker { text-align: center; font-size: 36px; letter-spacing: 8px; margin: 12px 0 6px; }
+.star-picker span { cursor: pointer; color: #475569; transition: color .15s, transform .1s; display: inline-block; }
+.star-picker span:active { transform: scale(1.15); }
+
+.review-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 14px; margin-bottom: 12px; }
+.review-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
+.review-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--blue2), var(--blue)); display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; font-weight: 700; flex-shrink: 0; }
+.review-name { font-size: 13px; font-weight: 700; color: #fff; }
+.review-date { font-size: 10px; color: var(--muted); }
+.review-stars { color: #f7b500; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
+.review-comment { font-size: 13px; color: #e2e8f0; line-height: 1.65; }
+.review-photo { width: 100%; border-radius: 12px; max-height: 280px; object-fit: cover; margin-top: 10px; }
+
+/* ============================================================
    FLOATING ADMIN TAB — แถบลอยจางๆ ริมจอ กดแล้วค่อยกางเป็นปุ่ม
    ============================================================ */
 .admin-tab {
@@ -1695,6 +1726,64 @@ body {
 </div>
 
 <!-- ============================================================
+     REVIEW PAGE (รีวิว & แชร์ทริป)
+     ============================================================ -->
+<div id="reviewPage">
+  <div class="bk-hdr">
+    <button class="btn-back" onclick="closeReviews()">⬅ ย้อนกลับ</button>
+    <span class="chip chip-green" style="font-size:11px">รีวิว & แชร์ทริป</span>
+  </div>
+
+  <div class="bk-body">
+    <div style="text-align:center;margin-bottom:16px">
+      <h2 style="font-size:20px;font-weight:700;color:#fff">⭐ รีวิวจากนักเดินทาง</h2>
+      <p style="font-size:12px;color:var(--yellow);margin-top:4px">แชร์รูป เล่าประสบการณ์ ให้คะแนนเพจกันได้เลยครับ</p>
+    </div>
+
+    <div id="reviewSummary"></div>
+
+    <button class="btn-login" style="background:linear-gradient(135deg,var(--blue2),var(--blue));margin-bottom:20px" onclick="openWriteReview()">✍️ เขียนรีวิว</button>
+
+    <div id="writeReviewBox" style="display:none;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:18px;margin-bottom:20px">
+      <div class="form-sec-header">
+        <div class="form-sec-ico">⭐</div>
+        <div>
+          <div class="form-sec-title">เขียนรีวิวของคุณ</div>
+          <div class="form-sec-sub">ให้คะแนนและแชร์ความประทับใจได้เลยครับ</div>
+        </div>
+      </div>
+
+      <div class="star-picker" id="starPicker">
+        <span onclick="setReviewRating(1)">☆</span><span onclick="setReviewRating(2)">☆</span><span onclick="setReviewRating(3)">☆</span><span onclick="setReviewRating(4)">☆</span><span onclick="setReviewRating(5)">☆</span>
+      </div>
+
+      <div class="ig">
+        <label>💬 ความคิดเห็น</label>
+        <textarea id="reviewComment" rows="4" placeholder="เล่าประสบการณ์ทริปที่ไปมา หรือความประทับใจกับเพจ..." style="width:100%;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.1);border-radius:14px;color:#fff;font-size:14px;font-family:inherit;padding:12px;outline:none;resize:vertical" oninput="checkReviewReady()"></textarea>
+      </div>
+
+      <div class="slip-upload">
+        <div class="slip-title">📸 แนบรูปทริป <span style="color:var(--muted);font-weight:400">(ไม่บังคับ)</span></div>
+        <div class="slip-drop" id="reviewPhotoDrop">
+          <div class="slip-ico">📷</div>
+          <div class="slip-txt">
+            <div class="slip-name" id="reviewPhotoName">แตะเพื่อเลือกรูป</div>
+            <div class="slip-sub">JPG, PNG หรือ WEBP ไม่เกิน 5MB</div>
+          </div>
+          <input type="file" id="reviewPhotoFile" accept="image/jpeg,image/png,image/webp" onchange="handleReviewPhoto(this)">
+        </div>
+        <img id="reviewPhotoPreview" class="slip-preview" alt="ตัวอย่างรูป">
+      </div>
+
+      <button id="reviewSubmitBtn" class="btn-confirm" disabled onclick="submitReview()">⭐ กรุณาให้คะแนนก่อนครับ</button>
+      <p onclick="closeWriteReview()" style="font-size:13px;color:var(--muted);margin-top:12px;cursor:pointer;text-align:center">ยกเลิก</p>
+    </div>
+
+    <div id="reviewList"></div>
+  </div>
+</div>
+
+<!-- ============================================================
      FLOATING ADMIN TAB (มุมขวาจอ — กดครั้งแรกกาง / กดซ้ำเพื่อเข้าหน้าแอดมิน)
      ============================================================ -->
 <div id="adminTab" class="admin-tab" onclick="toggleAdminTab(event)">
@@ -2096,6 +2185,9 @@ const EQUIP_ITEMS = {
 let currentUser = null;      // { phone, nick }
 let allBookings = [];        // ข้อมูลการจองทั้งหมดจาก backend
 let allEquipRentals = [];    // ข้อมูลการเช่าอุปกรณ์ทั้งหมดจาก backend (คนละชีทกับ bookings)
+let allReviews = [];         // ข้อมูลรีวิวทั้งหมดจาก backend (คนละชีทกับ bookings)
+let reviewRating = 0;        // คะแนนดาวที่กำลังเลือกในฟอร์มเขียนรีวิว
+let reviewPhotoFile = null;  // ไฟล์รูปที่แนบไว้ในฟอร์มเขียนรีวิว
 let cacheTrips = [];         // รายการทริป (unique trip+date) ที่สรุปจาก allBookings
 let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
 let selectedSeat = null;     // เบาะที่ผู้ใช้เลือกอยู่ตอนนี้
@@ -2375,6 +2467,7 @@ function fetchData() {
     finished = true;
     allBookings = res.bookings || [];
     allEquipRentals = res.rentals || [];
+    allReviews = res.reviews || [];
 
     const seen = {};
     cacheTrips = [];
@@ -2560,9 +2653,9 @@ function renderHome() {
         <div class="qa-mini-ico">🏕️</div>
         <div class="qa-mini-label">เช่าของ</div>
       </div>
-      <div class="qa-mini qa-mytrips-mini" onclick="switchTab('mytrips')">
-        <div class="qa-mini-ico">🪪</div>
-        <div class="qa-mini-label">ทริปของคุณ</div>
+      <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
+        <div class="qa-mini-ico">⭐</div>
+        <div class="qa-mini-label">รีวิว</div>
       </div>
     </div>
 
@@ -3887,6 +3980,257 @@ function closeEquipReceipt() {
   document.getElementById('equipReceiptPage').classList.remove('show');
   document.getElementById('equipPage').classList.remove('show');
   switchTab('home');
+}
+
+/* ================================================================
+   REVIEW PAGE (รีวิว & แชร์ทริป)
+   ================================================================ */
+function openReviews() {
+  renderReviewSummary();
+  renderReviewList();
+  document.getElementById('reviewPage').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function closeReviews() {
+  document.getElementById('reviewPage').classList.remove('show');
+  closeWriteReview();
+}
+
+function openWriteReview() {
+  document.getElementById('writeReviewBox').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('writeReviewBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+
+function closeWriteReview() {
+  document.getElementById('writeReviewBox').style.display = 'none';
+  resetReviewForm();
+}
+
+function setReviewRating(n) {
+  reviewRating = n;
+  document.querySelectorAll('#starPicker span').forEach((s, i) => {
+    s.textContent = i < n ? '★' : '☆';
+    s.style.color = i < n ? '#f7b500' : '#475569';
+  });
+  checkReviewReady();
+}
+
+function checkReviewReady() {
+  const comment = document.getElementById('reviewComment').value.trim();
+  const btn = document.getElementById('reviewSubmitBtn');
+  const ok = reviewRating > 0 && comment.length > 0;
+  btn.disabled = !ok;
+  btn.classList.toggle('ready', ok);
+  btn.innerText = ok ? '✅ ส่งรีวิว' : (reviewRating === 0 ? '⭐ กรุณาให้คะแนนก่อนครับ' : '💬 กรุณาเขียนความคิดเห็นก่อนครับ');
+}
+
+function handleReviewPhoto(input) {
+  const drop = document.getElementById('reviewPhotoDrop');
+  const nameEl = document.getElementById('reviewPhotoName');
+  const preview = document.getElementById('reviewPhotoPreview');
+
+  if (!input.files || !input.files[0]) { resetReviewPhoto(); return; }
+
+  const file = input.files[0];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+  if (!allowedTypes.includes(file.type)) {
+    input.value = '';
+    Swal.fire({
+      icon: 'warning', title: 'ไฟล์ไม่ถูกต้อง', text: 'กรุณาแนบรูปชนิด JPG, PNG หรือ WEBP',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+    resetReviewPhoto();
+    return;
+  }
+
+  const maxSize = 5 * 1024 * 1024;
+  if (file.size > maxSize) {
+    input.value = '';
+    Swal.fire({
+      icon: 'warning', title: 'ไฟล์ใหญ่เกินไป', text: 'กรุณาใช้รูปขนาดไม่เกิน 5MB',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+    resetReviewPhoto();
+    return;
+  }
+
+  reviewPhotoFile = file;
+  drop.classList.add('has-file');
+  nameEl.textContent = '✅ ' + file.name;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    preview.src = e.target.result;
+    preview.classList.add('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetReviewPhoto() {
+  reviewPhotoFile = null;
+  const input = document.getElementById('reviewPhotoFile');
+  const drop = document.getElementById('reviewPhotoDrop');
+  const nameEl = document.getElementById('reviewPhotoName');
+  const preview = document.getElementById('reviewPhotoPreview');
+  if (input) input.value = '';
+  if (drop) drop.classList.remove('has-file');
+  if (nameEl) nameEl.textContent = 'แตะเพื่อเลือกรูป';
+  if (preview) { preview.src = ''; preview.classList.remove('show'); }
+}
+
+function resetReviewForm() {
+  reviewRating = 0;
+  const commentEl = document.getElementById('reviewComment');
+  if (commentEl) commentEl.value = '';
+  resetReviewPhoto();
+  document.querySelectorAll('#starPicker span').forEach(s => { s.textContent = '☆'; s.style.color = '#475569'; });
+  const btn = document.getElementById('reviewSubmitBtn');
+  if (btn) { btn.disabled = true; btn.classList.remove('ready'); btn.innerText = '⭐ กรุณาให้คะแนนก่อนครับ'; }
+}
+
+function renderReviewSummary() {
+  const box = document.getElementById('reviewSummary');
+  if (!box) return;
+
+  const count = allReviews.length;
+  const avg = count ? allReviews.reduce((sum, r) => sum + Number(r.rating || 0), 0) / count : 0;
+  const roundedAvg = Math.round(avg);
+
+  box.innerHTML = `
+    <div class="review-summary-card">
+      <div class="avg">${count ? avg.toFixed(1) : '-'}</div>
+      <div class="stars">${'★'.repeat(roundedAvg)}${'☆'.repeat(5 - roundedAvg)}</div>
+      <div class="count">${count ? `จาก ${count} รีวิว` : 'ยังไม่มีรีวิวเลยครับ'}</div>
+    </div>
+  `;
+}
+
+function renderReviewList() {
+  const box = document.getElementById('reviewList');
+  if (!box) return;
+
+  if (allReviews.length === 0) {
+    box.innerHTML = '<div class="empty-st"><div class="ico">📷</div><p>ยังไม่มีรีวิวเลยครับ<br>เป็นคนแรกที่มารีวิวกันเถอะ!</p></div>';
+    return;
+  }
+
+  // ล่าสุดขึ้นก่อน
+  const sorted = [...allReviews].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+
+  box.innerHTML = sorted.map(r => {
+    const ratingNum = Math.max(0, Math.min(5, Number(r.rating) || 0));
+    const stars = '★'.repeat(ratingNum) + '☆'.repeat(5 - ratingNum);
+    const fmtDate = r.timestamp ? new Date(r.timestamp).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) : '';
+    const displayName = r.nickname || r.name || 'ผู้เดินทาง';
+    return `
+      <div class="review-card">
+        <div class="review-card-head">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0">
+            <div class="review-avatar">${displayName.charAt(0)}</div>
+            <div style="min-width:0">
+              <div class="review-name">${displayName}</div>
+              <div class="review-date">${fmtDate}</div>
+            </div>
+          </div>
+          <div class="review-stars">${stars}</div>
+        </div>
+        ${r.comment ? `<p class="review-comment">${r.comment}</p>` : ''}
+        ${r.photoUrl ? `<img src="${r.photoUrl}" class="review-photo" onerror="this.style.display='none'">` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+async function submitReview() {
+  const btn = document.getElementById('reviewSubmitBtn');
+  btn.disabled = true;
+  btn.innerText = '⌛ กำลังส่งรีวิว...';
+
+  try {
+    let photoData = { data: '', name: '', mimeType: '' };
+    if (reviewPhotoFile) {
+      photoData = await slipFileToBase64(reviewPhotoFile);
+    }
+
+    const reviewId = 'REVIEW-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+    const comment = document.getElementById('reviewComment').value.trim();
+    const nowIso = new Date().toISOString();
+
+    const payload = {
+      action: 'submitReview',
+      reviewId: reviewId,
+      name: currentUser.nick,
+      nickname: currentUser.nick,
+      phone: currentUser.phone,
+      rating: String(reviewRating),
+      comment: comment,
+      photoBase64: photoData.data,
+      photoName: photoData.name,
+      photoMime: photoData.mimeType,
+      session_id: MY_SESSION_ID
+    };
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = API_URL;
+    form.target = '_ifr_review';
+    form.acceptCharset = 'UTF-8';
+    form.style.display = 'none';
+
+    Object.entries(payload).forEach(([key, value]) => {
+      const field = document.createElement('textarea');
+      field.name = key;
+      field.value = value == null ? '' : String(value);
+      field.style.display = 'none';
+      form.appendChild(field);
+    });
+
+    let iframe = document.getElementById('_ifr_review');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.name = '_ifr_review';
+      iframe.id = '_ifr_review';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+
+    // รอหลังบ้านบันทึกข้อมูลสักครู่ก่อนอัปเดตหน้าจอ (เหมือนตอนจองที่นั่ง/เช่าอุปกรณ์)
+    setTimeout(() => {
+      allReviews.unshift({
+        name: currentUser.nick,
+        nickname: currentUser.nick,
+        rating: reviewRating,
+        comment: comment,
+        photoUrl: reviewPhotoFile ? URL.createObjectURL(reviewPhotoFile) : '',
+        timestamp: nowIso
+      });
+      renderReviewSummary();
+      renderReviewList();
+      closeWriteReview();
+
+      Swal.fire({
+        icon: 'success', title: 'ขอบคุณสำหรับรีวิว! 🎉', text: 'รีวิวของคุณถูกส่งเรียบร้อยแล้วครับ',
+        background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+      });
+
+      if (form.parentNode) form.remove();
+    }, 2500);
+
+  } catch (error) {
+    btn.disabled = false;
+    checkReviewReady();
+    Swal.fire({
+      icon: 'error', title: 'ส่งรีวิวไม่สำเร็จ', text: error.message || 'กรุณาลองใหม่อีกครั้ง',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+  }
 }
 
 </script>
