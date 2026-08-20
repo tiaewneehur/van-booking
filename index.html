@@ -331,18 +331,32 @@ body {
    HOME TAB
    ============================================================ */
 .greet-bar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: linear-gradient(135deg, rgba(2, 132, 199, .15), rgba(56, 189, 248, .08));
-  border: 1px solid rgba(56, 189, 248, .15);
+  background:
+    linear-gradient(135deg, rgba(2, 66, 100, .68), rgba(6, 11, 19, .78)),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=60') center/cover no-repeat;
+  border: 1px solid rgba(56, 189, 248, .18);
   border-radius: 18px;
-  padding: 14px 14px 14px 16px;
-  margin-bottom: 20px;
+  padding: 16px;
+  margin-bottom: 14px;
 }
 .greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; }
-.greet-bar .left p { font-size: 12px; color: var(--sub); margin-top: 2px; }
+.greet-bar .left p { font-size: 12px; color: #e2e8f0; margin-top: 2px; }
+.greet-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, .75);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .45);
+  flex-shrink: 0;
+}
+.home-quick-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+.home-quick-actions .qa-mini { flex: 1; width: auto; height: 62px; }
 .greet-actions { display: flex; gap: 10px; flex-shrink: 0; }
 .qa-mini {
   width: 66px;
@@ -362,6 +376,8 @@ body {
 .qa-mini .qa-mini-label { font-size: 9.5px; font-weight: 800; color: rgba(0, 0, 0, .75); line-height: 1; }
 .qa-trip-mini { background: linear-gradient(145deg, #ffe066, #ffc400); box-shadow: 0 5px 14px rgba(255, 196, 0, .4); }
 .qa-rent-mini { background: linear-gradient(145deg, #34e89e, #0bb96f); box-shadow: 0 5px 14px rgba(11, 185, 111, .4); }
+.qa-mytrips-mini { background: linear-gradient(145deg, #7dd3fc, #0284c7); box-shadow: 0 5px 14px rgba(2, 132, 199, .4); }
+.qa-mytrips-mini .qa-mini-label { color: rgba(255, 255, 255, .95); }
 @keyframes qaBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 .sec-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .sec-hdr h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
@@ -545,41 +561,29 @@ body {
 .h-seat .snum { font-size: 18px; font-weight: 800; color: var(--blue); }
 .h-seat p { font-size: 10px; color: var(--muted); }
 
-/* mini-seat: ป้ายเบาะสไตล์ boarding-pass โทนทองเข้าธีมเดียวกับป้ายราคาการ์ดทริป */
+/* mini-seat: ไอคอนเบาะจริง (รูปภาพ) + ป้ายเลขที่นั่งโทนทอง ใช้ในประวัติความบ้า */
 .mini-seat {
-  position: relative;
-  min-width: 56px;
-  height: 54px;
-  padding: 0 10px;
-  border-radius: 14px;
-  background: linear-gradient(160deg, #1a2233, #0d131f);
-  border: 1px solid rgba(212, 175, 55, .4);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 4px;
+  min-width: 58px;
   flex-shrink: 0;
-  overflow: hidden;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, .4), inset 0 1px 0 rgba(255, 255, 255, .05);
 }
-.mini-seat::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, #f6e2a0, #c9971f, transparent);
-}
-.mini-seat .mini-seat-label { font-size: 7px; font-weight: 800; letter-spacing: .5px; color: rgba(246, 226, 160, .6); margin-bottom: 2px; }
+.mini-seat-img { width: 36px; height: 36px; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .4)); }
 .mini-seat .mini-seat-num {
-  font-size: 16px;
-  font-weight: 900;
+  font-size: 11.5px;
+  font-weight: 800;
   color: #f6e2a0;
-  line-height: 1.1;
-  max-width: 64px;
+  background: rgba(201, 151, 31, .15);
+  border: 1px solid rgba(212, 175, 55, .4);
+  padding: 2px 10px;
+  border-radius: 999px;
+  max-width: 76px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-shadow: 0 0 14px rgba(246, 226, 160, .35);
 }
 
 .hist-group-title { font-size: 13px; font-weight: 700; color: var(--sub); margin: 18px 0 10px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
@@ -1275,6 +1279,7 @@ body {
   <div class="bnav">
     <div class="bnav-item active" id="nav-home" onclick="switchTab('home')"><div class="ico">🏠</div><div class="lbl">หน้าหลัก</div></div>
     <div class="bnav-item" id="nav-trips" onclick="switchTab('trips')"><div class="ico">🎒</div><div class="lbl">ทริปทั้งหมด</div></div>
+    <div class="bnav-item" id="nav-notif" onclick="switchTab('notif')"><div class="ico">🔔</div><div class="lbl">เผื่อจำเป็น</div></div>
     <div class="bnav-item" id="nav-mytrips" onclick="switchTab('mytrips')">
       <div class="ico">
         <img id="navProfilePic" class="nav-avatar" src="" alt="">
@@ -1282,7 +1287,6 @@ body {
       </div>
       <div class="lbl">โปรไฟล์</div>
     </div>
-    <div class="bnav-item" id="nav-notif" onclick="switchTab('notif')"><div class="ico">🔔</div><div class="lbl">เผื่อจำเป็น</div></div>
   </div>
 </div>
 
@@ -2454,17 +2458,23 @@ function renderHome() {
     <div class="greet-bar">
       <div class="left">
         <h2>${greeting}, ${currentUser.nick}! 👋</h2>
-        <p>คุณมีประวัติทริปทั้งหมด <strong style="color:var(--blue)">${myTripCount} ทริป</strong></p>
+        <p>คุณมีประวัติทริปทั้งหมด <strong style="color:#38bdf8">${myTripCount} ทริป</strong></p>
       </div>
-      <div class="greet-actions">
-        <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
-          <div class="qa-mini-ico">🎒</div>
-          <div class="qa-mini-label">จองทริป</div>
-        </div>
-        <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
-          <div class="qa-mini-ico">🏕️</div>
-          <div class="qa-mini-label">เช่าของ</div>
-        </div>
+      <img class="greet-avatar" src="${currentUser.linePicture || 'https://via.placeholder.com/100?text=👤'}" alt="">
+    </div>
+
+    <div class="home-quick-actions">
+      <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
+        <div class="qa-mini-ico">🎒</div>
+        <div class="qa-mini-label">จองทริป</div>
+      </div>
+      <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
+        <div class="qa-mini-ico">🏕️</div>
+        <div class="qa-mini-label">เช่าของ</div>
+      </div>
+      <div class="qa-mini qa-mytrips-mini" onclick="switchTab('mytrips')">
+        <div class="qa-mini-ico">🪪</div>
+        <div class="qa-mini-label">ทริปของคุณ</div>
       </div>
     </div>
 
@@ -2701,7 +2711,7 @@ function renderMyTrips() {
                 <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
               </div>
               <div class="mini-seat">
-                <span class="mini-seat-label">ที่นั่ง</span>
+                <img class="mini-seat-img" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f4ba.png" alt="เบาะ" onerror="this.style.display='none'">
                 <span class="mini-seat-num">${b.seat || '-'}</span>
               </div>
               <div class="h-arr">›</div>
