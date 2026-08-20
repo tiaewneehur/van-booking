@@ -952,6 +952,43 @@ body {
 }
 
 .seat-legend { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 14px 0 20px; padding: 10px; border-radius: 16px; background: linear-gradient(180deg, rgba(12, 21, 36, .95), rgba(6, 11, 19, .98)); border: 1px solid var(--border); flex-wrap: wrap; }
+
+/* หน้างาน — สำหรับคนไปเอง ไม่ใช้ที่นั่งรถตู้ ไม่มีสถานะว่าง/เต็ม แยกจากระบบเบาะทั้งหมด */
+.onsite-note { text-align: center; font-size: 11px; color: var(--muted); margin: -4px 0 10px; line-height: 1.5; }
+.onsite-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  padding: 10px;
+  background: linear-gradient(180deg, rgba(16, 28, 45, .98), rgba(10, 18, 32, .98));
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, .03);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04), 0 6px 18px rgba(0, 0, 0, .22);
+}
+.onsite-slot {
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  cursor: pointer;
+  transform: scale(.94);
+  transition: .18s;
+  background: linear-gradient(145deg, #2b3a55, #1c2637);
+  color: #cbd5e1;
+  box-shadow: 0 5px 0 #101825, 0 8px 14px rgba(0, 0, 0, .18);
+}
+.onsite-slot span:first-child { font-size: 8.5px; margin-bottom: 2px; opacity: .8; }
+.onsite-slot span:last-child { font-size: 16px; line-height: 1.1; }
+.onsite-slot.selected {
+  background: linear-gradient(145deg, #ffd84d, #f7b500);
+  color: #000;
+  transform: scale(.98);
+  box-shadow: 0 0 12px rgba(255, 216, 77, .45), 0 5px 0 #b57b00;
+  animation: hb .9s infinite;
+}
 .leg-item { font-size: 12px; font-weight: 600; color: #e2e8f0; }
 .seat-map-img { width: 100%; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
 
@@ -1382,6 +1419,23 @@ body {
       <div id="vanGridC" class="van-grid-seats"></div>
     </div>
 
+    <div class="van-block">
+      <div class="van-block-title">🎪 หน้างาน (มาเอง)</div>
+      <p class="onsite-note">สำหรับคนที่ขับรถไปเอง/นัดเจอกันที่หน้างาน ไม่ใช้ที่นั่งบนรถตู้</p>
+      <div class="onsite-grid">
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,1)"><span>หน้างาน</span><span>1</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,2)"><span>หน้างาน</span><span>2</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,3)"><span>หน้างาน</span><span>3</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,4)"><span>หน้างาน</span><span>4</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,5)"><span>หน้างาน</span><span>5</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,6)"><span>หน้างาน</span><span>6</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,7)"><span>หน้างาน</span><span>7</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,8)"><span>หน้างาน</span><span>8</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,9)"><span>หน้างาน</span><span>9</span></div>
+        <div class="onsite-slot" onclick="pickOnsiteSlot(this,10)"><span>หน้างาน</span><span>10</span></div>
+      </div>
+    </div>
+
     <div id="formFieldsBox2">
       <div class="form-sec-header">
         <div class="form-sec-ico">📝</div>
@@ -1629,7 +1683,7 @@ body {
     <div class="receipt" id="eqr-receipt-card">
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="eqr-trip">-</strong></div>
       <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="eqr-name">-</strong></div>
-      <div class="r-row">🪑 <span>เบาะ:</span> <strong id="eqr-seat">-</strong></div>
+      <div class="r-row">🪑 <span id="eqr-seat-label">เบาะ:</span> <strong id="eqr-seat">-</strong></div>
       <div style="height:1px;background:#e2e8f0;margin:12px 0"></div>
       <div id="eqr-items"></div>
       <div class="r-total-row"><span>ยอดรวม</span><span id="eqr-total">0 บาท</span></div>
@@ -2625,7 +2679,7 @@ function cardHTML(item, compact = false) {
   const isPast = new Date(item.date) < new Date(new Date().setHours(0, 0, 0, 0));
 
   const totalSeats = BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').length * 3;
-  const bookedCount = allBookings.filter(b => b.seat && b.trip === item.trip && b.date === item.date).length;
+  const bookedCount = allBookings.filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.trip === item.trip && b.date === item.date).length;
   const avail = totalSeats - bookedCount;
 
   // ป้ายสถานะมุมภาพ (ข้อความ/เงื่อนไขเดิมทุกอย่าง เปลี่ยนแค่การจัดสไตล์)
@@ -2901,7 +2955,7 @@ function openModal(name, dateStr) {
   const seatIds = ['A', 'B', 'C'].flatMap(prefix =>
     BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').map(n => prefix + n)
   );
-  const takenSeats = allBookings.filter(b => b.seat && b.trip === name && b.date === dateStr).map(b => String(b.seat));
+  const takenSeats = allBookings.filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.trip === name && b.date === dateStr).map(b => String(b.seat));
   const emptySeats = seatIds.filter(id => !takenSeats.includes(id));
   const avail = emptySeats.length;
   const fmtDate = new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -2991,6 +3045,7 @@ function goToBook() {
   selectedSeat = null;
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
+  document.querySelectorAll('.onsite-slot.selected').forEach(x => x.classList.remove('selected'));
   document.getElementById('bookingPage2').classList.add('show');
   document.body.style.overflow = 'hidden'; // กันไม่ให้หน้าเพจข้างหลังเลื่อน/โผล่ตอนคีย์บอร์ดเด้ง (เช่นตอนพิมพ์ชื่อ LINE)
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -3132,6 +3187,21 @@ function renderVansWithData(bookedList, lockList = []) {
   }
 }
 
+// เลือกช่อง "หน้างาน" (สำหรับคนไปเอง ไม่ใช้ที่นั่งรถตู้) — ไม่มีสถานะว่าง/เต็ม ไม่ต้องล็อกกับ backend
+function pickOnsiteSlot(el, num) {
+  const slotId = 'หน้างาน ' + num;
+  selectedSeat = slotId;
+  document.querySelectorAll('.seat.selected, .onsite-slot.selected').forEach(x => x.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('f-seat').value = slotId;
+  document.getElementById('formFieldsBox2').classList.add('show');
+  checkBook();
+
+  setTimeout(() => {
+    document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
+}
+
 async function pickSeat(el, id) {
   const trip = document.getElementById('b-trip').value.trim();
   const date = document.getElementById('f-dateraw').value.trim();
@@ -3148,7 +3218,7 @@ async function pickSeat(el, id) {
 
   // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
   selectedSeat = id;
-  document.querySelectorAll('.seat.selected').forEach(seat => seat.classList.remove('selected'));
+  document.querySelectorAll('.seat.selected, .onsite-slot.selected').forEach(seat => seat.classList.remove('selected'));
   el.classList.add('selected');
   document.getElementById('f-seat').value = id;
   document.getElementById('formFieldsBox2').classList.add('show');
@@ -3319,7 +3389,12 @@ function openPay() {
   }
 
   resetSlipUpload();
-  startSeatCountdown(); // ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ
+  const isOnsiteSlot = String(selectedSeat).startsWith('หน้างาน');
+  if (isOnsiteSlot) {
+    document.getElementById('seatLockTimerBox').style.display = 'none';
+  } else {
+    startSeatCountdown(); // ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ
+  }
   document.getElementById('payModal').classList.add('show');
 }
 
@@ -3572,7 +3647,7 @@ function renderEqTripList() {
         <div class="eq-trip-radio"></div>
         <div class="eq-trip-info">
           <h4>${b.trip}</h4>
-          <p>📅 ${fmtDate} · 🪑 เบาะ ${b.seat || '-'}</p>
+          <p>📅 ${fmtDate} · 🪑 ${String(b.seat || '').startsWith('หน้างาน') ? (b.seat || '-') : 'เบาะ ' + (b.seat || '-')}</p>
         </div>
       </div>
     `;
@@ -3709,6 +3784,8 @@ function confirmEquipRent() {
   setTimeout(() => {
     document.getElementById('eqr-trip').innerText = booking.trip;
     document.getElementById('eqr-name').innerText = booking.name || currentUser.nick;
+    const isOnsiteSeat = String(booking.seat || '').startsWith('หน้างาน');
+    document.getElementById('eqr-seat-label').textContent = isOnsiteSeat ? 'จุด:' : 'เบาะ:';
     document.getElementById('eqr-seat').innerText = booking.seat || '-';
     document.getElementById('eqr-items').innerHTML = rows.map(r =>
       `<div class="r-item-row"><span>${r.item.label} (${r.item.brand}) x${r.qty}</span><span>${r.subtotal.toLocaleString()} บาท</span></div>`
