@@ -989,6 +989,15 @@ body {
   box-shadow: 0 0 12px rgba(255, 216, 77, .45), 0 5px 0 #b57b00;
   animation: hb .9s infinite;
 }
+.onsite-slot.booked { background: linear-gradient(145deg, #ff4747, #d91f2f); color: #fff; box-shadow: 0 5px 0 #a91320, 0 8px 14px rgba(255, 71, 71, .14); cursor: not-allowed; }
+.onsite-slot.locking {
+  background: linear-gradient(145deg, #fb923c, #ea580c);
+  color: #fff;
+  box-shadow: 0 5px 0 #9a3412, 0 8px 14px rgba(249, 115, 22, .22);
+  cursor: not-allowed;
+  pointer-events: none;
+  animation: lockingPulse 1.2s infinite;
+}
 .leg-item { font-size: 12px; font-weight: 600; color: #e2e8f0; }
 .seat-map-img { width: 100%; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
 
@@ -1422,18 +1431,7 @@ body {
     <div class="van-block">
       <div class="van-block-title">🎪 หน้างาน (มาเอง)</div>
       <p class="onsite-note">สำหรับคนที่ขับรถไปเอง/นัดเจอกันที่หน้างาน ไม่ใช้ที่นั่งบนรถตู้</p>
-      <div class="onsite-grid">
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,1)"><span>หน้างาน</span><span>1</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,2)"><span>หน้างาน</span><span>2</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,3)"><span>หน้างาน</span><span>3</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,4)"><span>หน้างาน</span><span>4</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,5)"><span>หน้างาน</span><span>5</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,6)"><span>หน้างาน</span><span>6</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,7)"><span>หน้างาน</span><span>7</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,8)"><span>หน้างาน</span><span>8</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,9)"><span>หน้างาน</span><span>9</span></div>
-        <div class="onsite-slot" onclick="pickOnsiteSlot(this,10)"><span>หน้างาน</span><span>10</span></div>
-      </div>
+      <div class="onsite-grid" id="onsiteGrid"></div>
     </div>
 
     <div id="formFieldsBox2">
@@ -3046,6 +3044,7 @@ function goToBook() {
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
   document.querySelectorAll('.onsite-slot.selected').forEach(x => x.classList.remove('selected'));
+  renderOnsiteGrid();
   document.getElementById('bookingPage2').classList.add('show');
   document.body.style.overflow = 'hidden'; // กันไม่ให้หน้าเพจข้างหลังเลื่อน/โผล่ตอนคีย์บอร์ดเด้ง (เช่นตอนพิมพ์ชื่อ LINE)
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -3185,11 +3184,54 @@ function renderVansWithData(bookedList, lockList = []) {
     }, 150);
     highlightSeatId = null;
   }
+
+  renderOnsiteGrid(bookedMapping, lockedMapping);
 }
 
-// เลือกช่อง "หน้างาน" (สำหรับคนไปเอง ไม่ใช้ที่นั่งรถตู้) — ไม่มีสถานะว่าง/เต็ม ไม่ต้องล็อกกับ backend
-function pickOnsiteSlot(el, num) {
+// วาดกริด "หน้างาน" — เหมือนผังเบาะจริงทุกประการ: จองแล้วโชว์ชื่อ+ล็อกไว้, มีคนกำลังเลือกโชว์สีส้ม, ว่างถึงกดได้
+function renderOnsiteGrid(bookedMapping = {}, lockedMapping = {}) {
+  const grid = document.getElementById('onsiteGrid');
+  if (!grid) return;
+
+  grid.innerHTML = '';
+  for (let i = 1; i <= 10; i++) {
+    const slotId = 'หน้างาน ' + i;
+    const cell = document.createElement('div');
+    cell.className = 'onsite-slot';
+
+    if (bookedMapping[slotId]) {
+      cell.classList.add('booked');
+      cell.innerHTML = `<span style="font-size:8px">หน้างาน ${i}</span><span style="font-size:12px">${bookedMapping[slotId]}</span>`;
+    } else if (lockedMapping[slotId]) {
+      cell.classList.add('locking');
+      cell.innerHTML = `<span style="font-size:8px">หน้างาน ${i}</span><span style="font-size:10px">⏳ มีคนเลือก</span>`;
+    } else {
+      if (selectedSeat === slotId) cell.classList.add('selected');
+      cell.innerHTML = `<span>หน้างาน</span><span>${i}</span>`;
+      cell.onclick = () => pickOnsiteSlot(cell, i);
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+// เลือกช่อง "หน้างาน" (สำหรับคนไปเอง ไม่ใช้ที่นั่งรถตู้) — ล็อกกับ backend เหมือนเบาะจริง กันคนอื่นกดชนกัน
+async function pickOnsiteSlot(el, num) {
   const slotId = 'หน้างาน ' + num;
+  const trip = document.getElementById('b-trip').value.trim();
+  const date = document.getElementById('f-dateraw').value.trim();
+
+  if (!trip || !date) {
+    Swal.fire({
+      icon: 'error', title: 'ข้อมูลทริปไม่ครบ', text: 'กรุณากลับไปเลือกทริปใหม่',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+    return;
+  }
+
+  const previousSeat = selectedSeat; // จำที่เลือกเดิมไว้ เผื่อล็อกไม่สำเร็จ
+
+  // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
   selectedSeat = slotId;
   document.querySelectorAll('.seat.selected, .onsite-slot.selected').forEach(x => x.classList.remove('selected'));
   el.classList.add('selected');
@@ -3200,6 +3242,51 @@ function pickOnsiteSlot(el, num) {
   setTimeout(() => {
     document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 50);
+
+  function revertToPreviousSeat() {
+    selectedSeat = previousSeat;
+    el.classList.remove('selected');
+    document.getElementById('f-seat').value = previousSeat || '';
+
+    if (previousSeat) {
+      const previousEl = [...document.querySelectorAll('.seat, .onsite-slot')].find(x => x.textContent.includes(previousSeat));
+      if (previousEl) previousEl.classList.add('selected');
+    } else {
+      document.getElementById('formFieldsBox2').classList.remove('show');
+    }
+    checkBook();
+  }
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ action: 'lockSeat', date, trip, seat: slotId, session_id: MY_SESSION_ID })
+    });
+    const result = await response.json();
+
+    if (!result.ok) {
+      revertToPreviousSeat();
+      Swal.fire({
+        icon: 'warning',
+        title: 'ช่องนี้ไม่ว่างแล้ว',
+        text: result.error === 'seat_booked' ? 'ช่องนี้ถูกจองไปแล้ว กรุณาเลือกช่องอื่น' : 'มีคนอื่นกำลังเลือกช่องนี้อยู่ กรุณาเลือกช่องอื่น',
+        background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+      });
+      loadSeats(date);
+      return;
+    }
+
+    // ล็อกสำเร็จ -> เริ่มนับเวลาใหม่ 5 นาที (เหมือนเบาะจริง)
+    startSeatCountdown(true);
+
+  } catch (error) {
+    revertToPreviousSeat();
+    Swal.fire({
+      icon: 'error', title: 'ล็อกช่องไม่สำเร็จ', text: 'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+    loadSeats(date);
+  }
 }
 
 async function pickSeat(el, id) {
@@ -3389,12 +3476,7 @@ function openPay() {
   }
 
   resetSlipUpload();
-  const isOnsiteSlot = String(selectedSeat).startsWith('หน้างาน');
-  if (isOnsiteSlot) {
-    document.getElementById('seatLockTimerBox').style.display = 'none';
-  } else {
-    startSeatCountdown(); // ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ
-  }
+  startSeatCountdown(); // ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ
   document.getElementById('payModal').classList.add('show');
 }
 
