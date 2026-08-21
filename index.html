@@ -1114,17 +1114,59 @@ body {
 /* ============================================================
    SUCCESS PAGE
    ============================================================ */
-#successPage2 { position: fixed; inset: 0; z-index: 1100; background: var(--bg); display: none; overflow-y: auto; }
+#successPage2 {
+  position: fixed; inset: 0; z-index: 1100; display: none; overflow-y: auto;
+  background:
+    linear-gradient(180deg, rgba(6, 11, 19, .88), rgba(6, 11, 19, .97)),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center/cover no-repeat fixed;
+}
 #successPage2.show { display: block; animation: fadeUp .3s ease; }
 .succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px; text-align: center; }
 .succ-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 20px; box-shadow: 0 0 24px rgba(16, 185, 129, .45); }
-.receipt { background: #fff; color: #1e293b; border-radius: 18px; padding: 20px; text-align: left; box-shadow: 0 10px 25px rgba(0, 0, 0, .3); margin: 20px 0; }
-.r-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 14px; font-weight: 500; }
-.r-row span { color: #64748b; font-weight: 400; }
-.r-seat-box { background: #f0fdf4; border: 1px dashed #bbf7d0; padding: 12px; border-radius: 12px; text-align: center; margin-top: 14px; }
-.r-seat-box p { font-size: 11px; color: #16a34a; font-weight: 600; }
-.r-seat-box h4 { font-size: 38px; color: #15803d; font-weight: 800; }
+.receipt {
+  position: relative;
+  background: linear-gradient(180deg, #fffdf7, #fbf5e6);
+  color: #1e293b;
+  border-radius: 24px;
+  padding: 26px 22px 22px;
+  text-align: left;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, .4), 0 0 0 1px rgba(212, 175, 55, .3);
+  margin: 20px 0;
+  overflow: hidden;
+}
+.receipt::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #f6e2a0, #c9971f, #f6e2a0);
+}
+.r-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; font-size: 14px; font-weight: 500; border-bottom: 1px dashed #e5ddc4; }
+.r-row:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.r-row span { color: #9a8a68; font-weight: 400; min-width: 66px; }
+.r-seat-box {
+  background: linear-gradient(160deg, #fffcf2, #faf1d8);
+  border: 1.5px dashed #c9971f;
+  padding: 18px 14px 16px;
+  border-radius: 18px;
+  text-align: center;
+  margin-top: 18px;
+}
+.r-seat-box > p { font-size: 11px; color: #a16207; font-weight: 700; letter-spacing: .4px; margin-bottom: 12px; text-transform: uppercase; }
+.r-seat-split { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.r-seat-split.single { gap: 0; }
+.r-seat-part { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.r-seat-label { font-size: 10.5px; color: #92795a; font-weight: 700; letter-spacing: .2px; }
+.r-seat-value { font-size: 30px; font-weight: 900; color: #15803d; line-height: 1; }
+.r-seat-divider { width: 1px; height: 40px; background: linear-gradient(180deg, transparent, #c9971f, transparent); }
 .btn-home { width: 100%; height: 50px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
+
+/* ป๊อปอัพยืนยันเลือกที่นั่ง (SweetAlert) — ให้ดูพรีเมียมเข้าธีมแอป */
+.seat-confirm-popup {
+  border-radius: 26px !important;
+  border: 1px solid rgba(56, 189, 248, .25) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .55), 0 0 40px rgba(2, 132, 199, .12) !important;
+}
 
 /* ============================================================
    DRAWER (สาระแนะนำ)
@@ -1592,10 +1634,7 @@ body {
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="r-trip">-</strong></div>
       <div class="r-row">📅 <span>วันที่:</span> <strong id="r-date">-</strong></div>
       <div class="r-row">🚏 <span>จุดขึ้นรถ:</span> <strong id="r-pickup">-</strong></div>
-      <div class="r-seat-box">
-        <p>หมายเลขที่นั่งของคุณ</p>
-        <h4 id="r-seat">-</h4>
-      </div>
+      <div class="r-seat-box" id="r-seat-box"></div>
     </div>
     <p style="font-size:16px;color:var(--red);line-height:1.5;margin-bottom:16px">
       ทักไลน์แอดมินส่งหลักฐานการจองเพื่อให้แอดมินดึงเข้ากลุ่ม
@@ -3397,14 +3436,23 @@ async function pickOnsiteSlot(el, num) {
   }
 
   const onsiteConfirm = await Swal.fire({
-    icon: 'question',
-    title: 'ยืนยันเลือกช่องนี้?',
-    html: `<div style="font-size:16px;color:#e2e8f0">${slotId}</div>`,
+    html: `
+      <div style="padding:4px 0 2px">
+        <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#0bb96f,#34e89e);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 22px rgba(11,185,111,.45)">
+          <span style="font-size:28px">🎪</span>
+        </div>
+        <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:16px">ยืนยันเลือกช่องนี้?</div>
+        <div style="display:inline-block;background:linear-gradient(135deg,rgba(16,185,129,.14),rgba(11,185,111,.05));border:1px solid rgba(16,185,129,.3);border-radius:18px;padding:14px 28px">
+          <div style="font-size:20px;font-weight:900;color:#34e89e">${slotId}</div>
+        </div>
+      </div>
+    `,
     showCancelButton: true,
     confirmButtonText: '✅ ยืนยัน',
     cancelButtonText: '↩️ เปลี่ยนใจ',
     background: '#0c1524', color: '#f1f5f9',
-    confirmButtonColor: '#0284c7', cancelButtonColor: '#475569'
+    confirmButtonColor: '#0284c7', cancelButtonColor: '#334155',
+    customClass: { popup: 'seat-confirm-popup' }
   });
   if (!onsiteConfirm.isConfirmed) return;
 
@@ -3483,6 +3531,41 @@ function formatSeatDisplay(seat) {
   return van !== '-' ? `รถคันที่ ${van} · ${s}` : s;
 }
 
+// วาดกล่องเลขที่นั่งในใบเสร็จ แยกบล็อก "รถคันที่" กับ "เบาะ" ออกจากกัน
+// ถ้าเป็นการจองแบบ "หน้างาน" (ไม่มีแนวคิดรถคันที่) จะโชว์แบบบล็อกเดียวแทน
+function renderReceiptSeatBox(boxId, seat) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+
+  const s = String(seat || '-');
+
+  if (s.startsWith('หน้างาน')) {
+    box.innerHTML = `
+      <p>จุดนัดหมายของคุณ</p>
+      <div class="r-seat-split single">
+        <div class="r-seat-part"><span class="r-seat-value">${s}</span></div>
+      </div>
+    `;
+    return;
+  }
+
+  const van = vanNumberFromSeatId(s);
+  box.innerHTML = `
+    <p>หมายเลขที่นั่งของคุณ</p>
+    <div class="r-seat-split">
+      <div class="r-seat-part">
+        <span class="r-seat-label">รถคันที่</span>
+        <span class="r-seat-value">${van}</span>
+      </div>
+      <div class="r-seat-divider"></div>
+      <div class="r-seat-part">
+        <span class="r-seat-label">เบาะ</span>
+        <span class="r-seat-value">${s}</span>
+      </div>
+    </div>
+  `;
+}
+
 async function pickSeat(el, id) {
   const trip = document.getElementById('b-trip').value.trim();
   const date = document.getElementById('f-dateraw').value.trim();
@@ -3498,14 +3581,31 @@ async function pickSeat(el, id) {
   // ถามยืนยันก่อนล็อกเบาะจริง — ยังไม่แตะสถานะ/ล็อกอะไรจนกว่าจะกดยืนยัน
   const vanLabel = vanNumberFromSeatId(id);
   const confirmResult = await Swal.fire({
-    icon: 'question',
-    title: 'ยืนยันเลือกที่นั่งนี้?',
-    html: `<div style="font-size:16px;color:#e2e8f0">รถคันที่ <b style="color:#38bdf8">${vanLabel}</b> เบาะ <b style="color:#38bdf8">${id}</b></div>`,
+    html: `
+      <div style="padding:4px 0 2px">
+        <div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#0284c7,#38bdf8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 22px rgba(2,132,199,.45)">
+          <span style="font-size:28px">🪑</span>
+        </div>
+        <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:16px">ยืนยันเลือกที่นั่งนี้?</div>
+        <div style="display:inline-flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(56,189,248,.12),rgba(2,132,199,.05));border:1px solid rgba(56,189,248,.3);border-radius:18px;padding:14px 24px">
+          <div style="text-align:left">
+            <div style="font-size:10.5px;color:#94a3b8;font-weight:600;letter-spacing:.3px">รถคันที่</div>
+            <div style="font-size:24px;font-weight:900;color:#38bdf8;line-height:1.2">${vanLabel}</div>
+          </div>
+          <div style="width:1px;height:36px;background:rgba(255,255,255,.15)"></div>
+          <div style="text-align:left">
+            <div style="font-size:10.5px;color:#94a3b8;font-weight:600;letter-spacing:.3px">เบาะ</div>
+            <div style="font-size:24px;font-weight:900;color:#ffd84d;line-height:1.2">${id}</div>
+          </div>
+        </div>
+      </div>
+    `,
     showCancelButton: true,
     confirmButtonText: '✅ ยืนยัน',
     cancelButtonText: '↩️ เปลี่ยนใจ',
     background: '#0c1524', color: '#f1f5f9',
-    confirmButtonColor: '#0284c7', cancelButtonColor: '#475569'
+    confirmButtonColor: '#0284c7', cancelButtonColor: '#334155',
+    customClass: { popup: 'seat-confirm-popup' }
   });
   if (!confirmResult.isConfirmed) return; // เปลี่ยนใจ -> ไม่ทำอะไรเลย เบาะเดิม (ถ้ามี) ยังคงล็อกอยู่เหมือนเดิม
 
@@ -3781,7 +3881,7 @@ async function submitBook() {
       document.getElementById('r-trip').innerText = payload.trip;
       document.getElementById('r-date').innerText = new Date(payload.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
       document.getElementById('r-pickup').innerText = payload.pickup;
-      document.getElementById('r-seat').innerText = formatSeatDisplay(payload.seat);
+      renderReceiptSeatBox('r-seat-box', payload.seat);
 
       document.getElementById('successPage2').classList.add('show');
       allBookings.push({ ...payload, paymentStatus: 'รอตรวจสอบสลิป' });
