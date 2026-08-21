@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -1287,35 +1288,6 @@ body {
 }
 .admin-tab.expanded .admin-tab-label { max-width: 120px; opacity: 1; }
 
-/* ============================================================
-   MUSIC TOGGLE — ปุ่มลอยเปิด/ปิดเพลงคลอพื้นหลัง
-   ============================================================ */
-.music-toggle {
-  position: fixed;
-  right: 14px;
-  bottom: 82px;
-  z-index: 700;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(56, 189, 248, .12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(56, 189, 248, .28);
-  color: var(--blue);
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(2, 132, 199, .25);
-}
-.music-toggle.playing { animation: musicPulse 1.6s ease-in-out infinite; }
-@keyframes musicPulse {
-  0%, 100% { box-shadow: 0 4px 14px rgba(2, 132, 199, .25); }
-  50% { box-shadow: 0 4px 22px rgba(56, 189, 248, .55); }
-}
-
 </style>
 </head>
 <body>
@@ -1839,15 +1811,6 @@ body {
   <span class="admin-tab-dots">⋮</span>
   <span class="admin-tab-label">สำหรับแอดมิน</span>
 </div>
-
-<!-- ============================================================
-     เพลงคลอพื้นหลัง — เล่นอัตโนมัติทันทีที่ผู้ใช้แตะ/เลื่อนจอครั้งแรก
-     (เบราว์เซอร์ไม่ยอมให้เล่นเสียงเองก่อนมี interaction จากผู้ใช้)
-     🎵 ต้องอัปโหลดไฟล์เพลง 2 ไฟล์ชื่อ bg-music-1.mp3 และ bg-music-2.mp3
-        ไว้โฟลเดอร์เดียวกับ index.html — เล่นจบเพลงแรกจะข้ามไปเพลงที่ 2 อัตโนมัติ แล้ววนกลับ
-     ============================================================ -->
-<audio id="bgMusic" preload="auto"></audio>
-<div id="musicToggle" class="music-toggle" onclick="toggleMusic()">🔈</div>
 
 <script>
 /* ================================================================
@@ -2515,121 +2478,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ================================================================
-   เพลงคลอพื้นหลัง — เล่นอัตโนมัติทันทีที่ผู้ใช้แตะจอ/กดอะไรก็ได้ครั้งแรกหลังโหลดหน้าเสร็จ
-   เล่นเป็นเพลย์ลิสต์ 2 เพลง จบเพลงแรกข้ามไปเพลงที่ 2 อัตโนมัติ แล้ววนกลับเพลงแรก
-   โค้ดทั้งหมดห่อด้วย try/catch กันไม่ให้ปัญหาเรื่องเพลง (เช่นยังไม่ได้อัปโหลดไฟล์)
-   ไปทำให้ปุ่ม/หน้าเว็บส่วนอื่นค้างหรือกดไม่ได้
-   ================================================================ */
-const MUSIC_PLAYLIST = ['bg-music-1.mp3', 'bg-music-2.mp3'];
-let musicTrackIndex = 0;
-let musicStarted = false;
-// ตัด scroll/wheel ออก เหลือแค่ touchstart/click/keydown พอ กันไม่ให้ไปยุ่งกับการเลื่อนจอปกติ
-const MUSIC_START_EVENTS = ['touchstart', 'click', 'keydown'];
-
-function loadMusicTrack(index) {
-  try {
-    const audio = document.getElementById('bgMusic');
-    if (!audio) return;
-    musicTrackIndex = (index + MUSIC_PLAYLIST.length) % MUSIC_PLAYLIST.length;
-    audio.src = MUSIC_PLAYLIST[musicTrackIndex];
-  } catch (err) {
-    console.warn('loadMusicTrack error', err);
-  }
-}
-
-function playNextMusicTrack() {
-  try {
-    loadMusicTrack(musicTrackIndex + 1);
-    const audio = document.getElementById('bgMusic');
-    if (!audio) return;
-    audio.volume = 0.18;
-    const p = audio.play();
-    if (p && typeof p.catch === 'function') p.catch(() => {});
-  } catch (err) {
-    console.warn('playNextMusicTrack error', err);
-  }
-}
-
-function tryStartBgMusic() {
-  if (musicStarted) return;
-
-  try {
-    const audio = document.getElementById('bgMusic');
-    if (!audio) return;
-
-    if (!audio.src) loadMusicTrack(0);
-
-    audio.volume = 0.18; // ดังคลอๆ ไม่ดังมาก
-    const p = audio.play();
-    if (p && typeof p.then === 'function') {
-      p.then(() => {
-        musicStarted = true;
-        updateMusicToggleUI();
-        MUSIC_START_EVENTS.forEach(evt => document.removeEventListener(evt, tryStartBgMusic));
-      }).catch(() => {
-        // เล่นไม่สำเร็จ (เช่นยังไม่ได้อัปโหลดไฟล์เพลง หรือเบราว์เซอร์เข้มงวด) — ไม่ทำอะไรต่อ ปล่อยให้ผู้ใช้กดปุ่มลำโพงเองได้
-      });
-    }
-  } catch (err) {
-    console.warn('tryStartBgMusic error', err);
-  }
-}
-
-MUSIC_START_EVENTS.forEach(evt => document.addEventListener(evt, tryStartBgMusic, { passive: true }));
-
-window.addEventListener('DOMContentLoaded', () => {
-  const audio = document.getElementById('bgMusic');
-  if (audio) {
-    audio.addEventListener('ended', playNextMusicTrack);
-    audio.addEventListener('error', () => {
-      console.warn('โหลดไฟล์เพลงไม่สำเร็จ — เช็คว่าอัปโหลด bg-music-1.mp3 / bg-music-2.mp3 ไว้ที่โฟลเดอร์เดียวกับ index.html หรือยัง');
-      updateMusicToggleUI();
-    });
-  }
-});
-
-function updateMusicToggleUI() {
-  try {
-    const audio = document.getElementById('bgMusic');
-    const btn = document.getElementById('musicToggle');
-    if (!audio || !btn) return;
-
-    const isPlaying = !audio.paused;
-    btn.textContent = isPlaying ? '🔊' : '🔈';
-    btn.classList.toggle('playing', isPlaying);
-  } catch (err) {
-    console.warn('updateMusicToggleUI error', err);
-  }
-}
-
-function toggleMusic() {
-  try {
-    const audio = document.getElementById('bgMusic');
-    if (!audio) return;
-
-    if (!audio.src) loadMusicTrack(0);
-
-    if (audio.paused) {
-      audio.volume = 0.18;
-      const p = audio.play();
-      if (p && typeof p.then === 'function') {
-        p.then(() => {
-          musicStarted = true;
-          updateMusicToggleUI();
-        }).catch(() => {
-          updateMusicToggleUI();
-        });
-      }
-    } else {
-      audio.pause();
-      updateMusicToggleUI();
-    }
-  } catch (err) {
-    console.warn('toggleMusic error', err);
-  }
-}
-
-/* ================================================================
    DATA FETCH (JSONP ไป Google Apps Script)
    ================================================================ */
 function fetchData() {
@@ -2827,8 +2675,9 @@ function renderHome() {
         <div class="qa-mini-label">เช่าของ</div>
       </div>
       <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
-        <div class="qa-mini-ico">⭐</div>
-        <div class="qa-mini-label">รีวิว</div>
+        <div class="qa-mini-ico">👀</div>
+        <div class="qa-mini-label">รีวิว & แชร์ทริป</div> 
+
       </div>
     </div>
 
@@ -3051,7 +2900,7 @@ function renderMyTrips() {
   const isEliteRank = tripCount >= 11;
 
   const rankBadgeHTML = isEliteRank
-    ? `<div class="rank-shield-wrap"><img src="โล่.jpg" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
+    ? `<div class="rank-shield-wrap"><img src="โล่11.png" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
     : `<span class="rank-stars-plain">${"⭐".repeat(rankStars)}</span>`;
 
   document.getElementById('myContent').innerHTML = `
