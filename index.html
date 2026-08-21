@@ -556,12 +556,13 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 60px;
-  height: 68px;
+  width: 72px;
+  height: 82px;
 }
-.rank-shield-wrap svg {
+.rank-shield-wrap img {
   width: 100%;
   height: 100%;
+  object-fit: contain;
   animation: shieldGlow 1.8s ease-in-out infinite;
 }
 @keyframes shieldGlow {
@@ -2897,30 +2898,7 @@ function renderMyTrips() {
   const isEliteRank = tripCount >= 21;
 
   const rankBadgeHTML = isEliteRank
-    ? `<div class="rank-shield-wrap">
-        <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="shieldGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#fff3b0"/>
-              <stop offset="45%" stop-color="#ffd23f"/>
-              <stop offset="100%" stop-color="#c9971f"/>
-            </linearGradient>
-            <linearGradient id="starGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#fffbe6"/>
-              <stop offset="100%" stop-color="#f7b500"/>
-            </linearGradient>
-          </defs>
-          <path d="M50,3 C25,3 8,11 8,11 L8,55 C8,86 27,106 50,118 C73,106 92,86 92,55 L92,11 C92,11 75,3 50,3 Z"
-                fill="url(#shieldGrad)" stroke="#8a6100" stroke-width="2.5"/>
-          <g fill="url(#starGrad)" stroke="#8a6100" stroke-width="0.6" stroke-linejoin="round">
-            <path transform="translate(50,24)" d="M0,-5 L1.18,-1.62 L4.76,-1.55 L1.90,0.62 L2.94,4.05 L0,2 L-2.94,4.05 L-1.90,0.62 L-4.76,-1.55 L-1.18,-1.62 Z"/>
-            <path transform="translate(65.2,35.1)" d="M0,-5 L1.18,-1.62 L4.76,-1.55 L1.90,0.62 L2.94,4.05 L0,2 L-2.94,4.05 L-1.90,0.62 L-4.76,-1.55 L-1.18,-1.62 Z"/>
-            <path transform="translate(59.4,52.9)" d="M0,-5 L1.18,-1.62 L4.76,-1.55 L1.90,0.62 L2.94,4.05 L0,2 L-2.94,4.05 L-1.90,0.62 L-4.76,-1.55 L-1.18,-1.62 Z"/>
-            <path transform="translate(40.6,52.9)" d="M0,-5 L1.18,-1.62 L4.76,-1.55 L1.90,0.62 L2.94,4.05 L0,2 L-2.94,4.05 L-1.90,0.62 L-4.76,-1.55 L-1.18,-1.62 Z"/>
-            <path transform="translate(34.8,35.1)" d="M0,-5 L1.18,-1.62 L4.76,-1.55 L1.90,0.62 L2.94,4.05 L0,2 L-2.94,4.05 L-1.90,0.62 L-4.76,-1.55 L-1.18,-1.62 Z"/>
-          </g>
-        </svg>
-      </div>`
+    ? `<div class="rank-shield-wrap"><img src="badge-6star.png" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
     : `<span class="rank-stars-plain">${"⭐".repeat(rankStars)}</span>`;
 
   document.getElementById('myContent').innerHTML = `
