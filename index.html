@@ -1121,7 +1121,7 @@ body {
     url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center/cover no-repeat fixed;
 }
 #successPage2.show { display: block; animation: fadeUp .3s ease; }
-.succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px calc(56px + env(safe-area-inset-bottom)); text-align: center; }
+.succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px calc(140px + env(safe-area-inset-bottom)); text-align: center; }
 .succ-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 20px; box-shadow: 0 0 24px rgba(16, 185, 129, .45); }
 .receipt {
   position: relative;
@@ -3588,12 +3588,12 @@ async function pickSeat(el, id) {
         </div>
         <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:16px">ยืนยันเลือกที่นั่งนี้?</div>
         <div style="display:inline-flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(56,189,248,.12),rgba(2,132,199,.05));border:1px solid rgba(56,189,248,.3);border-radius:18px;padding:14px 24px">
-          <div style="text-align:left">
+          <div style="text-align:center;min-width:52px">
             <div style="font-size:10.5px;color:#94a3b8;font-weight:600;letter-spacing:.3px">รถคันที่</div>
             <div style="font-size:24px;font-weight:900;color:#38bdf8;line-height:1.2">${vanLabel}</div>
           </div>
           <div style="width:1px;height:36px;background:rgba(255,255,255,.15)"></div>
-          <div style="text-align:left">
+          <div style="text-align:center;min-width:52px">
             <div style="font-size:10.5px;color:#94a3b8;font-weight:600;letter-spacing:.3px">เบาะ</div>
             <div style="font-size:24px;font-weight:900;color:#ffd84d;line-height:1.2">${id}</div>
           </div>
@@ -3905,6 +3905,7 @@ async function submitBook() {
 function backHome() {
   document.getElementById('successPage2').classList.remove('show');
   document.getElementById('bookingPage2').classList.remove('show');
+  document.body.style.overflow = ''; // ปลดล็อกการเลื่อนจอ (ค้างมาจากตอนเปิดหน้าจองที่นั่ง เพราะ flow จองสำเร็จไม่เคยเรียก closeBook())
   switchTab('home');
 
   // โชว์โลโก้หมุนแล้วโหลดข้อมูลล่าสุดจากหลังบ้านใหม่ทั้งหมด กันไม่ให้เห็นข้อมูลเก่าค้าง
