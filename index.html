@@ -2674,9 +2674,8 @@ function renderHome() {
         <div class="qa-mini-label">เช่าของ</div>
       </div>
       <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
-        <div class="qa-mini-ico">👀</div>
-        <div class="qa-mini-label">รีวิว & แชร์ทริป</div> 
-
+        <div class="qa-mini-ico">⭐</div>
+        <div class="qa-mini-label">รีวิว</div>
       </div>
     </div>
 
@@ -2887,19 +2886,19 @@ function renderMyTrips() {
 
   const provinceCount = [...new Set(uniqueBookings.map(b => (TRIP_DETAILS[b.trip] || {}).loc).filter(Boolean))].length;
 
-  // เกณฑ์ระดับดาว: 1-3 ทริป=1★, 4-7=2★, 8-11=3★, 12-15=4★, 16-20=5★, 21+ = 5★ + โล่ทอง
+  // เกณฑ์ระดับดาว: 1-2 ทริป=1★, 3-4=2★, 5-6=3★, 7-8=4★, 9-10=5★, 11+ = ตราสายลุย 6 ดาว
   const tripCount = uniqueBookings.length;
   let rankStars = 0;
-  if (tripCount >= 21) rankStars = 5;
-  else if (tripCount >= 16) rankStars = 5;
-  else if (tripCount >= 12) rankStars = 4;
-  else if (tripCount >= 8) rankStars = 3;
-  else if (tripCount >= 4) rankStars = 2;
+  if (tripCount >= 11) rankStars = 5;
+  else if (tripCount >= 9) rankStars = 5;
+  else if (tripCount >= 7) rankStars = 4;
+  else if (tripCount >= 5) rankStars = 3;
+  else if (tripCount >= 3) rankStars = 2;
   else if (tripCount >= 1) rankStars = 1;
-  const isEliteRank = tripCount >= 21;
+  const isEliteRank = tripCount >= 11;
 
   const rankBadgeHTML = isEliteRank
-    ? `<div class="rank-shield-wrap"><img src="โล่.png" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
+    ? `<div class="rank-shield-wrap"><img src="โล่.jpg" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
     : `<span class="rank-stars-plain">${"⭐".repeat(rankStars)}</span>`;
 
   document.getElementById('myContent').innerHTML = `
