@@ -556,16 +556,28 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 12px 8px;
+  width: 48px;
+  height: 48px;
   margin-top: 2px;
-  background: linear-gradient(160deg, #ffe066, #f7b500 60%, #c9971f);
-  clip-path: polygon(0% 0%, 100% 0%, 100% 62%, 50% 100%, 0% 62%);
+}
+.rank-shield-wrap .shield-icon {
+  font-size: 40px;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(247, 181, 0, .65));
   animation: shieldGlow 1.8s ease-in-out infinite;
 }
-.rank-shield-wrap .rank-stars { font-size: 13px; letter-spacing: -1px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.rank-shield-wrap .shield-star {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 8.5px;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, .7));
+}
 @keyframes shieldGlow {
-  0%, 100% { box-shadow: 0 0 8px rgba(247, 181, 0, .5); }
-  50% { box-shadow: 0 0 18px rgba(247, 181, 0, .9); }
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(247, 181, 0, .5)); }
+  50% { filter: drop-shadow(0 0 14px rgba(247, 181, 0, .95)); }
 }
 .my-stat p { font-size: 10px; color: var(--sub); }
 
@@ -2896,7 +2908,14 @@ function renderMyTrips() {
   const isEliteRank = tripCount >= 21;
 
   const rankBadgeHTML = isEliteRank
-    ? `<div class="rank-shield-wrap"><span class="rank-stars">🛡️${"⭐".repeat(rankStars)}</span></div>`
+    ? `<div class="rank-shield-wrap">
+        <span class="shield-icon">🛡️</span>
+        <span class="shield-star" style="transform:translate(-50%,-50%) translate(0px,-13px)">⭐</span>
+        <span class="shield-star" style="transform:translate(-50%,-50%) translate(12.4px,-4px)">⭐</span>
+        <span class="shield-star" style="transform:translate(-50%,-50%) translate(7.6px,10.5px)">⭐</span>
+        <span class="shield-star" style="transform:translate(-50%,-50%) translate(-7.6px,10.5px)">⭐</span>
+        <span class="shield-star" style="transform:translate(-50%,-50%) translate(-12.4px,-4px)">⭐</span>
+      </div>`
     : `<span class="rank-stars-plain">${"⭐".repeat(rankStars)}</span>`;
 
   document.getElementById('myContent').innerHTML = `
