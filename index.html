@@ -2899,7 +2899,7 @@ function renderMyTrips() {
   const isEliteRank = tripCount >= 11;
 
   const rankBadgeHTML = isEliteRank
-    ? `<div class="rank-shield-wrap"><img src="โล่.png" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
+    ? `<div class="rank-shield-wrap"><img src="โล่11.png" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
     : `<span class="rank-stars-plain">${"⭐".repeat(rankStars)}</span>`;
 
   document.getElementById('myContent').innerHTML = `
