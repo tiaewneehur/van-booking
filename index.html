@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -1842,9 +1843,10 @@ body {
 <!-- ============================================================
      เพลงคลอพื้นหลัง — เล่นอัตโนมัติทันทีที่ผู้ใช้แตะ/เลื่อนจอครั้งแรก
      (เบราว์เซอร์ไม่ยอมให้เล่นเสียงเองก่อนมี interaction จากผู้ใช้)
-     🎵 ต้องอัปโหลดไฟล์เพลงชื่อ bg-music.mp3 ไว้โฟลเดอร์เดียวกับ index.html
+     🎵 ต้องอัปโหลดไฟล์เพลง 2 ไฟล์ชื่อ bg-music-1.mp3 และ bg-music-2.mp3
+        ไว้โฟลเดอร์เดียวกับ index.html — เล่นจบเพลงแรกจะข้ามไปเพลงที่ 2 อัตโนมัติ แล้ววนกลับ
      ============================================================ -->
-<audio id="bgMusic" src="bg-music.mp3" loop preload="auto"></audio>
+<audio id="bgMusic" preload="auto"></audio>
 <div id="musicToggle" class="music-toggle" onclick="toggleMusic()">🔈</div>
 
 <script>
@@ -2514,15 +2516,34 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /* ================================================================
    เพลงคลอพื้นหลัง — เล่นอัตโนมัติทันทีที่ผู้ใช้แตะ/เลื่อนจอครั้งแรกหลังโหลดหน้าเสร็จ
+   เล่นเป็นเพลย์ลิสต์ 2 เพลง จบเพลงแรกข้ามไปเพลงที่ 2 อัตโนมัติ แล้ววนกลับเพลงแรก
    ================================================================ */
+const MUSIC_PLAYLIST = ['bg-music-1.mp3', 'bg-music-2.mp3'];
+let musicTrackIndex = 0;
 let musicStarted = false;
 const MUSIC_START_EVENTS = ['touchstart', 'click', 'scroll', 'wheel', 'keydown'];
+
+function loadMusicTrack(index) {
+  const audio = document.getElementById('bgMusic');
+  if (!audio) return;
+  musicTrackIndex = (index + MUSIC_PLAYLIST.length) % MUSIC_PLAYLIST.length;
+  audio.src = MUSIC_PLAYLIST[musicTrackIndex];
+}
+
+function playNextMusicTrack() {
+  loadMusicTrack(musicTrackIndex + 1);
+  const audio = document.getElementById('bgMusic');
+  audio.volume = 0.18;
+  audio.play().catch(() => {});
+}
 
 function tryStartBgMusic() {
   if (musicStarted) return;
 
   const audio = document.getElementById('bgMusic');
   if (!audio) return;
+
+  if (!audio.src) loadMusicTrack(0);
 
   audio.volume = 0.18; // ดังคลอๆ ไม่ดังมาก
   audio.play()
@@ -2538,6 +2559,11 @@ function tryStartBgMusic() {
 
 MUSIC_START_EVENTS.forEach(evt => document.addEventListener(evt, tryStartBgMusic, { passive: true }));
 
+window.addEventListener('DOMContentLoaded', () => {
+  const audio = document.getElementById('bgMusic');
+  if (audio) audio.addEventListener('ended', playNextMusicTrack);
+});
+
 function updateMusicToggleUI() {
   const audio = document.getElementById('bgMusic');
   const btn = document.getElementById('musicToggle');
@@ -2551,6 +2577,8 @@ function updateMusicToggleUI() {
 function toggleMusic() {
   const audio = document.getElementById('bgMusic');
   if (!audio) return;
+
+  if (!audio.src) loadMusicTrack(0);
 
   if (audio.paused) {
     audio.volume = 0.18;
