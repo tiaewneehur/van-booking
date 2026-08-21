@@ -1214,7 +1214,8 @@ body {
 
 .review-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 14px; margin-bottom: 12px; }
 .review-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px; }
-.review-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--blue2), var(--blue)); display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; font-weight: 700; flex-shrink: 0; }
+.review-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--blue2), var(--blue)); display: flex; align-items: center; justify-content: center; font-size: 15px; color: #fff; font-weight: 700; flex-shrink: 0; overflow: hidden; }
+.review-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .review-name { font-size: 13px; font-weight: 700; color: #fff; }
 .review-date { font-size: 10px; color: var(--muted); }
 .review-stars { color: #f7b500; font-size: 14px; flex-shrink: 0; white-space: nowrap; }
@@ -2654,8 +2655,8 @@ function renderHome() {
         <div class="qa-mini-label">เช่าของ</div>
       </div>
       <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
-        <div class="qa-mini-ico">👀</div>
-        <div class="qa-mini-label">รีวิว & แชร์ทริป</div>
+        <div class="qa-mini-ico">⭐</div>
+        <div class="qa-mini-label">รีวิว</div>
       </div>
     </div>
 
@@ -4152,7 +4153,7 @@ function renderReviewList() {
       <div class="review-card">
         <div class="review-card-head">
           <div style="display:flex;align-items:center;gap:8px;min-width:0">
-            <div class="review-avatar">${displayName.charAt(0)}</div>
+            <div class="review-avatar">${r.linePicture ? `<img src="${r.linePicture}" onerror="this.parentNode.textContent='${displayName.charAt(0)}'">` : displayName.charAt(0)}</div>
             <div style="min-width:0">
               <div class="review-name">${displayName}</div>
               <div class="review-date">${fmtDate}</div>
@@ -4188,6 +4189,7 @@ async function submitReview() {
       name: currentUser.nick,
       nickname: currentUser.nick,
       phone: currentUser.phone,
+      linePicture: currentUser.linePicture || '',
       rating: String(reviewRating),
       comment: comment,
       photoBase64: photoData.data,
@@ -4228,6 +4230,7 @@ async function submitReview() {
       allReviews.unshift({
         name: currentUser.nick,
         nickname: currentUser.nick,
+        linePicture: currentUser.linePicture || '',
         rating: reviewRating,
         comment: comment,
         photoUrl: reviewPhotoFile ? URL.createObjectURL(reviewPhotoFile) : '',
