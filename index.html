@@ -2790,8 +2790,9 @@ function renderHome() {
         <div class="qa-mini-label">เช่าของ</div>
       </div>
       <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
-        <div class="qa-mini-ico">⭐</div>
-        <div class="qa-mini-label">รีวิว</div>
+        <div class="qa-mini-ico">👀</div>
+        <div class="qa-mini-label">รีวิว & แชร์ทริป</div> 
+
       </div>
     </div>
 
@@ -3014,7 +3015,7 @@ function renderMyTrips() {
   const isEliteRank = tripCount >= 11;
 
   const rankBadgeHTML = isEliteRank
-    ? `<div class="rank-shield-wrap"><img src="โล่.jpg" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
+    ? `<div class="rank-shield-wrap"><img src="โล่.png" alt="สายลุย 6 ดาว" onerror="this.parentNode.outerHTML='<span class=&quot;rank-stars-plain&quot;>${"⭐".repeat(rankStars)}</span>'"></div>`
     : `<span class="rank-stars-plain">${"⭐".repeat(rankStars)}</span>`;
 
   document.getElementById('myContent').innerHTML = `
