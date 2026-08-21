@@ -2654,8 +2654,8 @@ function renderHome() {
         <div class="qa-mini-label">เช่าของ</div>
       </div>
       <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
-        <div class="qa-mini-ico">👀</div>
-        <div class="qa-mini-label">รีวิว & แชร์ทริป</div>
+        <div class="qa-mini-ico">⭐</div>
+        <div class="qa-mini-label">รีวิว</div>
       </div>
     </div>
 
@@ -4109,6 +4109,23 @@ function renderReviewSummary() {
   `;
 }
 
+// backend ส่งวันที่มาเป็นข้อความรูปแบบไทย/ยุโรป "dd/MM/yyyy HH:mm:ss" (เช่น 23/03/2026 07:23:00)
+// new Date() ของ JS ตีความ "/" แบบเดือน/วัน/ปีของสหรัฐฯ ทำให้พังเป็น Invalid Date เวลาวัน>12
+// ฟังก์ชันนี้แกะรูปแบบ dd/MM/yyyy ตรงๆ ก่อน แล้วค่อย fallback ไปให้ JS parse เองถ้าไม่เข้ารูปแบบนี้ (เผื่อเป็น ISO string)
+function parseBackendDate_(value) {
+  const str = String(value || '').trim();
+  if (!str) return null;
+
+  const m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?$/);
+  if (m) {
+    const [, dd, mm, yyyy, hh = '0', min = '0', sec = '0'] = m;
+    return new Date(Number(yyyy), Number(mm) - 1, Number(dd), Number(hh), Number(min), Number(sec));
+  }
+
+  const fallback = new Date(str);
+  return isNaN(fallback.getTime()) ? null : fallback;
+}
+
 function renderReviewList() {
   const box = document.getElementById('reviewList');
   if (!box) return;
@@ -4119,12 +4136,17 @@ function renderReviewList() {
   }
 
   // ล่าสุดขึ้นก่อน
-  const sorted = [...allReviews].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+  const sorted = [...allReviews].sort((a, b) => {
+    const dateA = parseBackendDate_(a.timestamp);
+    const dateB = parseBackendDate_(b.timestamp);
+    return (dateB ? dateB.getTime() : 0) - (dateA ? dateA.getTime() : 0);
+  });
 
   box.innerHTML = sorted.map(r => {
     const ratingNum = Math.max(0, Math.min(5, Number(r.rating) || 0));
     const stars = '★'.repeat(ratingNum) + '☆'.repeat(5 - ratingNum);
-    const fmtDate = r.timestamp ? new Date(r.timestamp).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) : '';
+    const parsedDate = parseBackendDate_(r.timestamp);
+    const fmtDate = parsedDate ? parsedDate.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' }) : '';
     const displayName = r.nickname || r.name || 'ผู้เดินทาง';
     return `
       <div class="review-card">
