@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -1415,6 +1416,7 @@ body {
       <h2 id="md-name"></h2>
       <div id="md-date" class="modal-date"></div>
       <div id="md-price" class="modal-price"></div>
+      <div id="md-payment" class="modal-payment"></div>
       <div class="modal-grid">
         <div class="modal-card"><span>⏳ จำนวนวัน</span><strong id="md-days">-</strong></div>
         <div class="modal-card"><span>🥾 ระยะเดิน</span><strong id="md-dist">-</strong></div>
@@ -1422,7 +1424,6 @@ body {
         <div class="modal-card"><span>🚐 การเดินทาง</span><strong>รถตู้ VIP</strong></div>
       </div>
       <div id="md-hl" class="modal-hl"></div>
-      <div id="md-payment" class="modal-payment"></div>
       <div class="modal-seat-row">
         <div>
           <p style="font-size:11px;color:var(--sub);margin-bottom:4px">ที่นั่งคงเหลือ</p>
@@ -3091,7 +3092,18 @@ function openModal(name, dateStr) {
   document.getElementById('md-name').innerText = name;
   document.getElementById('md-date').innerText = '📅 ' + fmtDate;
   document.getElementById('md-price').innerText = '💸 ค่าใช้จ่ายประมาณ ' + info.price;
-  document.getElementById('md-payment').innerText = info.paymentNote ? '💰 ' + info.paymentNote : '';
+
+  // คำนวณยอดที่เหลือต้องจ่าย = ราคาทริปเต็ม - มัดจำ 1,000 บาท
+  const depositAmount = 1000;
+  const fullPriceNum = Number(String(info.price || '').replace(/[^\d]/g, '')) || 0;
+  const remainingNum = Math.max(fullPriceNum - depositAmount, 0);
+  const remainingFormatted = remainingNum.toLocaleString('th-TH');
+  const dueDaysMatch = String(info.paymentNote || '').match(/(\d+)\s*วัน/);
+  const dueDays = dueDaysMatch ? dueDaysMatch[1] : '15';
+  document.getElementById('md-payment').innerText = fullPriceNum
+    ? `💰 ชำระส่วนที่เหลือ ${remainingFormatted} บาท ก่อนเดินทาง ${dueDays} วัน (มัดจำ ${depositAmount.toLocaleString('th-TH')} บาท)`
+    : (info.paymentNote ? '💰 ' + info.paymentNote : '');
+
   document.getElementById('md-days').innerText = info.days;
   document.getElementById('md-dist').innerText = info.distance;
   document.getElementById('md-level').innerText = info.level;
