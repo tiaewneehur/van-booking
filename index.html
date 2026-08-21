@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -156,8 +157,8 @@ body {
 }
 .login-card .inp-wrap { width: 100%; max-width: 100%; }
 .login-card .btn-login { width: 100%; }
-.login-card h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-.login-card > p { font-size: 13px; color: var(--sub); margin-bottom: 22px; line-height: 1.6; }
+.login-card h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.login-desc { font-size: 13px; color: var(--sub); margin-bottom: 26px; line-height: 1.6; }
 
 .inp-wrap { position: relative; margin-bottom: 14px; }
 .inp-pre { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
@@ -246,7 +247,7 @@ body {
   30% { transform: rotate(14deg); }
   40% { transform: rotate(-4deg); }
 }
-.login-card > p { font-size: 13.5px; line-height: 1.7; }
+.login-desc { font-size: 13.5px; line-height: 1.7; }
 .login-note-pill {
   display: inline-flex;
   align-items: center;
@@ -1305,7 +1306,7 @@ body {
     <!-- STEP 1: เข้าสู่ระบบด้วย LINE -->
     <div id="lineLoginStep">
       <h2><span class="wave-emoji">👋</span> ยินดีต้อนรับโว้ยย!</h2>
-      <p>กดปุ่มด้านล่างเพื่อเข้าสู่ระบบด้วย LINE<br>ปลอดภัย ไม่ต้องจำรหัสผ่าน</p>
+      <p class="login-desc">กดปุ่มด้านล่างเพื่อเข้าสู่ระบบด้วย LINE<br>ปลอดภัย ไม่ต้องจำรหัสผ่าน</p>
       <button id="lineLoginBtn" class="btn-login" style="background:#06C755;display:none" onclick="loginWithLine()">
         <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:20px;height:20px">
@@ -1325,7 +1326,7 @@ body {
         </div>
       </div>
       <h2>ใส่ข้อมูลของคุณ 📞</h2>
-      <p>ใช้ผูกกับประวัติการจองของคุณเท่านั้น</p>
+      <p class="login-desc">ใช้ผูกกับประวัติการจองของคุณเท่านั้น</p>
       <div class="inp-wrap">
         <span class="inp-pre">🏷️</span>
         <input id="loginNick" class="inp" type="text" placeholder="พิมพ์ชื่อเล่นเพื่อแสดงบนผังเบาะ" maxlength="30" oninput="checkReady()">
@@ -3204,7 +3205,34 @@ function goToBook() {
   checkBook();
 }
 
+// ปลดล็อกเบาะที่ถืออยู่ทันที (ไม่ต้องรอหมดเวลา 5 นาที) — ใช้ตอนย้อนกลับ/ปิดเว็บโดยไม่จองสำเร็จ
+// useBeacon = true ใช้ตอนปิดแท็บ/เบราว์เซอร์ (fetch ปกติอาจถูกยกเลิกก่อนส่งสำเร็จ)
+function releaseMySeatLock(useBeacon) {
+  if (!selectedSeat) return;
+
+  const body = new URLSearchParams({ action: 'unlockSeat', session_id: MY_SESSION_ID });
+
+  try {
+    if (useBeacon && navigator.sendBeacon) {
+      const blob = new Blob([body.toString()], { type: 'application/x-www-form-urlencoded' });
+      navigator.sendBeacon(API_URL, blob);
+    } else {
+      fetch(API_URL, { method: 'POST', body, keepalive: true }).catch(() => {});
+    }
+  } catch (e) {
+    // ปลดล็อกไม่สำเร็จก็ไม่เป็นไร ระบบมีล็อกหมดอายุอัตโนมัติ 5 นาทีเป็นตัวกันสำรองอยู่แล้ว
+  }
+
+  selectedSeat = null;
+}
+
+// เผื่อผู้ใช้ปิดแท็บ/เบราว์เซอร์ทั้งที่ยังไม่ได้จองสำเร็จ ให้พยายามปลดล็อกให้ก่อนปิด
+['pagehide', 'beforeunload'].forEach(evt => {
+  window.addEventListener(evt, () => releaseMySeatLock(true));
+});
+
 function closeBook() {
+  releaseMySeatLock(false);
   document.getElementById('bookingPage2').classList.remove('show');
   document.body.style.overflow = '';
   clearInterval(seatRefreshTimer);
@@ -3369,6 +3397,18 @@ async function pickOnsiteSlot(el, num) {
     return;
   }
 
+  const onsiteConfirm = await Swal.fire({
+    icon: 'question',
+    title: 'ยืนยันเลือกช่องนี้?',
+    html: `<div style="font-size:16px;color:#e2e8f0">${slotId}</div>`,
+    showCancelButton: true,
+    confirmButtonText: '✅ ยืนยัน',
+    cancelButtonText: '↩️ เปลี่ยนใจ',
+    background: '#0c1524', color: '#f1f5f9',
+    confirmButtonColor: '#0284c7', cancelButtonColor: '#475569'
+  });
+  if (!onsiteConfirm.isConfirmed) return;
+
   const previousSeat = selectedSeat; // จำที่เลือกเดิมไว้ เผื่อล็อกไม่สำเร็จ
 
   // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
@@ -3429,6 +3469,21 @@ async function pickOnsiteSlot(el, num) {
   }
 }
 
+// แปลง prefix ของเบาะ (A/B/C) เป็นหมายเลขรถคันที่เท่าไหร่
+function vanNumberFromSeatId(seatId) {
+  const prefix = String(seatId || '').charAt(0).toUpperCase();
+  const map = { A: '1', B: '2', C: '3' };
+  return map[prefix] || '-';
+}
+
+// ป้ายเบาะสำหรับแสดงในหน้าใบเสร็จ/ป๊อปอัพ เช่น "รถคันที่ 1 · A1"
+function formatSeatDisplay(seat) {
+  const s = String(seat || '');
+  if (!s || s.startsWith('หน้างาน')) return s || '-';
+  const van = vanNumberFromSeatId(s);
+  return van !== '-' ? `รถคันที่ ${van} · ${s}` : s;
+}
+
 async function pickSeat(el, id) {
   const trip = document.getElementById('b-trip').value.trim();
   const date = document.getElementById('f-dateraw').value.trim();
@@ -3440,6 +3495,20 @@ async function pickSeat(el, id) {
     });
     return;
   }
+
+  // ถามยืนยันก่อนล็อกเบาะจริง — ยังไม่แตะสถานะ/ล็อกอะไรจนกว่าจะกดยืนยัน
+  const vanLabel = vanNumberFromSeatId(id);
+  const confirmResult = await Swal.fire({
+    icon: 'question',
+    title: 'ยืนยันเลือกที่นั่งนี้?',
+    html: `<div style="font-size:16px;color:#e2e8f0">รถคันที่ <b style="color:#38bdf8">${vanLabel}</b> เบาะ <b style="color:#38bdf8">${id}</b></div>`,
+    showCancelButton: true,
+    confirmButtonText: '✅ ยืนยัน',
+    cancelButtonText: '↩️ เปลี่ยนใจ',
+    background: '#0c1524', color: '#f1f5f9',
+    confirmButtonColor: '#0284c7', cancelButtonColor: '#475569'
+  });
+  if (!confirmResult.isConfirmed) return; // เปลี่ยนใจ -> ไม่ทำอะไรเลย เบาะเดิม (ถ้ามี) ยังคงล็อกอยู่เหมือนเดิม
 
   const previousSeat = selectedSeat; // จำเบาะเดิมไว้ เผื่อล็อกไม่สำเร็จ
 
@@ -3713,7 +3782,7 @@ async function submitBook() {
       document.getElementById('r-trip').innerText = payload.trip;
       document.getElementById('r-date').innerText = new Date(payload.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
       document.getElementById('r-pickup').innerText = payload.pickup;
-      document.getElementById('r-seat').innerText = payload.seat;
+      document.getElementById('r-seat').innerText = formatSeatDisplay(payload.seat);
 
       document.getElementById('successPage2').classList.add('show');
       allBookings.push({ ...payload, paymentStatus: 'รอตรวจสอบสลิป' });
@@ -3721,6 +3790,7 @@ async function submitBook() {
 
       if (form.parentNode) form.remove();
       selectedSlipFile = null;
+      selectedSeat = null; // จองสำเร็จแล้ว เคลียร์ค่าไว้กันการปลดล็อกเบาะที่จองสำเร็จไปแล้วเวลาปิดหน้าเว็บ
     }, 8000);
 
   } catch (error) {
