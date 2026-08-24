@@ -3069,8 +3069,35 @@ function viewMyBookingSeat(trip, dateStr, seat) {
 }
 
 // จำนวนวันที่เหลือก่อนวันเดินทาง (ปัดเป็นจำนวนเต็มวัน)
+// แปลงข้อความวันที่แบบไม่เดาผิด รองรับทั้ง ISO (yyyy-MM-dd) และ dd/MM/yyyy หรือ MM/dd/yyyy
+// (เผื่อ backend เคยถูก Sheets แอบแปลงวันที่มาก่อนหน้านี้)
+function parseTripDate_(dateStr) {
+  const str = String(dateStr || '').trim();
+  if (!str) return null;
+
+  let m = str.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if (m) {
+    const [, y, mo, d] = m;
+    return new Date(Number(y), Number(mo) - 1, Number(d));
+  }
+
+  m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) {
+    const [, a, b, y] = m;
+    const aNum = Number(a);
+    const bNum = Number(b);
+    if (aNum > 12) return new Date(Number(y), bNum - 1, aNum);
+    if (bNum > 12) return new Date(Number(y), aNum - 1, bNum);
+    return new Date(Number(y), bNum - 1, aNum); // กำกวม ถือเป็น dd/MM/yyyy
+  }
+
+  const fallback = new Date(str);
+  return isNaN(fallback.getTime()) ? null : fallback;
+}
+
 function daysUntilTrip(dateStr) {
-  const tripDate = new Date(dateStr);
+  const tripDate = parseTripDate_(dateStr);
+  if (!tripDate) return NaN;
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   tripDate.setHours(0, 0, 0, 0);
   return Math.round((tripDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
