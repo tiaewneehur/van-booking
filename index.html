@@ -623,6 +623,23 @@ body {
 .hist-group-title:first-child { margin-top: 0; }
 .h-arr { color: var(--blue); font-size: 18px; flex-shrink: 0; padding-left: 2px; }
 
+.booking-actions { display: flex; gap: 8px; margin: -4px 0 10px; padding-left: 68px; }
+.booking-actions button {
+  flex: 1;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, .03);
+  color: var(--sub);
+  font-size: 11.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+.booking-actions button.btn-change-seat { color: var(--blue); border-color: rgba(56, 189, 248, .3); background: rgba(56, 189, 248, .06); }
+.booking-actions button.btn-cancel-trip { color: var(--red); border-color: rgba(239, 68, 68, .3); background: rgba(239, 68, 68, .06); }
+.cancelled-chip { display: inline-block; background: rgba(239, 68, 68, .14); color: #f87171; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 999px; margin: -4px 0 10px 68px; }
+
 .empty-st { text-align: center; padding: 50px 20px; color: var(--muted); }
 .empty-st .ico { font-size: 48px; margin-bottom: 12px; }
 
@@ -1599,9 +1616,9 @@ body {
     <div id="seatLockTimerBox" class="seat-lock-timer">
       <div>
         <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
-        <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
+        <p>กรุณาชำระเงินและแนบสลิปภายใน 10 นาที</p>
       </div>
-      <div id="seatLockTimer" class="seat-lock-time">05:00</div>
+      <div id="seatLockTimer" class="seat-lock-time">10:00</div>
     </div>
 
     <div class="slip-upload">
@@ -1867,7 +1884,7 @@ const CLOSED_TRIPS = [""];
 // ตัวเลข/ข้อความอื่น = หมายเลขเบาะ (ต่อกับ prefix ตู้ เช่น A3, B7)
 const BUS_GRID_STRUCTURE = ['driver', 3, 6, 9, 'spacer', 2, 5, 8, 'เบาะซ้าย', 1, 4, 7];
 
-const SEAT_LOCK_MINUTES = 5;
+const SEAT_LOCK_MINUTES = 10;
 const SEAT_LOCK_DURATION = SEAT_LOCK_MINUTES * 60 * 1000;
 
 // รายละเอียดแต่ละทริป: คีย์ = ชื่อทริป (ต้องตรงกับข้อมูลจาก backend เป๊ะๆ)
@@ -2320,7 +2337,7 @@ function stopSeatCountdown() {
   const timer = document.getElementById('seatLockTimer');
   if (box) box.style.display = 'none';
   if (timer) {
-    timer.textContent = '05:00';
+    timer.textContent = '10:00';
     timer.classList.remove('warning');
   }
 }
@@ -2830,7 +2847,7 @@ function cardHTML(item, compact = false) {
   const isPast = new Date(item.date) < new Date(new Date().setHours(0, 0, 0, 0));
 
   const totalSeats = BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').length * 3;
-  const bookedCount = allBookings.filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.trip === item.trip && b.date === item.date).length;
+  const bookedCount = allBookings.filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.status !== 'ยกเลิกโดยลูกค้า' && b.trip === item.trip && b.date === item.date).length;
   const avail = totalSeats - bookedCount;
 
   // ป้ายสถานะมุมภาพ (ข้อความ/เงื่อนไขเดิมทุกอย่าง เปลี่ยนแค่การจัดสไตล์)
@@ -2971,6 +2988,9 @@ function renderMyTrips() {
         const img = TRIP_IMAGES[b.trip] || 'default.jpg';
         const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
         const isPast = new Date(b.date) < todayCut;
+        const isCancelled = b.status === 'ยกเลิกโดยลูกค้า';
+        const bkKey = (b.key || '').replace(/'/g, "\\'");
+        const bkSeat = (b.seat || '').replace(/'/g, "\\'");
         return `
           <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
             <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
@@ -2986,6 +3006,13 @@ function renderMyTrips() {
               </div>
               <div class="h-arr">›</div>
             </div>
+            ${isCancelled ? '<span class="cancelled-chip">❌ ยกเลิกแล้ว</span>' : ''}
+            ${(!isPast && !isCancelled) ? `
+              <div class="booking-actions">
+                <button class="btn-change-seat" onclick="event.stopPropagation(); changeSeatBooking('${bkKey}','${b.trip}','${b.date}','${bkSeat}')">🔄 เปลี่ยนที่นั่ง</button>
+                <button class="btn-cancel-trip" onclick="event.stopPropagation(); cancelTripBooking('${bkKey}','${b.trip}','${b.date}','${bkSeat}')">❌ ยกเลิกทริป</button>
+              </div>
+            ` : ''}
           </div>
         `;
       };
@@ -3039,6 +3066,128 @@ function viewMyBookingSeat(trip, dateStr, seat) {
   pendingTrip = { name: trip, date: fmtDate, raw: dateStr };
   highlightSeatId = seat || null;
   goToBook();
+}
+
+// จำนวนวันที่เหลือก่อนวันเดินทาง (ปัดเป็นจำนวนเต็มวัน)
+function daysUntilTrip(dateStr) {
+  const tripDate = new Date(dateStr);
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  tripDate.setHours(0, 0, 0, 0);
+  return Math.round((tripDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+// แจ้งเตือนกรณีเหลือเวลาน้อยกว่า 15 วัน — ให้ไปหาคนมาแทนแล้วทักแอดมินเองแทนการยกเลิก/เปลี่ยนในแอป
+function showTooLateToSelfEditDialog(actionLabel) {
+  Swal.fire({
+    icon: 'warning',
+    title: `${actionLabel}เองไม่ได้แล้วครับ`,
+    html: `เหลือเวลาก่อนวันเดินทาง <b>น้อยกว่า 15 วัน</b><br>กรุณาหาคนมาแทนที่แล้วแจ้งแอดมินทาง LINE ครับ`,
+    showCancelButton: true,
+    confirmButtonText: '💬 ทักไลน์แอดมิน',
+    cancelButtonText: 'ปิด',
+    background: '#0c1524', color: '#f1f5f9',
+    confirmButtonColor: '#06C755', cancelButtonColor: '#334155'
+  }).then(result => {
+    if (result.isConfirmed) window.open('https://line.me/ti/p/~tiaewneehur', '_blank');
+  });
+}
+
+async function cancelTripBooking(bookingKey, trip, date, seat) {
+  if (daysUntilTrip(date) < 15) {
+    showTooLateToSelfEditDialog('ยกเลิกทริป');
+    return;
+  }
+
+  const confirmResult = await Swal.fire({
+    icon: 'question',
+    title: 'ยืนยันยกเลิกทริปนี้?',
+    html: `<div style="font-size:14px;color:#e2e8f0">${trip}<br>เบาะ ${seat || '-'}</div><div style="font-size:12px;color:#fbbf24;margin-top:10px">การยกเลิกนี้ไม่สามารถย้อนกลับได้ครับ</div>`,
+    showCancelButton: true,
+    confirmButtonText: '❌ ยืนยันยกเลิก',
+    cancelButtonText: 'ไม่ยกเลิก',
+    background: '#0c1524', color: '#f1f5f9',
+    confirmButtonColor: '#ef4444', cancelButtonColor: '#334155'
+  });
+  if (!confirmResult.isConfirmed) return;
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ action: 'cancelBooking', bookingKey, phone: currentUser.phone })
+    });
+    const result = await response.json();
+
+    if (!result.ok) {
+      Swal.fire({
+        icon: 'error', title: 'ยกเลิกไม่สำเร็จ', text: result.message || 'กรุณาลองใหม่อีกครั้ง',
+        background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+      });
+      return;
+    }
+
+    const b = allBookings.find(x => x.key === bookingKey);
+    if (b) b.status = 'ยกเลิกโดยลูกค้า';
+    renderMyTrips();
+
+    Swal.fire({
+      icon: 'success', title: 'ยกเลิกทริปสำเร็จแล้วครับ',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+
+    fetchData(); // ซิงค์ข้อมูลจริงจากหลังบ้าน (ที่นั่งที่ปล่อยว่างจะได้อัปเดตให้คนอื่นเห็นด้วย)
+  } catch (error) {
+    Swal.fire({
+      icon: 'error', title: 'เกิดข้อผิดพลาด', text: 'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+  }
+}
+
+async function changeSeatBooking(bookingKey, trip, date, seat) {
+  if (daysUntilTrip(date) < 15) {
+    showTooLateToSelfEditDialog('เปลี่ยนที่นั่ง');
+    return;
+  }
+
+  const confirmResult = await Swal.fire({
+    icon: 'question',
+    title: 'เปลี่ยนที่นั่ง?',
+    html: `<div style="font-size:14px;color:#e2e8f0">ระบบจะยกเลิกที่นั่งเดิม (${seat || '-'}) แล้วพาไปเลือกที่นั่งใหม่ทันที</div>`,
+    showCancelButton: true,
+    confirmButtonText: '🔄 ดำเนินการต่อ',
+    cancelButtonText: 'ไม่เปลี่ยน',
+    background: '#0c1524', color: '#f1f5f9',
+    confirmButtonColor: '#0284c7', cancelButtonColor: '#334155'
+  });
+  if (!confirmResult.isConfirmed) return;
+
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ action: 'cancelBooking', bookingKey, phone: currentUser.phone })
+    });
+    const result = await response.json();
+
+    if (!result.ok) {
+      Swal.fire({
+        icon: 'error', title: 'ดำเนินการไม่สำเร็จ', text: result.message || 'กรุณาลองใหม่อีกครั้ง',
+        background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+      });
+      return;
+    }
+
+    const b = allBookings.find(x => x.key === bookingKey);
+    if (b) b.status = 'ยกเลิกโดยลูกค้า';
+
+    const fmtDate = new Date(date).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
+    pendingTrip = { name: trip, date: fmtDate, raw: date };
+    goToBook();
+  } catch (error) {
+    Swal.fire({
+      icon: 'error', title: 'เกิดข้อผิดพลาด', text: 'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
+      background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
+    });
+  }
 }
 
 /* ================================================================
@@ -3121,7 +3270,7 @@ function openModal(name, dateStr) {
   const seatIds = ['A', 'B', 'C'].flatMap(prefix =>
     BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').map(n => prefix + n)
   );
-  const takenSeats = allBookings.filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.trip === name && b.date === dateStr).map(b => String(b.seat));
+  const takenSeats = allBookings.filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.status !== 'ยกเลิกโดยลูกค้า' && b.trip === name && b.date === dateStr).map(b => String(b.seat));
   const emptySeats = seatIds.filter(id => !takenSeats.includes(id));
   const avail = emptySeats.length;
   const fmtDate = new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -3317,6 +3466,7 @@ function resetPickupSelector() {
 function renderVansWithData(bookedList, lockList = []) {
   const bookedMapping = {};
   bookedList.forEach(booking => {
+    if (booking.status === 'ยกเลิกโดยลูกค้า') return; // ยกเลิกแล้ว ปล่อยเบาะให้จองใหม่ได้
     const seat = String(booking.seat || '').trim();
     if (seat) bookedMapping[seat] = booking.nickname || 'เต็ม';
   });
