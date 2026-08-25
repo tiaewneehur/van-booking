@@ -623,6 +623,7 @@ body {
 .hist-group-title:first-child { margin-top: 0; }
 .h-arr { color: var(--blue); font-size: 18px; flex-shrink: 0; padding-left: 2px; }
 
+
 .empty-st { text-align: center; padding: 50px 20px; color: var(--muted); }
 .empty-st .ico { font-size: 48px; margin-bottom: 12px; }
 
@@ -1599,9 +1600,9 @@ body {
     <div id="seatLockTimerBox" class="seat-lock-timer">
       <div>
         <strong>⏳ ระบบล็อกที่นั่งของคุณไว้</strong>
-        <p>กรุณาชำระเงินและแนบสลิปภายใน 5 นาที</p>
+        <p>กรุณาชำระเงินและแนบสลิปภายใน 10 นาที</p>
       </div>
-      <div id="seatLockTimer" class="seat-lock-time">05:00</div>
+      <div id="seatLockTimer" class="seat-lock-time">10:00</div>
     </div>
 
     <div class="slip-upload">
@@ -1867,7 +1868,7 @@ const CLOSED_TRIPS = [""];
 // ตัวเลข/ข้อความอื่น = หมายเลขเบาะ (ต่อกับ prefix ตู้ เช่น A3, B7)
 const BUS_GRID_STRUCTURE = ['driver', 3, 6, 9, 'spacer', 2, 5, 8, 'เบาะซ้าย', 1, 4, 7];
 
-const SEAT_LOCK_MINUTES = 5;
+const SEAT_LOCK_MINUTES = 10;
 const SEAT_LOCK_DURATION = SEAT_LOCK_MINUTES * 60 * 1000;
 
 // รายละเอียดแต่ละทริป: คีย์ = ชื่อทริป (ต้องตรงกับข้อมูลจาก backend เป๊ะๆ)
@@ -2320,7 +2321,7 @@ function stopSeatCountdown() {
   const timer = document.getElementById('seatLockTimer');
   if (box) box.style.display = 'none';
   if (timer) {
-    timer.textContent = '05:00';
+    timer.textContent = '10:00';
     timer.classList.remove('warning');
   }
 }
@@ -2539,6 +2540,9 @@ function fetchData() {
       }
     });
 
+    // เรียงทริปตามวันเดินทางจริง (ใกล้สุดขึ้นก่อน) แทนลำดับที่มีคนจองเข้ามา
+    cacheTrips.sort((a, b) => new Date(a.date) - new Date(b.date));
+
     renderHome();
     renderTripList(cacheTrips);
     renderMyTrips();
@@ -2692,7 +2696,7 @@ function renderHome() {
 
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const closedTrips = cacheTrips.filter(t => CLOSED_TRIPS.includes(t.trip));
-  const pastTrips = cacheTrips.filter(t => new Date(t.date) < today);
+  const pastTrips = cacheTrips.filter(t => new Date(t.date) < today).sort((a, b) => new Date(b.date) - new Date(a.date));
 
   document.getElementById('homeContent').innerHTML = `
     <div class="greet-bar">
@@ -2889,7 +2893,7 @@ function cardHTML(item, compact = false) {
 function renderTripList(list) {
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const upcoming = list.filter(t => new Date(t.date) >= today);
-  const past = list.filter(t => new Date(t.date) < today);
+  const past = list.filter(t => new Date(t.date) < today).sort((a, b) => new Date(b.date) - new Date(a.date));
 
   document.getElementById('tripListFull').innerHTML = `
     <div class="sec-hdr"><h3>🏕️ ทริปที่เปิดจอง</h3></div>
