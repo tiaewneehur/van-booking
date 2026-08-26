@@ -623,6 +623,21 @@ body {
 .hist-group-title:first-child { margin-top: 0; }
 .h-arr { color: var(--blue); font-size: 18px; flex-shrink: 0; padding-left: 2px; }
 
+.pickup-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--sub);
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-top: 1px dashed var(--border);
+  border-radius: 0 0 16px 16px;
+  padding: 8px 14px 10px;
+  margin: -10px 0 10px;
+}
+.pickup-note strong { color: #e2e8f0; font-weight: 700; }
+
 
 .empty-st { text-align: center; padding: 50px 20px; color: var(--muted); }
 .empty-st .ico { font-size: 48px; margin-bottom: 12px; }
@@ -2975,9 +2990,16 @@ function renderMyTrips() {
         const img = TRIP_IMAGES[b.trip] || 'default.jpg';
         const fmtDate = new Date(b.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
         const isPast = new Date(b.date) < todayCut;
+
+        // จุดขึ้นรถถูกเก็บไว้ใน b.raw (JSON) ตอนจอง — แกะออกมาโชว์แนบใต้การ์ดทริปนั้นๆ โดยตรง
+        let pickupPoint = '';
+        try {
+          pickupPoint = JSON.parse(b.raw || '{}').pickup || '';
+        } catch (e) {}
+
         return `
           <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
-            <div class="h-item" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
+            <div class="h-item" style="${pickupPoint ? 'margin-bottom:0' : ''}" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
               <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
               <div class="hi">
                 <h4>${b.trip}</h4>
@@ -2990,6 +3012,7 @@ function renderMyTrips() {
               </div>
               <div class="h-arr">›</div>
             </div>
+            ${pickupPoint ? `<div class="pickup-note">🚏 จุดขึ้นรถ: <strong>${pickupPoint}</strong></div>` : ''}
           </div>
         `;
       };
