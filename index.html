@@ -1020,6 +1020,43 @@ body {
 
 /* หน้างาน — สำหรับคนไปเอง ไม่ใช้ที่นั่งรถตู้ ไม่มีสถานะว่าง/เต็ม แยกจากระบบเบาะทั้งหมด */
 .onsite-note { text-align: center; font-size: 11px; color: var(--muted); margin: -4px 0 10px; line-height: 1.5; }
+
+/* กล่องสรุปที่นั่งที่เลือกไว้ + ปุ่ม "ต่อไป" — โผล่หลังเลือกเบาะ ก่อนเด้งไปกรอกฟอร์ม */
+.seat-selection-summary {
+  position: sticky;
+  bottom: 16px;
+  margin: 18px 0;
+  padding: 16px;
+  border-radius: 20px;
+  background: linear-gradient(160deg, rgba(12, 21, 36, .98), rgba(6, 11, 19, .99));
+  border: 1.5px solid rgba(255, 216, 77, .35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .5), 0 0 24px rgba(255, 216, 77, .1);
+  z-index: 15;
+}
+.seat-selection-summary .sss-title { font-size: 13px; font-weight: 800; color: #fff; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.seat-selection-summary .sss-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.seat-selection-summary .sss-chip {
+  font-size: 12px;
+  font-weight: 700;
+  color: #241800;
+  background: linear-gradient(135deg, #ffd84d, #f7b500);
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.seat-selection-summary .sss-next-btn {
+  width: 100%;
+  height: 46px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(2, 132, 199, .3);
+}
+
 .onsite-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -1583,6 +1620,8 @@ body {
       <p class="onsite-note">สำหรับคนที่ขับรถไปเอง/นัดเจอกันที่หน้างาน ไม่ใช้ที่นั่งบนรถตู้</p>
       <div class="onsite-grid" id="onsiteGrid"></div>
     </div>
+
+    <div id="seatSelectionSummaryBox" class="seat-selection-summary" style="display:none"></div>
 
     <div id="formFieldsBox2">
       <div class="form-sec-header">
@@ -2394,6 +2433,7 @@ function handleSeatLockExpired() {
   seatFormData = {};
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
+  updateSeatSelectionSummary();
   checkBook();
 
   // ถ้าหน้าชำระเงินเปิดค้างอยู่ตอนที่นั่งหมดเวลา ต้องปิดทันที กันไม่ให้ส่งจองด้วยที่นั่งว่างเปล่า
@@ -3299,6 +3339,7 @@ function goToBook() {
   seatFormData = {};
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
+  updateSeatSelectionSummary();
   document.querySelectorAll('.onsite-slot.selected').forEach(x => x.classList.remove('selected'));
   renderOnsiteGrid();
   document.getElementById('bookingPage2').classList.add('show');
@@ -3536,7 +3577,10 @@ async function pickOnsiteSlot(el, num) {
     delete seatFormData[slotId];
     el.classList.remove('selected');
     document.getElementById('f-seat').value = selectedSeats.join(',');
-    renderSeatFormsContainer();
+    updateSeatSelectionSummary();
+    if (document.getElementById('formFieldsBox2').classList.contains('show')) {
+      renderSeatFormsContainer();
+    }
     if (selectedSeats.length === 0) {
       document.getElementById('formFieldsBox2').classList.remove('show');
     }
@@ -3566,24 +3610,25 @@ async function pickOnsiteSlot(el, num) {
   });
   if (!onsiteConfirm.isConfirmed) return;
 
-  // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
+  // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ — ยังไม่เด้งไปกรอกฟอร์ม
   selectedSeats.push(slotId);
   el.classList.add('selected');
   document.getElementById('f-seat').value = selectedSeats.join(',');
-  document.getElementById('formFieldsBox2').classList.add('show');
-  renderSeatFormsContainer();
+  updateSeatSelectionSummary();
+  if (document.getElementById('formFieldsBox2').classList.contains('show')) {
+    renderSeatFormsContainer();
+  }
   checkBook();
-
-  setTimeout(() => {
-    document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
 
   function revertAdd() {
     selectedSeats = selectedSeats.filter(s => s !== slotId);
     delete seatFormData[slotId];
     el.classList.remove('selected');
     document.getElementById('f-seat').value = selectedSeats.join(',');
-    renderSeatFormsContainer();
+    updateSeatSelectionSummary();
+    if (document.getElementById('formFieldsBox2').classList.contains('show')) {
+      renderSeatFormsContainer();
+    }
     if (selectedSeats.length === 0) {
       document.getElementById('formFieldsBox2').classList.remove('show');
     }
@@ -3676,6 +3721,37 @@ function updateSeatFormField(seatId, field, value) {
   if (!seatFormData[seatId]) seatFormData[seatId] = {};
   seatFormData[seatId][field] = value;
   checkBook();
+}
+
+// วาดกล่องสรุปที่นั่งที่เลือกไว้ + ปุ่ม "ต่อไป" — ไม่เด้งไปกรอกฟอร์มทันทีตอนเลือกเบาะ
+// ให้ผู้ใช้เลือกได้หลายที่นั่งก่อน แล้วค่อยกดต่อไปเองตอนพร้อม
+function updateSeatSelectionSummary() {
+  const box = document.getElementById('seatSelectionSummaryBox');
+  if (!box) return;
+
+  if (!selectedSeats.length) {
+    box.style.display = 'none';
+    box.innerHTML = '';
+    return;
+  }
+
+  box.style.display = 'block';
+  box.innerHTML = `
+    <div class="sss-title">🪑 เลือกไว้แล้ว ${selectedSeats.length} ที่นั่ง</div>
+    <div class="sss-chips">${selectedSeats.map(s => `<span class="sss-chip">${s}</span>`).join('')}</div>
+    <button class="sss-next-btn" onclick="goToPassengerForms()">ต่อไป: กรอกข้อมูลผู้โดยสาร →</button>
+  `;
+}
+
+// กด "ต่อไป" แล้วค่อยเด้งไปกรอกข้อมูลผู้โดยสารทีละที่นั่ง
+function goToPassengerForms() {
+  document.getElementById('formFieldsBox2').classList.add('show');
+  renderSeatFormsContainer();
+  checkBook();
+
+  setTimeout(() => {
+    document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 50);
 }
 
 // แปลง prefix ของเบาะ (A/B/C) เป็นหมายเลขรถคันที่เท่าไหร่
@@ -3795,7 +3871,10 @@ async function pickSeat(el, id) {
     delete seatFormData[id];
     el.classList.remove('selected');
     document.getElementById('f-seat').value = selectedSeats.join(',');
-    renderSeatFormsContainer();
+    updateSeatSelectionSummary();
+    if (document.getElementById('formFieldsBox2').classList.contains('show')) {
+      renderSeatFormsContainer();
+    }
     if (selectedSeats.length === 0) {
       document.getElementById('formFieldsBox2').classList.remove('show');
     }
@@ -3834,24 +3913,26 @@ async function pickSeat(el, id) {
   });
   if (!confirmResult.isConfirmed) return;
 
-  // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
+  // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ — ยังไม่เด้งไปกรอกฟอร์ม
+  // ให้เลือกเบาะอื่นต่อได้เรื่อยๆ จนกว่าจะกด "ต่อไป" เอง
   selectedSeats.push(id);
   el.classList.add('selected');
   document.getElementById('f-seat').value = selectedSeats.join(',');
-  document.getElementById('formFieldsBox2').classList.add('show');
-  renderSeatFormsContainer();
+  updateSeatSelectionSummary();
+  if (document.getElementById('formFieldsBox2').classList.contains('show')) {
+    renderSeatFormsContainer();
+  }
   checkBook();
-
-  setTimeout(() => {
-    document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 50);
 
   function revertAdd() {
     selectedSeats = selectedSeats.filter(s => s !== id);
     delete seatFormData[id];
     el.classList.remove('selected');
     document.getElementById('f-seat').value = selectedSeats.join(',');
-    renderSeatFormsContainer();
+    updateSeatSelectionSummary();
+    if (document.getElementById('formFieldsBox2').classList.contains('show')) {
+      renderSeatFormsContainer();
+    }
     if (selectedSeats.length === 0) {
       document.getElementById('formFieldsBox2').classList.remove('show');
     }
