@@ -1621,8 +1621,6 @@ body {
       <div class="onsite-grid" id="onsiteGrid"></div>
     </div>
 
-    <div id="seatSelectionSummaryBox" class="seat-selection-summary" style="display:none"></div>
-
     <div id="formFieldsBox2">
       <div class="form-sec-header">
         <div class="form-sec-ico">📝</div>
@@ -2352,6 +2350,7 @@ let pendingTrip = null;      // ทริปที่กำลังจะกด
 let selectedSeats = [];      // อาร์เรย์เบาะที่เลือกไว้ในรอบจองนี้ (จองได้หลายที่นั่งพร้อมกัน)
 let seatFormData = {};       // ข้อมูลผู้โดยสารแยกตามเบาะ { [seatId]: {name, nickname, phone, line} }
 let defaultBookerInfo = {};  // ค่าเริ่มต้นสำหรับเติมฟอร์มแต่ละที่นั่ง (จากโปรไฟล์/ประวัติการจอง)
+let passengerFormsOpened = false; // true หลังกด "ต่อไป" แล้ว (เปลี่ยนหน้าที่ปุ่มด้านล่างจาก "ต่อไป" เป็น "ยืนยัน/จ่ายเงิน")
 let highlightSeatId = null;  // เบาะที่ต้องสกรอลไปหา+ไฮไลต์ตอนเปิดหน้าเลือกเบาะ (มาจากประวัติการจอง)
 let selectedSlipFile = null; // ไฟล์สลิปที่แนบไว้
 
@@ -2431,9 +2430,9 @@ function handleSeatLockExpired() {
   seatLockExpiresAt = 0;
   selectedSeats = [];
   seatFormData = {};
+  passengerFormsOpened = false;
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
-  updateSeatSelectionSummary();
   checkBook();
 
   // ถ้าหน้าชำระเงินเปิดค้างอยู่ตอนที่นั่งหมดเวลา ต้องปิดทันที กันไม่ให้ส่งจองด้วยที่นั่งว่างเปล่า
@@ -3337,9 +3336,9 @@ function goToBook() {
 
   selectedSeats = [];
   seatFormData = {};
+  passengerFormsOpened = false;
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
-  updateSeatSelectionSummary();
   document.querySelectorAll('.onsite-slot.selected').forEach(x => x.classList.remove('selected'));
   renderOnsiteGrid();
   document.getElementById('bookingPage2').classList.add('show');
@@ -3723,28 +3722,16 @@ function updateSeatFormField(seatId, field, value) {
   checkBook();
 }
 
-// วาดกล่องสรุปที่นั่งที่เลือกไว้ + ปุ่ม "ต่อไป" — ไม่เด้งไปกรอกฟอร์มทันทีตอนเลือกเบาะ
-// ให้ผู้ใช้เลือกได้หลายที่นั่งก่อน แล้วค่อยกดต่อไปเองตอนพร้อม
+// ไม่มีกล่องลอยกลางหน้าแยกแล้ว — ปุ่มติดจอด้านล่าง (checkBook) ทำหน้าที่
+// เป็นทั้งตัวสรุป/ปุ่ม "ต่อไป" ในตัวเดียวกันแทน ฟังก์ชันนี้เก็บไว้เป็น stub
+// เผื่อโค้ดจุดอื่นยังเรียกอยู่ ไม่ต้องไล่แก้ทุกที่
 function updateSeatSelectionSummary() {
-  const box = document.getElementById('seatSelectionSummaryBox');
-  if (!box) return;
-
-  if (!selectedSeats.length) {
-    box.style.display = 'none';
-    box.innerHTML = '';
-    return;
-  }
-
-  box.style.display = 'block';
-  box.innerHTML = `
-    <div class="sss-title">🪑 เลือกไว้แล้ว ${selectedSeats.length} ที่นั่ง</div>
-    <div class="sss-chips">${selectedSeats.map(s => `<span class="sss-chip">${s}</span>`).join('')}</div>
-    <button class="sss-next-btn" onclick="goToPassengerForms()">ต่อไป: กรอกข้อมูลผู้โดยสาร →</button>
-  `;
+  checkBook();
 }
 
-// กด "ต่อไป" แล้วค่อยเด้งไปกรอกข้อมูลผู้โดยสารทีละที่นั่ง
+// กด "ต่อไป" (ปุ่มติดจอด้านล่าง ตอนยังไม่เปิดฟอร์ม) แล้วค่อยเด้งไปกรอกข้อมูลผู้โดยสารทีละที่นั่ง
 function goToPassengerForms() {
+  passengerFormsOpened = true;
   document.getElementById('formFieldsBox2').classList.add('show');
   renderSeatFormsContainer();
   checkBook();
@@ -3977,21 +3964,37 @@ async function pickSeat(el, id) {
 function checkBook() {
   const btn = document.getElementById('confirmBtn');
   const pickupOk = document.getElementById('f-pickup').value.trim() !== '';
-
   const hasSeats = selectedSeats.length > 0;
-  const allSeatsFilled = hasSeats && selectedSeats.every(seatId => {
+
+  if (!hasSeats) {
+    btn.disabled = true;
+    btn.classList.remove('ready');
+    btn.innerText = '🚀 เลือกที่นั่งอย่างน้อย 1 ที่ก่อนครับ';
+    btn.onclick = null;
+    return;
+  }
+
+  if (!passengerFormsOpened) {
+    // ยังไม่เปิดฟอร์มกรอกข้อมูล -> ปุ่มด้านล่างทำหน้าที่เป็น "ต่อไป" แทน
+    btn.disabled = false;
+    btn.classList.add('ready');
+    btn.innerText = `ต่อไป: กรอกข้อมูลผู้โดยสาร (${selectedSeats.length} ที่นั่ง) →`;
+    btn.onclick = () => goToPassengerForms();
+    return;
+  }
+
+  const allSeatsFilled = selectedSeats.every(seatId => {
     const d = seatFormData[seatId] || {};
     return String(d.name || '').trim() && String(d.nickname || '').trim() &&
            String(d.phone || '').trim() && String(d.line || '').trim();
   });
 
-  const ok = hasSeats && allSeatsFilled && pickupOk;
+  const ok = allSeatsFilled && pickupOk;
   btn.disabled = !ok;
   btn.classList.toggle('ready', ok);
+  btn.onclick = () => openPay();
 
-  if (!hasSeats) {
-    btn.innerText = '🚀 เลือกที่นั่งอย่างน้อย 1 ที่ก่อนครับ';
-  } else if (!allSeatsFilled) {
+  if (!allSeatsFilled) {
     btn.innerText = `🚀 กรอกข้อมูลให้ครบทุกที่นั่ง (${selectedSeats.length} ที่นั่ง)`;
   } else if (!pickupOk) {
     btn.innerText = '🚀 กรุณาเลือกจุดขึ้นรถ';
