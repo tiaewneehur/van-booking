@@ -842,6 +842,36 @@ body {
 .form-sec-title { font-size: 15px; font-weight: 800; color: #fff; }
 .form-sec-sub { font-size: 11px; color: var(--sub); margin-top: 2px; }
 
+/* การ์ดกรอกข้อมูลผู้โดยสารแยกตามเบาะ — จองหลายที่นั่งพร้อมกันได้ */
+.seat-form-card {
+  background: rgba(255, 255, 255, .03);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 16px 4px;
+  margin-bottom: 14px;
+}
+.seat-form-card-hdr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.seat-form-badge {
+  min-width: 46px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--blue2), var(--blue));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.seat-form-card-hdr span { font-size: 12.5px; color: var(--sub); font-weight: 600; }
+
 /* เลือกจุดขึ้นรถ — ใช้ dropdown เพื่อรองรับตัวเลือกหลายจุดแบบไม่กินพื้นที่ */
 .pickup-select {
   width: 100%;
@@ -1095,6 +1125,17 @@ body {
 .pay-box h3 { font-size: 22px; color: var(--yellow); margin-bottom: 4px; }
 .pay-box .sub { font-size: 13px; color: var(--red); }
 .qr-img { width: 180px; border-radius: 12px; border: 4px solid #fff; margin: 16px auto; display: block; box-shadow: 0 6px 15px rgba(0, 0, 0, .3); }
+.deposit-summary-box {
+  background: linear-gradient(135deg, rgba(16, 185, 129, .14), rgba(56, 189, 248, .06));
+  border: 1.5px dashed rgba(16, 185, 129, .5);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin: 0 0 16px;
+  text-align: center;
+}
+.deposit-summary-box .ds-label { font-size: 11px; color: var(--sub); font-weight: 600; letter-spacing: .3px; margin-bottom: 4px; }
+.deposit-summary-box .ds-calc { font-size: 12px; color: #94a3b8; margin-bottom: 4px; }
+.deposit-summary-box .ds-total { font-size: 26px; font-weight: 900; color: #34e89e; line-height: 1.2; }
 .chk-row { display: flex; align-items: flex-start; gap: 10px; text-align: left; color: #cbd5e1; font-size: 12px; margin: 16px 0; background: rgba(255, 255, 255, .02); padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, .04); }
 .chk-row input { width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
 .btn-pay-ok { width: 100%; height: 48px; border-radius: 10px; border: none; background: var(--green); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; }
@@ -1547,30 +1588,15 @@ body {
       <div class="form-sec-header">
         <div class="form-sec-ico">📝</div>
         <div>
-          <div class="form-sec-title">กรอกข้อมูลผู้จอง</div>
-          <div class="form-sec-sub">ใช้ยืนยันตัวตนตอนขึ้นรถ กรอกให้ครบนะครับ</div>
+          <div class="form-sec-title">กรอกข้อมูลผู้โดยสาร</div>
+          <div class="form-sec-sub">กรอกข้อมูลให้ครบทุกที่นั่งที่เลือกไว้นะครับ</div>
         </div>
       </div>
 
-      <div class="ig">
-        <label>🤦 ชื่อ-นามสกุลจริง</label>
-        <input id="f-name" placeholder="ระบุชื่อ-นามสกุลจริง..." oninput="checkBook()">
-      </div>
-      <div class="ig">
-        <label>🏷️ ชื่อเล่น</label>
-        <input id="f-nick" placeholder="ชื่อเล่น" oninput="checkBook()">
-      </div>
-      <div class="ig">
-        <label>📞 เบอร์โทรศัพท์</label>
-        <input id="f-phone" type="tel" oninput="checkBook()">
-      </div>
-      <div class="ig">
-        <label>💬 ชื่อ LINE</label>
-        <input id="f-line" placeholder="ชื่อไลน์อ่ะ เข้าใจมั้ย!!" oninput="checkBook()">
-      </div>
+      <div id="seatFormsContainer"></div>
 
       <div class="ig">
-        <label>🚏 จุดขึ้นรถ</label>
+        <label>🚏 จุดขึ้นรถ (ใช้ร่วมกันทุกที่นั่ง)</label>
 
         <select id="f-pickup-select" class="pickup-select" onchange="handlePickupSelect()">
           <option value="ลานจอด BTS หมอชิต">ลานจอด BTS หมอชิต</option>
@@ -1610,7 +1636,9 @@ body {
     <span class="chip chip-green" style="font-size:11px;position:absolute;top:16px;left:16px">ขั้นตอนที่ 3: ชำระเงิน</span>
     <h3 style="margin-top:22px">💰 ชำระเงินค่ามัดจำทริป 💰</h3>
     <p class="sub">(สแกน QR หรือบันทึกภาพเพื่อชำระเงิน)</p>
-    <img src="slip-qr.png" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
+    <img src="IMG_3747.jpeg" class="qr-img" onerror="this.src='https://via.placeholder.com/200?text=PROMPTPAY+QR'">
+
+    <div id="depositSummaryBox" class="deposit-summary-box"></div>
 
     <div id="seatLockTimerBox" class="seat-lock-timer">
       <div>
@@ -1646,7 +1674,7 @@ body {
     <div class="succ-ico">✓</div>
     <h2 style="font-size:26px;font-weight:700;color:#fff">จองสำเร็จ! 🎉</h2>
     <div class="receipt" id="r-receipt-card">
-      <div class="r-row">👤 <span>ผู้จอง:</span> <strong id="r-name">-</strong></div>
+      <div class="r-row">🎟️ <span>จำนวน:</span> <strong id="r-name">-</strong></div>
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="r-trip">-</strong></div>
       <div class="r-row">📅 <span>วันที่:</span> <strong id="r-date">-</strong></div>
       <div class="r-row">🚏 <span>จุดขึ้นรถ:</span> <strong id="r-pickup">-</strong></div>
@@ -2282,7 +2310,9 @@ let reviewRating = 0;        // คะแนนดาวที่กำลัง
 let reviewPhotoFile = null;  // ไฟล์รูปที่แนบไว้ในฟอร์มเขียนรีวิว
 let cacheTrips = [];         // รายการทริป (unique trip+date) ที่สรุปจาก allBookings
 let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
-let selectedSeat = null;     // เบาะที่ผู้ใช้เลือกอยู่ตอนนี้
+let selectedSeats = [];      // อาร์เรย์เบาะที่เลือกไว้ในรอบจองนี้ (จองได้หลายที่นั่งพร้อมกัน)
+let seatFormData = {};       // ข้อมูลผู้โดยสารแยกตามเบาะ { [seatId]: {name, nickname, phone, line} }
+let defaultBookerInfo = {};  // ค่าเริ่มต้นสำหรับเติมฟอร์มแต่ละที่นั่ง (จากโปรไฟล์/ประวัติการจอง)
 let highlightSeatId = null;  // เบาะที่ต้องสกรอลไปหา+ไฮไลต์ตอนเปิดหน้าเลือกเบาะ (มาจากประวัติการจอง)
 let selectedSlipFile = null; // ไฟล์สลิปที่แนบไว้
 
@@ -2360,7 +2390,8 @@ function stopSeatCountdown() {
 
 function handleSeatLockExpired() {
   seatLockExpiresAt = 0;
-  selectedSeat = null;
+  selectedSeats = [];
+  seatFormData = {};
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
   checkBook();
@@ -2422,8 +2453,6 @@ function enterApp() {
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('appShell').classList.add('show');
   document.getElementById('loadingScreen').classList.add('show');
-  document.getElementById('f-phone').value = currentUser.phone;
-  document.getElementById('f-nick').value = currentUser.nick;
   updateNavAvatar();
   fetchData();
 }
@@ -3251,19 +3280,23 @@ function goToBook() {
   document.getElementById('b-trip').value = pendingTrip.name;
   document.getElementById('b-date').value = pendingTrip.date;
   document.getElementById('f-dateraw').value = formattedDate;
-  document.getElementById('f-phone').value = currentUser.phone;
-  document.getElementById('f-nick').value = currentUser.nick;
-  document.getElementById('f-line').value = currentUser.lineName || currentUser.nick;
 
-  // ดึงชื่อ-นามสกุลจริงจากประวัติการจองครั้งล่าสุดที่ผูกกับเบอร์นี้ (ถ้ามี) มาใส่ให้อัตโนมัติ
-  // คนใหม่ที่ยังไม่เคยจอง (ไม่เจอประวัติ) จะเจอช่องว่างให้กรอกเองตามปกติ
+  // ดึงชื่อ-นามสกุลจริงจากประวัติการจองครั้งล่าสุดที่ผูกกับเบอร์นี้ (ถ้ามี) มาใช้เป็นค่าเริ่มต้น
+  // ให้แต่ละฟอร์มที่นั่ง (คนใหม่ที่ยังไม่เคยจองจะเจอช่องว่างให้กรอกเองตามปกติ)
   const normPhoneForName = (p) => String(p || '').replace(/\D/g, '').slice(-9);
   const myPastBooking = allBookings
     .filter(b => b.name && normPhoneForName(b.phone) === normPhoneForName(currentUser.phone))
     .slice(-1)[0];
-  document.getElementById('f-name').value = myPastBooking ? myPastBooking.name : '';
 
-  selectedSeat = null;
+  defaultBookerInfo = {
+    name: myPastBooking ? myPastBooking.name : '',
+    nickname: currentUser.nick,
+    phone: currentUser.phone,
+    line: currentUser.lineName || currentUser.nick
+  };
+
+  selectedSeats = [];
+  seatFormData = {};
   document.getElementById('f-seat').value = '';
   document.getElementById('formFieldsBox2').classList.remove('show');
   document.querySelectorAll('.onsite-slot.selected').forEach(x => x.classList.remove('selected'));
@@ -3282,7 +3315,7 @@ function goToBook() {
     if (page && page.classList.contains('show')) {
       loadSeats(document.getElementById('f-dateraw').value);
     }
-  }, 5000);
+  }, 3000);
 
   checkBook();
 }
@@ -3290,7 +3323,7 @@ function goToBook() {
 // ปลดล็อกเบาะที่ถืออยู่ทันที (ไม่ต้องรอหมดเวลา 5 นาที) — ใช้ตอนย้อนกลับ/ปิดเว็บโดยไม่จองสำเร็จ
 // useBeacon = true ใช้ตอนปิดแท็บ/เบราว์เซอร์ (fetch ปกติอาจถูกยกเลิกก่อนส่งสำเร็จ)
 function releaseMySeatLock(useBeacon) {
-  if (!selectedSeat) return;
+  if (!selectedSeats.length) return;
 
   const body = new URLSearchParams({ action: 'unlockSeat', session_id: MY_SESSION_ID });
 
@@ -3302,10 +3335,11 @@ function releaseMySeatLock(useBeacon) {
       fetch(API_URL, { method: 'POST', body, keepalive: true }).catch(() => {});
     }
   } catch (e) {
-    // ปลดล็อกไม่สำเร็จก็ไม่เป็นไร ระบบมีล็อกหมดอายุอัตโนมัติ 5 นาทีเป็นตัวกันสำรองอยู่แล้ว
+    // ปลดล็อกไม่สำเร็จก็ไม่เป็นไร ระบบมีล็อกหมดอายุอัตโนมัติ 10 นาทีเป็นตัวกันสำรองอยู่แล้ว
   }
 
-  selectedSeat = null;
+  selectedSeats = [];
+  seatFormData = {};
 }
 
 // เผื่อผู้ใช้ปิดแท็บ/เบราว์เซอร์ทั้งที่ยังไม่ได้จองสำเร็จ ให้พยายามปลดล็อกให้ก่อนปิด
@@ -3413,7 +3447,7 @@ function renderVansWithData(bookedList, lockList = []) {
         cell.innerHTML = `<span style="font-size:9px">${id}</span><div style="font-size:10px;text-align:center">⏳ มีคนเลือก</div>`;
       } else {
         cell.classList.add('empty');
-        if (id === selectedSeat) cell.classList.add('selected');
+        if (selectedSeats.includes(id)) cell.classList.add('selected');
         cell.innerHTML = `<span style="font-size:10px">เบาะ</span><span style="font-size:15px">${id}</span>`;
         cell.onclick = () => pickSeat(cell, id);
       }
@@ -3456,7 +3490,7 @@ function renderOnsiteGrid(bookedMapping = {}, lockedMapping = {}) {
       cell.classList.add('locking');
       cell.innerHTML = `<span style="font-size:8px">หน้างาน ${i}</span><span style="font-size:10px">⏳ มีคนเลือก</span>`;
     } else {
-      if (selectedSeat === slotId) cell.classList.add('selected');
+      if (selectedSeats.includes(slotId)) cell.classList.add('selected');
       cell.innerHTML = `<span>หน้างาน</span><span>${i}</span>`;
       cell.onclick = () => pickOnsiteSlot(cell, i);
     }
@@ -3479,16 +3513,48 @@ async function pickOnsiteSlot(el, num) {
     return;
   }
 
+  // ถ้าช่องนี้อยู่ในรายการที่เลือกไว้แล้ว -> ถามเอาออกจากรายการแทน
+  if (selectedSeats.includes(slotId)) {
+    const removeConfirm = await Swal.fire({
+      icon: 'question',
+      title: 'เอาช่องนี้ออกจากรายการจอง?',
+      html: `<div style="font-size:16px;color:#e2e8f0">${slotId}</div>`,
+      showCancelButton: true,
+      confirmButtonText: '🗑️ เอาออก',
+      cancelButtonText: 'ไม่เอาออก',
+      background: '#0c1524', color: '#f1f5f9',
+      confirmButtonColor: '#ef4444', cancelButtonColor: '#334155'
+    });
+    if (!removeConfirm.isConfirmed) return;
+
+    fetch(API_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ action: 'unlockSeat', date, trip, seat: slotId, session_id: MY_SESSION_ID })
+    }).catch(() => {});
+
+    selectedSeats = selectedSeats.filter(s => s !== slotId);
+    delete seatFormData[slotId];
+    el.classList.remove('selected');
+    document.getElementById('f-seat').value = selectedSeats.join(',');
+    renderSeatFormsContainer();
+    if (selectedSeats.length === 0) {
+      document.getElementById('formFieldsBox2').classList.remove('show');
+    }
+    checkBook();
+    return;
+  }
+
   const onsiteConfirm = await Swal.fire({
     html: `
       <div style="padding:4px 0 2px">
         <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#0bb96f,#34e89e);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 22px rgba(11,185,111,.45);overflow:hidden;border:2px solid rgba(255,255,255,.25)">
           <img src="เที่ย นี่เหอะ.png" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
         </div>
-        <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:16px">ยืนยันเลือกช่องนี้?</div>
+        <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:16px">เพิ่มช่องนี้ในรายการจอง?</div>
         <div style="display:inline-block;background:linear-gradient(135deg,rgba(16,185,129,.14),rgba(11,185,111,.05));border:1px solid rgba(16,185,129,.3);border-radius:18px;padding:14px 28px">
           <div style="font-size:20px;font-weight:900;color:#34e89e">${slotId}</div>
         </div>
+        ${selectedSeats.length ? `<div style="font-size:11.5px;color:#94a3b8;margin-top:12px">ตอนนี้เลือกไว้แล้ว ${selectedSeats.length} ที่นั่ง</div>` : ''}
       </div>
     `,
     showCancelButton: true,
@@ -3500,29 +3566,25 @@ async function pickOnsiteSlot(el, num) {
   });
   if (!onsiteConfirm.isConfirmed) return;
 
-  const previousSeat = selectedSeat; // จำที่เลือกเดิมไว้ เผื่อล็อกไม่สำเร็จ
-
   // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
-  selectedSeat = slotId;
-  document.querySelectorAll('.seat.selected, .onsite-slot.selected').forEach(x => x.classList.remove('selected'));
+  selectedSeats.push(slotId);
   el.classList.add('selected');
-  document.getElementById('f-seat').value = slotId;
+  document.getElementById('f-seat').value = selectedSeats.join(',');
   document.getElementById('formFieldsBox2').classList.add('show');
+  renderSeatFormsContainer();
   checkBook();
 
   setTimeout(() => {
     document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 50);
 
-  function revertToPreviousSeat() {
-    selectedSeat = previousSeat;
+  function revertAdd() {
+    selectedSeats = selectedSeats.filter(s => s !== slotId);
+    delete seatFormData[slotId];
     el.classList.remove('selected');
-    document.getElementById('f-seat').value = previousSeat || '';
-
-    if (previousSeat) {
-      const previousEl = [...document.querySelectorAll('.seat, .onsite-slot')].find(x => x.textContent.includes(previousSeat));
-      if (previousEl) previousEl.classList.add('selected');
-    } else {
+    document.getElementById('f-seat').value = selectedSeats.join(',');
+    renderSeatFormsContainer();
+    if (selectedSeats.length === 0) {
       document.getElementById('formFieldsBox2').classList.remove('show');
     }
     checkBook();
@@ -3536,7 +3598,7 @@ async function pickOnsiteSlot(el, num) {
     const result = await response.json();
 
     if (!result.ok) {
-      revertToPreviousSeat();
+      revertAdd();
       Swal.fire({
         icon: 'warning',
         title: 'ช่องนี้ไม่ว่างแล้ว',
@@ -3547,17 +3609,73 @@ async function pickOnsiteSlot(el, num) {
       return;
     }
 
-    // ล็อกสำเร็จ -> เริ่มนับเวลาใหม่ 5 นาที (เหมือนเบาะจริง)
+    // ล็อกสำเร็จ -> เริ่มนับเวลาใหม่ 10 นาที ให้เวลาสดใหม่ทุกครั้งที่เพิ่มเบาะ
     startSeatCountdown(true);
 
   } catch (error) {
-    revertToPreviousSeat();
+    revertAdd();
     Swal.fire({
       icon: 'error', title: 'ล็อกช่องไม่สำเร็จ', text: 'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
       background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
     loadSeats(date);
   }
+}
+
+// แปลง prefix ของเบาะ (A/B/C) เป็นหมายเลขรถคันที่เท่าไหร่
+function seatIdSafe(seatId) {
+  return String(seatId || '').replace(/\s+/g, '_');
+}
+
+// วาดการ์ดฟอร์มกรอกข้อมูลผู้โดยสาร แยกทีละใบต่อเบาะที่เลือกไว้ (จองหลายที่นั่งพร้อมกันได้)
+function renderSeatFormsContainer() {
+  const container = document.getElementById('seatFormsContainer');
+  if (!container) return;
+
+  container.innerHTML = selectedSeats.map((seatId, i) => {
+    const safeId = seatIdSafe(seatId);
+    const data = seatFormData[seatId] || {};
+    // เติมค่าเริ่มต้นให้ที่นั่งแรกจากโปรไฟล์/ประวัติ ที่นั่งถัดไปเว้นว่างให้กรอกเอง (คนละคน)
+    if (data.name === undefined) {
+      seatFormData[seatId] = {
+        name: i === 0 ? (defaultBookerInfo.name || '') : '',
+        nickname: i === 0 ? (defaultBookerInfo.nickname || '') : '',
+        phone: i === 0 ? (defaultBookerInfo.phone || '') : '',
+        line: i === 0 ? (defaultBookerInfo.line || '') : ''
+      };
+    }
+    const d = seatFormData[seatId];
+    return `
+      <div class="seat-form-card">
+        <div class="seat-form-card-hdr">
+          <div class="seat-form-badge">${seatId}</div>
+          <span>ผู้โดยสารเบาะนี้</span>
+        </div>
+        <div class="ig">
+          <label>🤦 ชื่อ-นามสกุลจริง</label>
+          <input id="sf-name-${safeId}" value="${d.name || ''}" placeholder="ระบุชื่อ-นามสกุลจริง..." oninput="updateSeatFormField('${seatId.replace(/'/g, "\\'")}','name',this.value)">
+        </div>
+        <div class="ig">
+          <label>🏷️ ชื่อเล่น</label>
+          <input id="sf-nick-${safeId}" value="${d.nickname || ''}" placeholder="ชื่อเล่น" oninput="updateSeatFormField('${seatId.replace(/'/g, "\\'")}','nickname',this.value)">
+        </div>
+        <div class="ig">
+          <label>📞 เบอร์โทรศัพท์</label>
+          <input id="sf-phone-${safeId}" type="tel" value="${d.phone || ''}" oninput="updateSeatFormField('${seatId.replace(/'/g, "\\'")}','phone',this.value)">
+        </div>
+        <div class="ig">
+          <label>💬 ชื่อ LINE</label>
+          <input id="sf-line-${safeId}" value="${d.line || ''}" placeholder="ชื่อไลน์อ่ะ เข้าใจมั้ย!!" oninput="updateSeatFormField('${seatId.replace(/'/g, "\\'")}','line',this.value)">
+        </div>
+      </div>
+    `;
+  }).join('') || '<p style="text-align:center;color:var(--muted);padding:16px;font-size:13px">เลือกเบาะจากผังด้านบนก่อนครับ</p>';
+}
+
+function updateSeatFormField(seatId, field, value) {
+  if (!seatFormData[seatId]) seatFormData[seatId] = {};
+  seatFormData[seatId][field] = value;
+  checkBook();
 }
 
 // แปลง prefix ของเบาะ (A/B/C) เป็นหมายเลขรถคันที่เท่าไหร่
@@ -3610,6 +3728,36 @@ function renderReceiptSeatBox(boxId, seat) {
   `;
 }
 
+// วาดใบเสร็จกรณีจองหลายที่นั่ง — แสดงรายชื่อผู้โดยสารทุกคนพร้อมเบาะของตัวเอง + ยอดมัดจำรวม
+function renderMultiSeatReceipt(boxId, entries) {
+  const box = document.getElementById(boxId);
+  if (!box) return;
+
+  const depositPerSeat = 1000;
+  const total = entries.length * depositPerSeat;
+
+  const rows = entries.map(e => {
+    const isOnsite = String(e.seat || '').startsWith('หน้างาน');
+    const seatLabel = isOnsite ? e.seat : `คันที่ ${vanNumberFromSeatId(e.seat)} · ${e.seat}`;
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #e5ddc4">
+        <span style="font-size:12.5px;color:#1e293b;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.name}</span>
+        <span style="font-size:13px;color:#15803d;font-weight:800;flex-shrink:0">${seatLabel}</span>
+      </div>
+    `;
+  }).join('');
+
+  box.innerHTML = `
+    <p>ที่นั่งที่จองไว้ (${entries.length} ที่นั่ง)</p>
+    <div style="text-align:left">${rows}</div>
+    <div style="margin-top:12px;padding-top:12px;border-top:2px solid #c9971f;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11.5px;color:#92795a;font-weight:700">ยอดมัดจำที่โอน</span>
+      <span style="font-size:22px;font-weight:900;color:#15803d">${total.toLocaleString('th-TH')} บาท</span>
+    </div>
+  `;
+}
+
+
 async function pickSeat(el, id) {
   const trip = document.getElementById('b-trip').value.trim();
   const date = document.getElementById('f-dateraw').value.trim();
@@ -3622,15 +3770,47 @@ async function pickSeat(el, id) {
     return;
   }
 
-  // ถามยืนยันก่อนล็อกเบาะจริง — ยังไม่แตะสถานะ/ล็อกอะไรจนกว่าจะกดยืนยัน
   const vanLabel = vanNumberFromSeatId(id);
+
+  // ถ้าเบาะนี้อยู่ในรายการที่เลือกไว้แล้ว -> ถามเอาออกจากรายการแทน
+  if (selectedSeats.includes(id)) {
+    const removeConfirm = await Swal.fire({
+      icon: 'question',
+      title: 'เอาที่นั่งนี้ออกจากรายการจอง?',
+      html: `<div style="font-size:16px;color:#e2e8f0">รถคันที่ <b style="color:#38bdf8">${vanLabel}</b> เบาะ <b style="color:#ffd84d">${id}</b></div>`,
+      showCancelButton: true,
+      confirmButtonText: '🗑️ เอาออก',
+      cancelButtonText: 'ไม่เอาออก',
+      background: '#0c1524', color: '#f1f5f9',
+      confirmButtonColor: '#ef4444', cancelButtonColor: '#334155'
+    });
+    if (!removeConfirm.isConfirmed) return;
+
+    fetch(API_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ action: 'unlockSeat', date, trip, seat: id, session_id: MY_SESSION_ID })
+    }).catch(() => {});
+
+    selectedSeats = selectedSeats.filter(s => s !== id);
+    delete seatFormData[id];
+    el.classList.remove('selected');
+    document.getElementById('f-seat').value = selectedSeats.join(',');
+    renderSeatFormsContainer();
+    if (selectedSeats.length === 0) {
+      document.getElementById('formFieldsBox2').classList.remove('show');
+    }
+    checkBook();
+    return;
+  }
+
+  // ถามยืนยันก่อนล็อกเบาะจริง — ยังไม่แตะสถานะ/ล็อกอะไรจนกว่าจะกดยืนยัน
   const confirmResult = await Swal.fire({
     html: `
       <div style="padding:4px 0 2px">
         <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#0284c7,#38bdf8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:0 8px 22px rgba(2,132,199,.45);overflow:hidden;border:2px solid rgba(255,255,255,.25)">
           <img src="เที่ย นี่เหอะ.png" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none'">
         </div>
-        <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:16px">ยืนยันเลือกที่นั่งนี้?</div>
+        <div style="font-size:17px;font-weight:800;color:#fff;margin-bottom:16px">เพิ่มที่นั่งนี้ในรายการจอง?</div>
         <div style="display:inline-flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(56,189,248,.12),rgba(2,132,199,.05));border:1px solid rgba(56,189,248,.3);border-radius:18px;padding:14px 24px">
           <div style="text-align:center;min-width:52px">
             <div style="font-size:10.5px;color:#94a3b8;font-weight:600;letter-spacing:.3px">รถคันที่</div>
@@ -3642,6 +3822,7 @@ async function pickSeat(el, id) {
             <div style="font-size:24px;font-weight:900;color:#ffd84d;line-height:1.2">${id}</div>
           </div>
         </div>
+        ${selectedSeats.length ? `<div style="font-size:11.5px;color:#94a3b8;margin-top:12px">ตอนนี้เลือกไว้แล้ว ${selectedSeats.length} ที่นั่ง</div>` : ''}
       </div>
     `,
     showCancelButton: true,
@@ -3651,31 +3832,27 @@ async function pickSeat(el, id) {
     confirmButtonColor: '#0284c7', cancelButtonColor: '#334155',
     customClass: { popup: 'seat-confirm-popup' }
   });
-  if (!confirmResult.isConfirmed) return; // เปลี่ยนใจ -> ไม่ทำอะไรเลย เบาะเดิม (ถ้ามี) ยังคงล็อกอยู่เหมือนเดิม
-
-  const previousSeat = selectedSeat; // จำเบาะเดิมไว้ เผื่อล็อกไม่สำเร็จ
+  if (!confirmResult.isConfirmed) return;
 
   // แสดงผลทันทีแบบ optimistic ก่อนรอ backend ตอบกลับ
-  selectedSeat = id;
-  document.querySelectorAll('.seat.selected, .onsite-slot.selected').forEach(seat => seat.classList.remove('selected'));
+  selectedSeats.push(id);
   el.classList.add('selected');
-  document.getElementById('f-seat').value = id;
+  document.getElementById('f-seat').value = selectedSeats.join(',');
   document.getElementById('formFieldsBox2').classList.add('show');
+  renderSeatFormsContainer();
   checkBook();
 
   setTimeout(() => {
     document.getElementById('formFieldsBox2').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 50);
 
-  function revertToPreviousSeat() {
-    selectedSeat = previousSeat;
+  function revertAdd() {
+    selectedSeats = selectedSeats.filter(s => s !== id);
+    delete seatFormData[id];
     el.classList.remove('selected');
-    document.getElementById('f-seat').value = previousSeat || '';
-
-    if (previousSeat) {
-      const previousEl = [...document.querySelectorAll('.seat')].find(seat => seat.textContent.includes(previousSeat));
-      if (previousEl) previousEl.classList.add('selected');
-    } else {
+    document.getElementById('f-seat').value = selectedSeats.join(',');
+    renderSeatFormsContainer();
+    if (selectedSeats.length === 0) {
       document.getElementById('formFieldsBox2').classList.remove('show');
     }
     checkBook();
@@ -3689,7 +3866,7 @@ async function pickSeat(el, id) {
     const result = await response.json();
 
     if (!result.ok) {
-      revertToPreviousSeat();
+      revertAdd();
       Swal.fire({
         icon: 'warning',
         title: 'เบาะนี้ไม่ว่างแล้ว',
@@ -3700,11 +3877,11 @@ async function pickSeat(el, id) {
       return;
     }
 
-    // ล็อกเบาะสำเร็จ -> เริ่มนับเวลาใหม่ 5 นาที
+    // ล็อกเบาะสำเร็จ -> เริ่มนับเวลาใหม่ 10 นาที ให้เวลาสดใหม่ทุกครั้งที่เพิ่มเบาะ
     startSeatCountdown(true);
 
   } catch (error) {
-    revertToPreviousSeat();
+    revertAdd();
     Swal.fire({
       icon: 'error', title: 'ล็อกเบาะไม่สำเร็จ', text: 'อินเทอร์เน็ตหรือระบบหลังบ้านไม่ตอบสนอง กรุณาลองใหม่',
       background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
@@ -3715,12 +3892,31 @@ async function pickSeat(el, id) {
   }
 }
 
+
 function checkBook() {
-  const ok = ['f-name', 'f-nick', 'f-phone', 'f-line', 'f-seat', 'f-pickup'].every(id => document.getElementById(id).value.trim() !== '');
   const btn = document.getElementById('confirmBtn');
+  const pickupOk = document.getElementById('f-pickup').value.trim() !== '';
+
+  const hasSeats = selectedSeats.length > 0;
+  const allSeatsFilled = hasSeats && selectedSeats.every(seatId => {
+    const d = seatFormData[seatId] || {};
+    return String(d.name || '').trim() && String(d.nickname || '').trim() &&
+           String(d.phone || '').trim() && String(d.line || '').trim();
+  });
+
+  const ok = hasSeats && allSeatsFilled && pickupOk;
   btn.disabled = !ok;
   btn.classList.toggle('ready', ok);
-  btn.innerText = ok ? '👉 พร้อมแล้ว...ไปโอนเงินกันเลย! ✨' : '🚀 กรอกข้อมูลให้ครบและเลือกที่นั่ง';
+
+  if (!hasSeats) {
+    btn.innerText = '🚀 เลือกที่นั่งอย่างน้อย 1 ที่ก่อนครับ';
+  } else if (!allSeatsFilled) {
+    btn.innerText = `🚀 กรอกข้อมูลให้ครบทุกที่นั่ง (${selectedSeats.length} ที่นั่ง)`;
+  } else if (!pickupOk) {
+    btn.innerText = '🚀 กรุณาเลือกจุดขึ้นรถ';
+  } else {
+    btn.innerText = `👉 พร้อมแล้ว...ไปโอนเงิน ${selectedSeats.length} ที่นั่งกันเลย! ✨`;
+  }
 }
 
 /* ================================================================
@@ -3819,13 +4015,21 @@ function slipFileToBase64(file) {
    PAYMENT
    ================================================================ */
 function openPay() {
-  if (!selectedSeat) {
+  if (!selectedSeats.length) {
     Swal.fire({
-      icon: 'warning', title: 'ยังไม่ได้เลือกที่นั่ง', text: 'กรุณาเลือกที่นั่งก่อนชำระเงิน',
+      icon: 'warning', title: 'ยังไม่ได้เลือกที่นั่ง', text: 'กรุณาเลือกที่นั่งอย่างน้อย 1 ที่ก่อนชำระเงิน',
       background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
     return;
   }
+
+  const depositPerSeat = 1000;
+  const total = selectedSeats.length * depositPerSeat;
+  document.getElementById('depositSummaryBox').innerHTML = `
+    <div class="ds-label">ยอดที่ต้องโอนมัดจำ</div>
+    <div class="ds-calc">${selectedSeats.length} ที่นั่ง × ${depositPerSeat.toLocaleString('th-TH')} บาท</div>
+    <div class="ds-total">${total.toLocaleString('th-TH')} บาท</div>
+  `;
 
   resetSlipUpload();
   startSeatCountdown(); // ถ้ายังไม่หมดเวลาจะนับต่อ ไม่รีเซ็ตซ้ำ
@@ -3844,8 +4048,7 @@ async function submitBook() {
 
   // กันเหนียวขั้นสุดท้าย: ห้ามส่งจองถ้าไม่มีที่นั่งที่ล็อกไว้จริงในตอนนี้
   // (เผื่อกรณีที่นั่งหมดเวลาไปแล้วระหว่างที่หน้าชำระเงินยังเปิดค้างอยู่)
-  const seatValueAtSubmit = document.getElementById('f-seat').value.trim();
-  if (!selectedSeat || !seatValueAtSubmit) {
+  if (!selectedSeats.length) {
     closePay();
     Swal.fire({
       icon: 'warning', title: 'ที่นั่งของคุณถูกปลดล็อกไปแล้ว', text: 'กรุณาเลือกเบาะใหม่แล้วทำรายการอีกครั้งครับ',
@@ -3867,19 +4070,29 @@ async function submitBook() {
 
   try {
     const slipData = await slipFileToBase64(selectedSlipFile);
-    const bookingId = 'BOOK-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+
+    const seatEntries = selectedSeats.map(seatId => {
+      const d = seatFormData[seatId] || {};
+      return {
+        seat: seatId,
+        name: (d.name || '').trim(),
+        nickname: (d.nickname || '').trim(),
+        phone: (d.phone || '').trim(),
+        line: (d.line || '').trim()
+      };
+    });
+
+    const pickup = document.getElementById('f-pickup').value.trim();
+    const trip = document.getElementById('b-trip').value;
+    const date = document.getElementById('f-dateraw').value;
 
     const payload = {
-      date: document.getElementById('f-dateraw').value,
-      trip: document.getElementById('b-trip').value,
-      seat: document.getElementById('f-seat').value,
-      name: document.getElementById('f-name').value.trim(),
-      nickname: document.getElementById('f-nick').value.trim(),
-      phone: document.getElementById('f-phone').value.trim(),
-      line: document.getElementById('f-line').value.trim(),
-      pickup: document.getElementById('f-pickup').value.trim(),
+      action: 'submitMultiBooking',
+      date: date,
+      trip: trip,
+      pickup: pickup,
+      seats: JSON.stringify(seatEntries),
       confirm: 'true',
-      bookingId: bookingId,
       session_id: MY_SESSION_ID,
       slipBase64: slipData.data,
       slipName: slipData.name,
@@ -3921,19 +4134,23 @@ async function submitBook() {
       stopSeatCountdown();
       closePay();
 
-      document.getElementById('r-name').innerText = payload.name;
-      document.getElementById('r-trip').innerText = payload.trip;
-      document.getElementById('r-date').innerText = new Date(payload.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
-      document.getElementById('r-pickup').innerText = payload.pickup;
-      renderReceiptSeatBox('r-seat-box', payload.seat);
+      document.getElementById('r-name').innerText = seatEntries.length + ' ที่นั่ง';
+      document.getElementById('r-trip').innerText = trip;
+      document.getElementById('r-date').innerText = new Date(date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+      document.getElementById('r-pickup').innerText = pickup;
+      renderMultiSeatReceipt('r-seat-box', seatEntries);
 
       document.getElementById('successPage2').classList.add('show');
-      allBookings.push({ ...payload, paymentStatus: 'รอตรวจสอบสลิป' });
+
+      seatEntries.forEach(entry => {
+        allBookings.push({ date, trip, seat: entry.seat, name: entry.name, nickname: entry.nickname, phone: entry.phone, line: entry.line, pickup, status: 'รอตรวจสอบสลิป' });
+      });
       renderMyTrips();
 
       if (form.parentNode) form.remove();
       selectedSlipFile = null;
-      selectedSeat = null; // จองสำเร็จแล้ว เคลียร์ค่าไว้กันการปลดล็อกเบาะที่จองสำเร็จไปแล้วเวลาปิดหน้าเว็บ
+      selectedSeats = []; // จองสำเร็จแล้ว เคลียร์ค่าไว้กันการปลดล็อกเบาะที่จองสำเร็จไปแล้วเวลาปิดหน้าเว็บ
+      seatFormData = {};
     }, 8000);
 
   } catch (error) {
