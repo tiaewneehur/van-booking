@@ -276,6 +276,13 @@ body {
   justify-content: space-between;
   gap: 8px;
   flex-wrap: wrap;
+  transition: background .2s ease, border-color .2s ease;
+}
+.hdr.home-theme {
+  background:
+    linear-gradient(180deg, rgba(6, 11, 19, .58), rgba(6, 11, 19, .3)),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center 20%/cover no-repeat;
+  border-bottom-color: transparent;
 }
 .hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; }
@@ -338,8 +345,8 @@ body {
   content: '';
   position: absolute; inset: 0; z-index: 0;
   background:
-    linear-gradient(180deg, rgba(6, 11, 19, .22) 0%, rgba(6, 11, 19, .5) 62%, var(--bg) 100%),
-    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center/cover no-repeat;
+    linear-gradient(180deg, rgba(6, 11, 19, .3) 0%, rgba(6, 11, 19, .5) 62%, var(--bg) 100%),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center 40%/cover no-repeat;
 }
 .home-hero > * { position: relative; z-index: 1; }
 
@@ -1578,7 +1585,7 @@ body {
      APP SHELL
      ============================================================ -->
 <div id="appShell">
-  <div class="hdr">
+  <div class="hdr home-theme">
     <div class="hdr-brand" onclick="switchTab('home')">
       <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/44?text=🏕'" alt="Logo">
       <div>
@@ -3356,6 +3363,7 @@ function switchTab(id) {
     document.getElementById('tab-' + t).classList.toggle('active-page', t === id);
     document.getElementById('nav-' + t).classList.toggle('active', t === id);
   });
+  document.querySelector('.hdr').classList.toggle('home-theme', id === 'home');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
