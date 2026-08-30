@@ -452,6 +452,92 @@ body {
   display: flex; align-items: center; justify-content: center; font-size: 30px;
 }
 
+/* ============================================================
+   TRIP CARD V2 — สไตล์รูปเต็มการ์ด + ข้อความซ้อนบนรูป (ตามแบบอ้างอิง)
+   ============================================================ */
+.trip-hcard2 {
+  position: relative;
+  display: block;
+  border-radius: 22px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #0d1420;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .4);
+  transition: transform .18s ease;
+}
+.trip-hcard2:active { transform: scale(.98); }
+
+.thc-photo { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; }
+.thc-photo img { width: 100%; height: 100%; object-fit: cover; }
+.thc-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0) 22%, rgba(0, 0, 0, .82) 100%); }
+
+.thc-status-pill {
+  position: absolute; top: 14px; left: 14px; z-index: 2;
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255, 255, 255, .1); color: #d8f5e6;
+  border: 1px solid rgba(255, 255, 255, .18);
+  padding: 6px 14px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .1px;
+  backdrop-filter: blur(6px);
+}
+.thc-status-pill::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #34e89e; box-shadow: 0 0 6px #34e89e; }
+.thc-status-pill.full::before { background: #ef6a6a; box-shadow: 0 0 6px #ef6a6a; }
+.thc-status-pill.almost::before { background: #f4d160; box-shadow: 0 0 6px #f4d160; }
+.thc-status-pill.soon::before { background: #94a3b8; box-shadow: none; }
+.thc-status-pill.done::before { background: #94a3b8; box-shadow: none; }
+
+.thc-overlay { position: absolute; left: 18px; right: 18px; bottom: 16px; z-index: 2; }
+.thc-title { font-size: 21px; font-weight: 800; color: #fff; line-height: 1.28; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0, 0, 0, .55); }
+.thc-meta-row { display: flex; align-items: center; gap: 16px; font-size: 13px; color: #e5e7eb; margin-bottom: 16px; }
+.thc-meta-row span { display: flex; align-items: center; gap: 5px; text-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
+
+.thc-bottom-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.thc-price strong { font-size: 26px; font-weight: 900; color: #fff; text-shadow: 0 2px 8px rgba(0, 0, 0, .5); }
+.thc-price span { font-size: 12.5px; color: #cbd5e1; margin-left: 4px; }
+.thc-seats-pill {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+  background: rgba(16, 185, 129, .16); border: 1px solid rgba(16, 185, 129, .45); color: #7fe3b4;
+  backdrop-filter: blur(6px);
+  padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space: nowrap;
+}
+.thc-seats-pill.low { background: rgba(245, 158, 11, .16); border-color: rgba(245, 158, 11, .45); color: #f6cd6e; }
+.thc-seats-pill.full { background: rgba(239, 68, 68, .16); border-color: rgba(239, 68, 68, .45); color: #f3a0a0; }
+
+.trip-hcard2.compact .thc-photo { aspect-ratio: 16 / 9; }
+.trip-hcard2.compact .thc-title { font-size: 16px; margin-bottom: 6px; }
+.trip-hcard2.compact .thc-meta-row { font-size: 11px; gap: 12px; margin-bottom: 10px; }
+.trip-hcard2.compact .thc-price strong { font-size: 19px; }
+.trip-hcard2.compact .thc-seats-pill { font-size: 11px; padding: 6px 12px; }
+
+/* ============================================================
+   ประวัติความบ้า (โปรไฟล์) — การ์ดรูปพื้นหลังเต็ม แทนรายการเล็กเดิม
+   ============================================================ */
+.hist-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 16 / 9;
+  margin-bottom: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .35);
+}
+.hist-card img { width: 100%; height: 100%; object-fit: cover; }
+.hist-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, .88) 100%); }
+.hist-card-overlay { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 2; }
+.hist-card-overlay h4 { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 5px; text-shadow: 0 2px 8px rgba(0, 0, 0, .55); }
+.hist-card-overlay p { font-size: 11.5px; color: #e2e8f0; margin-bottom: 6px; text-shadow: 0 1px 4px rgba(0, 0, 0, .5); }
+.hist-card-seat {
+  position: absolute; top: 10px; right: 10px; z-index: 2;
+  min-width: 50px; padding: 5px 10px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #1a2233, #0d131f);
+  border: 1px solid rgba(212, 175, 55, .45);
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .4);
+}
+.hist-card-seat .mini-seat-label { display: block; font-size: 7px; font-weight: 800; letter-spacing: .5px; color: rgba(246, 226, 160, .6); }
+.hist-card-seat .mini-seat-num { display: block; font-size: 14px; font-weight: 900; color: #f6e2a0; line-height: 1.2; }
+
 /* เส้นปรุตั๋ว — องค์ประกอบซิกเนเจอร์ของการ์ด ให้ความรู้สึกเหมือนตั๋วเดินทางใบพรีเมียม */
 .lux-stub { position: relative; border-top: 1.5px dashed rgba(212, 175, 55, .35); }
 .lux-stub::before, .lux-stub::after {
@@ -632,7 +718,7 @@ body {
   background: var(--bg2);
   border: 1px solid var(--border);
   border-top: 1px dashed var(--border);
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 18px 18px;
   padding: 8px 14px 10px;
   margin: -10px 0 10px;
 }
@@ -2941,7 +3027,6 @@ function toggleBookingHistory(triggerEl, listId) {
 function cardHTML(item, compact = false) {
   const info = TRIP_DETAILS[item.trip] || {};
   const img = TRIP_IMAGES[item.trip] || 'default.jpg';
-  const fmtDate = new Date(item.date).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
   const locked = CLOSED_TRIPS.includes(item.trip);
   const isPast = new Date(item.date) < new Date(new Date().setHours(0, 0, 0, 0));
 
@@ -2951,7 +3036,7 @@ function cardHTML(item, compact = false) {
 
   // ป้ายสถานะมุมภาพ (ข้อความ/เงื่อนไขเดิมทุกอย่าง เปลี่ยนแค่การจัดสไตล์)
   let statusClass = 'open';
-  let statusText = 'เปิดจอง';
+  let statusText = '🟢 เปิดจองอยู่';
   if (locked) {
     statusClass = 'soon'; statusText = '⚠️ เร็วๆนี้';
   } else if (isPast) {
@@ -2963,7 +3048,7 @@ function cardHTML(item, compact = false) {
   }
 
   let seatsClass = 'ok';
-  let seatsText = `🟢 ว่าง ${avail} ที่`;
+  let seatsText = `👤 เหลือ ${avail} ที่นั่ง`;
   if (locked) {
     seatsClass = 'full'; seatsText = '⚠️ ยังไม่เปิด';
   } else if (isPast) {
@@ -2971,28 +3056,28 @@ function cardHTML(item, compact = false) {
   } else if (avail <= 0) {
     seatsClass = 'full'; seatsText = '🔴 เต็มแล้ว';
   } else if (avail <= 5) {
-    seatsClass = 'low'; seatsText = `🔥 ว่าง ${avail} ที่`;
+    seatsClass = 'low'; seatsText = `🔥 เหลือ ${avail} ที่`;
   }
 
+  // แยกตัวเลขราคาออกจากคำว่า "บาท" เพื่อจัดสไตล์ตัวเลขใหญ่ + หน่วยเล็กแยกกัน
+  const priceNum = String(info.price || '-').replace(/\s*บาท\s*$/, '');
+
   return `
-    <div class="trip-hcard${compact ? ' compact' : ''}" onclick="openModal('${item.trip}','${item.date}')">
-      <div class="lux-photo">
+    <div class="trip-hcard2${compact ? ' compact' : ''}" onclick="openModal('${item.trip}','${item.date}')">
+      <div class="thc-photo">
         <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&q=70'}">
-        <span class="lux-status ${statusClass}">${statusText}</span>
-        <span class="lux-price">฿${info.price || '-'}</span>
+        <span class="thc-status-pill ${statusClass}">${statusText}</span>
         ${locked ? '<div class="lux-locked-ov">🔒</div>' : ''}
-      </div>
-      <div class="lux-stub"></div>
-      <div class="lux-body">
-        <h4 class="lux-title">${item.trip}</h4>
-        <div class="lux-loc">📍 ${info.loc || 'ประเทศไทย'}</div>
-        <div class="lux-meta-row">
-          <span class="lux-date">🗓️ ${fmtDate}</span>
-          <span class="lux-seats ${seatsClass}">${seatsText}</span>
-        </div>
-        <div class="lux-meta-row2">
-          <span class="lux-days">⏳ ${info.days || '-'}</span>
-          <span class="lux-cta">ดูรายละเอียด <span>›</span></span>
+        <div class="thc-overlay">
+          <h4 class="thc-title">${item.trip}</h4>
+          <div class="thc-meta-row">
+            <span>📍 ${info.loc || 'ประเทศไทย'}</span>
+            <span>⏳ ${info.days || '-'}</span>
+          </div>
+          <div class="thc-bottom-row">
+            <div class="thc-price"><strong>${priceNum}</strong><span>บาท/ท่าน</span></div>
+            <div class="thc-seats-pill ${seatsClass}">${seatsText}</div>
+          </div>
         </div>
       </div>
     </div>
@@ -3096,18 +3181,17 @@ function renderMyTrips() {
 
         return `
           <div class="${i >= 2 ? 'hist-extra' : ''}" style="${i >= 2 ? 'display:none' : ''}">
-            <div class="h-item" style="${pickupPoint ? 'margin-bottom:0' : ''}" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
-              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=100&q=60'}">
-              <div class="hi">
-                <h4>${b.trip}</h4>
-                <p>📅 ${fmtDate}</p>
-                <p style="margin-top:4px">${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}</p>
-              </div>
-              <div class="mini-seat">
+            <div class="hist-card" style="${pickupPoint ? 'margin-bottom:0;border-radius:18px 18px 0 0' : ''}" onclick="viewMyBookingSeat('${b.trip}','${b.date}','${b.seat || ''}')">
+              <img src="${img}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=60'}">
+              <div class="hist-card-seat">
                 <span class="mini-seat-label">ที่นั่ง</span>
                 <span class="mini-seat-num">${b.seat || '-'}</span>
               </div>
-              <div class="h-arr">›</div>
+              <div class="hist-card-overlay">
+                <h4>${b.trip}</h4>
+                <p>📅 ${fmtDate}</p>
+                ${isPast ? '<span class="chip chip-green">✅ ไปแล้ว</span>' : '<span class="chip chip-blue">🗓️ กำลังจะไป</span>'}
+              </div>
             </div>
             ${pickupPoint ? `<div class="pickup-note">🚏 จุดขึ้นรถ: <strong>${pickupPoint}</strong></div>` : ''}
           </div>
