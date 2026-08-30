@@ -1178,7 +1178,37 @@ body {
     url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center/cover no-repeat fixed;
 }
 #successPage2.show { display: block; animation: fadeUp .3s ease; }
-.succ-body { max-width: 440px; margin: 0 auto; padding: 18px 20px calc(100px + env(safe-area-inset-bottom)); text-align: center; }
+.succ-body { max-width: 440px; margin: 0 auto; padding: 18px 20px calc(90px + env(safe-area-inset-bottom)); text-align: center; }
+.succ-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(6, 11, 19, .92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+  z-index: 1200;
+  display: flex;
+  justify-content: center;
+}
+.succ-line-btn {
+  width: 100%;
+  max-width: 400px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #06C755;
+  color: #fff;
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 14.5px;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(6, 199, 85, .35);
+}
 .succ-ico { width: 48px; height: 48px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; margin: 0 auto 10px; box-shadow: 0 0 18px rgba(16, 185, 129, .45); }
 .receipt {
   position: relative;
@@ -1684,11 +1714,13 @@ body {
       ทักไลน์แอดมินส่งหลักฐานการจองเพื่อให้แอดมินดึงเข้ากลุ่ม
       <br><span style="font-size:11.5px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
     </p>
-    <a href="https://line.me/ti/p/~tiaewneehur" target="_blank" rel="noopener noreferrer"
-       style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:#06C755;color:#fff;padding:11px;border-radius:12px;font-size:13.5px;font-weight:700;margin-bottom:8px;box-shadow:0 6px 18px rgba(6,199,85,.3)">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:19px;height:19px"> ทักไลน์แอดมินเลย
+    <span onclick="backHome()" style="display:inline-block;font-size:13px;color:var(--sub);text-decoration:underline;text-underline-offset:2px;cursor:pointer;margin-top:4px">กลับสู่หน้าหลัก 🏠</span>
+  </div>
+
+  <div class="succ-sticky-bar">
+    <a href="https://line.me/ti/p/~tiaewneehur" target="_blank" rel="noopener noreferrer" class="succ-line-btn">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:20px;height:20px"> ทักไลน์แอดมินเลย
     </a>
-    <button class="btn-home" onclick="backHome()">กลับสู่หน้าหลัก 🏠</button>
   </div>
 </div>
 
