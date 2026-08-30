@@ -337,15 +337,15 @@ body {
    ============================================================ */
 .home-hero {
   position: relative;
-  margin: -16px -16px 20px;
-  padding: 18px 16px 26px;
+  margin: -16px -16px 22px;
+  padding: 18px 16px 30px;
   overflow: hidden;
 }
 .home-hero::before {
   content: '';
   position: absolute; inset: 0; z-index: 0;
   background:
-    linear-gradient(180deg, rgba(6, 11, 19, .18) 0%, rgba(6, 11, 19, .48) 62%, var(--bg) 100%),
+    linear-gradient(180deg, rgba(6, 11, 19, .18) 0%, rgba(6, 11, 19, .55) 72%, var(--bg) 100%),
     url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=65') center 30% / cover fixed;
 }
 .home-hero > * { position: relative; z-index: 1; }
@@ -392,7 +392,6 @@ body {
 .qa-mytrips-mini { background: linear-gradient(145deg, #7dd3fc, #0284c7); box-shadow: 0 5px 14px rgba(2, 132, 199, .4); }
 .qa-mytrips-mini .qa-mini-label { color: rgba(255, 255, 255, .95); }
 @keyframes qaBeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-.home-hero .search-wrap { margin-bottom: 0; }
 .sec-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .sec-hdr h3 { font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; }
 
@@ -2928,26 +2927,26 @@ function renderHome() {
         </div>
         <img class="greet-avatar" src="${currentUser.linePicture || 'https://via.placeholder.com/100?text=👤'}" alt="">
       </div>
+    </div>
 
-      <div class="home-quick-actions">
-        <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
-          <div class="qa-mini-ico">🎒</div>
-          <div class="qa-mini-label">จองทริป</div>
-        </div>
-        <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
-          <div class="qa-mini-ico">🏕️</div>
-          <div class="qa-mini-label">เช่าของ</div>
-        </div>
-        <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
-          <div class="qa-mini-ico">👀</div>
-          <div class="qa-mini-label">รีวิว & แชร์ทริป</div>
-        </div>
+    <div class="home-quick-actions">
+      <div class="qa-mini qa-trip-mini" onclick="switchTab('trips')">
+        <div class="qa-mini-ico">🎒</div>
+        <div class="qa-mini-label">จองทริป</div>
       </div>
+      <div class="qa-mini qa-rent-mini" onclick="openEquipRent()">
+        <div class="qa-mini-ico">🏕️</div>
+        <div class="qa-mini-label">เช่าของ</div>
+      </div>
+      <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
+        <div class="qa-mini-ico">👀</div>
+        <div class="qa-mini-label">รีวิว & แชร์ทริป</div>
+      </div>
+    </div>
 
-      <div class="search-wrap">
-        <span class="s-ico">🔍</span>
-        <input id="homeSearchInput" placeholder="ค้นหาชื่อทริป..." oninput="searchHomeTrips()">
-      </div>
+    <div class="search-wrap">
+      <span class="s-ico">🔍</span>
+      <input id="homeSearchInput" placeholder="ค้นหาชื่อทริป..." oninput="searchHomeTrips()">
     </div>
 
     <div class="sec-hdr">
