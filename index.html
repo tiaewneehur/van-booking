@@ -284,22 +284,28 @@ body {
     url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=65') center 30% / cover fixed;
   border-bottom-color: transparent;
 }
-.hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-.hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; }
-.hdr-brand h1 { font-size: 16px; font-weight: 800; color: var(--blue); }
-.hdr-brand span { font-size: 8px; color: #fff; opacity: .7; display: block; }
+.hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; transition: gap .25s ease; }
+.hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; transition: width .25s ease, height .25s ease; }
+.hdr-brand h1 { font-size: 16px; font-weight: 800; color: var(--blue); transition: font-size .25s ease; }
+.hdr-brand span { font-size: 8px; color: #fff; opacity: .7; display: block; transition: font-size .25s ease; }
+.hdr-actions { display: flex; gap: 8px; margin-left: auto; }
 .hdr-btn {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+  border: none; cursor: pointer; font-family: inherit; white-space: nowrap;
+  padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  transition: width .25s ease, height .25s ease, padding .25s ease, border-radius .25s ease;
 }
+.hdr-btn-info { background: rgba(6, 11, 19, .55); backdrop-filter: blur(6px); border: 1px solid rgba(56, 189, 248, .35); color: var(--blue); }
+.hdr-btn-contact { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 3px 10px rgba(2, 132, 199, .3); }
+
+/* บนหน้าแรก: โลโก้/ชื่อแบรนด์ใหญ่ขึ้นให้เด่นเหมือนแบนเนอร์ ปุ่มย่อเป็นวงกลมไอคอนล้วน */
+.hdr.home-theme { padding: 20px 18px 22px; align-items: center; }
+.hdr.home-theme .hdr-brand img { width: 68px; height: 68px; }
+.hdr.home-theme .hdr-brand h1 { font-size: 22px; }
+.hdr.home-theme .hdr-brand span { font-size: 11.5px; }
+.hdr.home-theme .hdr-btn { width: 38px; height: 38px; padding: 0; border-radius: 50%; justify-content: center; flex-shrink: 0; }
+.hdr.home-theme .hdr-btn-label { display: none; }
+.hdr.home-theme .hdr-btn-ico { font-size: 16px; }
 
 .bnav {
   position: fixed;
@@ -1592,9 +1598,9 @@ body {
         <span>ออกไปเที่ยวให้โลกจำ 🏔️</span>
       </div>
     </div>
-    <div style="display:flex;gap:8px;margin-left:auto">
-      <button onclick="openDrawer()" style="display:flex;align-items:center;gap:5px;background:rgba(6,11,19,.55);backdrop-filter:blur(6px);border:1px solid rgba(56,189,248,.35);color:var(--blue);padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">📋 สาระแนะนำ</button>
-      <button onclick="document.getElementById('adminPopup').style.display='flex'" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;color:#fff;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 3px 10px rgba(2,132,199,.3)">👤 ติดต่อ</button>
+    <div class="hdr-actions">
+      <button class="hdr-btn hdr-btn-info" onclick="openDrawer()"><span class="hdr-btn-ico">📋</span><span class="hdr-btn-label">สาระแนะนำ</span></button>
+      <button class="hdr-btn hdr-btn-contact" onclick="document.getElementById('adminPopup').style.display='flex'"><span class="hdr-btn-ico">👤</span><span class="hdr-btn-label">ติดต่อ</span></button>
     </div>
   </div>
 
