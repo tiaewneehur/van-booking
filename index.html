@@ -280,8 +280,8 @@ body {
 }
 .hdr.home-theme {
   background:
-    linear-gradient(180deg, rgba(6, 11, 19, .58), rgba(6, 11, 19, .3)),
-    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center 20%/cover no-repeat;
+    linear-gradient(180deg, rgba(6, 11, 19, .5), rgba(6, 11, 19, .25)),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=65') center 30% / cover fixed;
   border-bottom-color: transparent;
 }
 .hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -345,8 +345,8 @@ body {
   content: '';
   position: absolute; inset: 0; z-index: 0;
   background:
-    linear-gradient(180deg, rgba(6, 11, 19, .3) 0%, rgba(6, 11, 19, .5) 62%, var(--bg) 100%),
-    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center 40%/cover no-repeat;
+    linear-gradient(180deg, rgba(6, 11, 19, .18) 0%, rgba(6, 11, 19, .48) 62%, var(--bg) 100%),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=65') center 30% / cover fixed;
 }
 .home-hero > * { position: relative; z-index: 1; }
 
@@ -1594,7 +1594,7 @@ body {
       </div>
     </div>
     <div style="display:flex;gap:8px;margin-left:auto">
-      <button onclick="openDrawer()" style="display:flex;align-items:center;gap:5px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);color:var(--blue);padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">📋 สาระแนะนำ</button>
+      <button onclick="openDrawer()" style="display:flex;align-items:center;gap:5px;background:rgba(6,11,19,.55);backdrop-filter:blur(6px);border:1px solid rgba(56,189,248,.35);color:var(--blue);padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">📋 สาระแนะนำ</button>
       <button onclick="document.getElementById('adminPopup').style.display='flex'" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;color:#fff;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 3px 10px rgba(2,132,199,.3)">👤 ติดต่อ</button>
     </div>
   </div>
