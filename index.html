@@ -1178,45 +1178,45 @@ body {
     url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1000&q=60') center/cover no-repeat fixed;
 }
 #successPage2.show { display: block; animation: fadeUp .3s ease; }
-.succ-body { max-width: 440px; margin: 0 auto; padding: 40px 20px calc(140px + env(safe-area-inset-bottom)); text-align: center; }
-.succ-ico { width: 72px; height: 72px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; margin: 0 auto 20px; box-shadow: 0 0 24px rgba(16, 185, 129, .45); }
+.succ-body { max-width: 440px; margin: 0 auto; padding: 18px 20px calc(100px + env(safe-area-inset-bottom)); text-align: center; }
+.succ-ico { width: 48px; height: 48px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; margin: 0 auto 10px; box-shadow: 0 0 18px rgba(16, 185, 129, .45); }
 .receipt {
   position: relative;
   background: linear-gradient(180deg, #fffdf7, #fbf5e6);
   color: #1e293b;
-  border-radius: 24px;
-  padding: 26px 22px 22px;
+  border-radius: 20px;
+  padding: 16px 18px 14px;
   text-align: left;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, .4), 0 0 0 1px rgba(212, 175, 55, .3);
-  margin: 20px 0;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .4), 0 0 0 1px rgba(212, 175, 55, .3);
+  margin: 10px 0;
   overflow: hidden;
 }
 .receipt::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 5px;
+  height: 4px;
   background: linear-gradient(90deg, #f6e2a0, #c9971f, #f6e2a0);
 }
-.r-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 12px; font-size: 14px; font-weight: 500; border-bottom: 1px dashed #e5ddc4; }
+.r-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; padding-bottom: 7px; font-size: 12.5px; font-weight: 500; border-bottom: 1px dashed #e5ddc4; }
 .r-row:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.r-row span { color: #9a8a68; font-weight: 400; min-width: 66px; }
+.r-row span { color: #9a8a68; font-weight: 400; min-width: 60px; }
 .r-seat-box {
   background: linear-gradient(160deg, #fffcf2, #faf1d8);
   border: 1.5px dashed #c9971f;
-  padding: 18px 14px 16px;
-  border-radius: 18px;
+  padding: 10px 12px 8px;
+  border-radius: 14px;
   text-align: center;
-  margin-top: 18px;
+  margin-top: 10px;
 }
-.r-seat-box > p { font-size: 11px; color: #a16207; font-weight: 700; letter-spacing: .4px; margin-bottom: 12px; text-transform: uppercase; }
+.r-seat-box > p { font-size: 10px; color: #a16207; font-weight: 700; letter-spacing: .4px; margin-bottom: 6px; text-transform: uppercase; }
 .r-seat-split { display: flex; align-items: center; justify-content: center; gap: 20px; }
 .r-seat-split.single { gap: 0; }
 .r-seat-part { display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .r-seat-label { font-size: 10.5px; color: #92795a; font-weight: 700; letter-spacing: .2px; }
-.r-seat-value { font-size: 30px; font-weight: 900; color: #15803d; line-height: 1; }
-.r-seat-divider { width: 1px; height: 40px; background: linear-gradient(180deg, transparent, #c9971f, transparent); }
-.btn-home { width: 100%; height: 50px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 8px; }
+.r-seat-value { font-size: 26px; font-weight: 900; color: #15803d; line-height: 1; }
+.r-seat-divider { width: 1px; height: 34px; background: linear-gradient(180deg, transparent, #c9971f, transparent); }
+.btn-home { width: 100%; height: 46px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; margin-top: 6px; }
 
 /* ป๊อปอัพยืนยันเลือกที่นั่ง (SweetAlert) — ให้ดูพรีเมียมเข้าธีมแอป */
 .seat-confirm-popup {
@@ -1672,7 +1672,7 @@ body {
 <div id="successPage2">
   <div class="succ-body">
     <div class="succ-ico">✓</div>
-    <h2 style="font-size:26px;font-weight:700;color:#fff">จองสำเร็จ! 🎉</h2>
+    <h2 style="font-size:19px;font-weight:700;color:#fff;margin-bottom:2px">จองสำเร็จ! 🎉</h2>
     <div class="receipt" id="r-receipt-card">
       <div class="r-row">🎟️ <span>จำนวน:</span> <strong id="r-name">-</strong></div>
       <div class="r-row">⛺ <span>ทริป:</span> <strong id="r-trip">-</strong></div>
@@ -1680,13 +1680,13 @@ body {
       <div class="r-row">🚏 <span>จุดขึ้นรถ:</span> <strong id="r-pickup">-</strong></div>
       <div class="r-seat-box" id="r-seat-box"></div>
     </div>
-    <p style="font-size:16px;color:var(--red);line-height:1.5;margin-bottom:16px">
+    <p style="font-size:12.5px;color:var(--red);line-height:1.4;margin-bottom:10px">
       ทักไลน์แอดมินส่งหลักฐานการจองเพื่อให้แอดมินดึงเข้ากลุ่ม
-      <br><span style="font-size:16px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
+      <br><span style="font-size:11.5px;color:var(--muted)">(แคปหน้าจอไว้เป็นหลักฐานได้เลยครับ)</span>
     </p>
     <a href="https://line.me/ti/p/~tiaewneehur" target="_blank" rel="noopener noreferrer"
-       style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:#06C755;color:#fff;padding:14px;border-radius:14px;font-size:15px;font-weight:700;margin-bottom:12px;box-shadow:0 6px 18px rgba(6,199,85,.3)">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:22px;height:22px"> ทักไลน์แอดมินเลย
+       style="text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;background:#06C755;color:#fff;padding:11px;border-radius:12px;font-size:13.5px;font-weight:700;margin-bottom:8px;box-shadow:0 6px 18px rgba(6,199,85,.3)">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:19px;height:19px"> ทักไลน์แอดมินเลย
     </a>
     <button class="btn-home" onclick="backHome()">กลับสู่หน้าหลัก 🏠</button>
   </div>
@@ -3773,19 +3773,19 @@ function renderMultiSeatReceipt(boxId, entries) {
     const isOnsite = String(e.seat || '').startsWith('หน้างาน');
     const seatLabel = isOnsite ? e.seat : `คันที่ ${vanNumberFromSeatId(e.seat)} · ${e.seat}`;
     return `
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed #e5ddc4">
-        <span style="font-size:12.5px;color:#1e293b;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.name}</span>
-        <span style="font-size:13px;color:#15803d;font-weight:800;flex-shrink:0">${seatLabel}</span>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 0;border-bottom:1px dashed #e5ddc4">
+        <span style="font-size:11.5px;color:#1e293b;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.name}</span>
+        <span style="font-size:12px;color:#15803d;font-weight:800;flex-shrink:0">${seatLabel}</span>
       </div>
     `;
   }).join('');
 
   box.innerHTML = `
     <p>ที่นั่งที่จองไว้ (${entries.length} ที่นั่ง)</p>
-    <div style="text-align:left">${rows}</div>
-    <div style="margin-top:12px;padding-top:12px;border-top:2px solid #c9971f;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:11.5px;color:#92795a;font-weight:700">ยอดมัดจำที่โอน</span>
-      <span style="font-size:22px;font-weight:900;color:#15803d">${total.toLocaleString('th-TH')} บาท</span>
+    <div style="text-align:left;max-height:150px;overflow-y:auto">${rows}</div>
+    <div style="margin-top:8px;padding-top:8px;border-top:2px solid #c9971f;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11px;color:#92795a;font-weight:700">ยอดมัดจำที่โอน</span>
+      <span style="font-size:19px;font-weight:900;color:#15803d">${total.toLocaleString('th-TH')} บาท</span>
     </div>
   `;
 }
