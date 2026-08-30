@@ -276,36 +276,23 @@ body {
   justify-content: space-between;
   gap: 8px;
   flex-wrap: wrap;
-  transition: background .2s ease, border-color .2s ease;
 }
-.hdr.home-theme {
-  background:
-    linear-gradient(180deg, rgba(6, 11, 19, .5), rgba(6, 11, 19, .25)),
-    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=65') center 30% / cover fixed;
-  border-bottom-color: transparent;
-}
-.hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; transition: gap .25s ease; }
-.hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; transition: width .25s ease, height .25s ease; }
-.hdr-brand h1 { font-size: 16px; font-weight: 800; color: var(--blue); transition: font-size .25s ease; }
-.hdr-brand span { font-size: 8px; color: #fff; opacity: .7; display: block; transition: font-size .25s ease; }
-.hdr-actions { display: flex; gap: 8px; margin-left: auto; }
+.hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; }
+.hdr-brand h1 { font-size: 16px; font-weight: 800; color: var(--blue); }
+.hdr-brand span { font-size: 8px; color: #fff; opacity: .7; display: block; }
 .hdr-btn {
-  display: flex; align-items: center; gap: 5px;
-  border: none; cursor: pointer; font-family: inherit; white-space: nowrap;
-  padding: 6px 11px; border-radius: 999px; font-size: 11px; font-weight: 600;
-  transition: width .25s ease, height .25s ease, padding .25s ease, border-radius .25s ease;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
 }
-.hdr-btn-info { background: rgba(6, 11, 19, .55); backdrop-filter: blur(6px); border: 1px solid rgba(56, 189, 248, .35); color: var(--blue); }
-.hdr-btn-contact { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 3px 10px rgba(2, 132, 199, .3); }
-
-/* บนหน้าแรก: โลโก้/ชื่อแบรนด์ใหญ่ขึ้นให้เด่นเหมือนแบนเนอร์ ปุ่มย่อเป็นวงกลมไอคอนล้วน */
-.hdr.home-theme { padding: 20px 18px 22px; align-items: center; }
-.hdr.home-theme .hdr-brand img { width: 68px; height: 68px; }
-.hdr.home-theme .hdr-brand h1 { font-size: 22px; }
-.hdr.home-theme .hdr-brand span { font-size: 11.5px; }
-.hdr.home-theme .hdr-btn { width: 38px; height: 38px; padding: 0; border-radius: 50%; justify-content: center; flex-shrink: 0; }
-.hdr.home-theme .hdr-btn-label { display: none; }
-.hdr.home-theme .hdr-btn-ico { font-size: 16px; }
 
 .bnav {
   position: fixed;
@@ -341,30 +328,22 @@ body {
 /* ============================================================
    HOME TAB
    ============================================================ */
-.home-hero {
-  position: relative;
-  margin: -16px -16px 22px;
-  padding: 18px 16px 30px;
-  overflow: hidden;
-}
-.home-hero::before {
-  content: '';
-  position: absolute; inset: 0; z-index: 0;
-  background:
-    linear-gradient(180deg, rgba(6, 11, 19, .18) 0%, rgba(6, 11, 19, .55) 72%, var(--bg) 100%),
-    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&q=65') center 30% / cover fixed;
-}
-.home-hero > * { position: relative; z-index: 1; }
-
 .greet-bar {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 18px;
+  background:
+    linear-gradient(135deg, rgba(2, 66, 100, .68), rgba(6, 11, 19, .78)),
+    url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=60') center/cover no-repeat;
+  border: 1px solid rgba(56, 189, 248, .18);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
 }
-.greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; text-shadow: 0 2px 8px rgba(0, 0, 0, .5); }
-.greet-bar .left p { font-size: 12px; color: #e2e8f0; margin-top: 2px; text-shadow: 0 1px 6px rgba(0, 0, 0, .5); }
+.greet-bar .left h2 { font-size: 15px; font-weight: 700; color: #fff; }
+.greet-bar .left p { font-size: 12px; color: #e2e8f0; margin-top: 2px; }
 .greet-avatar {
   width: 52px;
   height: 52px;
@@ -374,7 +353,7 @@ body {
   box-shadow: 0 4px 14px rgba(0, 0, 0, .45);
   flex-shrink: 0;
 }
-.home-quick-actions { display: flex; gap: 10px; margin-bottom: 18px; }
+.home-quick-actions { display: flex; gap: 10px; margin-bottom: 20px; }
 .home-quick-actions .qa-mini { flex: 1; width: auto; height: 62px; }
 .greet-actions { display: flex; gap: 10px; flex-shrink: 0; }
 .qa-mini {
@@ -1590,7 +1569,7 @@ body {
      APP SHELL
      ============================================================ -->
 <div id="appShell">
-  <div class="hdr home-theme">
+  <div class="hdr">
     <div class="hdr-brand" onclick="switchTab('home')">
       <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/44?text=🏕'" alt="Logo">
       <div>
@@ -1598,9 +1577,9 @@ body {
         <span>ออกไปเที่ยวให้โลกจำ 🏔️</span>
       </div>
     </div>
-    <div class="hdr-actions">
-      <button class="hdr-btn hdr-btn-info" onclick="openDrawer()"><span class="hdr-btn-ico">📋</span><span class="hdr-btn-label">สาระแนะนำ</span></button>
-      <button class="hdr-btn hdr-btn-contact" onclick="document.getElementById('adminPopup').style.display='flex'"><span class="hdr-btn-ico">👤</span><span class="hdr-btn-label">ติดต่อ</span></button>
+    <div style="display:flex;gap:8px;margin-left:auto">
+      <button onclick="openDrawer()" style="display:flex;align-items:center;gap:5px;background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.25);color:var(--blue);padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap">📋 สาระแนะนำ</button>
+      <button onclick="document.getElementById('adminPopup').style.display='flex'" style="display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;color:#fff;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;box-shadow:0 3px 10px rgba(2,132,199,.3)">👤 ติดต่อ</button>
     </div>
   </div>
 
@@ -2925,14 +2904,12 @@ function renderHome() {
   const pastTrips = cacheTrips.filter(t => new Date(t.date) < today).sort((a, b) => new Date(b.date) - new Date(a.date));
 
   document.getElementById('homeContent').innerHTML = `
-    <div class="home-hero">
-      <div class="greet-bar">
-        <div class="left">
-          <h2>${greeting}, ${currentUser.nick}! 👋</h2>
-          <p>คุณมีประวัติทริปทั้งหมด <strong style="color:#38bdf8">${myTripCount} ทริป</strong></p>
-        </div>
-        <img class="greet-avatar" src="${currentUser.linePicture || 'https://via.placeholder.com/100?text=👤'}" alt="">
+    <div class="greet-bar">
+      <div class="left">
+        <h2>${greeting}, ${currentUser.nick}! 👋</h2>
+        <p>คุณมีประวัติทริปทั้งหมด <strong style="color:#38bdf8">${myTripCount} ทริป</strong></p>
       </div>
+      <img class="greet-avatar" src="${currentUser.linePicture || 'https://via.placeholder.com/100?text=👤'}" alt="">
     </div>
 
     <div class="home-quick-actions">
@@ -2946,11 +2923,12 @@ function renderHome() {
       </div>
       <div class="qa-mini qa-mytrips-mini" onclick="openReviews()">
         <div class="qa-mini-ico">👀</div>
-        <div class="qa-mini-label">รีวิว & แชร์ทริป</div>
+        <div class="qa-mini-label">รีวิว & แชร์ทริป</div> 
+
       </div>
     </div>
 
-    <div class="search-wrap">
+    <div class="search-wrap" style="margin-bottom:16px">
       <span class="s-ico">🔍</span>
       <input id="homeSearchInput" placeholder="ค้นหาชื่อทริป..." oninput="searchHomeTrips()">
     </div>
@@ -3368,7 +3346,6 @@ function switchTab(id) {
     document.getElementById('tab-' + t).classList.toggle('active-page', t === id);
     document.getElementById('nav-' + t).classList.toggle('active', t === id);
   });
-  document.querySelector('.hdr').classList.toggle('home-theme', id === 'home');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
