@@ -280,7 +280,7 @@ body {
 .hdr {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
-  padding-bottom: 6px;
+  padding-bottom: 14px;
   margin-bottom: 2px;
 }
 .hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -367,22 +367,16 @@ body {
 .home-banner-actions .hdr-btn-info { background: rgba(6, 11, 19, .55); border: 1px solid rgba(56, 189, 248, .4); color: var(--blue); }
 .home-banner-actions .hdr-btn-contact { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 3px 10px rgba(2, 132, 199, .35); }
 .hdr-greet {
-  position: absolute;
-  left: 50%; bottom: 8px;
-  transform: translateX(-50%);
-  z-index: 2;
   display: flex;
   align-items: center;
   gap: 12px;
   width: calc(100% - 32px);
   max-width: 440px;
-  background: rgba(6, 11, 19, .5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, .12);
+  margin: 12px auto 0;
+  background: rgba(255, 255, 255, .04);
+  border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 16px;
   padding: 10px 14px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
 }
 .hdr-greet img {
   width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
@@ -1615,9 +1609,9 @@ body {
         <button class="hdr-btn hdr-btn-info" onclick="openDrawer()">📋 สาระแนะนำ</button>
         <button class="hdr-btn hdr-btn-contact" onclick="document.getElementById('adminPopup').style.display='flex'">👤 ติดต่อ</button>
       </div>
-
-      <div class="hdr-greet" id="hdrGreet"></div>
     </div>
+
+    <div class="hdr-greet" id="hdrGreet"></div>
   </div>
 
   <div id="tab-home" class="view-page active-page"><div class="main" id="homeContent"></div></div>
@@ -3430,6 +3424,8 @@ function switchTab(id) {
     document.getElementById('tab-' + t).classList.toggle('active-page', t === id);
     document.getElementById('nav-' + t).classList.toggle('active', t === id);
   });
+  const greetEl = document.getElementById('hdrGreet');
+  if (greetEl) greetEl.style.display = (id === 'home') ? 'flex' : 'none';
   if (id === 'mytrips') fetchArchiveBookings();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
