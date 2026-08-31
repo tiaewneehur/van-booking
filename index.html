@@ -2751,19 +2751,10 @@ function fetchData() {
     cacheTrips.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     renderHome();
+    renderUpcomingCarousel();
     renderTripList(cacheTrips);
     renderMyTrips();
     renderNotif();
-
-    const today = new Date(new Date().setHours(0, 0, 0, 0));
-    const upcomingEl = document.getElementById('upcomingList');
-    if (upcomingEl) {
-      const upcoming = cacheTrips.filter(t => new Date(t.date) >= today);
-      upcomingEl.innerHTML = upcoming.map(t => cardHTML(t, true)).join('')
-        || '<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
-
-      setupCarouselAutoScroll('upcoming', upcomingEl, 2000);
-    }
 
     document.getElementById('loadingScreen').classList.remove('show');
     delete window[cb];
@@ -2802,7 +2793,10 @@ function fetchArchiveBookings() {
     archiveFetched = true;
     renderMyTrips();
     // อัปเดตเลข "ประวัติทริปทั้งหมด" ในหน้าแรกให้นับรวมประวัติเก่าด้วย (ไม่บล็อกการโหลดครั้งแรก)
-    if (document.getElementById('tab-home')) renderHome();
+    if (document.getElementById('tab-home')) {
+      renderHome();
+      renderUpcomingCarousel();
+    }
     delete window[cb];
   };
 
@@ -2933,6 +2927,12 @@ function renderHome() {
   const closedTrips = cacheTrips.filter(t => CLOSED_TRIPS.includes(t.trip));
   const pastTrips = cacheTrips.filter(t => new Date(t.date) < today).sort((a, b) => new Date(b.date) - new Date(a.date));
 
+  // ข้อมูลพร้อมอยู่แล้วตอนเรียกฟังก์ชันนี้เสมอ (renderHome() ถูกเรียกหลังโหลดข้อมูลสำเร็จทุกครั้ง)
+  // เลยแสดงการ์ดจริงไปเลย ไม่ต้องมีข้อความ "กำลังโหลด" ค้างแวบเดียวก่อนถูกแทนที่ซ้ำซ้อน
+  const upcomingTrips = cacheTrips.filter(t => new Date(t.date) >= today);
+  const upcomingListHTML = upcomingTrips.map(t => cardHTML(t, true)).join('')
+    || '<p style="text-align:center;color:var(--muted);padding:20px">ยังไม่มีทริปเปิดจองครับ</p>';
+
   document.getElementById('homeContent').innerHTML = `
     <div class="greet-bar">
       <div class="left">
@@ -2968,7 +2968,7 @@ function renderHome() {
       <span onclick="switchTab('trips')" style="font-size:12px;color:var(--blue);cursor:pointer;font-weight:600">ดูทั้งหมด ›</span>
     </div>
     <div id="upcomingList" style="display:flex;gap:12px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none">
-      <p style="text-align:center;color:var(--blue);padding:20px">⌛ กำลังโหลดข้อมูลจากหลังบ้าน...</p>
+      ${upcomingListHTML}
     </div>
 
     <div class="divider"></div>
@@ -3049,6 +3049,19 @@ function renderHome() {
       <p style="font-size:9.5px;color:var(--muted);margin-top:3px">ออกแบบและพัฒนาโดยทีมงานเที่ยวนี่เหอะ 🏕️</p>
     </div>
   `;
+}
+
+// เติมการ์ดในแถวสไลด์ "ทริปที่เปิดจอง" หน้าแรก — แยกเป็นฟังก์ชันเพื่อเรียกซ้ำได้ทุกครั้งที่ renderHome() รันใหม่
+// (renderHome() เขียน HTML ทั้งหมดทับใหม่ทุกครั้ง รวมถึงรีเซ็ต #upcomingList กลับเป็นข้อความ "กำลังโหลด" ด้วย
+// ถ้าไม่เรียกฟังก์ชันนี้ซ้ำ การ์ดจะค้างไม่โผล่กลับมาอีกเลย)
+// เดินเครื่องสไลด์อัตโนมัติของแถว "ทริปที่เปิดจอง" หน้าแรก
+// (renderHome() เขียนการ์ดจริงลงไปตรงๆ อยู่แล้วตอนวาด HTML เลยไม่ต้องมาเขียน innerHTML ซ้ำที่นี่อีก
+// แค่ผูก setupCarouselAutoScroll ให้กับ element ที่เพิ่งถูกสร้างขึ้นใหม่เท่านั้น)
+function renderUpcomingCarousel() {
+  const upcomingEl = document.getElementById('upcomingList');
+  if (!upcomingEl) return;
+
+  setupCarouselAutoScroll('upcoming', upcomingEl, 2000);
 }
 
 // สลับ "ดูทั้งหมด ⇄ ย่อ" สำหรับลิสต์ทริปที่ผ่านมา
