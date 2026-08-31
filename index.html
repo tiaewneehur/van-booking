@@ -3465,7 +3465,7 @@ function openModal(name, dateStr) {
   const seatIds = ['A', 'B', 'C'].flatMap(prefix =>
     BUS_GRID_STRUCTURE.filter(n => n !== 'driver' && n !== 'spacer').map(n => prefix + n)
   );
-  const takenSeats = allBookings.filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.trip === name && b.date === dateStr).map(b => String(b.seat));
+  const takenSeats = [...allBookings, ...allArchiveBookings].filter(b => b.seat && !String(b.seat).startsWith('หน้างาน') && b.trip === name && b.date === dateStr).map(b => String(b.seat));
   const emptySeats = seatIds.filter(id => !takenSeats.includes(id));
   const avail = emptySeats.length;
   const fmtDate = new Date(dateStr).toLocaleDateString('th-TH', { day: 'numeric', month: 'long', year: 'numeric' });
