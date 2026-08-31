@@ -283,6 +283,8 @@ body {
   padding-bottom: 53px;
   margin-bottom: 2px;
 }
+/* หน้าอื่นนอกจากหน้าแรกไม่มีกล่องทักทาย เลยไม่ต้องเผื่อระยะด้านล่างเยอะขนาดนั้น */
+.hdr.no-greet { padding-bottom: 15px; }
 .hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
 .hdr-brand img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--blue); object-fit: cover; }
 .hdr-brand h1 { font-size: 16px; font-weight: 800; color: var(--blue); }
@@ -3447,6 +3449,7 @@ function switchTab(id) {
   });
   const greetEl = document.getElementById('hdrGreet');
   if (greetEl) greetEl.style.display = (id === 'home') ? 'flex' : 'none';
+  document.querySelector('.hdr').classList.toggle('no-greet', id !== 'home');
   if (id === 'mytrips') fetchArchiveBookings();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
