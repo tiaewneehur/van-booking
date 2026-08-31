@@ -372,7 +372,7 @@ body {
   gap: 12px;
   width: calc(100% - 32px);
   max-width: 440px;
-  margin: 12px auto 0;
+  margin: -8px auto 0;
   background: rgba(255, 255, 255, .04);
   border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 16px;
@@ -2823,11 +2823,27 @@ function fetchArchiveBookings() {
     allArchiveBookings = res.bookings || [];
     archiveFetched = true;
     renderMyTrips();
-    // อัปเดตเลข "ประวัติทริปทั้งหมด" ในหน้าแรกให้นับรวมประวัติเก่าด้วย (ไม่บล็อกการโหลดครั้งแรก)
+
+    // เติมทริปเก่าจาก archive กลับเข้า cacheTrips ด้วย ไม่งั้นส่วน "ทริปที่ผ่านมา" หน้าแรกจะว่างเปล่า
+    // (เพราะทริปที่วันผ่านไปแล้วถูกย้ายออกจาก allBookings ไปอยู่ archive แทน)
+    const seenTrips = {};
+    cacheTrips.forEach(t => { seenTrips[t.trip + '_' + t.date] = 1; });
+    allArchiveBookings.forEach(b => {
+      if (!b.trip || !b.date) return;
+      const key = b.trip + '_' + b.date;
+      if (!seenTrips[key]) {
+        seenTrips[key] = 1;
+        cacheTrips.push({ trip: b.trip, date: b.date });
+      }
+    });
+    cacheTrips.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // อัปเดตเลข "ประวัติทริปทั้งหมด" + ส่วนทริปที่ผ่านมาในหน้าแรกให้นับรวมประวัติเก่าด้วย (ไม่บล็อกการโหลดครั้งแรก)
     if (document.getElementById('tab-home')) {
       renderHome();
       renderUpcomingCarousel();
     }
+    renderTripList(cacheTrips);
     delete window[cb];
   };
 
