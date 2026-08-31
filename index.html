@@ -280,7 +280,7 @@ body {
 .hdr {
   background: var(--bg);
   border-bottom: 1px solid var(--border);
-  padding-bottom: 16px;
+  padding-bottom: 6px;
   margin-bottom: 2px;
 }
 .hdr-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -335,43 +335,63 @@ body {
    HOME TAB
    ============================================================ */
 .home-banner {
+  position: relative;
   width: 100%;
   max-width: 480px;
   margin: 0 auto;
-  display: block;
   cursor: pointer;
+  overflow: hidden;
 }
 .home-banner img { width: 100%; height: auto; display: block; }
+.home-banner-fade {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 46%;
+  background: linear-gradient(180deg, rgba(6, 11, 19, 0) 0%, var(--bg) 94%);
+  pointer-events: none;
+}
 .home-banner-actions {
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 2;
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 14px 16px;
+  gap: 8px;
 }
 .home-banner-actions .hdr-btn {
   display: flex; align-items: center; gap: 5px;
   border: none; cursor: pointer; font-family: inherit; white-space: nowrap;
-  padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  padding: 7px 12px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
-.home-banner-actions .hdr-btn-info { background: rgba(6, 11, 19, .55); border: 1px solid rgba(56, 189, 248, .35); color: var(--blue); }
-.home-banner-actions .hdr-btn-contact { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 3px 10px rgba(2, 132, 199, .3); }
+.home-banner-actions .hdr-btn-info { background: rgba(6, 11, 19, .55); border: 1px solid rgba(56, 189, 248, .4); color: var(--blue); }
+.home-banner-actions .hdr-btn-contact { background: linear-gradient(135deg, var(--blue2), var(--blue)); color: #fff; box-shadow: 0 3px 10px rgba(2, 132, 199, .35); }
 .hdr-greet {
+  position: absolute;
+  left: 50%; bottom: 8px;
+  transform: translateX(-50%);
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 12px;
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 16px;
+  width: calc(100% - 32px);
+  max-width: 440px;
+  background: rgba(6, 11, 19, .5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 16px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
 }
 .hdr-greet img {
-  width: 50px; height: 50px; border-radius: 50%; object-fit: cover;
-  border: 2px solid rgba(56, 189, 248, .45);
-  box-shadow: 0 3px 10px rgba(2, 132, 199, .25);
+  width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
+  border: 2px solid rgba(56, 189, 248, .5);
   flex-shrink: 0;
 }
-.hdr-greet h2 { font-size: 14.5px; font-weight: 700; color: #fff; }
-.hdr-greet p { font-size: 12px; color: var(--sub); margin-top: 2px; }
-.home-quick-actions { display: flex; gap: 10px; margin-bottom: 20px; }
+.hdr-greet h2 { font-size: 13.5px; font-weight: 700; color: #fff; }
+.hdr-greet p { font-size: 11px; color: #cbd5e1; margin-top: 2px; }
+.home-quick-actions { display: flex; gap: 10px; margin-bottom: 16px; }
 .home-quick-actions .qa-mini { flex: 1; width: auto; height: 62px; }
 .qa-mini {
   width: 66px;
@@ -1589,14 +1609,15 @@ body {
   <div class="hdr">
     <div class="home-banner">
       <img src="EB06A978-5432-4609-BA2B-F9CB9A30E239.png" alt="เที่ยวนี่เหอะ" onclick="switchTab('home')">
-    </div>
+      <div class="home-banner-fade"></div>
 
-    <div class="home-banner-actions">
-      <button class="hdr-btn hdr-btn-info" onclick="openDrawer()">📋 สาระแนะนำ</button>
-      <button class="hdr-btn hdr-btn-contact" onclick="document.getElementById('adminPopup').style.display='flex'">👤 ติดต่อ</button>
-    </div>
+      <div class="home-banner-actions">
+        <button class="hdr-btn hdr-btn-info" onclick="openDrawer()">📋 สาระแนะนำ</button>
+        <button class="hdr-btn hdr-btn-contact" onclick="document.getElementById('adminPopup').style.display='flex'">👤 ติดต่อ</button>
+      </div>
 
-    <div class="hdr-greet" id="hdrGreet"></div>
+      <div class="hdr-greet" id="hdrGreet"></div>
+    </div>
   </div>
 
   <div id="tab-home" class="view-page active-page"><div class="main" id="homeContent"></div></div>
