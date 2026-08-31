@@ -2447,6 +2447,8 @@ const EQUIP_ITEMS = {
 let currentUser = null;      // { phone, nick }
 let allBookings = [];        // ข้อมูลการจองทั้งหมดจาก backend
 let allEquipRentals = [];    // ข้อมูลการเช่าอุปกรณ์ทั้งหมดจาก backend (คนละชีทกับ bookings)
+let allArchiveBookings = []; // ประวัติทริปเก่า (วันเดินทางผ่านไปแล้ว) จากชีต bookingsArchive — ดึงเฉพาะตอนเปิดหน้าโปรไฟล์
+let archiveFetched = false;  // กันดึงซ้ำทุกครั้งที่สลับแท็บ ดึงแค่ครั้งเดียวต่อรอบเปิดเว็บก็พอ
 let allReviews = [];         // ข้อมูลรีวิวทั้งหมดจาก backend (คนละชีทกับ bookings)
 let reviewRating = 0;        // คะแนนดาวที่กำลังเลือกในฟอร์มเขียนรีวิว
 let reviewPhotoFile = null;  // ไฟล์รูปที่แนบไว้ในฟอร์มเขียนรีวิว
@@ -2765,6 +2767,9 @@ function fetchData() {
 
     document.getElementById('loadingScreen').classList.remove('show');
     delete window[cb];
+
+    // โหลดประวัติทริปเก่าต่อแบบไม่บล็อกหน้าจอ ให้หน้าแรกโหลดไวก่อน แล้วค่อยอัปเดตเลขให้ครบทีหลัง
+    fetchArchiveBookings();
   };
 
   const script = document.createElement('script');
@@ -2779,6 +2784,31 @@ function fetchData() {
       background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
     });
   };
+  document.body.appendChild(script);
+}
+
+// ดึงประวัติทริปเก่า (จากชีต bookingsArchive) — เรียกเฉพาะตอนเปิดแท็บโปรไฟล์เท่านั้น
+// ไม่ปนกับ fetchData() หลัก เพื่อไม่ให้หน้าอื่น (โดยเฉพาะหน้าผังเบาะ) ช้าลงจากขนาด archive ที่จะโตขึ้นเรื่อยๆ
+function fetchArchiveBookings() {
+  if (archiveFetched) {
+    renderMyTrips();
+    return;
+  }
+
+  const cb = 'cbArc_' + Date.now();
+
+  window[cb] = (res) => {
+    allArchiveBookings = res.bookings || [];
+    archiveFetched = true;
+    renderMyTrips();
+    // อัปเดตเลข "ประวัติทริปทั้งหมด" ในหน้าแรกให้นับรวมประวัติเก่าด้วย (ไม่บล็อกการโหลดครั้งแรก)
+    if (document.getElementById('tab-home')) renderHome();
+    delete window[cb];
+  };
+
+  const script = document.createElement('script');
+  script.src = API_URL + '?action=readArchive&callback=' + cb;
+  script.onerror = () => { delete window[cb]; };
   document.body.appendChild(script);
 }
 
@@ -2897,7 +2927,7 @@ function renderHome() {
     h < 21 ? '🌆 สวัสดีตอนหัวค่ำ' :
     '😴 สวัสดีตอนดึกๆ หลับบ้างเห๊อะ';
   const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
-  const myTripCount = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone)).length;
+  const myTripCount = [...allBookings, ...allArchiveBookings].filter(b => norm(b.phone) === norm(currentUser.phone)).length;
 
   const today = new Date(new Date().setHours(0, 0, 0, 0));
   const closedTrips = cacheTrips.filter(t => CLOSED_TRIPS.includes(t.trip));
@@ -3142,7 +3172,7 @@ function searchHomeTrips() {
    ================================================================ */
 function renderMyTrips() {
   const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
-  const myBookings = allBookings.filter(b => norm(b.phone) === norm(currentUser.phone));
+  const myBookings = [...allBookings, ...allArchiveBookings].filter(b => norm(b.phone) === norm(currentUser.phone));
 
   const seen = {};
   const uniqueBookings = [];
@@ -3346,6 +3376,7 @@ function switchTab(id) {
     document.getElementById('tab-' + t).classList.toggle('active-page', t === id);
     document.getElementById('nav-' + t).classList.toggle('active', t === id);
   });
+  if (id === 'mytrips') fetchArchiveBookings();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
