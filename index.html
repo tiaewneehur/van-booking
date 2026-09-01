@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -2513,7 +2512,18 @@ let reviewRating = 0;        // คะแนนดาวที่กำลัง
 let reviewPhotoFile = null;  // ไฟล์รูปที่แนบไว้ในฟอร์มเขียนรีวิว
 let cacheTrips = [];         // รายการทริป (unique trip+date) ที่สรุปจาก allBookings
 let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
-let pendingGuestBooking = null; // เก็บทริปที่ผู้เยี่ยมชม (ยังไม่ล็อกอิน) ตั้งใจจะจอง ไว้พาไปหน้าเลือกเบาะต่อทันทีหลังล็อกอินสำเร็จ
+// เก็บทริปที่ผู้เยี่ยมชม (ยังไม่ล็อกอิน) ตั้งใจจะจอง ไว้พาไปหน้าเลือกเบาะต่อทันทีหลังล็อกอินสำเร็จ
+// ⚠️ ต้องอ่านค่าจาก localStorage ตั้งแต่บรรทัดนี้เลย (ไม่ใช่แค่ตัวแปรความจำเฉยๆ) เพราะการล็อกอิน LINE
+// ในเบราว์เซอร์ทั่วไป (นอกแอป LINE) จะ "รีไดเรกต์ทั้งหน้าเว็บ" ไป-กลับ ทำให้ตัวแปร JS ในหน่วยความจำหายหมด
+// การเก็บไว้ใน localStorage ก่อนรีไดเรกต์ แล้วอ่านกลับมาตอนโหลดหน้าใหม่ จึงทำให้ระบบยังจำทริปที่ตั้งใจจะจองไว้ได้
+let pendingGuestBooking = (() => {
+  try {
+    const saved = localStorage.getItem('tnhPendingBooking');
+    return saved ? JSON.parse(saved) : null;
+  } catch (e) {
+    return null;
+  }
+})();
 let selectedSeats = [];      // อาร์เรย์เบาะที่เลือกไว้ในรอบจองนี้ (จองได้หลายที่นั่งพร้อมกัน)
 let seatFormData = {};       // ข้อมูลผู้โดยสารแยกตามเบาะ { [seatId]: {name, nickname, phone, line} }
 let defaultBookerInfo = {};  // ค่าเริ่มต้นสำหรับเติมฟอร์มแต่ละที่นั่ง (จากโปรไฟล์/ประวัติการจอง)
@@ -2685,6 +2695,7 @@ function showLoginPrompt() {
 function closeLoginPrompt() {
   document.getElementById('loginPage').classList.add('hidden');
   pendingGuestBooking = null;
+  try { localStorage.removeItem('tnhPendingBooking'); } catch (e) {}
 }
 
 // อัปเดตไอคอนโปรไฟล์ในเมนูด้านล่างให้เป็นรูปโปรไฟล์ LINE จริง (แทนอิโมจิ 🪪)
@@ -2851,6 +2862,7 @@ function fetchData() {
     if (currentUser && pendingGuestBooking) {
       pendingTrip = pendingGuestBooking;
       pendingGuestBooking = null;
+      try { localStorage.removeItem('tnhPendingBooking'); } catch (e) {}
       goToBook();
     }
 
@@ -3640,7 +3652,12 @@ function closeModal() {
 // ผู้เยี่ยมชมกดปุ่ม "เข้าสู่ระบบเพื่อจองที่นั่ง" ในหน้ารายละเอียดทริป — จำทริปที่ตั้งใจจะจองไว้ แล้วพาไปล็อกอิน
 // หลังล็อกอินสำเร็จ ระบบจะพากลับมาที่หน้าเลือกเบาะของทริปนี้ให้อัตโนมัติ (ดูใน fetchData callback)
 function promptLoginToBook() {
-  if (pendingTrip) pendingGuestBooking = { ...pendingTrip };
+  if (pendingTrip) {
+    pendingGuestBooking = { ...pendingTrip };
+    // ต้องเก็บลง localStorage ด้วย (ไม่ใช่แค่ตัวแปรในหน่วยความจำ) เพราะ liff.login() ในเบราว์เซอร์ทั่วไป
+    // จะรีไดเรกต์ออกจากหน้าเว็บไปหน้า LINE แล้วเด้งกลับมาใหม่ทั้งหน้า ตัวแปร JS เดิมจะหายไปหมด
+    try { localStorage.setItem('tnhPendingBooking', JSON.stringify(pendingGuestBooking)); } catch (e) {}
+  }
   closeModal();
   showLoginPrompt();
 }
