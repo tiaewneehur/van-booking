@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -270,6 +269,26 @@ body {
   margin-top: 18px;
   font-size: 11px;
   color: var(--muted);
+}
+
+/* ปุ่มปิดหน้าล็อกอิน (โผล่เฉพาะตอนถูกเรียกขึ้นมาระหว่างเยี่ยมชมแบบไม่ล็อกอิน — ให้กลับไปดูทริปต่อได้) */
+#loginCloseBtn {
+  display: none;
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .08);
+  border: none;
+  color: #fff;
+  font-size: 17px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  backdrop-filter: blur(6px);
 }
 
 /* ============================================================
@@ -1546,6 +1565,7 @@ body {
      LOGIN PAGE
      ============================================================ -->
 <div id="loginPage">
+  <button id="loginCloseBtn" onclick="closeLoginPrompt()">✕</button>
   <div class="login-logo">
     <img src="เที่ย นี่เหอะ.png" onerror="this.src='https://via.placeholder.com/90?text=🏕'" alt="Logo">
     <h1>หารเฉลี่ยเที่ยวนี่เหอะ</h1>
@@ -2482,7 +2502,7 @@ const EQUIP_ITEMS = {
 /* ================================================================
    GLOBAL STATE
    ================================================================ */
-let currentUser = null;      // { phone, nick }
+let currentUser = null;      // { phone, nick }  — null = โหมดผู้เยี่ยมชม (guest / หน้าสาธารณะ)
 let allBookings = [];        // ข้อมูลการจองทั้งหมดจาก backend
 let allEquipRentals = [];    // ข้อมูลการเช่าอุปกรณ์ทั้งหมดจาก backend (คนละชีทกับ bookings)
 let allArchiveBookings = []; // ประวัติทริปเก่า (วันเดินทางผ่านไปแล้ว) จากชีต bookingsArchive — ดึงเฉพาะตอนเปิดหน้าโปรไฟล์
@@ -2492,6 +2512,7 @@ let reviewRating = 0;        // คะแนนดาวที่กำลัง
 let reviewPhotoFile = null;  // ไฟล์รูปที่แนบไว้ในฟอร์มเขียนรีวิว
 let cacheTrips = [];         // รายการทริป (unique trip+date) ที่สรุปจาก allBookings
 let pendingTrip = null;      // ทริปที่กำลังจะกดจอง (ก่อนเข้าหน้าเลือกเบาะ)
+let pendingGuestBooking = null; // เก็บทริปที่ผู้เยี่ยมชม (ยังไม่ล็อกอิน) ตั้งใจจะจอง ไว้พาไปหน้าเลือกเบาะต่อทันทีหลังล็อกอินสำเร็จ
 let selectedSeats = [];      // อาร์เรย์เบาะที่เลือกไว้ในรอบจองนี้ (จองได้หลายที่นั่งพร้อมกัน)
 let seatFormData = {};       // ข้อมูลผู้โดยสารแยกตามเบาะ { [seatId]: {name, nickname, phone, line} }
 let defaultBookerInfo = {};  // ค่าเริ่มต้นสำหรับเติมฟอร์มแต่ละที่นั่ง (จากโปรไฟล์/ประวัติการจอง)
@@ -2593,16 +2614,16 @@ function handleSeatLockExpired() {
     text: payModalWasOpen
       ? 'ที่นั่งของคุณถูกปลดล็อกอัตโนมัติระหว่างที่คุณกำลังชำระเงิน กรุณาเลือกเบาะใหม่แล้วทำรายการอีกครั้งครับ'
       : 'ระบบปลดล็อกที่นั่งอัตโนมัติ กรุณาเลือกเบาะใหม่ครับ',
-    background: '#0c1524',
-    color: '#f1f5f9',
-    confirmButtonColor: '#0284c7'
+    background: '#0c1524', color: '#f1f5f9', confirmButtonColor: '#0284c7'
   });
 }
 
 /* ================================================================
    LOGIN (LINE Login ผ่าน LIFF SDK)
    - เปิดจากในแอป LINE (isInClient) -> ล็อกอินอัตโนมัติ ไม่ต้องกดปุ่ม
-   - เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่ม "เข้าสู่ระบบด้วย LINE"
+   - เปิดจากเบราว์เซอร์ทั่วไปและยังไม่เคยล็อกอิน -> เข้าสู่ "โหมดสาธารณะ" (guest)
+     ให้ดูหน้าแรก/รายละเอียดทริปได้เลยโดยไม่ต้องล็อกอินก่อน
+     พอกดจองที่นั่ง/เช่าของ/ดูโปรไฟล์ ค่อยเด้งมาล็อกอิน
    - หลังล็อกอิน LINE สำเร็จ -> ดึงชื่อ/รูปจาก LINE มาใช้อัตโนมัติ
      แล้วให้กรอกเบอร์โทรอีกครั้งเดียว (ใช้จับคู่ประวัติการจองในระบบหลังบ้านเดิม)
    ================================================================ */
@@ -2639,6 +2660,30 @@ function enterApp() {
   document.getElementById('loadingScreen').classList.add('show');
   updateNavAvatar();
   fetchData();
+}
+
+// เข้าสู่ "โหมดสาธารณะ" (guest) — ให้ดูหน้าแรก/รายละเอียดทริปได้โดยไม่ต้องล็อกอิน
+// currentUser ยังคงเป็น null ต่อไป จนกว่าจะล็อกอินจริงผ่าน doLogin()
+function enterGuestMode() {
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('loadingScreen').classList.add('show');
+  updateNavAvatar();
+  fetchData();
+}
+
+// เรียกขึ้นมาเมื่อผู้เยี่ยมชม (guest) ต้องล็อกอินก่อนถึงจะทำสิ่งที่ต้องการได้
+// (จองที่นั่ง / เช่าอุปกรณ์ / เขียนรีวิว / ดูโปรไฟล์) — ใช้ overlay หน้าล็อกอินเดิมซ้ำได้เลย
+function showLoginPrompt() {
+  const closeBtn = document.getElementById('loginCloseBtn');
+  // โชว์ปุ่มปิดเฉพาะตอนที่มีเนื้อหาให้กลับไปดูต่อ (คือเคยเข้าโหมดสาธารณะมาก่อนแล้ว)
+  if (closeBtn) closeBtn.style.display = currentUser === null && cacheTrips.length ? 'flex' : 'none';
+  document.getElementById('loginPage').classList.remove('hidden');
+}
+
+// ปิดหน้าล็อกอินที่ถูกเรียกขึ้นมาระหว่างเยี่ยมชม กลับไปดูทริปต่อได้ตามปกติ (ไม่มีผลถ้ายังไม่เคยดูทริปมาก่อน)
+function closeLoginPrompt() {
+  document.getElementById('loginPage').classList.add('hidden');
+  pendingGuestBooking = null;
 }
 
 // อัปเดตไอคอนโปรไฟล์ในเมนูด้านล่างให้เป็นรูปโปรไฟล์ LINE จริง (แทนอิโมจิ 🪪)
@@ -2681,6 +2726,8 @@ async function initLiff() {
     console.error('LIFF init error', err);
     clearTimeout(stuckTimer);
     showLineLoginRetry('⚠️ เชื่อมต่อ LINE ไม่สำเร็จ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
+    // เชื่อมต่อ LINE ไม่ได้ ไม่ได้แปลว่าเว็บใช้ไม่ได้ทั้งหมด — ให้เข้าดูหน้าสาธารณะได้ก่อน แล้วค่อยล็อกอินทีหลังได้
+    enterGuestMode();
     return;
   }
 
@@ -2691,12 +2738,14 @@ async function initLiff() {
       // เปิดจากในแอป LINE โดยตรง -> ล็อกอินอัตโนมัติไม่ต้องกดปุ่ม
       liff.login();
     } else {
-      // เปิดจากเบราว์เซอร์ทั่วไป -> โชว์ปุ่มให้กด
-      showLineLoginRetry(null);
+      // เปิดจากเบราว์เซอร์ทั่วไป และยังไม่ได้ล็อกอิน -> เข้าสู่โหมดสาธารณะ ให้ดูทริปได้เลย
+      showLineLoginRetry(null); // เตรียมปุ่ม "เข้าสู่ระบบด้วย LINE" ไว้เผื่อกดทีหลัง
+      enterGuestMode();
     }
   } catch (err) {
     console.error('LIFF login flow error', err);
     showLineLoginRetry('⚠️ เข้าสู่ระบบ LINE ไม่สำเร็จ กรุณากดปุ่มด้านล่างเพื่อลองใหม่');
+    enterGuestMode();
   } finally {
     clearTimeout(stuckTimer);
   }
@@ -2796,6 +2845,13 @@ function fetchData() {
 
     document.getElementById('loadingScreen').classList.remove('show');
     delete window[cb];
+
+    // ถ้าผู้เยี่ยมชม (guest) เพิ่งล็อกอินสำเร็จโดยตั้งใจจะจองทริปใดไว้ก่อนหน้านี้ -> พาไปหน้าเลือกเบาะทันที
+    if (currentUser && pendingGuestBooking) {
+      pendingTrip = pendingGuestBooking;
+      pendingGuestBooking = null;
+      goToBook();
+    }
 
     // โหลดประวัติทริปเก่าต่อแบบไม่บล็อกหน้าจอ ให้หน้าแรกโหลดไวก่อน แล้วค่อยอัปเดตเลขให้ครบทีหลัง
     fetchArchiveBookings();
@@ -2963,7 +3019,20 @@ function setupCarouselAutoScroll(key, el, intervalMs) {
 // (ตอนโหลดครั้งแรก และตอน archive โหลดเสร็จ เพื่ออัปเดตจำนวนทริปให้ครบ)
 function renderHeaderGreeting() {
   const el = document.getElementById('hdrGreet');
-  if (!el || !currentUser) return;
+  if (!el) return;
+
+  // โหมดผู้เยี่ยมชม (ยังไม่ล็อกอิน) — โชว์คำทักทายทั่วไป พร้อมปุ่มชวนล็อกอิน
+  if (!currentUser) {
+    el.innerHTML = `
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--blue));display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">👋</div>
+      <div style="flex:1;min-width:0">
+        <h2>ยินดีต้อนรับสู่เที่ยวนี่เหอะ!</h2>
+        <p>เข้าสู่ระบบเพื่อจองที่นั่งและดูประวัติการเดินทาง</p>
+      </div>
+      <button class="hdr-btn" style="background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;color:#fff;flex-shrink:0" onclick="showLoginPrompt()">เข้าสู่ระบบ</button>
+    `;
+    return;
+  }
 
   const h = new Date().getHours();
   const greeting =
@@ -3242,6 +3311,23 @@ function searchHomeTrips() {
    MY TRIPS TAB
    ================================================================ */
 function renderMyTrips() {
+  // โหมดผู้เยี่ยมชม (ยังไม่ล็อกอิน) — ยังไม่มีข้อมูลส่วนตัวให้แสดง โชว์การ์ดชวนล็อกอินแทน
+  if (!currentUser) {
+    document.getElementById('myContent').innerHTML = `
+      <div class="empty-st">
+        <div class="ico">🔐</div>
+        <p>เข้าสู่ระบบด้วย LINE เพื่อดูประวัติการเดินทาง<br>และจัดการการจองของคุณครับ</p>
+      </div>
+      <button class="btn-login" style="background:linear-gradient(135deg,var(--blue2),var(--blue))" onclick="showLoginPrompt()">
+        <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" style="width:20px;height:20px">
+          เข้าสู่ระบบด้วย LINE
+        </span>
+      </button>
+    `;
+    return;
+  }
+
   const norm = (p) => String(p || '').replace(/\D/g, '').slice(-9);
   const myBookings = [...allBookings, ...allArchiveBookings].filter(b => norm(b.phone) === norm(currentUser.phone));
 
@@ -3443,6 +3529,12 @@ function renderNotif() {
 const TABS = ['home', 'trips', 'mytrips', 'notif'];
 
 function switchTab(id) {
+  // แท็บ "โปรไฟล์" ต้องล็อกอินก่อนถึงจะเข้าดูได้ — ผู้เยี่ยมชม (guest) กดแล้วให้เด้งไปล็อกอินแทน
+  if (id === 'mytrips' && !currentUser) {
+    showLoginPrompt();
+    return;
+  }
+
   TABS.forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('active-page', t === id);
     document.getElementById('nav-' + t).classList.toggle('active', t === id);
@@ -3527,6 +3619,14 @@ function openModal(name, dateStr) {
   }
 
   pendingTrip = { name, date: fmtDate, raw: dateStr };
+
+  // ผู้เยี่ยมชม (ยังไม่ล็อกอิน) — ปุ่มที่จะพาไปหน้าเลือกเบาะทุกกรณี (ยกเว้นตอนยังไม่เปิดจอง) ให้เปลี่ยนเป็นชวนล็อกอินแทน
+  if (!currentUser && !bookBtn.disabled) {
+    bookBtn.innerText = '🔐 เข้าสู่ระบบเพื่อจองที่นั่ง';
+    bookBtn.onclick = () => promptLoginToBook();
+    bookBtn.style.background = 'linear-gradient(145deg, #0284c7, #38bdf8)';
+  }
+
   document.getElementById('modalBg').classList.add('show');
   document.body.style.overflow = 'hidden';
 }
@@ -3534,6 +3634,14 @@ function openModal(name, dateStr) {
 function closeModal() {
   document.getElementById('modalBg').classList.remove('show');
   document.body.style.overflow = '';
+}
+
+// ผู้เยี่ยมชมกดปุ่ม "เข้าสู่ระบบเพื่อจองที่นั่ง" ในหน้ารายละเอียดทริป — จำทริปที่ตั้งใจจะจองไว้ แล้วพาไปล็อกอิน
+// หลังล็อกอินสำเร็จ ระบบจะพากลับมาที่หน้าเลือกเบาะของทริปนี้ให้อัตโนมัติ (ดูใน fetchData callback)
+function promptLoginToBook() {
+  if (pendingTrip) pendingGuestBooking = { ...pendingTrip };
+  closeModal();
+  showLoginPrompt();
 }
 
 /* ================================================================
@@ -4567,6 +4675,12 @@ function getMyUniqueBookings() {
 }
 
 function openEquipRent() {
+  // เช่าอุปกรณ์ต้องผูกกับทริปที่จองไว้ของบัญชีตัวเอง — ผู้เยี่ยมชม (guest) ต้องล็อกอินก่อน
+  if (!currentUser) {
+    showLoginPrompt();
+    return;
+  }
+
   eqSelectedTripKey = null;
   eqQty = { tent: 0, sleepingBag: 0, sleepingPad: 0 };
 
@@ -4780,6 +4894,12 @@ function closeReviews() {
 }
 
 function openWriteReview() {
+  // เขียนรีวิวต้องผูกกับบัญชีผู้ใช้ — ผู้เยี่ยมชม (guest) ต้องล็อกอินก่อน (ดูรีวิวคนอื่นได้โดยไม่ต้องล็อกอิน)
+  if (!currentUser) {
+    showLoginPrompt();
+    return;
+  }
+
   document.getElementById('writeReviewBox').style.display = 'block';
   setTimeout(() => {
     document.getElementById('writeReviewBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
